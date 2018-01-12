@@ -1,0 +1,33 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=0"><script>(function (doc, win) {
+      var docEl = doc.documentElement,
+          resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+          recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              if(clientWidth>=640){
+                  docEl.style.fontSize = '100px';
+              }else{
+                  docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+              }
+          };
+
+      if (!doc.addEventListener) return;
+      win.addEventListener(resizeEvt, recalc, false);
+      doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window);
+
+    var style=document.createElement("style");  
+    style.setAttribute("type", "text/css");  
+    var cssString = '.min-h {min-height: '+ window.innerHeight +'px;}'
+    if(style.styleSheet){// IE  
+        style.styleSheet.cssText = cssString;  
+    } else {// w3c  
+        var cssText = document.createTextNode(cssString);  
+        style.appendChild(cssText);  
+    }  
+  
+    var heads = document.getElementsByTagName("head");  
+    if(heads.length)  
+        heads[0].appendChild(style);  
+    else  
+        document.documentElement.appendChild(style)</script><title>牛霸霸屏</title><link href=./static/css/app.0a6aaab36e6119bfebf0cb5a0e283dcb.css rel=stylesheet></head><body><div id=app-box></div><script type=text/javascript src=./static/js/manifest.be3c073d31f3829d66f2.js></script><script type=text/javascript src=./static/js/vendor.b4602c2e9700d70735a7.js></script><script type=text/javascript src=./static/js/app.25eb582c538ecd4ec2a9.js></script></body></html>

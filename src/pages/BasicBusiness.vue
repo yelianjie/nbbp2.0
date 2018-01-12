@@ -27,6 +27,10 @@ export default {
     Cell,
     XButton
   },
+  beforeRouteEnter (to, from, next) {
+    document.title = '牛霸霸屏商户管理-基础信息'
+    next()
+  },
   data () {
     return {
 

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=	gqwAbhpew0rdL9sZei9dL2PQWGqW7beB"></script>
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  body, html,#container {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+  body {
+    background-color: #fff;
+  }
+  .flex {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+  }
+  .flex-v {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+            flex-direction: column;
+  }
+  .flex-h {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+            flex-direction: row;
+  }
+  .flex-1 {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+            flex: 1;
+  }
+  .flex-align-center {
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+            align-items: center;
+  }
+  .flex-pack-center {
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+            justify-content: center;
+  }
+  #ball {
+    width: 18px;
+    height: 30px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
+    z-index: 1;
+    background: url(./marker_01.png) no-repeat;
+    background-size: 18px 30px;
+  }
+  .bar {
+  position: fixed; top: 0; left: 0; right: 0; /* 决定了搜索框置顶 */
+  height: 44px; padding: 0 10px;
+  background-color: #fff; opacity: 0.8; /* 搜索框半透明效果 */
+  z-index: 1;
+}
+.bar form {
+  padding: 0;margin: 0;
+}
+.search-row {
+  position: relative;
+  height: 30px; padding: 7px 0;
+}
+.cancel-input {
+  height: 30px;
+  line-height: 30px;
+  background-color: transparent;
+  border: 0;
+  display: block;
+  padding: 7px;
+  text-align: center;
+  -webkit-box-sizing: content-box;
+  display: none;
+  font-size: 14px;
+}
+.cancel-input:focus {
+  outline: none;
+  border: 0;
+}
+.search-row input[type=search] {
+  position: absolute; top: 7px;
+  height: 30px; line-height: 21px; width: 100%; padding: 10px 15px 10px 30px;
+  border: 0; border-radius: 6px; outline: 0; background-color: rgba(0,0,0,0.1);
+  font-size: 16px; text-align: center;
+  z-index: 100;
+}
+.search-row .placeholder {
+  position: absolute; top: 2px; left: 0; right: 0;
+  display: inline-block; height: 34px; line-height: 34px;
+  border: 0; border-radius: 6px;
+  font-size: 16px; text-align: center; color: #999;
+  z-index: 1;  
+}
+.search-row .placeholder .iconfont {
+  display: inline-block; width: 19px; line-height: 24px; padding: 10px 0; 
+  font-size: 21px; color: #666;
+}
+.search-row .placeholder .text {
+  line-height: 40px;
+  vertical-align: top;
+}
+
+.active:before {
+  position: absolute; top: 11px; left: 5px; right: auto;
+  display: block; margin-right: 0;
+  font-size: 21px;
+}
+.active input[type=search] {
+  text-align: left
+}
+.active .placeholder{
+  display: none
+}
+input[type="search"]{-webkit-appearance:none;} 
+
+input::-webkit-search-cancel-button {display: none;}
+ul,li {
+  margin: 0;
+  padding: 0;
+}
+#scroller-suggestion {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  z-index: 1;
+}
+#scroller-suggestion .suggestion-wrapper {
+  height: 240px;
+  overflow: hidden;
+}
+#scroller-suggestion li,
+#search-suggestion li {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+}
+#scroller-suggestion li.active .title {
+  color: #d6b03f;
+}
+#scroller-suggestion li.active .address {
+  color: #d6b03f;
+}
+#scroller-suggestion li:last-child,
+#search-suggestion li:last-child {
+  border-bottom: 0;
+}
+.title {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.address {
+  font-size: 14px;
+  color: #ababab;
+}
+#map-wrap{
+  position: relative;
+}
+#saveAddress {
+  width: 100%;
+  height: 44px;
+  line-height: 44px;
+  background-color:#4fa3d2;
+  color: #fff;
+  border: 0;
+  font-size: 18px;
+}
+#search-suggestion {
+  position: absolute;
+  top: 44px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  z-index: 2;
+  overflow: hidden;
+  display: none;
+}
+#search-suggestion::after {
+  position: absolute;
+  top: 0;
+  height: 1px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ddd;
+  content: "";
+}
+  </style>
+</head>
+<body>
+  <header class="bar">
+      <form name="search" class="search flex flex-h" id="search" action="" onsubmit="return false;">
+        <div class="search-row flex-1">
+          <input type="search" name="word" id="word">
+          <span class="placeholder "><span class="iconfont icon-sousuo"></span><span class="text">搜索</span></span>
+        </div>
+        <button class="cancel-input" id="cancel-input">取消</button>
+      </form>
+    </header>
+    
+  <div id="map-wrap">
+      <div id="container"></div>
+      <span id="ball"></span>
+  </div>
+  <div id="scroller-suggestion">
+      <div class="suggestion-wrapper">
+          <ul>
+
+          </ul>
+      </div>
+      
+    <button id="saveAddress">保存</button>
+  </div>
+  <div id="search-suggestion">
+      <ul>
+
+        </ul>
+    </div>
+</body>
+</html>
+
+<script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+<script src="./bscroll.min.js"></script>
+<script>
+  window.debounce = function(idle, action){
+    var last
+    return function(){
+      var ctx = this, args = arguments
+      clearTimeout(last)
+      last = setTimeout(function(){
+          action.apply(ctx, args)
+      }, idle)
+    }
+  }
+</script>
+<script type="text/javascript">
+  var scroll,searchScroll
+  var container = document.getElementById("container")
+  container.style.height = window.innerHeight - 240 + 'px'
+  var mp = new BMap.Map("container");
+  var local = new BMap.LocalSearch(mp, {
+    onSearchComplete: searchBack,
+    pageCapacity: 10
+  })
+  var geolocation = new BMap.Geolocation();   
+  geolocation.getCurrentPosition(function(result) {
+    if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+      //通过Geolocation类的getStatus()可以判断是否成功定位。  
+      var pt = result.point;
+      surroundingPoisShow(pt)
+    }
+  })
+  mp.enableScrollWheelZoom();
+
+  mp.addEventListener("dragend", function showInfo(){
+   var cp = mp.getCenter();
+   var nears = new BMap.Geocoder();
+   nears.getLocation(cp, function(rs) {
+     var addComp = rs.addressComponents; 
+     formatHTML(rs.surroundingPois)
+     scroll.refresh()
+     scroll.scrollTo(0,0,0)
+   }, {
+    poiRadius: 1000
+   })
+
+  });
+  
+  function surroundingPoisShow(point) {
+    mp.centerAndZoom(new BMap.Point(point.lng,point.lat), 15);
+      var nears = new BMap.Geocoder();
+      nears.getLocation(point, function(rs) {
+        formatHTML(rs.surroundingPois)
+        var wrapper = document.querySelector('.suggestion-wrapper')
+        scroll = new BScroll(wrapper, {
+          tap: true
+        })
+    }, {
+      poiRadius: 1000
+    })
+  }
+
+  function searchBack(result){
+    for( var i in result) {
+      if (Object.prototype.toString.call(result[i])=='[object Array]' && result[i].length > 0) {
+        if (result[i][0].point) {
+          formatSearchHTML(result[i])
+        } else {
+          formatSearchHTML([])
+        }
+        
+        if (searchScroll) {
+          searchScroll.refresh()
+        } else {
+          var wrapper = document.querySelector('#search-suggestion')
+          searchScroll = new BScroll(wrapper, {
+            tap: true
+          })
+        }
+        break;
+      }
+    }
+
+    }
+  var _scroller = $(".suggestion-wrapper ul")
+  var _search = $("#search-suggestion")
+  var cancelBtn = $('#cancel-input')
+  function formatHTML (data) {
+    var _html = ''
+    if (data.length > 0) {
+      for(var i = 0; i < data.length; i++){
+        _html += '<li class="confirmPoint" data-lng="'+ data[i].point.lng +'" data-lat="'+ data[i].point.lat +'"><p class="title">'+ data[i].title +'</p><p class="address">'+ data[i].address +'</p></li>'
+      }
+    } else {
+      _html = '<li style="text-align:center;"><p class="address">无搜索结果</p></li>'
+    }
+    _scroller.html(_html)
+  }
+  function formatSearchHTML (data) {
+    var _html = ''
+    if (data.length > 0) {
+      for(var i = 0; i < data.length; i++){
+        _html += '<li class="point" data-lng="'+ data[i].point.lng +'" data-lat="'+ data[i].point.lat +'"><p class="title">'+ data[i].title +'</p><p class="address">'+ data[i].address +'</p></li>'
+      }
+    } else {
+      _html = '<li style="text-align:center;"><p class="address">无搜索结果</p></li>'
+    }
+    _search.children('ul').html(_html)
+  } 
+  var word = document.getElementById("word")
+  var searchRow = document.querySelector(".search-row")
+  word.addEventListener("focus", function(e){
+    searchRow.className = 'search-row flex-1 active iconfont icon-sousuo'
+    if (word.value == ''){
+      _search.children('ul').empty()
+    }
+    cancelBtn.show()
+    _search.show()
+  })
+  word.addEventListener("blur", function(e){
+    searchRow.className = 'search-row flex-1'
+  })
+  var searchDebounce = window.debounce(300, getResult)
+  word.addEventListener("input", searchDebounce)
+  
+  cancelBtn.on('click', function() {
+    _search.hide()
+    cancelBtn.hide()
+    word.value = ''
+    word.blur()
+  })
+  /* document.getElementById("search").addEventListener('submit', function(e) {
+    local.search(word.value)
+    //return false;
+  }) */
+  function getResult () {
+    local.search(word.value)
+  } 
+  $('body').on('tap', '.point', function(e) {
+    var lat = $(this).attr('data-lat')
+    var lng = $(this).attr('data-lng')
+    var point = new BMap.Point(lng, lat)
+    _search.hide()
+    cancelBtn.hide()
+    word.value = ''
+    word.blur()
+    surroundingPoisShow(point)
+  })
+
+  $('body').on('tap', '.confirmPoint', function(e) {
+    $('.confirmPoint').removeClass('active')
+    $(this).addClass('active')
+    var lat = $(this).attr('data-lat')
+    var lng = $(this).attr('data-lng')
+    var point = new BMap.Point(lng, lat)
+    mp.centerAndZoom(point, 15);
+  })
+  
+</script>

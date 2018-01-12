@@ -25,6 +25,10 @@ export default {
       }]
     }
   },
+  beforeRouteEnter (to, from, next) {
+    document.title = '牛霸霸屏商户管理'
+    next()
+  },
   components: {
     BusinessAgentTop,
     BusinessMenus,
