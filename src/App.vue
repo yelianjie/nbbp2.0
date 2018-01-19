@@ -12,7 +12,14 @@ export default {
 
 <style lang="less">
 @import '~vux/src/styles/reset.less';
-
+@import './styles/bpDialog.less';
+.noscroll,
+.noscroll body {
+  overflow: hidden;
+}
+.noscroll body {
+  position: relative;
+}
 body {
   background-color: #f5f5f5;
   font-size: 16px;

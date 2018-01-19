@@ -36,17 +36,25 @@
     <div class="percent-divide fff">
       <p class="set-title">绑定二维码</p>
       <div class="bindif">
-        <x-button :gradients="['#1D62F0', '#1D62F0']" mini>去绑定</x-button>
+        <x-button :gradients="['#1D62F0', '#1D62F0']" mini @click.native="maskVisible = true">去绑定</x-button>
       </div>
     </div>
     <div class="bottom_fix">
       <x-button :gradients="['#1D62F0', '#1D62F0']" link="/">保存</x-button>
     </div>
+
+    <div id="maskQrcode" v-show="maskVisible" @click="maskVisible = false">
+      <p>请扫描以下二维码绑定</p>
+      <p>管理酒吧</p>
+      <img src="http://nb.siweiquanjing.com/attachment/bar/20171227191747_227.png"/>
+    </div>
+    <!-- <bp-dialog :visible="dialogVisible"></bp-dialog> -->
 </div>
 </template>
 
 <script>
 import { XNumber, XInput, Group, XButton } from 'vux'
+// import bpDialog from '@/components/bpDialog.vue'
 export default {
   name: 'AgentBarInfo',
   components: {
@@ -57,7 +65,29 @@ export default {
   },
   data () {
     return {
-
+      maskVisible: false,
+      dialogVisible: false
+    }
+  },
+  mounted () {
+    this.$bpDialog({
+      title: '提示啊',
+      content: '<b>我有没有加粗</b>',
+      stopAuto: false,
+      confirmCallback: () => {
+        setTimeout(() => {
+          this.$bpDialog.hide()
+        }, 3000)
+      }
+    })
+  },
+  watch: {
+    maskVisible (newVal, oldVal) {
+      if (newVal) {
+        document.documentElement.classList.add('noscroll')
+      } else {
+        document.documentElement.classList.remove('noscroll')
+      }
     }
   }
 }
@@ -102,5 +132,28 @@ export default {
 }
 .bindif {
   padding: 0 15px 10px;
+}
+#maskQrcode {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, .75);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  p {
+    color: #fff;
+    font-size: 14px;
+  }
+  img {
+    margin-top: 10px;
+    width: 160px;
+    height: 160px;
+    display: block;
+  }
 }
 </style>

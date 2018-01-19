@@ -36,7 +36,7 @@ export default {
         img: '',
         tip: '价格、类型、时长等',
         route: {
-          path: '/BaPingManage'
+          path: '/BaPingSetting'
         }
       }, {
         name: '背景设置',

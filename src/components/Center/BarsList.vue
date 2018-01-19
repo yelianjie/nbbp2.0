@@ -1,7 +1,7 @@
 <template>
   <div class="bar-list">
       <ul>
-        <li class="bar-item flex" v-for="(v,i) in barsList" :key="i">
+        <li class="bar-item flex" v-for="(v,i) in barsList" :key="i" @click="pageToBarInfo">
           <div class="bar-img">
             <img src="../../assets/logo.png" alt="">
           </div>
@@ -26,6 +26,11 @@ export default {
   },
   data () {
     return {
+    }
+  },
+  methods: {
+    pageToBarInfo () {
+      this.$router.push({path: '/AgentBarInfo'})
     }
   }
 }

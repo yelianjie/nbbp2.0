@@ -6,7 +6,8 @@ import VueRouter from 'vue-router'
 import App from './App'
 import store from './store'
 import router from './router'
-import { ToastPlugin } from 'vux'
+import bpDialog from './plugins/bpDialog'
+import { ToastPlugin, ConfirmPlugin } from 'vux'
 import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 Validator.localize('ch', ZH_CN)
@@ -14,7 +15,9 @@ Validator.localize('ch')
 Vue.use(VeeValidate, {
   errorBagName: 'vErrors'
 })
+Vue.use(bpDialog)
 Vue.use(ToastPlugin)
+Vue.use(ConfirmPlugin)
 Vue.use(VueRouter)
 
 FastClick.attach(document.body)

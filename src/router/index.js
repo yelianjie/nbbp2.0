@@ -60,6 +60,20 @@ export default new Router({
       }
     },
     {
+      path: '/BapingSetting',
+      name: 'BapingSetting',
+      component: (resolve) => {
+        require(['@/pages/BapingSetting'], resolve)
+      }
+    },
+    {
+      path: '/BgSetting',
+      name: 'BgSetting',
+      component: (resolve) => {
+        require(['@/pages/BgSetting'], resolve)
+      }
+    },
+    {
       path: '/Manager',
       name: 'Manager',
       component: (resolve) => {
@@ -71,6 +85,13 @@ export default new Router({
       name: 'AgentBarInfo',
       component: (resolve) => {
         require(['@/pages/AgentBarInfo'], resolve)
+      }
+    },
+    {
+      path: '/BindManage',
+      name: 'BindManage',
+      component: (resolve) => {
+        require(['@/pages/BindManage'], resolve)
       }
     }
   ]

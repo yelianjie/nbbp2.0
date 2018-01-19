@@ -33,6 +33,8 @@ export default {
       }]
     }
   },
+  mounted () {
+  },
   components: {
     BusinessAgentTop,
     BarsList,
