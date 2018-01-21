@@ -93,6 +93,13 @@ export default new Router({
       component: (resolve) => {
         require(['@/pages/BindManage'], resolve)
       }
+    },
+    {
+      path: '/Main',
+      name: 'Main',
+      component: (resolve) => {
+        require(['@/pages/Main'], resolve)
+      }
     }
   ]
 })
