@@ -7,8 +7,9 @@
     </div>
     <div class="msg-item-right flex-1">
       <msg-user></msg-user>
-      <div class="msg-item-middle onlymsg">
-        {{data.content}}
+      <div class="msg-item-middle msgimg flex">
+        <div class="img"><img src="../../assets/jj.jpg"/></div>
+        <div class="content">{{data.content}}</div>
       </div>
       <div class="msg-item-bottom">
         <msg-bottom :like="data.likes" @onLike="like"></msg-bottom>
@@ -38,18 +39,20 @@ export default {
 <style lang="less" scoped>
 @import '../../styles/main.less';
 
-.msg-item-top {
-  * {
-    display: block;
-    margin-right: 4px;
-  }
-  .msg-name {
-    font-size: @baseFontSize;
-  }
-}
-.msg-item-middle.onlymsg {
-  display: inline-block;
+.msg-item-middle.msgimg {
   min-width: @minMsgWidth;
   max-width: @maxMsgWidth;
+  .img {
+    width: 50%;
+    img {
+      width: 100%;
+      max-height: 300px;
+      display: block;
+    }
+  }
+  .content {
+    padding-left: @msgpadLeft;
+    width: 50%;
+  }
 }
 </style>

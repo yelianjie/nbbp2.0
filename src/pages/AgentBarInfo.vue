@@ -70,16 +70,6 @@ export default {
     }
   },
   mounted () {
-    this.$bpDialog({
-      title: '提示啊',
-      content: '<b>我有没有加粗</b>',
-      stopAuto: false,
-      confirmCallback: () => {
-        setTimeout(() => {
-          this.$bpDialog.hide()
-        }, 3000)
-      }
-    })
   },
   watch: {
     maskVisible (newVal, oldVal) {

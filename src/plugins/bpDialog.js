@@ -18,7 +18,7 @@ export default {
       }
       let BpDialogTpl = Vue.extend({
         template: `
-          <div class="bp-dialog-wrap">
+          <div class="bp-dialog-wrap" v-if="domVisible">
             <transition name="bp-mask">
             <div class="bp-mask" style="display:none;"  v-show="visible"></div>
             </transition>
@@ -39,9 +39,12 @@ export default {
           </div>`,
         data () {
           return {
-            content: opt.content,
-            visible: false
+            content: opt.content ? opt.content : '',
+            visible: false,
+            domVisible: true
           }
+        },
+        mounted () {
         },
         methods: {
           confirm () {
@@ -58,8 +61,7 @@ export default {
           hide () {
             this.visible = false
             setTimeout(() => {
-              console.log('11')
-              this.$destroy()
+              this.domVisible = false
             }, 300)
           }
         }
