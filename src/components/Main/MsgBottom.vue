@@ -14,7 +14,7 @@
         <span class="num">3</span>
       </div>
       <div class="msg-btn msg-btn-big msg-share flex flex-1 flex-align-center">
-        <img src="../../assets/logo.png"/>
+        <svg-icon icon-class="share" @click.native="shareMaskVisible = true"/>
       </div>
     </template>
     <template v-else>
@@ -32,17 +32,26 @@
       </div>
       
     </template>
+    <x-dialog v-model="shareMaskVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
+      <p style="color:#fff;text-align:right;" @click="shareMaskVisible = false">
+        <span style="font-size:30px;">分享至朋友圈</span>
+      </p>
+    </x-dialog>
     <!--<button @click="likea">点赞</button>{{this.like}}-->
   </div>
 </template>
 
 <script>
+import { XDialog } from 'vux'
 export default {
   props: ['like', 'display'],
   data () {
     return {
-
+      shareMaskVisible: false
     }
+  },
+  components: {
+    XDialog
   },
   methods: {
     likea () {
@@ -83,7 +92,7 @@ export default {
   &.msg-share {
     justify-content: flex-end;
     margin-right: 0;
-    img {
+    .svg-icon {
       margin: 0;
       width: 0.4rem;
       height: 0.4rem;

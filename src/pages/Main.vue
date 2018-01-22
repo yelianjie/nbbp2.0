@@ -52,18 +52,12 @@
         <span class="buble-place right"></span>
       </div>
     </div>
-    <!--<template v-for="(v, i) in chatlist">
-      <msg :key="i" :index="i" :data="v" @onLike="like"></msg>
-    </template>
-    <button @click="bpModelVisible = true">打开</button>
-    <button @click="bpModelVisible = false">关闭</button>
-    <button @click="openDialog">关闭</button>
-    <transition name="slide-fade">
-      <div id="fixed_bp_modal" v-show="bpModelVisible">
-
-      </div>
-    </transition>-->
   </div>
+  <div id="fixed-bgds-btns">
+    <div class="f-btn" @click="bpWindowVisible = true"><img src="../assets/bp-btn.png"/></div>
+    <div class="f-btn"><img src="../assets/ds-btn.png"/></div>
+  </div>
+  <bp-window v-model="bpWindowVisible"></bp-window>
   </div>
 </template>
 
@@ -73,6 +67,7 @@ import MsgImg from '../components/Main/MsgImg'
 import MsgOnlyImg from '../components/Main/Img'
 import BpMsg from '../components/Main/BpMsg'
 import DsMsg from '../components/Main/DsMsg'
+import BpWindow from '../components/Main/BpWindow'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   data () {
@@ -102,7 +97,7 @@ export default {
         likes: 666,
         type: 0
       }],
-      bpModelVisible: false
+      bpWindowVisible: false
     }
   },
   mounted () {
@@ -129,7 +124,8 @@ export default {
     MsgImg,
     MsgOnlyImg,
     BpMsg,
-    DsMsg
+    DsMsg,
+    BpWindow
   }
 }
 </script>
@@ -234,8 +230,6 @@ export default {
     margin-right: 0.15rem;
   }
 }
-.chat-submit-btn {
-}
 .footer-right {
   background-color: @bubleBg;
   position: relative;
@@ -277,27 +271,15 @@ export default {
     }
   }
 }
-#fixed_bp_modal {
-  position: fixed;
-  left: 0;
-  bottom: 0;
+#fixed-bgds-btns {
+  position: absolute;
+  bottom: 1.4rem;
   right: 0;
-  min-height: 300px;
-  max-height: 400px;
-  z-index: 1;
-  background-color: #fff;
+  img {
+    width: 1.34rem;
+  }
 }
-.slide-fade-enter-active {
-  transition: all .3s ease;
-}
-.slide-fade-leave-active {
-  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active for below version 2.1.8 */ {
-  transform: translateY(100%);
-  opacity: 0;
-}
+
 @media screen and (min-width: 414px) and (max-width: 414px) {
   .main-header .header-ball {
     right: 1px;
