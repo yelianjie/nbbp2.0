@@ -1,5 +1,5 @@
 <template>
-  <div class="container main fheight">
+  <div class="container main flex flex-v">
     <div class="main-header flex flex-align-center">
       <div class="flex main-header-left flex-align-center">
         <div class="main-header-avatar">
@@ -15,12 +15,12 @@
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
         <div class="boardcast-scroller flex-1">
           <div class="scroller-wrap">
-            我是2一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强
+            我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强
           </div>
         </div>
       </div>
     </div>
-    <div class="main-content">
+    <div class="flex-1 main-content">
       <template v-for="(v, i) in chatlist">
         <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 0"></msg>
         <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 1"></msg-img>
@@ -210,19 +210,9 @@ export default {
 .main-content {
   overflow-x: hidden;
   overflow-y: auto;
-  position: absolute;
-  bottom: 1rem;
-  left: 0;
-  top: 1rem;
-  right: 0;
   -webkit-overflow-scrolling: touch;
 }
 .footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
   padding: 0.15rem;
   border-top: 0.5px solid rgba(255, 255, 255, 0.4);
   .svg-icon {

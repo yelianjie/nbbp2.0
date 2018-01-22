@@ -27,11 +27,7 @@ body {
   font-size: 16px;
   line-height: 1.4;
 }
-body, html {
-  height: 100%;
-  overflow: hidden;
-}
-#app {
+body, html, #app {
   height: 100%;
 }
 .container {
