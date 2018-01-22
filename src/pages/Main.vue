@@ -15,7 +15,7 @@
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
         <div class="boardcast-scroller flex-1">
           <div class="scroller-wrap">
-            我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强
+            我是2一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强
           </div>
         </div>
       </div>

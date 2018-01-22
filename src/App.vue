@@ -27,8 +27,16 @@ body {
   font-size: 16px;
   line-height: 1.4;
 }
+body, html {
+  height: 100%;
+  overflow: hidden;
+}
+#app {
+  height: 100%;
+}
 .container {
   position: relative;
+  height: 100%;
 }
 .padding-bar {
   padding-bottom: 62px;
