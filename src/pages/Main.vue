@@ -1,5 +1,5 @@
 <template>
-  <div class="container main fheight flex flex-v">
+  <div class="container main fheight">
     <div class="main-header flex flex-align-center">
       <div class="flex main-header-left flex-align-center">
         <div class="main-header-avatar">
@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <div class="flex-1 main-content">
+    <div class="main-content">
       <template v-for="(v, i) in chatlist">
         <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 0"></msg>
         <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 1"></msg-img>
@@ -210,7 +210,11 @@ export default {
 .main-content {
   overflow-x: hidden;
   overflow-y: auto;
-  margin-bottom: 1rem;
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  top: 1rem;
+  right: 0;
   -webkit-overflow-scrolling: touch;
 }
 .footer {
