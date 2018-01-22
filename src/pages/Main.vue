@@ -1,5 +1,6 @@
 <template>
-  <div class="container main flex flex-v">
+  <div class="container">
+    <div class="main flex flex-v">
     <div class="main-header flex flex-align-center">
       <div class="flex main-header-left flex-align-center">
         <div class="main-header-avatar">
@@ -62,6 +63,7 @@
 
       </div>
     </transition>-->
+  </div>
   </div>
 </template>
 
@@ -134,10 +136,12 @@ export default {
 
 <style lang="less" scoped>
 @import '../styles/main.less';
-.main {
-  overflow: hidden;
-  background: @bgColor;
+.container {
   color: #fff;
+}
+.main {
+  height: 100%;
+  background: @bgColor;
 }
 .main-header {
   padding: 0.2rem 0;

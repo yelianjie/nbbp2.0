@@ -9,7 +9,7 @@
       <msg-user></msg-user>
       <div class="msg-item-middle bpmsg" v-bind:class="{'theme-propose': true}">
         <div class="flex">
-          <div class="msg-item-info flex flex-v flex-align-center">
+          <div class="msg-item-info flex flex-1 flex-v flex-align-center">
             <div class="msg-bp-title">求婚霸屏60秒</div>
             <div class="content">{{data.content}}</div>
           </div>
@@ -55,8 +55,8 @@ export default {
     height: 1.6rem;
     margin-left: @msgpadTop;
     img {
-      width: 20px;
-      height: 20px;
+      width: 1.6rem;
+      height: 1.6rem;
       display: block;
     }
   }
