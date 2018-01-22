@@ -210,9 +210,15 @@ export default {
 .main-content {
   overflow-x: hidden;
   overflow-y: auto;
+  margin-bottom: 1rem;
   -webkit-overflow-scrolling: touch;
 }
 .footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
   padding: 0.15rem;
   border-top: 0.5px solid rgba(255, 255, 255, 0.4);
   .svg-icon {

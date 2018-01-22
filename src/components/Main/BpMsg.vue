@@ -55,8 +55,8 @@ export default {
     height: 1.6rem;
     margin-left: @msgpadTop;
     img {
-      width: 1.6rem;
-      height: 1.6rem;
+      width: 68px;
+      height: 68px;
       display: block;
     }
   }
