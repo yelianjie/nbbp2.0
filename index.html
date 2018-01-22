@@ -23,7 +23,7 @@
             var style=document.createElement("style");
             style.id = 'control'
             style.setAttribute("type", "text/css");  
-            var cssString = '.min-h {min-height: '+ window.innerHeight +'px;} .fheight {height: '+ window.innerHeight +'px;}'
+            var cssString = 'body,html {height:100%;overflow: hidden;} .min-h {min-height: '+ window.innerHeight +'px;} .fheight {height: '+ window.innerHeight +'px;}'
             if(style.styleSheet){// IE  
               style.styleSheet.cssText = cssString;  
             } else {// w3c  
