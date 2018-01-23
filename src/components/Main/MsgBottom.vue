@@ -32,23 +32,28 @@
       </div>
       
     </template>
-    <x-dialog v-model="shareMaskVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
-      <p style="color:#fff;text-align:right;" @click="shareMaskVisible = false">
-        <span style="font-size:30px;">分享至朋友圈</span>
-      </p>
-    </x-dialog>
+    <div v-transfer-dom>
+      <x-dialog v-model="shareMaskVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
+        <p style="color:#fff;text-align:right;" @click="shareMaskVisible = false">
+          <span style="font-size:30px;">分享至朋友圈</span>
+        </p>
+      </x-dialog>
+    </div>
     <!--<button @click="likea">点赞</button>{{this.like}}-->
   </div>
 </template>
 
 <script>
-import { XDialog } from 'vux'
+import { TransferDomDirective as TransferDom, XDialog } from 'vux'
 export default {
   props: ['like', 'display'],
   data () {
     return {
       shareMaskVisible: false
     }
+  },
+  directives: {
+    TransferDom
   },
   components: {
     XDialog

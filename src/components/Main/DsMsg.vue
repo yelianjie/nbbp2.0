@@ -13,8 +13,8 @@
           <div class="ds-box-gift flex-align-center">
             <img src="../../assets/jj.jpg"/>
           </div>
-          <div class="ds-box-arrow flex flex-align-center flex-1">
-            <img />
+          <div class="ds-box-arrow flex flex-align-center flex-pack-center flex-1">
+            <svg-icon icon-class="arrow-ds"/>
           </div>
           <div class="ds-box-to flex flex-align-center">
             <img src="../../assets/logo.png"/>
@@ -74,6 +74,13 @@ export default {
     padding: 0.3rem;
     margin: @msgpadTop 0;
     background-color: @dsBg;
+  }
+  .ds-box-arrow {
+    .svg-icon {
+      width: 0.6rem;
+      height: 0.6rem;
+      display: block;
+    }
   }
   .ds-box-gift {
     img {

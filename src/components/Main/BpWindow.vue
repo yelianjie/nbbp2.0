@@ -13,7 +13,7 @@
           <div class="bp-time-container">
             <div class="bp-time-item selected" v-for="i in 8" :key="i">
               <div class="time">{{i * 10}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-              <div class="time-price">10</div>
+              <div class="time-price"><img src="../../assets/logo.png" class="coin"/>10</div>
             </div>
           </div>
           <div class="rpxline" style="margin-bottom: 0.2rem;"></div>
@@ -21,7 +21,7 @@
             <div class="bp-theme-item boderbox" v-for="i in 8" :key="i">
               <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
               <div class="theme-icon"><img src="../../assets/logo.png"></div>
-              <div class="theme-name">生日霸屏</div>
+              <div class="theme-name overflow">生日霸屏</div>
             </div>
           </div>
           <div class="bp-input-area flex">
@@ -76,7 +76,7 @@ export default {
   right: 0;
   min-height: 300px;
   z-index: 2;
-  border-radius: 10px 10px 0 0;
+  border-radius: 15px 15px 0 0;
   background: -webkit-radial-gradient(circle closest-corner, #621653, #170127);
   background: radial-gradient(circle closest-corner at 50% 30%, #621653, #170127);
 }
@@ -261,5 +261,10 @@ input[type="file"] {
   text-align: center;
   background-color: @mainColor;
   color: #fff;
+}
+.coin {
+  width: 0.16rem;
+  height: 0.16rem;
+  vertical-align: 0;
 }
 </style>

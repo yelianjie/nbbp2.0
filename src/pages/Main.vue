@@ -10,7 +10,6 @@
           <p class="nickname">鲜花</p>
           <span class="level level-1">V1</span>
         </div>
-        <div class="header-ball"></div>
       </div>
       <div class="flex flex-1 main-header-right flex-align-center">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
@@ -36,21 +35,22 @@
         <div class="footer-left flex">
           <div class="footer-icons flex">
             <span class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="home"/></span>
-            <span class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="img"/></span>
+            <span class="icon flex flex-align-center flex-pack-center" @click="textImgVisible = true"><svg-icon icon-class="img"/></span>
             <span class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="face"/></span>
           </div>
         </div>
-        <span class="buble-place left"></span>
         <div class="footer-right flex flex-1">
-          <div class="upload-img"></div>
-          <div class="chat-input flex-1">
+          <div class="upload-img flex flex-pack-center flex-align-center" v-show="textImgVisible">
+            <img src="../assets/logo.png"/>
+            <svg-icon icon-class="close-no-circle" @click.native="textImgVisible = false"/>
+          </div>
+          <div class="chat-input flex-1" :class="{'move': textImgVisible}">
             <input type="text" placeholder="说点什么吧！">
           </div>
           <div class="chat-submit-btn flex flex-align-center">
             <svg-icon icon-class="plane"/>
           </div>
         </div>
-        <span class="buble-place right"></span>
       </div>
     </div>
   </div>
@@ -60,10 +60,12 @@
   </div>
   <bp-window v-model="bpWindowVisible"></bp-window>
   <ds-window v-model="dsindowVisible"></ds-window>
+  
   </div>
 </template>
 
 <script>
+import { XDialog } from 'vux'
 import Msg from '../components/Main/Msg'
 import MsgImg from '../components/Main/MsgImg'
 import MsgOnlyImg from '../components/Main/Img'
@@ -101,7 +103,8 @@ export default {
         type: 0
       }],
       bpWindowVisible: false,
-      dsindowVisible: false
+      dsindowVisible: false,
+      textImgVisible: false
     }
   },
   mounted () {
@@ -130,7 +133,8 @@ export default {
     BpMsg,
     DsMsg,
     BpWindow,
-    DsWindow
+    DsWindow,
+    XDialog
   }
 }
 </script>
@@ -148,29 +152,11 @@ export default {
   padding: 0.2rem 0;
   .main-header-left {
     margin-left: 0.6rem;
-    width: 1.3rem;
+    width: 1.7rem;
     height: 0.8rem;
     background-color: @bubleBg;
+    border-radius: 0 50px 50px 0;
     position: relative;
-  }
-  .header-ball {
-    position: absolute;
-    width: 0.36rem;
-    height: 0.8rem;
-    right: 0;
-    top: 0;
-    transform: translate3d(100%, 0, 0);
-    background-color: transparent;
-    overflow: hidden;
-    &:after {
-      position: absolute;
-      width: 0.8rem;
-      height: 0.8rem;
-      .radius();
-      background-color: @bubleBg;
-      left: -0.44rem;
-      content: "";
-    }
   }
   .main-header-avatar {
     position: absolute;
@@ -190,9 +176,6 @@ export default {
       line-height: 1;
       margin-bottom: 4px;
     }
-  }
-  .main-header-right {
-    margin-left: 0.4rem;
   }
   .boardcast-icon {
     width: 0.32rem;
@@ -238,34 +221,38 @@ export default {
 .footer-right {
   background-color: @bubleBg;
   position: relative;
-}
-.buble-place {
-    width: 0.36rem;
-    height: 0.7rem;
-    background-color: transparent;
-    overflow: hidden;
-    display: block;
-    position: relative;
-    &:after {
-      position: absolute;
+  border-radius: 50px;
+  .upload-img {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    img {
+      .radius();
       width: 0.7rem;
       height: 0.7rem;
-      .radius();
-      background-color: @bubleBg;
-      content: "";
+      display: block;
     }
-    &.right:after {
-      transform: translateX(-50%);
+    .svg-icon {
+      width: 0.3rem;
+      height: 0.3rem;
+      box-sizing: content-box;
+      padding: 0.1rem 0.15rem;
     }
   }
+}
+
 .chat-input {
   margin-right: 10px;
+  &.move input {
+    padding: 0.2rem 0 0.2rem 1.4rem;
+  }
   input {
     background-color: transparent;
     width: 100%;
     border: 0;
     line-height: 0.3rem;
-    padding: 0.2rem 0 0.2rem 4px;
+    padding: 0.2rem 0 0.2rem 0.3rem;
+    transition: all .3s ease-out;
     color: #fff;
     &:focus {
       outline: none;
@@ -284,23 +271,11 @@ export default {
     width: 1.34rem;
   }
 }
-
-@media screen and (min-width: 414px) and (max-width: 414px) {
-  .main-header .header-ball {
-    right: 1px;
-  }
-  .footer-right .buble-place.left {
-  }
-  .footer-right .buble-place.right {
-  }
+.chat-submit-btn {
+  margin-right: 0.3rem;
 }
 
 @media screen and (min-width: 320px) and (max-width: 374px) {
-  .chat-input {
-    input {
-      padding: 0.2rem 0 0.15rem 4px;
-    }
-  }
   .nickname {
     font-size: 13px;
   }

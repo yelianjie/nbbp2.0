@@ -4,7 +4,7 @@
       <div class="mask-overlay" v-show="visible" @click="closeWindow"></div>
     </transition>
     <transition name="slide-fade">
-      <div class="window" id="bp-model" v-show="visible">
+      <div class="window" id="ds-model" v-show="visible">
         <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close"/></span>
         <div class="window-top">
           <p class="window-title">为&ensp;鲜花&ensp;送礼</p>
@@ -13,7 +13,7 @@
           <div class="ds-person-container">
             <swiper :options="swiperDsPersonOption">
               <swiper-slide v-for="(v, i) in 8" :key="i">
-                <div class="ds-person-item selected ds-item">
+                <div class="ds-person-item ds-item" :class="{'selected': dsToIndex == i}" @click="dsToIndex = i">
                   <div class="ds-person-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="person-avatar ds-img"><img src="../../assets/logo.png"></div>
                   <div class="person-name ds-text">Somer</div>
@@ -26,31 +26,23 @@
           <div class="ds-gift-container">
             <swiper :options="swiperDsGiftOption">
               <swiper-slide v-for="(v, i) in 8" :key="i">
-                <div class="ds-gift-item boderbox selected ds-item">
+                <div class="ds-gift-item boderbox ds-item" :class="{'selected': dsGiftIndex == i}" @click="dsGiftIndex = i">
                   <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="gift-icon ds-img"><img src="../../assets/logo.png"></div>
-                  <div class="gift-name ds-text">生日霸屏</div>
+                  <div class="gift-name ds-text overflow">兰博基尼</div>
+                  <div class="gift-price"><img src="../../assets/logo.png" class="coin"/>10</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
             </swiper>
           </div>
           <div class="bp-input-area flex">
-            <div class="bp-textarea flex-1">
-              <textarea class="bp-input boderbox" placeholder="请输入霸屏上墙语，30字以内"></textarea>
-            </div>
-            <div class="bp-upload">
-              <label class="upload-inner boderbox flex flex-v flex-align-center flex-pack-center" for="bp-upload-img">
-                <svg-icon icon-class="camera"/>
-                <p>添加照片</p>
-                <input type="file" id="bp-upload-img" name="bp-upload-img"/>
-              </label>
-            </div>
+            <input class="bp-input boderbox" placeholder="请输入送礼上墙语，15字以内" />
           </div>
         </div>
         <div class="window-bottom flex flex-align-center">
           <div class="account">总计：104</div>
-          <div class="repeat flex-1"><svg-icon icon-class="substract"/><span>连续霸屏</span><svg-icon icon-class="plus"/></div>
+          <div class="repeat flex-1"><svg-icon icon-class="substract"/><span>连续送礼</span><svg-icon icon-class="plus"/></div>
           <div class="submit"><button class="bp-button bp-submit">购买</button></div>
         </div>
       </div>
@@ -69,6 +61,8 @@ export default {
   },
   data () {
     return {
+      dsToIndex: -1,
+      dsGiftIndex: -1,
       swiperDsPersonOption: {
         slidesPerView: 4,
         freeMode: true,
@@ -111,19 +105,19 @@ export default {
     background: rgba(255, 255, 255, 0.8);
   }
   /deep/ .swiper-pagination-bullet-active {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.5);
   }
 }
 
 
-#bp-model {
+#ds-model {
   position: absolute;
   left: 0;
   bottom: 0;
   right: 0;
   min-height: 300px;
   z-index: 2;
-  border-radius: 10px 10px 0 0;
+  border-radius: 15px 15px 0 0;
   background: -webkit-radial-gradient(circle closest-corner, #621653, #170127);
   background: radial-gradient(circle closest-corner at 50% 30%, #621653, #170127);
 }
@@ -230,8 +224,7 @@ export default {
 }
 .bp-input {
   width: 100%;
-  height: 1.35rem;
-  resize: none;
+  height: 0.3rem;
   padding: 0.2rem;
   background-color: transparent;
   border: 1px solid @borderColor;
@@ -239,6 +232,7 @@ export default {
   border-radius: 6px;
   color: #fff;
   display: block;
+  box-sizing: content-box;
   &::-webkit-input-placeholder {
     color: rgba(255, 255, 255, 0.5);
     text-align: center;
@@ -277,5 +271,13 @@ input[type="file"] {
   text-align: center;
   background-color: @mainColor;
   color: #fff;
+}
+.coin {
+  width: 0.16rem;
+  height: 0.16rem;
+  vertical-align: 0;
+}
+.gift-price {
+  text-align: center;
 }
 </style>
