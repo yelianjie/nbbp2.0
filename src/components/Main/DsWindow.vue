@@ -96,6 +96,7 @@ export default {
 
 
 <style lang="less" scoped>
+@import '../../styles/window.less';
 @mainColor: #f31374;
 @borderColor: rgba(255, 255, 255, 0.5);
 /*vendor swiper*/
@@ -120,71 +121,7 @@ export default {
   background: -webkit-radial-gradient(circle closest-corner, #621653, #170127);
   background: radial-gradient(circle closest-corner at 50% 30%, #621653, #170127);
 }
-.fade-enter-active {
-  transition: all .3s ease;
-}
-.fade-leave-active {
-  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-.slide-fade-enter-active {
-  transition: all .3s ease;
-}
-.slide-fade-leave-active {
-  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.slide-fade-enter, .slide-fade-leave-to {
-  transform: translateY(100%);
-  opacity: 0;
-}
-.ds-person-container,
-.ds-gift-container {
-  font-size: 0;
-  .swiper-container {
-    padding: 10px 0 15px;
-  }
-}
-.close-icon {
-  position: absolute;
-  right: 0.2rem;
-  top: 0.2rem;
-  .svg-icon {
-    width: 0.4rem;
-    height: 0.4rem;
-  }
-}
-.selected-icon {
-    color: @mainColor;
-    position: absolute;
-    right: 0;
-    top: 0;
-    transform: translate3d(50%, -50%, 0);
-    display: none;
-    width: 0.3rem;
-    height: 0.3rem;
-    .svg-icon {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 0.3rem;
-      height: 0.3rem;
-      z-index: 2;
-      display: block;
-    }
-    &:after {
-      content: "";
-      position: absolute;
-      left: 15%;
-      top: 15%;
-      width: 70%;
-      height: 70%;
-      border-radius: 50%;
-      z-index: 1;
-      background-color: #fff;
-    }
-  }
+
 .ds-item {
   width: 1.5rem;
   margin-right: 0.23333rem;
@@ -255,26 +192,6 @@ export default {
     color: #fff;
     margin-top: 4px;
   }
-}
-input[type="file"] {
-  position: absolute;
-  width: 0;
-  height: 0;
-  left: 0;
-}
-.bp-submit {
-  width: 1.4rem;
-  height: 0.64rem;
-  padding: 0;
-  line-height: 0.64rem;
-  text-align: center;
-  background-color: @mainColor;
-  color: #fff;
-}
-.coin {
-  width: 0.16rem;
-  height: 0.16rem;
-  vertical-align: 0;
 }
 .gift-price {
   text-align: center;

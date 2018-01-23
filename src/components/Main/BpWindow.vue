@@ -29,11 +29,12 @@
               <textarea class="bp-input boderbox" placeholder="请输入霸屏上墙语，30字以内"></textarea>
             </div>
             <div class="bp-upload">
-              <label class="upload-inner boderbox flex flex-v flex-align-center flex-pack-center" for="bp-upload-img">
-                <svg-icon icon-class="camera"/>
-                <p>添加照片</p>
-                <input type="file" id="bp-upload-img" name="bp-upload-img"/>
-              </label>
+              <upload name="bp-upload-img" @onPreview="onPreview">
+                <label class="upload-inner boderbox flex flex-v flex-align-center flex-pack-center" for="bp-upload-img">
+                  <svg-icon icon-class="camera"/>
+                  <p>添加照片</p>      
+                </label>
+              </upload>
             </div>
           </div>
         </div>
@@ -48,6 +49,7 @@
 </template>
 
 <script>
+import Upload from '../Upload'
 export default {
   model: {
     prop: 'visible',
@@ -57,9 +59,13 @@ export default {
   methods: {
     closeWindow () {
       this.$emit('closeWindow', false)
+    },
+    onPreview (img) {
+      this.$emit('preview', img)
     }
   },
   components: {
+    Upload
   }
 
 }
@@ -67,6 +73,7 @@ export default {
 
 
 <style lang="less" scoped>
+@import '../../styles/window.less';
 @mainColor: #f31374;
 @borderColor: rgba(255, 255, 255, 0.5);
 #bp-model {
@@ -80,68 +87,7 @@ export default {
   background: -webkit-radial-gradient(circle closest-corner, #621653, #170127);
   background: radial-gradient(circle closest-corner at 50% 30%, #621653, #170127);
 }
-.fade-enter-active {
-  transition: all .3s ease;
-}
-.fade-leave-active {
-  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-.slide-fade-enter-active {
-  transition: all .3s ease;
-}
-.slide-fade-leave-active {
-  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.slide-fade-enter, .slide-fade-leave-to {
-  transform: translateY(100%);
-  opacity: 0;
-}
-.bp-time-container,
-.bp-theme-container {
-  font-size: 0;
-}
-.close-icon {
-  position: absolute;
-  right: 0.2rem;
-  top: 0.2rem;
-  .svg-icon {
-    width: 0.4rem;
-    height: 0.4rem;
-  }
-}
-.selected-icon {
-    color: @mainColor;
-    position: absolute;
-    right: 0;
-    top: 0;
-    transform: translate3d(50%, -50%, 0);
-    display: none;
-    width: 0.3rem;
-    height: 0.3rem;
-    .svg-icon {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 0.3rem;
-      height: 0.3rem;
-      z-index: 2;
-      display: block;
-    }
-    &:after {
-      content: "";
-      position: absolute;
-      left: 15%;
-      top: 15%;
-      width: 70%;
-      height: 70%;
-      border-radius: 50%;
-      z-index: 1;
-      background-color: #fff;
-    }
-  }
+
 .bp-time-item {
   display: inline-block;
   font-size: 13px;
@@ -247,24 +193,6 @@ export default {
     margin-top: 4px;
   }
 }
-input[type="file"] {
-  position: absolute;
-  width: 0;
-  height: 0;
-  left: 0;
-}
-.bp-submit {
-  width: 1.4rem;
-  height: 0.64rem;
-  padding: 0;
-  line-height: 0.64rem;
-  text-align: center;
-  background-color: @mainColor;
-  color: #fff;
-}
-.coin {
-  width: 0.16rem;
-  height: 0.16rem;
-  vertical-align: 0;
-}
+
+
 </style>

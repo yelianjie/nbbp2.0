@@ -37,7 +37,7 @@
     <div class="f-btn" @click="bpWindowVisible = true"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="dsindowVisible = true"><img src="../assets/ds-btn.png"/></div>
   </div>
-  <bp-window v-model="bpWindowVisible"></bp-window>
+  <bp-window v-model="bpWindowVisible" @preview="preview"></bp-window>
   <ds-window v-model="dsindowVisible"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
@@ -87,6 +87,7 @@
       <p style="color: #88878f;"><svg-icon icon-class="close" />当前剩余余额可用：<svg-icon icon-class="close" />45</p>
     </div>
   </bp-dialog>-->
+  <crop v-show="cropVisible" ref="crop"></crop>
   </div>
 </template>
 
@@ -102,6 +103,7 @@ import BpMsg from '../components/Main/BpMsg'
 import DsMsg from '../components/Main/DsMsg'
 import BpWindow from '../components/Main/BpWindow'
 import DsWindow from '../components/Main/DsWindow'
+import Crop from '../components/Crop'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   data () {
@@ -137,6 +139,7 @@ export default {
       userDialogVisible: false,
       shareMaskVisible: false,
       buyDialogVisible: false,
+      cropVisible: false,
       height: 0,
       noMore: false
     }
@@ -169,6 +172,18 @@ export default {
       setTimeout(() => {
         this.buyDialogVisible = false
       }, 3000)
+    },
+    preview (img) {
+      var _this = this
+      var src = this.$refs.crop.crop.filterImage(img, {width: img.width, height: img.height})// IOS中如果图片过大，将不能画在canvas中
+      this.$refs.crop.crop.init()
+      var realImg = new Image()
+      this.cropVisible = true
+      realImg.onload = function () {
+        _this.$refs.crop.updateImg(src)
+        _this.$refs.crop.crop.setSize(this.width, this.height)
+      }
+      realImg.src = src
     }
   },
   components: {
@@ -182,7 +197,8 @@ export default {
     BpWindow,
     DsWindow,
     XDialog,
-    InfiniteLoading
+    InfiniteLoading,
+    Crop
   }
 }
 </script>
@@ -191,9 +207,6 @@ export default {
 @import '../styles/main.less';
 .container {
   color: #fff;
-  /deep/ .weui-dialog__title {
-    color: #6c6a75;
-  }
 }
 .main {
   height: 100%;
