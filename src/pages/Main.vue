@@ -21,38 +21,17 @@
         </div>
       </div>
     </div>
-    <div class="flex-1 main-content">
+    <div class="flex-1 main-content" ref="scrollWrapper">
+      <infinite-loading @infinite="infiniteHandler" direction="top" :distance="0"></infinite-loading>
       <template v-for="(v, i) in chatlist">
-        <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 0"></msg>
-        <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 1"></msg-img>
-        <msg-only-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 2"></msg-only-img>
-        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 3"></bp-msg>
-        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 4"></ds-msg>
+        <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 0" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true"></msg>
+        <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 1" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true"></msg-img>
+        <msg-only-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 2" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true"></msg-only-img>
+        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 3" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true"></bp-msg>
+        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 4" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true"></ds-msg>
       </template>
     </div>
-    <div class="footer ">
-      <div class="flex">
-        <div class="footer-left flex">
-          <div class="footer-icons flex">
-            <span class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="home"/></span>
-            <span class="icon flex flex-align-center flex-pack-center" @click="textImgVisible = true"><svg-icon icon-class="img"/></span>
-            <span class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="face"/></span>
-          </div>
-        </div>
-        <div class="footer-right flex flex-1">
-          <div class="upload-img flex flex-pack-center flex-align-center" v-show="textImgVisible">
-            <img src="../assets/logo.png"/>
-            <svg-icon icon-class="close-no-circle" @click.native="textImgVisible = false"/>
-          </div>
-          <div class="chat-input flex-1" :class="{'move': textImgVisible}">
-            <input type="text" placeholder="说点什么吧！">
-          </div>
-          <div class="chat-submit-btn flex flex-align-center">
-            <svg-icon icon-class="plane"/>
-          </div>
-        </div>
-      </div>
-    </div>
+    <footer-main @onBuy="buyDialogVisible = true"></footer-main>
   </div>
   <div id="fixed-bgds-btns">
     <div class="f-btn" @click="bpWindowVisible = true"><img src="../assets/bp-btn.png"/></div>
@@ -60,12 +39,62 @@
   </div>
   <bp-window v-model="bpWindowVisible"></bp-window>
   <ds-window v-model="dsindowVisible"></ds-window>
-  
+  <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
+    <div class="user-box">
+      <div class="user-info flex flex-v flex-align-center">
+        <img src="../assets/logo.png" class="avatar"/>
+        <p class="uname">鲜花</p>
+        <div class="msg-item-top flex flex-align-center">
+          <span class="level level-1">V1</span>
+          <span class="sex sex-male"><svg-icon icon-class="male" /></span>
+          <span class="msg-name">游侠</span>
+        </div>
+        <p class="sign">签名：暂无签名</p>
+        <div class="user-dialog-bottom flex-1 flex" style="width:100%;">
+          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center">
+            <img src="../assets/gift-b-icon.png"/>
+            <span>为TA送礼</span>
+          </div>
+          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center">
+            <img src="../assets/ba-b-icon.png"/>
+            <span>为TA霸屏</span>
+          </div>
+          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center">
+            <img src="../assets/like-b-icon.png"/>
+            <span>为TA点赞</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div @click="userDialogVisible = false">
+      <svg-icon icon-class="close" className="close-u-dialog-btn"/>
+    </div>
+  </x-dialog>
+  <x-dialog v-model="shareMaskVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
+    <div class="fullscreen"  @click="shareMaskVisible = false">
+      <img src="../assets/share.png" style="max-width: 100%;float:right;width: 4.2rem;margin: 0.2rem 0.2rem 0 0;"/>
+    </div>
+  </x-dialog>
+  <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy">
+    <div class="">
+      <div class="" style="font-size: 20px;margin-bottom: 10px;">30<img src="../assets/small.png"/></div>
+      <p style="color: #88878f;"><svg-icon icon-class="close" />当前剩余余额可用：<svg-icon icon-class="close" />45</p>
+    </div>
+  </bp-dialog>
+  <!--<bp-dialog :bg-title="true" v-model="buyDialogVisible" @onConfirm="confirmBuy">
+    <div class="">
+      <div class="" style="font-size: 20px;margin-bottom: 10px;">30<img src="../assets/small.png"/></div>
+      <p style="color: #88878f;"><svg-icon icon-class="close" />当前剩余余额可用：<svg-icon icon-class="close" />45</p>
+    </div>
+  </bp-dialog>-->
   </div>
 </template>
 
 <script>
 import { XDialog } from 'vux'
+import BpDialog from '../components/bpDialog'
+import InfiniteLoading from 'vue-infinite-loading'
+import FooterMain from '../components/Main/Footer'
 import Msg from '../components/Main/Msg'
 import MsgImg from '../components/Main/MsgImg'
 import MsgOnlyImg from '../components/Main/Img'
@@ -77,7 +106,8 @@ import DsWindow from '../components/Main/DsWindow'
 export default {
   data () {
     return {
-      chatlist: [{
+      chatlist: [],
+      list: [{
         content: '重金霸屏，献给未来的你你你你你啊~',
         likes: 666,
         type: 3
@@ -104,29 +134,46 @@ export default {
       }],
       bpWindowVisible: false,
       dsindowVisible: false,
-      textImgVisible: false
+      userDialogVisible: false,
+      shareMaskVisible: false,
+      buyDialogVisible: false,
+      height: 0,
+      noMore: false
     }
   },
   mounted () {
   },
+  watch: {
+    height: function (newVal, oldVal) {
+      var diff = newVal - oldVal
+      this.$refs.scrollWrapper.scrollTop = diff
+    }
+  },
   methods: {
+    infiniteHandler ($state) {
+      setTimeout(() => {
+        const temp = []
+        for (var i = 0; i < 5; i++) {
+          var index = Math.floor(Math.random(0, 1) * this.list.length)
+          temp.push(this.list[index])
+        }
+        this.chatlist = temp.concat(this.chatlist)
+        this.height = this.$refs.scrollWrapper.scrollHeight
+        $state.loaded()
+      }, 1000)
+    },
     like (index) {
       this.chatlist[index].likes++
     },
-    openDialog () {
-      this.$bpDialog({
-        title: '提示啊',
-        content: '<b>我有没有加粗</b>',
-        stopAuto: false,
-        confirmCallback: () => {
-          setTimeout(() => {
-            this.$bpDialog.hide()
-          }, 3000)
-        }
-      })
+    confirmBuy () {
+      setTimeout(() => {
+        this.buyDialogVisible = false
+      }, 3000)
     }
   },
   components: {
+    FooterMain,
+    BpDialog,
     Msg,
     MsgImg,
     MsgOnlyImg,
@@ -134,7 +181,8 @@ export default {
     DsMsg,
     BpWindow,
     DsWindow,
-    XDialog
+    XDialog,
+    InfiniteLoading
   }
 }
 </script>
@@ -143,6 +191,9 @@ export default {
 @import '../styles/main.less';
 .container {
   color: #fff;
+  /deep/ .weui-dialog__title {
+    color: #6c6a75;
+  }
 }
 .main {
   height: 100%;
@@ -200,69 +251,7 @@ export default {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
-.footer {
-  padding: 0.15rem;
-  border-top: 0.5px solid rgba(255, 255, 255, 0.4);
-  .svg-icon {
-    width: 0.4rem;
-    height: 0.4rem;
-    display: block;
-  }
-}
-.footer-icons {
-  span {
-    width: 0.7rem;
-    height: 0.7rem;
-    background-color: @bubleBg;
-    border-radius: 50%;
-    margin-right: 0.15rem;
-  }
-}
-.footer-right {
-  background-color: @bubleBg;
-  position: relative;
-  border-radius: 50px;
-  .upload-img {
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50px;
-    img {
-      .radius();
-      width: 0.7rem;
-      height: 0.7rem;
-      display: block;
-    }
-    .svg-icon {
-      width: 0.3rem;
-      height: 0.3rem;
-      box-sizing: content-box;
-      padding: 0.1rem 0.15rem;
-    }
-  }
-}
 
-.chat-input {
-  margin-right: 10px;
-  &.move input {
-    padding: 0.2rem 0 0.2rem 1.4rem;
-  }
-  input {
-    background-color: transparent;
-    width: 100%;
-    border: 0;
-    line-height: 0.3rem;
-    padding: 0.2rem 0 0.2rem 0.3rem;
-    transition: all .3s ease-out;
-    color: #fff;
-    &:focus {
-      outline: none;
-    }
-    &::-webkit-input-placeholder {
-      color: rgba(255, 255, 255, 0.5);
-      font-size: @baseFontSize;
-    }
-  }
-}
 #fixed-bgds-btns {
   position: absolute;
   bottom: 1.4rem;
@@ -271,10 +260,56 @@ export default {
     width: 1.34rem;
   }
 }
-.chat-submit-btn {
-  margin-right: 0.3rem;
-}
 
+.user-info {
+  width: 5.4rem;
+  background: #fff url('../assets/card-bg.png') no-repeat top;
+  background-size: contain;
+  border-radius: 15px;
+  margin: 0 auto;
+  .avatar {
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 50%;
+    border: 0.1rem solid rgba(255, 255, 255, 0.2);
+    margin: 0.6rem 0 0.4rem;
+  }
+  .uname {
+    font-size: 18px;
+    color: #161a25;
+    margin-bottom: 0.2rem;
+  }
+  .msg-name {
+    color: #161a25;
+  }
+  .sign {
+    color: #88878f;
+    font-size: 14px;
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+  }
+}
+.user-dialog-bottom {
+  background-color: #d9dbea;
+  border-radius: 0 0 15px 15px;
+  padding: 0.25rem 0;
+  .u-d {
+    * {
+      display: block;
+    }
+    span {
+      font-size: 13px;
+      color: #6c6a75;
+      margin-top: 4px;
+    }
+  }
+}
+.close-u-dialog-btn.svg-icon {
+  width: 0.7rem;
+  height: 0.7rem;
+  padding: 0.5rem 0;
+  box-sizing: content-box;
+}
 @media screen and (min-width: 320px) and (max-width: 374px) {
   .nickname {
     font-size: 13px;

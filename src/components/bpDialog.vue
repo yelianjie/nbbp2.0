@@ -1,19 +1,22 @@
 <template>
   <div class="bp-dialog-wrap">
     <transition name="bp-mask">
-        <div class="bp-mask" style="display:none;"  v-show="visible"></div>
+        <div class="bp-mask" v-show="visible"></div>
     </transition>
     <transition name="bp-dialog">
-        <div class="bp-dialog" style="display: none;" v-show="visible">
-            <div class="bp-dialog__hd">
-            <strong class="bp-dialog__title">${opt.title}</strong>
+        <div class="bp-dialog" :style="{'background': bgTitle ? 'transparent' : '#fff'}" v-show="visible">
+            <div class="bp-dialog__hd" v-if="!bgTitle">
+              <strong class="bp-dialog__title">{{title}}</strong>
+            </div>
+            <div class="bp-dialog_bg" v-else>
+              <img :src="bgSrc"/>
             </div>
             <div class="bp-dialog__bd">
-            <p style="text-align: center;" v-html="content"></p>
+            <slot></slot>
             </div>
             <div class="bp-dialog__ft">
-            <a href="javascript:;" class="bp-dialog__btn bp-dialog__btn_default" @click.prevent="cancle">${opt.cancelText}</a>
-            <a href="javascript:;" class="bp-dialog__btn bp-dialog__btn_primary" @click.prevent="confirm">${opt.confirmText}</a>
+            <a href="javascript:;" class="bp-dialog__btn bp-dialog__btn_default" @click.prevent="cancle">{{cancelText}}</a>
+            <a href="javascript:;" class="bp-dialog__btn bp-dialog__btn_primary" @click.prevent="confirm">{{confirmText}}</a>
             </div>
         </div>
     </transition>
@@ -22,9 +25,52 @@
 
 <script>
 export default {
-  props: ['visible']
+  model: {
+    prop: 'visible',
+    event: 'closeDialog'
+  },
+  props: {
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    cancelText: {
+      type: String,
+      default: '取消'
+    },
+    confirmText: {
+      type: String,
+      default: '确定'
+    },
+    bgTitle: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+    }
+  },
+  mounted () {
+
+  },
+  computed: {
+  },
+  methods: {
+    cancle () {
+      this.$emit('closeDialog', false)
+    },
+    confirm () {
+      this.$emit('onConfirm')
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
+@import '../styles/bpDialog.less';
 </style>

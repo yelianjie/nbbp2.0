@@ -1,0 +1,112 @@
+<template>
+  <div class="footer">
+    <div class="flex">
+      <div class="footer-left flex">
+        <div class="footer-icons flex">
+          <span class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="home"/></span>
+          <span class="icon flex flex-align-center flex-pack-center" @click="textImgVisible = true"><svg-icon icon-class="img"/></span>
+          <span class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="face"/></span>
+        </div>
+      </div>
+      <div class="footer-right flex flex-1">
+        <div class="upload-img flex flex-pack-center flex-align-center" v-show="textImgVisible">
+          <img src="../../assets/logo.png"/>
+          <svg-icon icon-class="close-no-circle" @click.native="textImgVisible = false"/>
+        </div>
+        <div class="chat-input flex-1" :class="{'move': textImgVisible}">
+          <input type="text" placeholder="说点什么吧！">
+        </div>
+        <div class="chat-submit-btn flex flex-align-center" @click="buy">
+          <svg-icon icon-class="plane"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      textImgVisible: false
+    }
+  },
+  methods: {
+    buy () {
+      this.$emit('onBuy')
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+@import '../../styles/main.less';
+.footer {
+  padding: 0.15rem;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.4);
+  .svg-icon {
+    width: 0.4rem;
+    height: 0.4rem;
+    display: block;
+  }
+}
+.footer-icons {
+  span {
+    width: 0.7rem;
+    height: 0.7rem;
+    background-color: @bubleBg;
+    border-radius: 50%;
+    margin-right: 0.15rem;
+  }
+}
+.footer-right {
+  background-color: @bubleBg;
+  position: relative;
+  border-radius: 50px;
+  .upload-img {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    img {
+      .radius();
+      width: 0.7rem;
+      height: 0.7rem;
+      display: block;
+    }
+    .svg-icon {
+      width: 0.3rem;
+      height: 0.3rem;
+      box-sizing: content-box;
+      padding: 0.1rem 0.15rem;
+    }
+  }
+}
+
+.chat-input {
+  margin-right: 10px;
+  &.move input {
+    padding: 0.2rem 0 0.2rem 1.4rem;
+  }
+  input {
+    background-color: transparent;
+    width: 100%;
+    border: 0;
+    line-height: 0.3rem;
+    padding: 0.2rem 0 0.2rem 0.3rem;
+    transition: all .3s ease-out;
+    color: #fff;
+    &:focus {
+      outline: none;
+    }
+    &::-webkit-input-placeholder {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: @baseFontSize;
+    }
+  }
+}
+
+.chat-submit-btn {
+  margin-right: 0.3rem;
+}
+</style>
+

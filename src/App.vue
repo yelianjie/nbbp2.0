@@ -13,7 +13,6 @@ export default {
 <style lang="less">
 @import '~vux/src/styles/reset.less';
 @import './styles/global.less';
-@import './styles/bpDialog.less';
 
 .noscroll,
 .noscroll body {

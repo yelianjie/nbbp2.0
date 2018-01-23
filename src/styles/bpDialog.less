@@ -1,11 +1,13 @@
+@lineColor: #c1c1cb;
+@confirmColor: #f21575;
 .setTopLine() {
   position: absolute;
   left: 0;
   top: 0;
   right: 0;
   height: 1px;
-  border-top: 1px solid #D5D5D6;
-  color: #D5D5D6;
+  border-top: 1px solid @lineColor;
+  color: @lineColor;
   -webkit-transform-origin: 0 0;
   transform-origin: 0 0;
   -webkit-transform: scaleY(0.5);
@@ -14,11 +16,11 @@
 .setLeftLine() {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 20%;
   width: 1px;
-  bottom: 0;
-  border-left: 1px solid #D5D5D6;
-  color: #D5D5D6;
+  bottom: 20%;
+  border-left: 1px solid @lineColor;
+  color: @lineColor;
   -webkit-transform-origin: 0 0;
   transform-origin: 0 0;
   -webkit-transform: scaleX(0.5);
@@ -46,47 +48,56 @@
     position: fixed;
     z-index: 5000;
     width: 80%;
-    max-width: 300px;
+    width: 5.36rem;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color :#fff;
     text-align: center;
-    border-radius: 3px;
+    border-radius: 15px;
     overflow: hidden;
 }
 .bp-dialog__hd {
-    padding: 1.3em 1.6em .5em;
+    padding: 20px;
     &.with-no-content {
       padding: 1.7em 1.6em;
+    }
+}
+.bp-dialog_bg {
+    img {
+      width: 100%;
     }
 }
 .bp-dialog__title {
     font-weight: 400;
     font-size: 18px;
+    color: #161a25;
 }
 .bp-dialog__bd {
-    padding: 0 1.6em .8em;
+    padding: 0.35rem 1.6em;
     min-height: 40px;
     font-size: 15px;
     line-height: 1.3;
     word-wrap: break-word;
     word-break: break-all;
-    color: #999;
+    color: #161a25;
+    position: relative;
+    background-color: #fff;
     &:first-child{
         padding:2.7em 20px 1.7em;
         color:#353535;
     }
-}
-.bp-dialog__ft {
-    position: relative;
-    line-height: 48px;
-    font-size: 18px;
-    display: flex;
     &:after {
         content: " ";
         .setTopLine();
     }
+}
+.bp-dialog__ft {
+    position: relative;
+    line-height: 0.96rem;
+    font-size: 18px;
+    display: flex;
+    background-color: #fff;
 }
 .bp-dialog__btn {
     display: block;
@@ -111,10 +122,10 @@
     }
 }
 .bp-dialog__btn_default {
-    color: #353535;
+    color: #6c6a75;
 }
 .bp-dialog__btn_primary {
-    color: #FF9900;
+    color: @confirmColor;
 }
 @media screen and (min-width: 1024px) {
     .bp-dialog {

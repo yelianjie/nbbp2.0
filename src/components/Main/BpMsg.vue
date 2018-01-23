@@ -1,9 +1,7 @@
 <template>
   <div class="msg-item flex">
     <div class="msg-item-left">
-      <div class="msg-item-user-avatar">
-        <img src="../../assets/logo.png"/>
-      </div>
+      <user-avatar @onAvatar="avatar"></user-avatar>
     </div>
     <div class="msg-item-right flex-1">
       <msg-user></msg-user>
@@ -16,7 +14,7 @@
           <div class="img"><img src="../../assets/jj.jpg"/></div>
         </div>
         <div class="msg-item-bottom">
-          <msg-bottom :like="data.likes" @onLike="like" :display="1"></msg-bottom>
+          <msg-bottom :like="data.likes" @onLike="like" @onShare="share" :display="1"></msg-bottom>
         </div>
       </div>
       
@@ -27,15 +25,23 @@
 <script>
 import MsgBottom from './MsgBottom'
 import MsgUser from './MsgUser'
+import UserAvatar from './UserAvatar'
 export default {
   props: ['data', 'index'],
   components: {
     MsgBottom,
-    MsgUser
+    MsgUser,
+    UserAvatar
   },
   methods: {
     like () {
       this.$emit('onLike', this.index)
+    },
+    avatar () {
+      this.$emit('onAvatar', this.index)
+    },
+    share () {
+      this.$emit('onShare')
     }
   }
 }
@@ -47,9 +53,6 @@ export default {
 .msg-item-middle.bpmsg {
   min-width: @minMsgWidth;
   max-width: @maxMsgWidth;
-  & > .flex {
-    margin-bottom: @msgpadTop;
-  }
   .img {
     width: 1.6rem;
     height: 1.6rem;

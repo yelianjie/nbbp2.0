@@ -67,8 +67,7 @@ export default {
         slidesPerView: 4,
         freeMode: true,
         pagination: {
-          el: '.swiper-pagination',
-          dynamicBullets: true
+          el: '.swiper-pagination'
         }
       },
       swiperDsGiftOption: {
