@@ -7,22 +7,33 @@
       <div class="window" id="bp-model" v-show="visible">
         <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close"/></span>
         <div class="window-top">
-          <p class="window-title">为&ensp;鲜花&ensp;霸屏</p>
+          <p class="window-title">为&ensp;鲜花&ensp;送礼</p>
         </div>
         <div class="window-middle">
-          <div class="bp-time-container">
-            <div class="bp-time-item selected" v-for="i in 8" :key="i">
-              <div class="time">{{i * 10}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-              <div class="time-price">10</div>
-            </div>
+          <div class="ds-person-container">
+            <swiper :options="swiperDsPersonOption">
+              <swiper-slide v-for="(v, i) in 8" :key="i">
+                <div class="ds-person-item selected ds-item">
+                  <div class="ds-person-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+                  <div class="person-avatar ds-img"><img src="../../assets/logo.png"></div>
+                  <div class="person-name ds-text">Somer</div>
+                </div>
+              </swiper-slide>
+              <div class="swiper-pagination" slot="pagination"></div>
+            </swiper>
           </div>
           <div class="rpxline" style="margin-bottom: 0.2rem;"></div>
-          <div class="bp-theme-container">
-            <div class="bp-theme-item boderbox" v-for="i in 8" :key="i">
-              <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-              <div class="theme-icon"><img src="../../assets/logo.png"></div>
-              <div class="theme-name">生日霸屏</div>
-            </div>
+          <div class="ds-gift-container">
+            <swiper :options="swiperDsGiftOption">
+              <swiper-slide v-for="(v, i) in 8" :key="i">
+                <div class="ds-gift-item boderbox selected ds-item">
+                  <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+                  <div class="gift-icon ds-img"><img src="../../assets/logo.png"></div>
+                  <div class="gift-name ds-text">生日霸屏</div>
+                </div>
+              </swiper-slide>
+              <div class="swiper-pagination" slot="pagination"></div>
+            </swiper>
           </div>
           <div class="bp-input-area flex">
             <div class="bp-textarea flex-1">
@@ -48,10 +59,33 @@
 </template>
 
 <script>
+import 'swiper/dist/css/swiper.css'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
+
 export default {
   model: {
     prop: 'visible',
     event: 'closeWindow'
+  },
+  data () {
+    return {
+      swiperDsPersonOption: {
+        slidesPerView: 4,
+        freeMode: true,
+        pagination: {
+          el: '.swiper-pagination',
+          dynamicBullets: true
+        }
+      },
+      swiperDsGiftOption: {
+        slidesPerColumn: 2,
+        slidesPerView: 4,
+        freeMode: true,
+        pagination: {
+          el: '.swiper-pagination'
+        }
+      }
+    }
   },
   props: ['visible'],
   methods: {
@@ -60,6 +94,8 @@ export default {
     }
   },
   components: {
+    swiper,
+    swiperSlide
   }
 
 }
@@ -69,6 +105,17 @@ export default {
 <style lang="less" scoped>
 @mainColor: #f31374;
 @borderColor: rgba(255, 255, 255, 0.5);
+/*vendor swiper*/
+.window /deep/ {
+  /deep/ .swiper-pagination-bullet {
+    background: rgba(255, 255, 255, 0.8);
+  }
+  /deep/ .swiper-pagination-bullet-active {
+    background: #fff;
+  }
+}
+
+
 #bp-model {
   position: absolute;
   left: 0;
@@ -99,9 +146,12 @@ export default {
   transform: translateY(100%);
   opacity: 0;
 }
-.bp-time-container,
-.bp-theme-container {
+.ds-person-container,
+.ds-gift-container {
   font-size: 0;
+  .swiper-container {
+    padding: 10px 0 15px;
+  }
 }
 .close-icon {
   position: absolute;
@@ -142,59 +192,25 @@ export default {
       background-color: #fff;
     }
   }
-.bp-time-item {
-  display: inline-block;
-  font-size: 13px;
-  width: 1.15rem;
-  margin-right: 0.7rem;
-  margin-bottom: 0.4rem;
-  &:nth-child(4n+4) {
-    margin-right: 0;
-  }
-  .time {
-    height: 0.5rem;
-    line-height: 0.5rem;
-    text-align: center;
-    border: 1px solid @borderColor;
-    border-radius: 3px;
-    position: relative;
-  }
-  &.selected {
-    .time {
-      border: 1px solid @mainColor;
-    }
-    .selected-icon {
-      display: block;
-    }
-  }
-  .time-price {
-    vertical-align: middle;
-    text-align: center;
-    font-size: 12px;
-  }
-}
-.bp-theme-item {
+.ds-item {
   width: 1.5rem;
   margin-right: 0.23333rem;
   display: inline-block;
   font-size: 12px;
   margin-bottom: 0.2rem;
   position: relative;
-  &:nth-child(4n+4) {
-    margin-right: 0;
-  }
-  .theme-icon {
+  .ds-img {
     img {
       width: 0.92rem;
       display: block;
       margin: 0.15rem auto;
     }
   }
-  .theme-name {
+  .ds-text {
     text-align: center;
     margin-bottom: 0.15rem;
   }
-  .bp-theme-selected {
+  .ds-selected {
     position: absolute;
     left: 0;
     bottom: 0;
@@ -205,7 +221,7 @@ export default {
     z-index: 1;
     display: none;
   }
-  &.selected .bp-theme-selected {
+  &.selected .ds-selected {
     display: block;
     .selected-icon {
       display: block;

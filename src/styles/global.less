@@ -1,6 +1,29 @@
+@mainColor: #f31374;
 .line-gradient(@direction, @start, @end) {
   background: -webkit-linear-gradient(@direction, @start,  @end 70%, @end);
 }
+.boderbox {
+  box-sizing: border-box;
+}
+.flex {
+  display: flex;
+}
+.flex-v {
+  flex-direction: column;
+}
+.flex-h {
+  flex-direction: row;
+}
+.flex-1 {
+  flex: 1;
+}
+.flex-align-center {
+  align-items: center;
+}
+.flex-pack-center {
+  justify-content: center;
+}
+
 
 .theme-ask {
   .line-gradient(top, #e43cd0, #8a0ee2);
@@ -47,4 +70,54 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 1;
+}
+
+.clearfix:after{
+  content:".";
+  display:block;
+  height:0;
+  clear:both;
+  visibility:hidden;
+}
+.bp-button {
+  width: auto;
+  border-width: 0;
+  outline: 0;
+  -webkit-appearance: none;
+  font-size: 13px;
+  border-radius: 5px;
+}
+/*global style*/
+.window {
+  padding: 0.2rem 0.4rem;
+}
+.window-title {
+  text-align: center;
+  margin-bottom: 0.4rem;
+}
+.rpxline {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: scaleY(0.5);
+}
+.window-bottom {
+  margin-top: 0.2rem;
+  font-size: 13px;
+  .account {
+    width: 1.6rem;
+    margin-right: 0.6rem;
+  }
+  .repeat {
+    color: @mainColor;
+    .svg-icon {
+      width: 0.4rem;
+      height: 0.4rem;
+      vertical-align: middle;
+    }
+    span {
+      margin: 0 8px;
+      vertical-align: middle;
+    }
+  }
 }

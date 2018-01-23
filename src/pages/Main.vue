@@ -16,7 +16,8 @@
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
         <div class="boardcast-scroller flex-1">
           <div class="scroller-wrap">
-            我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强
+            <marquee direction="left" befavior="scroll" scrollamount="0">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>
+            
           </div>
         </div>
       </div>
@@ -55,9 +56,10 @@
   </div>
   <div id="fixed-bgds-btns">
     <div class="f-btn" @click="bpWindowVisible = true"><img src="../assets/bp-btn.png"/></div>
-    <div class="f-btn"><img src="../assets/ds-btn.png"/></div>
+    <div class="f-btn" @click="dsindowVisible = true"><img src="../assets/ds-btn.png"/></div>
   </div>
   <bp-window v-model="bpWindowVisible"></bp-window>
+  <ds-window v-model="dsindowVisible"></ds-window>
   </div>
 </template>
 
@@ -68,6 +70,7 @@ import MsgOnlyImg from '../components/Main/Img'
 import BpMsg from '../components/Main/BpMsg'
 import DsMsg from '../components/Main/DsMsg'
 import BpWindow from '../components/Main/BpWindow'
+import DsWindow from '../components/Main/DsWindow'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   data () {
@@ -97,7 +100,8 @@ export default {
         likes: 666,
         type: 0
       }],
-      bpWindowVisible: false
+      bpWindowVisible: false,
+      dsindowVisible: false
     }
   },
   mounted () {
@@ -125,7 +129,8 @@ export default {
     MsgOnlyImg,
     BpMsg,
     DsMsg,
-    BpWindow
+    BpWindow,
+    DsWindow
   }
 }
 </script>

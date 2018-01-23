@@ -43,31 +43,7 @@ body, html, #app {
 .weui-toast.vux-toast-bottom {
   bottom: 54px;
 }
-.clearfix:after{
-  content:".";
-  display:block;
-  height:0;
-  clear:both;
-  visibility:hidden;
-}
-.flex {
-  display: flex;
-}
-.flex-v {
-  flex-direction: column;
-}
-.flex-h {
-  flex-direction: row;
-}
-.flex-1 {
-  flex: 1;
-}
-.flex-align-center {
-  align-items: center;
-}
-.flex-pack-center {
-  justify-content: center;
-}
+
 .inner {
   background-color: #fff;
 }
