@@ -16,7 +16,7 @@
                 <div class="ds-person-item ds-item" :class="{'selected': dsToIndex == i}" @click="dsToIndex = i">
                   <div class="ds-person-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="person-avatar ds-img"><img src="../../assets/logo.png"></div>
-                  <div class="person-name ds-text">Somer</div>
+                  <div class="person-name ds-text overflow flex"><span class="sex sex-male"><svg-icon icon-class="male" /></span>Somer</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -30,7 +30,7 @@
                   <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="gift-icon ds-img"><img src="../../assets/logo.png"></div>
                   <div class="gift-name ds-text overflow">兰博基尼</div>
-                  <div class="gift-price"><img src="../../assets/logo.png" class="coin"/>10</div>
+                  <div class="gift-price"><svg-icon icon-class="coin" className="coin" />10</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -41,8 +41,8 @@
           </div>
         </div>
         <div class="window-bottom flex flex-align-center">
-          <div class="account">总计：104</div>
-          <div class="repeat flex-1"><svg-icon icon-class="substract"/><span>连续送礼</span><svg-icon icon-class="plus"/></div>
+          <div class="account  flex-1">总计：<svg-icon icon-class="coin" className="coin" />104</div>
+          <div class="repeat"><svg-icon icon-class="substract"/><span>连续送礼</span><svg-icon icon-class="plus"/></div>
           <div class="submit"><button class="bp-button bp-submit">购买</button></div>
         </div>
       </div>
@@ -98,7 +98,7 @@ export default {
 <style lang="less" scoped>
 @import '../../styles/window.less';
 @mainColor: #f31374;
-@borderColor: rgba(255, 255, 255, 0.5);
+@borderColor: rgba(255, 255, 255, 0.3);
 /*vendor swiper*/
 .window /deep/ {
   /deep/ .swiper-pagination-bullet {
@@ -195,5 +195,7 @@ export default {
 }
 .gift-price {
   text-align: center;
+  line-height: 0.24rem;
+  margin-bottom: 0.15rem;
 }
 </style>

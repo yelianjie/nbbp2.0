@@ -11,7 +11,7 @@
             <div class="bp-dialog_bg" v-else>
               <img :src="bgSrc"/>
             </div>
-            <div class="bp-dialog__bd">
+            <div class="bp-dialog__bd" :class="{'line': !bgTitle}">
             <slot></slot>
             </div>
             <div class="bp-dialog__ft">
@@ -49,6 +49,9 @@ export default {
     bgTitle: {
       type: Boolean,
       default: false
+    },
+    bgSrc: {
+      default: ''
     }
   },
   data () {

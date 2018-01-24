@@ -14,7 +14,7 @@
           <div class="img"><img src="../../assets/jj.jpg"/></div>
         </div>
         <div class="msg-item-bottom">
-          <msg-bottom :like="data.likes" @onLike="like" @onShare="share" :display="1"></msg-bottom>
+          <msg-bottom :like="data.likes" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds" :display="1"></msg-bottom>
         </div>
       </div>
       
@@ -42,6 +42,12 @@ export default {
     },
     share () {
       this.$emit('onShare')
+    },
+    bp () {
+      this.$emit('onBp')
+    },
+    ds () {
+      this.$emit('onDs')
     }
   }
 }

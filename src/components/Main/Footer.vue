@@ -3,15 +3,20 @@
     <div class="flex">
       <div class="footer-left flex">
         <div class="footer-icons flex">
-          <span class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="home"/></span>
-          <span class="icon flex flex-align-center flex-pack-center" @click="textImgVisible = true"><svg-icon icon-class="img"/></span>
-          <span class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="face"/></span>
+          <div class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="home"/></div>
+          <div class="icon flex flex-align-center flex-pack-center">
+            <upload name="msg-upload-img" @on-preview="msgImgUploadPreview">
+              <svg-icon icon-class="img"/>
+            </upload>
+            <label for="msg-upload-img" class="n-label"></label>
+          </div>
+          <div class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="face"/></div>
         </div>
       </div>
       <div class="footer-right flex flex-1">
         <div class="upload-img flex flex-pack-center flex-align-center" v-show="textImgVisible">
-          <img src="../../assets/logo.png"/>
-          <svg-icon icon-class="close-no-circle" @click.native="textImgVisible = false"/>
+          <img :src="base64"/>
+          <svg-icon icon-class="close-no-circle" @click.native="deleteMsgImg"/>
         </div>
         <div class="chat-input flex-1" :class="{'move': textImgVisible}">
           <input type="text" placeholder="说点什么吧！">
@@ -25,16 +30,30 @@
 </template>
 
 <script>
+import Upload from '../Upload'
 export default {
   data () {
     return {
-      textImgVisible: false
+      textImgVisible: false,
+      base64: ''
     }
   },
   methods: {
     buy () {
       this.$emit('onBuy')
+    },
+    msgImgUploadPreview (base64) {
+      console.log('111')
+      this.textImgVisible = true
+      this.base64 = base64
+    },
+    deleteMsgImg () {
+      this.textImgVisible = false
+      this.base64 = ''
     }
+  },
+  components: {
+    Upload
   }
 }
 </script>
@@ -51,12 +70,13 @@ export default {
   }
 }
 .footer-icons {
-  span {
+  .icon {
     width: 0.7rem;
     height: 0.7rem;
     background-color: @bubleBg;
     border-radius: 50%;
     margin-right: 0.15rem;
+    position: relative;
   }
 }
 .footer-right {

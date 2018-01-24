@@ -67,7 +67,7 @@ body, html, #app {
   font-size: 12px;
   color: #fff;
   text-align: center;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 .level-1 {
    background-color: red;

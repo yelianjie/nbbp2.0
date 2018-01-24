@@ -1,15 +1,15 @@
 <template>
   <div class="msg-bottom-btns flex">
     <template v-if="display == 1">
-      <div class="msg-btn msg-btn-big flex flex-align-center">
+      <div class="msg-btn msg-btn-big flex flex-align-center" @click="ds">
         <span class="icon-wrap"><img src="../../assets/gift-b-icon.png"/></span>
         <span class="num">1</span>
       </div>
-      <div class="msg-btn msg-btn-big flex flex-align-center">
+      <div class="msg-btn msg-btn-big flex flex-align-center" @click="liked">
         <span class="icon-wrap"><img src="../../assets/like-b-icon.png"/></span>
         <span class="num">2</span>
       </div>
-      <div class="msg-btn msg-btn-big flex flex-align-center">
+      <div class="msg-btn msg-btn-big flex flex-align-center" @click="bp">
         <span class="icon-wrap"><img src="../../assets/ba-b-icon.png"/></span>
         <span class="num">3</span>
       </div>
@@ -18,16 +18,16 @@
       </div>
     </template>
     <template v-else>
-      <div class="msg-btn flex flex-align-center">
-        <svg-icon icon-class="gift" />
+      <div class="msg-btn flex flex-align-center" @click="ds">
+        <svg-icon icon-class="gift" @click.native="ds"/>
         <span class="num">1</span>
       </div>
-      <div class="msg-btn flex flex-align-center">
+      <div class="msg-btn flex flex-align-center" @click="bp">
         <img src="../../assets/ba-icon.png"/>
         <span class="num">3</span>
       </div>
-      <div class="msg-btn flex flex-align-center">
-        <svg-icon icon-class="like" />
+      <div class="msg-btn flex flex-align-center" @click="liked">
+        <svg-icon icon-class="like" @click.native="like"/>
         <span class="num">2</span>
       </div>
       
@@ -46,11 +46,17 @@ export default {
     }
   },
   methods: {
-    likea () {
+    liked () {
       this.$emit('onLike')
     },
     share () {
       this.$emit('onShare')
+    },
+    ds () {
+      this.$emit('onDs')
+    },
+    bp () {
+      this.$emit('onBp')
     }
   }
 }

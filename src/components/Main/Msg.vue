@@ -9,7 +9,7 @@
         {{data.content}}
       </div>
       <div class="msg-item-bottom">
-        <msg-bottom :like="data.likes" @onLike="like" @onShare="share"></msg-bottom>
+        <msg-bottom :like="data.likes" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds"></msg-bottom>
       </div>
     </div>
     
@@ -36,6 +36,12 @@ export default {
     },
     share () {
       this.$emit('onShare')
+    },
+    bp () {
+      this.$emit('onBp')
+    },
+    ds () {
+      this.$emit('onDs')
     }
   }
 }

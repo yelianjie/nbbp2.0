@@ -13,34 +13,41 @@
           <div class="bp-time-container">
             <div class="bp-time-item selected" v-for="i in 8" :key="i">
               <div class="time">{{i * 10}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-              <div class="time-price"><img src="../../assets/logo.png" class="coin"/>10</div>
+              <div class="time-price"><svg-icon icon-class="coin" className="coin" />10</div>
             </div>
           </div>
           <div class="rpxline" style="margin-bottom: 0.2rem;"></div>
           <div class="bp-theme-container">
-            <div class="bp-theme-item boderbox" v-for="i in 8" :key="i">
-              <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-              <div class="theme-icon"><img src="../../assets/logo.png"></div>
-              <div class="theme-name overflow">生日霸屏</div>
-            </div>
+            <swiper :options="swiperThemeOption">
+              <swiper-slide v-for="(v, i) in 8" :key="i">
+                <div class="bp-theme-item boderbox">
+                  <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+                  <div class="theme-icon"><img src="../../assets/logo.png"></div>
+                  <div class="theme-name overflow">生日霸屏</div>
+                </div>
+              </swiper-slide>
+              <div class="swiper-pagination" slot="pagination"></div>
+            </swiper>
           </div>
           <div class="bp-input-area flex">
             <div class="bp-textarea flex-1">
               <textarea class="bp-input boderbox" placeholder="请输入霸屏上墙语，30字以内"></textarea>
             </div>
             <div class="bp-upload">
-              <upload name="bp-upload-img" @onPreview="onPreview">
-                <label class="upload-inner boderbox flex flex-v flex-align-center flex-pack-center" for="bp-upload-img">
+              <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip">
+                <div class="upload-inner boderbox flex flex-v flex-align-center flex-pack-center">
                   <svg-icon icon-class="camera"/>
-                  <p>添加照片</p>      
-                </label>
+                  <p>添加照片</p>
+                  <label for="bp-upload-img" class="n-label" id="base64Img" :style="{'background-image':'url('+base64Img+')'}"></label>
+                  <!--<div class="n-label base64-img" v-show="base64Img" :style="{'background-image':'url('+base64Img+')'}"></div>-->
+                </div>
               </upload>
             </div>
           </div>
         </div>
         <div class="window-bottom flex flex-align-center">
-          <div class="account">总计：104</div>
-          <div class="repeat flex-1"><svg-icon icon-class="substract"/><span>连续霸屏</span><svg-icon icon-class="plus"/></div>
+          <div class="account flex-1">总计：<svg-icon icon-class="coin" className="coin" />104</div>
+          <div class="repeat"><svg-icon icon-class="substract"/><span>连续霸屏</span><svg-icon icon-class="plus"/></div>
           <div class="submit"><button class="bp-button bp-submit">购买</button></div>
         </div>
       </div>
@@ -49,6 +56,8 @@
 </template>
 
 <script>
+import 'swiper/dist/css/swiper.css'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import Upload from '../Upload'
 export default {
   model: {
@@ -56,16 +65,31 @@ export default {
     event: 'closeWindow'
   },
   props: ['visible'],
+  data () {
+    return {
+      swiperThemeOption: {
+        slidesPerColumn: 2,
+        slidesPerView: 4,
+        freeMode: true,
+        pagination: {
+          el: '.swiper-pagination'
+        }
+      },
+      base64Img: ''
+    }
+  },
   methods: {
     closeWindow () {
       this.$emit('closeWindow', false)
     },
-    onPreview (img) {
-      this.$emit('preview', img)
+    afterClip (base64) {
+      this.base64Img = base64
     }
   },
   components: {
-    Upload
+    Upload,
+    swiper,
+    swiperSlide
   }
 
 }
@@ -75,7 +99,17 @@ export default {
 <style lang="less" scoped>
 @import '../../styles/window.less';
 @mainColor: #f31374;
-@borderColor: rgba(255, 255, 255, 0.5);
+@borderColor: rgba(255, 255, 255, 0.3);
+/*vendor swiper*/
+.window /deep/ {
+  /deep/ .swiper-pagination-bullet {
+    background: rgba(255, 255, 255, 0.8);
+  }
+  /deep/ .swiper-pagination-bullet-active {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
+
 #bp-model {
   position: absolute;
   left: 0;
@@ -117,6 +151,7 @@ export default {
     vertical-align: middle;
     text-align: center;
     font-size: 12px;
+    margin-top: 4px;
   }
 }
 .bp-theme-item {
@@ -182,6 +217,7 @@ export default {
   height: 1.35rem;
   border: 1px solid @borderColor;
   border-radius: 6px;
+  position: relative;
   .svg-icon {
     width: 0.45rem;
     height: 0.45rem;
@@ -193,6 +229,21 @@ export default {
     margin-top: 4px;
   }
 }
-
+#base64Img {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
+  right: -1px;
+  border-radius: 6px;
+}
+/* .base64-img {
+  z-index: 2;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+} */
 
 </style>

@@ -66,6 +66,7 @@
 .bp-dialog_bg {
     img {
       width: 100%;
+      display: block;
     }
 }
 .bp-dialog__title {
@@ -74,7 +75,7 @@
     color: #161a25;
 }
 .bp-dialog__bd {
-    padding: 0.35rem 1.6em;
+    padding: 0.35rem 0.45rem;
     min-height: 40px;
     font-size: 15px;
     line-height: 1.3;
@@ -87,7 +88,7 @@
         padding:2.7em 20px 1.7em;
         color:#353535;
     }
-    &:after {
+    &.line:after {
         content: " ";
         .setTopLine();
     }

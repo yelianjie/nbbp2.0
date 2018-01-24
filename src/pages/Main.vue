@@ -7,7 +7,7 @@
           <img src="../assets/logo.png">
         </div>
         <div class="main-header-user flex-1 flex flex-v flex-pack-center flex-align-center">
-          <p class="nickname">鲜花</p>
+          <p class="nickname overflow">鲜花</p>
           <span class="level level-1">V1</span>
         </div>
       </div>
@@ -24,11 +24,11 @@
     <div class="flex-1 main-content" ref="scrollWrapper">
       <infinite-loading @infinite="infiniteHandler" direction="top" :distance="0"></infinite-loading>
       <template v-for="(v, i) in chatlist">
-        <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 0" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true"></msg>
-        <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 1" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true"></msg-img>
-        <msg-only-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 2" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true"></msg-only-img>
-        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 3" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true"></bp-msg>
-        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 4" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true"></ds-msg>
+        <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 0" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
+        <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 1" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-img>
+        <msg-only-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 2" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-only-img>
+        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 3" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></bp-msg>
+        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 4" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
       </template>
     </div>
     <footer-main @onBuy="buyDialogVisible = true"></footer-main>
@@ -37,7 +37,7 @@
     <div class="f-btn" @click="bpWindowVisible = true"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="dsindowVisible = true"><img src="../assets/ds-btn.png"/></div>
   </div>
-  <bp-window v-model="bpWindowVisible" @preview="preview"></bp-window>
+  <bp-window v-model="bpWindowVisible"></bp-window>
   <ds-window v-model="dsindowVisible"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
@@ -75,22 +75,44 @@
       <img src="../assets/share.png" style="max-width: 100%;float:right;width: 4.2rem;margin: 0.2rem 0.2rem 0 0;"/>
     </div>
   </x-dialog>
-  <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy">
+  <x-dialog v-model="concernVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
+    <div class="qrcode-box">
+      <div class="qrcode-info flex flex-v flex-align-center">
+        <img src="../assets/jj.jpg" class="qrcode"/>
+        <p>请长按二维码</p>
+        <p>关注牛霸霸屏官方公众号</p>
+        <p>即可加入CMK酒吧聊天室</p>
+      </div>
+    </div>
+  </x-dialog>
+  <!-- <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy">
     <div class="">
       <div class="" style="font-size: 20px;margin-bottom: 10px;">30<img src="../assets/small.png"/></div>
       <p style="color: #88878f;"><svg-icon icon-class="close" />当前剩余余额可用：<svg-icon icon-class="close" />45</p>
     </div>
-  </bp-dialog>
-  <!--<bp-dialog :bg-title="true" v-model="buyDialogVisible" @onConfirm="confirmBuy">
+  </bp-dialog> -->
+  <!--<bp-dialog :bg-title="true" :bgSrc="chargeBg" v-model="buyDialogVisible" @onConfirm="confirmBuy">
     <div class="">
-      <div class="" style="font-size: 20px;margin-bottom: 10px;">30<img src="../assets/small.png"/></div>
-      <p style="color: #88878f;"><svg-icon icon-class="close" />当前剩余余额可用：<svg-icon icon-class="close" />45</p>
+      <p style="font-size: 13px;color:#6c6a75;text-align: left;
+      margin-bottom: 10px;">当前有102元收益可兑换成牛角</p>
+      <div><input type="number" class="boderbox" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
+      <div style="color:#6c6a75;text-align: left;font-size: 12px;margin-top:10px;"><svg-icon icon-class="notice"/><span style="margin-left:6px;">1牛角=1元</span></div>
+    </div>
+  </bp-dialog>-->
+  <!--<bp-dialog :bg-title="true" :bgSrc="despoitBg" v-model="buyDialogVisible" @onConfirm="confirmBuy">
+    <div class="">
+      <p style="font-size: 13px;color:#6c6a75;text-align: left;
+      margin-bottom: 10px;">当前收益：102元</p>
+      <div><input type="number" class="boderbox" placeholder="请输入要提现的金额" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
+      <div style="color:#6c6a75;text-align: left;font-size: 12px;margin-top:10px;"><svg-icon icon-class="notice"/><span>目前仅支持整百数提现</span></div>
     </div>
   </bp-dialog>-->
   </div>
 </template>
 
 <script>
+import chargeBg from '../assets/charge-bg.png'
+import despoitBg from '../assets/despoit-bg.png'
 import { XDialog } from 'vux'
 import BpDialog from '../components/bpDialog'
 import InfiniteLoading from 'vue-infinite-loading'
@@ -106,6 +128,8 @@ import DsWindow from '../components/Main/DsWindow'
 export default {
   data () {
     return {
+      chargeBg: chargeBg,
+      despoitBg: despoitBg,
       chatlist: [],
       list: [{
         content: '重金霸屏，献给未来的你你你你你啊~',
@@ -137,6 +161,7 @@ export default {
       userDialogVisible: false,
       shareMaskVisible: false,
       buyDialogVisible: false,
+      concernVisible: false,
       height: 0,
       noMore: false
     }
@@ -165,22 +190,16 @@ export default {
     like (index) {
       this.chatlist[index].likes++
     },
+    bp (index) {
+      this.bpWindowVisible = true
+    },
+    ds (index) {
+      this.dsindowVisible = true
+    },
     confirmBuy () {
       setTimeout(() => {
         this.buyDialogVisible = false
       }, 3000)
-    },
-    preview (img) {
-      var _this = this
-      var src = this.$refs.crop.crop.filterImage(img, {width: img.width, height: img.height})// IOS中如果图片过大，将不能画在canvas中
-      this.$refs.crop.crop.init()
-      var realImg = new Image()
-      this.cropVisible = true
-      realImg.onload = function () {
-        _this.$refs.crop.updateImg(src)
-        _this.$refs.crop.crop.setSize(this.width, this.height)
-      }
-      realImg.src = src
     }
   },
   components: {
@@ -203,6 +222,7 @@ export default {
 @import '../styles/main.less';
 .container {
   color: #fff;
+  overflow: hidden;
 }
 .main {
   height: 100%;
@@ -232,9 +252,11 @@ export default {
   }
   .main-header-user {
     margin-left: 0.4rem;
+    margin-right: 0.3rem;
     .nickname {
       line-height: 1;
       margin-bottom: 4px;
+      width: 1rem;
     }
   }
   .boardcast-icon {
@@ -318,6 +340,24 @@ export default {
   height: 0.7rem;
   padding: 0.5rem 0;
   box-sizing: content-box;
+}
+.qrcode-info {
+  width: 4.75rem;
+  padding: 0.6rem 0;
+  background: #fff url('../assets/qrcode-bg.png') no-repeat top;
+  background-size: contain;
+  border-radius: 15px;
+  margin: 0 auto;
+  .qrcode {
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-bottom: 0.8rem;
+  }
+  p {
+    line-height: 0.4rem;
+    color: #3d404f;
+    font-size: 14px;
+  }
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   .nickname {
