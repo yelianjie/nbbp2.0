@@ -7,13 +7,13 @@
       <div class="window" id="bp-model" v-show="visible">
         <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close"/></span>
         <div class="window-top">
-          <p class="window-title">为&ensp;鲜花&ensp;霸屏</p>
+          <p class="window-title f14">为&ensp;鲜花&ensp;霸屏</p>
         </div>
         <div class="window-middle">
           <div class="bp-time-container">
             <div class="bp-time-item selected" v-for="i in 8" :key="i">
-              <div class="time">{{i * 10}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-              <div class="time-price"><svg-icon icon-class="coin" className="coin" />10</div>
+              <div class="time f13">{{i * 10}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+              <div class="time-price f12"><svg-icon icon-class="coin" className="coin" />10</div>
             </div>
           </div>
           <div class="rpxline" style="margin-bottom: 0.2rem;"></div>
@@ -23,7 +23,7 @@
                 <div class="bp-theme-item boderbox">
                   <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="theme-icon"><img src="../../assets/logo.png"></div>
-                  <div class="theme-name overflow">生日霸屏</div>
+                  <div class="theme-name f13 overflow">生日霸屏</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -37,7 +37,7 @@
               <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip">
                 <div class="upload-inner boderbox flex flex-v flex-align-center flex-pack-center">
                   <svg-icon icon-class="camera"/>
-                  <p>添加照片</p>
+                  <p class="f13">添加照片</p>
                   <label for="bp-upload-img" class="n-label" id="base64Img" :style="{'background-image':'url('+base64Img+')'}"></label>
                   <!--<div class="n-label base64-img" v-show="base64Img" :style="{'background-image':'url('+base64Img+')'}"></div>-->
                 </div>
@@ -45,7 +45,7 @@
             </div>
           </div>
         </div>
-        <div class="window-bottom flex flex-align-center">
+        <div class="window-bottom f13 flex flex-align-center">
           <div class="account flex-1">总计：<svg-icon icon-class="coin" className="coin" />104</div>
           <div class="repeat"><svg-icon icon-class="substract"/><span>连续霸屏</span><svg-icon icon-class="plus"/></div>
           <div class="submit"><button class="bp-button bp-submit">购买</button></div>
@@ -124,7 +124,6 @@ export default {
 
 .bp-time-item {
   display: inline-block;
-  font-size: 13px;
   width: 1.15rem;
   margin-right: 0.7rem;
   margin-bottom: 0.4rem;
@@ -150,7 +149,6 @@ export default {
   .time-price {
     vertical-align: middle;
     text-align: center;
-    font-size: 12px;
     margin-top: 4px;
   }
 }
@@ -158,7 +156,6 @@ export default {
   width: 1.5rem;
   margin-right: 0.23333rem;
   display: inline-block;
-  font-size: 12px;
   margin-bottom: 0.2rem;
   position: relative;
   &:nth-child(4n+4) {
@@ -224,7 +221,6 @@ export default {
     display: block;
   }
   p {
-    font-size: 13px;
     color: #fff;
     margin-top: 4px;
   }

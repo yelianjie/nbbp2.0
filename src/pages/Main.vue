@@ -7,14 +7,14 @@
           <img src="../assets/logo.png">
         </div>
         <div class="main-header-user flex-1 flex flex-v flex-pack-center flex-align-center">
-          <p class="nickname overflow">鲜花</p>
+          <p class="nickname overflow f14">鲜花</p>
           <span class="level level-1">V1</span>
         </div>
       </div>
       <div class="flex flex-1 main-header-right flex-align-center">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
         <div class="boardcast-scroller flex-1">
-          <div class="scroller-wrap">
+          <div class="scroller-wrap f14">
             <marquee direction="left" befavior="scroll" scrollamount="0">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>
             
           </div>
@@ -43,13 +43,13 @@
     <div class="user-box">
       <div class="user-info flex flex-v flex-align-center">
         <img src="../assets/logo.png" class="avatar"/>
-        <p class="uname">鲜花</p>
+        <p class="uname f18">鲜花</p>
         <div class="msg-item-top flex flex-align-center">
           <span class="level level-1">V1</span>
           <span class="sex sex-male"><svg-icon icon-class="male" /></span>
           <span class="msg-name">游侠</span>
         </div>
-        <p class="sign">签名：暂无签名</p>
+        <p class="sign f14">签名：暂无签名</p>
         <div class="user-dialog-bottom flex-1 flex" style="width:100%;">
           <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center">
             <img src="../assets/gift-b-icon.png"/>
@@ -79,9 +79,9 @@
     <div class="qrcode-box">
       <div class="qrcode-info flex flex-v flex-align-center">
         <img src="../assets/jj.jpg" class="qrcode"/>
-        <p>请长按二维码</p>
-        <p>关注牛霸霸屏官方公众号</p>
-        <p>即可加入CMK酒吧聊天室</p>
+        <p class="f14">请长按二维码</p>
+        <p class="f14">关注牛霸霸屏官方公众号</p>
+        <p class="f14">即可加入CMK酒吧聊天室</p>
       </div>
     </div>
   </x-dialog>
@@ -257,10 +257,11 @@ export default {
       line-height: 1;
       margin-bottom: 4px;
       width: 1rem;
+      text-align: center;
     }
   }
   .boardcast-icon {
-    width: 0.32rem;
+    width: 0.36rem;
     height: 0.32rem;
     display: block;
     margin-left: 0.1rem;
@@ -306,7 +307,6 @@ export default {
     margin: 0.6rem 0 0.4rem;
   }
   .uname {
-    font-size: 18px;
     color: #161a25;
     margin-bottom: 0.2rem;
   }
@@ -315,7 +315,6 @@ export default {
   }
   .sign {
     color: #88878f;
-    font-size: 14px;
     margin-top: 0.2rem;
     margin-bottom: 0.2rem;
   }
@@ -356,12 +355,11 @@ export default {
   p {
     line-height: 0.4rem;
     color: #3d404f;
-    font-size: 14px;
   }
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
-  .nickname {
+  /* .nickname {
     font-size: 13px;
-  }
+  } */
 }
 </style>

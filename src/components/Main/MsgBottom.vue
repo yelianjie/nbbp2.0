@@ -3,15 +3,15 @@
     <template v-if="display == 1">
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="ds">
         <span class="icon-wrap"><img src="../../assets/gift-b-icon.png"/></span>
-        <span class="num">1</span>
+        <span class="num f12">1</span>
       </div>
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="liked">
         <span class="icon-wrap"><img src="../../assets/like-b-icon.png"/></span>
-        <span class="num">2</span>
+        <span class="num f12">2</span>
       </div>
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="bp">
         <span class="icon-wrap"><img src="../../assets/ba-b-icon.png"/></span>
-        <span class="num">3</span>
+        <span class="num f12">3</span>
       </div>
       <div class="msg-btn msg-btn-big msg-share flex flex-1 flex-align-center">
         <svg-icon icon-class="share" @click.native="share"/>
@@ -20,15 +20,15 @@
     <template v-else>
       <div class="msg-btn flex flex-align-center" @click="ds">
         <svg-icon icon-class="gift" @click.native="ds"/>
-        <span class="num">1</span>
+        <span class="num f12">1</span>
       </div>
       <div class="msg-btn flex flex-align-center" @click="bp">
         <img src="../../assets/ba-icon.png"/>
-        <span class="num">3</span>
+        <span class="num f12">3</span>
       </div>
       <div class="msg-btn flex flex-align-center" @click="liked">
         <svg-icon icon-class="like" @click.native="like"/>
-        <span class="num">2</span>
+        <span class="num f12">2</span>
       </div>
       
     </template>
@@ -87,7 +87,6 @@ export default {
     }
   }
   .num {
-    font-size: 12px;
     width: 0.3rem;
     text-align: center;
   }

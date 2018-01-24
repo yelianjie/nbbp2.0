@@ -7,7 +7,7 @@
       <div class="window" id="ds-model" v-show="visible">
         <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close"/></span>
         <div class="window-top">
-          <p class="window-title">为&ensp;鲜花&ensp;送礼</p>
+          <p class="window-title f14">为&ensp;鲜花&ensp;送礼</p>
         </div>
         <div class="window-middle">
           <div class="ds-person-container">
@@ -16,7 +16,7 @@
                 <div class="ds-person-item ds-item" :class="{'selected': dsToIndex == i}" @click="dsToIndex = i">
                   <div class="ds-person-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="person-avatar ds-img"><img src="../../assets/logo.png"></div>
-                  <div class="person-name ds-text overflow flex"><span class="sex sex-male"><svg-icon icon-class="male" /></span>Somer</div>
+                  <div class="person-name ds-text overflow flex f12"><span class="sex sex-male"><svg-icon icon-class="male" /></span>Somer</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -29,8 +29,8 @@
                 <div class="ds-gift-item boderbox ds-item" :class="{'selected': dsGiftIndex == i}" @click="dsGiftIndex = i">
                   <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="gift-icon ds-img"><img src="../../assets/logo.png"></div>
-                  <div class="gift-name ds-text overflow">兰博基尼</div>
-                  <div class="gift-price"><svg-icon icon-class="coin" className="coin" />10</div>
+                  <div class="gift-name ds-text overflow f13">兰博基尼</div>
+                  <div class="gift-price f12"><svg-icon icon-class="coin" className="coin" />10</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -40,7 +40,7 @@
             <input class="bp-input boderbox" placeholder="请输入送礼上墙语，15字以内" />
           </div>
         </div>
-        <div class="window-bottom flex flex-align-center">
+        <div class="window-bottom f13 flex flex-align-center">
           <div class="account  flex-1">总计：<svg-icon icon-class="coin" className="coin" />104</div>
           <div class="repeat"><svg-icon icon-class="substract"/><span>连续送礼</span><svg-icon icon-class="plus"/></div>
           <div class="submit"><button class="bp-button bp-submit">购买</button></div>
@@ -126,7 +126,6 @@ export default {
   width: 1.5rem;
   margin-right: 0.23333rem;
   display: inline-block;
-  font-size: 12px;
   margin-bottom: 0.2rem;
   position: relative;
   .ds-img {
@@ -138,7 +137,7 @@ export default {
   }
   .ds-text {
     text-align: center;
-    margin-bottom: 0.15rem;
+    margin: 0 0.15rem 0.15rem;
   }
   .ds-selected {
     position: absolute;
@@ -176,23 +175,7 @@ export default {
     line-height: 0.95rem;
   }
 }
-.upload-inner {
-  width: 1.4rem;
-  margin-left: 0.2rem;
-  height: 1.35rem;
-  border: 1px solid @borderColor;
-  border-radius: 6px;
-  .svg-icon {
-    width: 0.45rem;
-    height: 0.45rem;
-    display: block;
-  }
-  p {
-    font-size: 13px;
-    color: #fff;
-    margin-top: 4px;
-  }
-}
+
 .gift-price {
   text-align: center;
   line-height: 0.24rem;

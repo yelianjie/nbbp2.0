@@ -11,9 +11,6 @@ export default {
 </script>
 
 <style lang="less">
-@import '~vux/src/styles/reset.less';
-@import './styles/global.less';
-
 .noscroll,
 .noscroll body {
   overflow: hidden;
@@ -70,6 +67,30 @@ body, html, #app {
   border-radius: 3px;
 }
 .level-1 {
-   background-color: red;
+  background-image: linear-gradient(to right, #60e76e, #19a859);
+}
+.sex {
+  padding: 2px 4px;
+  border-radius: 3px;
+  .svg-icon {
+    height: 12px!important;
+    width: 12px!important;
+    display: block;
+  }
+}
+.sex-male {
+  background-color: #3a72d8;
+}
+.sex-female {
+  background-color: #ff3976;
+}
+.tag {
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: #fff;
+  &.tagcity {
+    background-color: #645bc4;
+  }
 }
 </style>

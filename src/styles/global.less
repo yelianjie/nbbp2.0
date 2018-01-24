@@ -1,7 +1,51 @@
+/*global variable*/
 @mainColor: #f31374;
+
+/*global mixin*/
 .line-gradient(@direction, @start, @end) {
   background: -webkit-linear-gradient(@direction, @start,  @end 70%, @end);
 }
+.setTopLine(@lineColor: #f1f1f1) {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid @lineColor;
+  color: @lineColor;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.setLeftLine(@lineColor: #f1f1f1) {
+  position: absolute;
+  left: 0;
+  top: 20%;
+  width: 1px;
+  bottom: 20%;
+  border-left: 1px solid @lineColor;
+  color: @lineColor;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleX(0.5);
+  transform: scaleX(0.5);
+}
+.setRightLine(@lineColor: #f1f1f1) {
+  position: absolute;
+  right: 0;
+  top: 20%;
+  width: 1px;
+  bottom: 20%;
+  border-right: 1px solid @lineColor;
+  color: @lineColor;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleX(0.5);
+  transform: scaleX(0.5);
+}
+
+
 .boderbox {
   box-sizing: border-box;
 }
@@ -67,6 +111,7 @@ input[type="file"] {
   height: 0;
   left: 0;
   outline: none;
+  clip: rect(0 0 0 0);
 }
 .mask-overlay {
   position: fixed;
@@ -107,7 +152,13 @@ input[type="file"] {
   font-size: 15px;
 }
 .f18 {
+  font-size: 18px;
+}
+.f20 {
   font-size: 20px;
+}
+.tc {
+  text-align: center;
 }
 .white {
   color: #fff;
@@ -118,7 +169,6 @@ input[type="file"] {
 .window-title {
   text-align: center;
   margin-bottom: 20px;
-  font-size: 14px;
 }
 .rpxline {
   width: 100%;
@@ -128,7 +178,6 @@ input[type="file"] {
 }
 .window-bottom {
   margin-top: 0.2rem;
-  font-size: 13px;
   .account {
     width: 1.6rem;
   }
