@@ -41,7 +41,8 @@
      * 作用就是让Canvas中每个像素和手机屏幕的物理像素1：1对应，在Canvas中画线或写字可以更清晰
      */
     function pixelRatio(ctx) {
-        return 1
+        var backingstore = ctx.webkitBackingStorePixelRatio|| 1;
+        return (window.devicePixelRatio || 1) / backingstore;
     }
 
     /**

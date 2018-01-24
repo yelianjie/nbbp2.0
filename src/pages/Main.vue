@@ -87,7 +87,6 @@
       <p style="color: #88878f;"><svg-icon icon-class="close" />当前剩余余额可用：<svg-icon icon-class="close" />45</p>
     </div>
   </bp-dialog>-->
-  <crop v-show="cropVisible" ref="crop"></crop>
   </div>
 </template>
 
@@ -103,7 +102,6 @@ import BpMsg from '../components/Main/BpMsg'
 import DsMsg from '../components/Main/DsMsg'
 import BpWindow from '../components/Main/BpWindow'
 import DsWindow from '../components/Main/DsWindow'
-import Crop from '../components/Crop'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   data () {
@@ -139,7 +137,6 @@ export default {
       userDialogVisible: false,
       shareMaskVisible: false,
       buyDialogVisible: false,
-      cropVisible: false,
       height: 0,
       noMore: false
     }
@@ -197,8 +194,7 @@ export default {
     BpWindow,
     DsWindow,
     XDialog,
-    InfiniteLoading,
-    Crop
+    InfiniteLoading
   }
 }
 </script>

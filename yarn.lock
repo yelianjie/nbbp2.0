@@ -1566,6 +1566,10 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+croppie@^2.5.1:
+  version "2.5.1"
+  resolved "http://registry.npm.taobao.org/croppie/download/croppie-2.5.1.tgz#87896bb4fb219350106558791730ed275730f38e"
+
 cross-spawn@^5.0.1:
   version "5.1.0"
   resolved "http://registry.npm.taobao.org/cross-spawn/download/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"

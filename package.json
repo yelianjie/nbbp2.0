@@ -11,6 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "croppie": "^2.5.1",
     "es6-promise": "^4.2.2",
     "fastclick": "^1.0.6",
     "vee-validate": "^2.0.0",

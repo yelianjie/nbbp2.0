@@ -1,5 +1,5 @@
 <template>
-  <div class="fullscreen" id="crop-container">
+  <!--<div class="fullscreen" id="crop-container">
     <div class="gold-inner" id="inner">
         <div class="frame">
             <img src="../assets/gold-rotate.png" class="rotate" id="btnRotate">
@@ -8,20 +8,29 @@
         <img src="../assets/blank.gif" id="frameImg" class="frame-img">
     </div>
     <button id="clip" @click="clip">裁剪</button>
-</div>
+</div>-->
+  <div id="demo" class="fullscreen">
+    <img :src="src" id="img"/>
+    <div id="button"><button @click="clipa">裁剪</button></div>
+    <div id="show" v-if="final"><img :src="final"/></div>
+  </div>
 </template>
 
 <script>
-import '../vendor/touch'
-import '../vendor/veCrop'
+// import '../vendor/touch'
+// import '../vendor/veCrop'
+import 'croppie/croppie.css'
+import Croppie from 'croppie'
 export default {
   data () {
     return {
-      crop: null
+      crop: null,
+      src: '',
+      final: ''
     }
   },
   mounted () {
-    this.$nextTick(() => {
+    /* this.$nextTick(() => {
       var frameImg = document.getElementById('frameImg')
       var frame = document.getElementById('inner')
       var cropFrame = document.getElementById('innerFrame')
@@ -32,11 +41,23 @@ export default {
         frameBorderWidth: 2,
         cropFrame: cropFrame
       })
-    })
+    }) */
   },
   methods: {
     updateImg (src) {
-      document.getElementById('frameImg').setAttribute('src', src)
+      // document.getElementById('frameImg').setAttribute('src', src)
+      this.src = src
+      this.$nextTick(() => {
+        this.crop = new Croppie(document.getElementById('img'), {})
+      })
+    },
+    clipa () {
+      this.crop.result({
+        type: 'base64',
+        size: 'original'
+      }).then((base64) => {
+        this.final = base64
+      })
     },
     clip () {
       this.crop.generate(function (base64) {
@@ -48,7 +69,26 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#crop-container {
+#demo {
+  position: fixed;
+  bottom: 10%;
+  background-color: #000;
+}
+#button {
+  position: absolute;
+  bottom: 0;
+  z-index: 1222;
+}
+#show {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 333;
+  background-color: red;
+}
+/*#crop-container {
   background-color: #000;
 }
 .gold-inner {
@@ -93,6 +133,6 @@ export default {
     transition: transform .1s ease;
     transition: transform .1s ease, -webkit-transform .1s ease;
   }
-}
+}*/
 </style>
 
