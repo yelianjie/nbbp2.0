@@ -1,7 +1,7 @@
 <template>
   <div id="container" class="fullscreen flex flex-v" v-show="visible">
-    <div id="crop-inner" class="flex-1" v-if="src">
-      <img :src="src" id="img" v-if="src"/>
+    <div id="crop-inner" class="fullscreen" v-if="src">
+      <img :src="src" id="img"/>
     </div>
     <div id="buttons" class="flex">
       <button @click="cancel" class="flex-1">取消</button>
@@ -72,8 +72,16 @@ export default {
   position: fixed;
   background-color: #000;
 }
+#crop-inner {
+  bottom: 48px;
+
+}
 #buttons {
   height: 48px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   button {
     font-size: 14px;
     color: #fff;
