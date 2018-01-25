@@ -27,6 +27,13 @@ export default new Router({
       }
     },
     {
+      path: '/Profile',
+      name: 'Profile',
+      component: (resolve) => {
+        require(['@/pages/Profile'], resolve)
+      }
+    },
+    {
       path: '/AgentCenter',
       name: 'AgentCenter',
       component: (resolve) => {

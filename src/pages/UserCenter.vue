@@ -14,7 +14,7 @@
           <span class="level level-1">V1</span>
           <span class="f12 point">234积分</span>
         </div>
-        <div class="rpxline" style="background-color: #645bc4;"></div>
+        <div class="rpxline" style="background-color: #333743;"></div>
         <p class="sign f14 flex"><span style="white-space: nowrap;">签名：</span><span>最开心的事就是你很好最开心</span></p>
         <div class="flex white tag1">
           <span class="sex sex-male flex flex-align-center"><svg-icon icon-class="male" /></span>
@@ -40,9 +40,9 @@
       </div>
       <div class="group">
         <ul>
-          <li><router-link :to="{path: '/'}" class="flex group-link f14 flex-align-center"><span style="color: #e8401b;"><svg-icon icon-class="heart" /></span>推荐给好友</router-link></li>
-          <li><router-link :to="{path: '/'}" class="flex group-link f14 flex-align-center"><span style="color: #5bf475;"><svg-icon icon-class="about" /></span>关于我们</router-link></li>
-          <li><router-link :to="{path: '/'}" class="flex group-link f14 flex-align-center"><span style="color: #317fe3;"><svg-icon icon-class="cooperate" /></span>商户加盟</router-link></li>
+          <li><router-link :to="{path: '/'}" class="flex group-link f14 flex-align-center"><span style="color: #e8401b;"><svg-icon icon-class="heart" /></span>推荐给好友<svg-icon icon-class="arrow-right" className="arrow-right"/></router-link></li>
+          <li><router-link :to="{path: '/'}" class="flex group-link f14 flex-align-center"><span style="color: #5bf475;"><svg-icon icon-class="about" /></span>关于我们<svg-icon icon-class="arrow-right" className="arrow-right"/></router-link></li>
+          <li><router-link :to="{path: '/'}" class="flex group-link f14 flex-align-center"><span style="color: #317fe3;"><svg-icon icon-class="cooperate" /></span>商户加盟<svg-icon icon-class="arrow-right" className="arrow-right"/></router-link></li>
         </ul>
       </div>
     </div>
@@ -128,7 +128,7 @@ export default {
 }
 .user-middle {
   background-color: @bgColor;
-  ul li {
+  .group ul li {
     display: block;
   }
   .group-link {
@@ -149,6 +149,15 @@ export default {
       background-color: #2e313a;
       border-radius: 50%; 
       margin-right: 10px;
+    }
+    .arrow-right {
+      width: 0.4rem;
+      height: 0.4rem;
+      fill: #5d5e63;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 }

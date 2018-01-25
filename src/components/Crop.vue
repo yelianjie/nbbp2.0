@@ -1,7 +1,7 @@
 <template>
   <div id="container" class="fullscreen flex flex-v" v-show="visible">
     <div id="crop-inner" class="flex-1" v-if="src">
-      <img :src="src" id="img"/>
+      <img :src="src" id="img" v-if="src"/>
     </div>
     <div id="buttons" class="flex">
       <button @click="cancel" class="flex-1">取消</button>
