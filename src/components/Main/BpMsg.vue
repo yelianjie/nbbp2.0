@@ -35,10 +35,10 @@ export default {
   },
   methods: {
     like () {
-      this.$emit('onLike', this.index)
+      this.$emit('onLike', this.data)
     },
     avatar () {
-      this.$emit('onAvatar', this.index)
+      this.$emit('onAvatar', this.data)
     },
     share () {
       this.$emit('onShare')

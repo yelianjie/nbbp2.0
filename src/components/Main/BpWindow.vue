@@ -5,13 +5,15 @@
     </transition>
     <transition name="slide-fade">
       <div class="window" id="bp-model" v-show="visible">
-        <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close"/></span>
+        <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close" @click.native="closeWindow"/></span>
         <div class="window-top">
-          <p class="window-title f14">为&ensp;鲜花&ensp;霸屏</p>
+          <p class="window-title f14 flex flex-align-center" v-if="true">为<img src="../../assets/logo.png" class="for-who circle"/>鲜花霸屏</p>
+          <p class="window-title f14 flex flex-align-center" v-else>为全场观众霸屏</p>
         </div>
+        <div class="rpxline" style="margin-bottom: 0.4rem;"></div>
         <div class="window-middle">
           <div class="bp-time-container">
-            <div class="bp-time-item selected" v-for="i in 8" :key="i">
+            <div class="bp-time-item" v-for="i in 8" :key="i" :class="{'selected': bpTimeIndex == i}" @click="bpTimeIndex = i">
               <div class="time f13">{{i * 10}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
               <div class="time-price f12"><svg-icon icon-class="coin" className="coin" />10</div>
             </div>
@@ -20,7 +22,7 @@
           <div class="bp-theme-container">
             <swiper :options="swiperThemeOption">
               <swiper-slide v-for="(v, i) in 8" :key="i">
-                <div class="bp-theme-item boderbox">
+                <div class="bp-theme-item boderbox" :class="{'selected': bpThemeIndex == i}" @click="bpThemeIndex = i">
                   <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="theme-icon"><img src="../../assets/logo.png"></div>
                   <div class="theme-name f13 overflow">生日霸屏</div>
@@ -67,6 +69,8 @@ export default {
   props: ['visible'],
   data () {
     return {
+      bpTimeIndex: -1,
+      bpThemeIndex: -1,
       swiperThemeOption: {
         slidesPerColumn: 2,
         slidesPerView: 4,
@@ -154,9 +158,8 @@ export default {
 }
 .bp-theme-item {
   width: 1.5rem;
-  margin-right: 0.23333rem;
+  margin: 0 0.0875rem 0.2rem;
   display: inline-block;
-  margin-bottom: 0.2rem;
   position: relative;
   &:nth-child(4n+4) {
     margin-right: 0;

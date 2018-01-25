@@ -1,34 +1,36 @@
 <template>
   <div class="container">
+    <onlines :peoples="onlinePeople" @onShowCard="showCard" v-model="onlineVisible"></onlines>
     <div class="main flex flex-v">
-    <div class="main-header flex flex-align-center">
-      <div class="flex main-header-left flex-align-center">
-        <div class="main-header-avatar">
-          <img src="../assets/logo.png">
-        </div>
-        <div class="main-header-user flex-1 flex flex-v flex-pack-center flex-align-center">
-          <p class="nickname overflow f14">鲜花</p>
-          <span class="level level-1">V1</span>
-        </div>
-      </div>
-      <div class="flex flex-1 main-header-right flex-align-center">
+      <div class="flex boardcast flex-align-center">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
         <div class="boardcast-scroller flex-1">
           <div class="scroller-wrap f14">
-            <marquee direction="left" befavior="scroll" scrollamount="0">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>
-            
+            <marquee direction="left" befavior="scroll" scrollamount="4">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>
           </div>
         </div>
       </div>
+    <div class="main-header flex flex-align-center">
+      <div class="flex main-header-left flex-align-center">
+        <div class="main-header-avatar">
+          <img src="../assets/logo.png" class="circle">
+        </div>
+      </div>
+      <div class="flex-1 main-header-right flex-align-center flex">
+        <div class="online-persons" v-for="(v, i) in onlinePeople" :key="i" @click="showCard">
+          <img :src="v.avatar" class="circle person-avatar"/>
+        </div>
+      </div>
+      <div class="white more f13 flex flex-align-center" @click="onlineVisible = true"><span>更多</span><svg-icon  @click.native="onlineVisible = true" icon-class="arrow-right"/></div>
     </div>
     <div class="flex-1 main-content" ref="scrollWrapper">
       <infinite-loading @infinite="infiniteHandler" direction="top" :distance="0"></infinite-loading>
       <template v-for="(v, i) in chatlist">
-        <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 0" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
-        <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 1" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-img>
-        <msg-only-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 2" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-only-img>
-        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 3" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></bp-msg>
-        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 4" @onAvatar="userDialogVisible = true" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
+        <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 0" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
+        <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 1" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-img>
+        <msg-only-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 2" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-only-img>
+        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 3" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></bp-msg>
+        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 4" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
       </template>
     </div>
     <footer-main @onBuy="buyDialogVisible = true"></footer-main>
@@ -51,15 +53,15 @@
         </div>
         <p class="sign f14">签名：暂无签名</p>
         <div class="user-dialog-bottom flex-1 flex" style="width:100%;">
-          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center">
+          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="bp">
             <img src="../assets/gift-b-icon.png"/>
             <span>为TA送礼</span>
           </div>
-          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center">
+          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="ds">
             <img src="../assets/ba-b-icon.png"/>
             <span>为TA霸屏</span>
           </div>
-          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center">
+          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="like">
             <img src="../assets/like-b-icon.png"/>
             <span>为TA点赞</span>
           </div>
@@ -124,6 +126,7 @@ import BpMsg from '../components/Main/BpMsg'
 import DsMsg from '../components/Main/DsMsg'
 import BpWindow from '../components/Main/BpWindow'
 import DsWindow from '../components/Main/DsWindow'
+import Onlines from '../components/Main/Onlines'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   data () {
@@ -156,12 +159,55 @@ export default {
         likes: 666,
         type: 0
       }],
+      onlinePeople: [{
+        sex: 2,
+        name: '娄艺潇',
+        avatar: 'https://tvax2.sinaimg.cn/crop.0.0.512.512.50/4e7f0c83ly8fe9xa2lqksj20e80e83z3.jpg'
+      }, {
+        sex: 1,
+        name: '思想聚焦',
+        avatar: 'https://tva4.sinaimg.cn/crop.0.0.180.180.50/67dd74e0jw1e8qgp5bmzyj2050050aa8.jpg'
+      }, {
+        sex: 1,
+        name: '西门町在宁波',
+        avatar: 'https://tvax3.sinaimg.cn/crop.0.0.512.512.50/8216df68ly8ff1b8rtm8zj20e80e83yn.jpg'
+      }, {
+        sex: 1,
+        name: '人民日报',
+        avatar: 'https://tva1.sinaimg.cn/crop.0.3.1018.1018.50/a716fd45gw1ev7q2k8japj20sg0sg779.jpg'
+      }, {
+        sex: 1,
+        name: '当时我就震惊了',
+        avatar: 'https://tva1.sinaimg.cn/crop.0.0.440.440.50/6927e7a5jw8ezf44123d4j20c80c80tg.jpg'
+      }, {
+        sex: 1,
+        name: '同道大叔',
+        avatar: 'https://tva4.sinaimg.cn/crop.0.0.512.512.50/b6f28977jw8eqb042gir6j20e80e8aa9.jpg'
+      }, {
+        sex: 2,
+        name: '短腿王怼怼',
+        avatar: 'https://tvax4.sinaimg.cn/crop.0.0.750.750.50/a0c1fb53ly8fn3kukoes5j20ku0kudh5.jpg'
+      }, {
+        sex: 2,
+        name: '头大就是硬道理',
+        avatar: 'https://tvax1.sinaimg.cn/crop.0.9.494.494.50/bd30a422ly8fj0d8js9zwj20dq0e874q.jpg'
+      }, {
+        sex: 2,
+        name: '林依晨Ariel',
+        avatar: 'https://tvax1.sinaimg.cn/crop.0.0.512.512.50/6a661712ly8fnshg7z2z7j20e80e8js8.jpg'
+      }, {
+        sex: 1,
+        name: 'jasonchenmusic',
+        avatar: 'https://tvax4.sinaimg.cn/crop.0.1.509.509.50/73a68773ly8fea294f5i0j20e50e83yq.jpg'
+      }],
       bpWindowVisible: false,
       dsindowVisible: false,
       userDialogVisible: false,
       shareMaskVisible: false,
       buyDialogVisible: false,
       concernVisible: false,
+      onlineVisible: false,
+      currentUserInfo: {},
       height: 0,
       noMore: false
     }
@@ -187,13 +233,21 @@ export default {
         $state.loaded()
       }, 1000)
     },
-    like (index) {
-      this.chatlist[index].likes++
+    showCard (data) {
+      this.currentUserInfo = data
+      this.userDialogVisible = true
     },
-    bp (index) {
+    like () {
+      // this.chatlist[index].likes++
+    },
+    bp () {
+      this.onlineVisible = false
+      this.userDialogVisible = false
       this.bpWindowVisible = true
     },
-    ds (index) {
+    ds () {
+      this.onlineVisible = false
+      this.userDialogVisible = false
       this.dsindowVisible = true
     },
     confirmBuy () {
@@ -212,6 +266,7 @@ export default {
     DsMsg,
     BpWindow,
     DsWindow,
+    Onlines,
     XDialog,
     InfiniteLoading
   }
@@ -229,54 +284,58 @@ export default {
   background: @bgColor;
 }
 .main-header {
-  padding: 0.2rem 0;
+  padding: 0.1rem 0;
   .main-header-left {
-    margin-left: 0.6rem;
-    width: 1.7rem;
-    height: 0.8rem;
-    background-color: @bubleBg;
-    border-radius: 0 50px 50px 0;
+    margin-left: 0.24rem;
     position: relative;
   }
   .main-header-avatar {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translate3d(-50%, -50%, 0);
-    width: 0.8rem;
-    height: 0.8rem;
     img {
-      width: 100%;
-      height: 100%;
+      width: 0.8rem;
+      height: 0.8rem;
+      display: block;
     }
   }
-  .main-header-user {
-    margin-left: 0.4rem;
-    margin-right: 0.3rem;
-    .nickname {
-      line-height: 1;
-      margin-bottom: 4px;
-      width: 1rem;
-      text-align: center;
-    }
+  .main-header-right {
+    overflow-y: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-left: 0.24rem;
   }
-  .boardcast-icon {
-    width: 0.36rem;
-    height: 0.32rem;
+  .person-avatar {
     display: block;
-    margin-left: 0.1rem;
-    margin-right: 0.1rem;
+    width: 0.64rem;
+    height: 0.64rem;
   }
-  .boardcast-scroller {
-    width: 3.68rem;
-    height: 0.4rem;
-    overflow: auto;
+  .online-persons {
+    margin-right: 0.2rem;
+    &:last-child {
+      margin-right: 0;
+    }
   }
-  .scroller-wrap {
-    width: 100%;
-    height: 100%;
-    line-height: 0.4rem;
+  .more {
+    padding: 0 10px; 
   }
+}
+.boardcast {
+  margin: 0.2rem 0;
+}
+.boardcast-icon {
+  width: 0.4rem;
+  height: 0.36rem;
+  display: block;
+  margin-left: 0.24rem;
+  margin-right: 0.2rem;
+}
+.boardcast-scroller {
+  width: 3.68rem;
+  height: 0.4rem;
+  overflow: auto;
+}
+.scroller-wrap {
+  width: 100%;
+  height: 100%;
+  line-height: 0.4rem;
 }
 .main-content {
   overflow-x: hidden;

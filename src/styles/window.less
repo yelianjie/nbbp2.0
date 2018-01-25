@@ -1,3 +1,42 @@
+.window {
+  padding: 0.2rem 0.4rem;
+}
+.window-title {
+  text-align: center;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+  padding-left: 10px;
+  position: relative;
+  &:before {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 0.48rem;
+    content: "";
+    width: 4px;
+    background-color: @mainColor;
+  }
+}
+.window-bottom {
+  margin-top: 0.2rem;
+  .account {
+    width: 1.6rem;
+  }
+  .repeat {
+    color: @mainColor;
+    margin-right: 0.6rem;
+    .svg-icon {
+      width: 0.4rem;
+      height: 0.4rem;
+      vertical-align: middle;
+    }
+    span {
+      margin: 0 8px;
+      vertical-align: middle;
+    }
+  }
+}
 .fade-enter-active {
   transition: all .3s ease;
 }
@@ -27,11 +66,12 @@
 }
 .close-icon {
   position: absolute;
-  right: 0.2rem;
-  top: 0.2rem;
+  right: 0.4rem;
+  top: 0.25rem;
+  z-index: 1;
   .svg-icon {
-    width: 0.4rem;
-    height: 0.4rem;
+    width: 0.54rem;
+    height: 0.54rem;
   }
 }
 .selected-icon {
@@ -64,7 +104,11 @@
       background-color: #fff;
     }
   }
-
+.for-who {
+  width: 0.64rem;
+  height: 0.64rem;
+  margin: 0 5px;
+}
 .coin {
   width: 0.24rem;
   height: 0.24rem;

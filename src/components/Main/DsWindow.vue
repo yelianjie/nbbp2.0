@@ -5,22 +5,13 @@
     </transition>
     <transition name="slide-fade">
       <div class="window" id="ds-model" v-show="visible">
-        <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close"/></span>
+        <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close" @click.native="closeWindow"/></span>
         <div class="window-top">
-          <p class="window-title f14">为&ensp;鲜花&ensp;送礼</p>
+          <p class="window-title f14 flex flex-align-center" v-if="true">为<img src="../../assets/logo.png" class="for-who circle"/>鲜花送礼</p>
+          <p class="window-title f14 flex flex-align-center" v-else>为全场观众送礼</p>
         </div>
         <div class="window-middle">
           <div class="ds-person-container">
-            <swiper :options="swiperDsPersonOption">
-              <swiper-slide v-for="(v, i) in 8" :key="i">
-                <div class="ds-person-item ds-item" :class="{'selected': dsToIndex == i}" @click="dsToIndex = i">
-                  <div class="ds-person-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-                  <div class="person-avatar ds-img"><img src="../../assets/logo.png"></div>
-                  <div class="person-name ds-text overflow flex f12"><span class="sex sex-male"><svg-icon icon-class="male" /></span>Somer</div>
-                </div>
-              </swiper-slide>
-              <div class="swiper-pagination" slot="pagination"></div>
-            </swiper>
           </div>
           <div class="rpxline" style="margin-bottom: 0.2rem;"></div>
           <div class="ds-gift-container">
@@ -61,15 +52,7 @@ export default {
   },
   data () {
     return {
-      dsToIndex: -1,
       dsGiftIndex: -1,
-      swiperDsPersonOption: {
-        slidesPerView: 4,
-        freeMode: true,
-        pagination: {
-          el: '.swiper-pagination'
-        }
-      },
       swiperDsGiftOption: {
         slidesPerColumn: 2,
         slidesPerView: 4,
@@ -124,9 +107,8 @@ export default {
 
 .ds-item {
   width: 1.5rem;
-  margin-right: 0.23333rem;
+  margin: 0 0.0875rem 0.2rem;
   display: inline-block;
-  margin-bottom: 0.2rem;
   position: relative;
   .ds-img {
     img {
