@@ -1,9 +1,9 @@
 <template>
-  <div id="container" class="fullscreen flex flex-v" v-show="visible">
-    <div id="crop-inner" class="fullscreen" v-if="src">
+  <div class="crop-box fullscreen flex flex-v" v-show="visible">
+    <div class="fullscreen crop-inner" v-if="src">
       <img :src="src" id="img"/>
     </div>
-    <div id="buttons" class="flex">
+    <div class="flex buttons">
       <button @click="cancel" class="flex-1">取消</button>
       <button @click="clip" class="flex-1">确定</button>
     </div>
@@ -20,7 +20,7 @@ export default {
     prop: 'visible',
     event: 'croptrigger'
   },
-  props: ['visible'],
+  props: ['visible', 'cropRadio'],
   data () {
     return {
       crop: null,
@@ -32,7 +32,7 @@ export default {
   mounted () {
     var fsize = parseInt(document.documentElement.style.fontSize)
     this.clipWidth = Math.floor(6 * fsize)
-    this.clipHeight = Math.floor(6 * fsize)
+    this.clipHeight = Math.floor(6 * fsize * this.cropRadio)
   },
   methods: {
     updateImg (src) {
@@ -50,11 +50,13 @@ export default {
       })
     },
     clip () {
+      this.$mask()
       this.crop.result({
         type: 'base64',
         size: 'original'
       }).then((base64) => {
         this.cancel()
+        this.$mask.hide()
         this.$emit('on-clip', base64)
       })
     },
@@ -68,15 +70,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#container {
+.crop-box {
   position: fixed;
   background-color: #000;
 }
-#crop-inner {
+.crop-inner {
   bottom: 48px;
-
 }
-#buttons {
+.buttons {
   height: 48px;
   position: absolute;
   bottom: 0;

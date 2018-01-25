@@ -3,7 +3,7 @@
     <slot></slot>
     <input type="file" accept="image/*" :id="name" :name="name" @change="fileChange"/>
     <template v-if="isCrop">
-      <crop v-model="cropVisible" ref="crop" @on-clip="finishClip"></crop>
+      <crop v-model="cropVisible" ref="crop" @on-clip="finishClip" :crop-radio="cropRadio"></crop>
     </template>
   </div>
 </template>
@@ -19,6 +19,10 @@ export default {
     isCrop: {
       type: Boolean,
       default: false
+    },
+    cropRadio: {
+      type: Number,
+      default: 1
     }
   },
   data () {

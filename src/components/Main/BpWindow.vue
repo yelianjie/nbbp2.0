@@ -34,7 +34,7 @@
               <textarea class="bp-input boderbox" placeholder="请输入霸屏上墙语，30字以内"></textarea>
             </div>
             <div class="bp-upload">
-              <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip">
+              <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip" :cropRadio="0.5625">
                 <div class="upload-inner boderbox flex flex-v flex-align-center flex-pack-center">
                   <svg-icon icon-class="camera"/>
                   <p class="f13">添加照片</p>

@@ -10,6 +10,7 @@ import './icons'
 import 'vux/src/styles/reset.less'
 import './styles/global.less'
 import bpDialog from './plugins/bpDialog'
+import maskPlugin from './plugins/mask'
 import { ToastPlugin, ConfirmPlugin, LoadingPlugin } from 'vux'
 import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
@@ -19,6 +20,7 @@ Vue.use(VeeValidate, {
   errorBagName: 'vErrors'
 })
 Vue.use(bpDialog)
+Vue.use(maskPlugin)
 Vue.use(ToastPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)
