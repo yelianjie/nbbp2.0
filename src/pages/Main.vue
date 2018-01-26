@@ -6,7 +6,8 @@
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
         <div class="boardcast-scroller flex-1">
           <div class="scroller-wrap f14">
-            <marquee direction="left" befavior="scroll" scrollamount="4">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>
+            我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强刷本领强粉刷本领强刷本领强粉刷本领强
+            <!--<marquee direction="left" befavior="scroll" scrollamount="4">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>-->
           </div>
         </div>
       </div>
@@ -16,15 +17,21 @@
           <router-link :to="{path: '/UserCenter'}"><img src="../assets/logo.png" class="circle"></router-link>
         </div>
       </div>
-      <div class="flex-1 main-header-right flex-align-center flex">
-        <div class="online-persons flex" v-for="(v, i) in onlinePeople" :key="i" @click="showCard">
+      <div class="flex-1 main-header-right">
+        <div class="online-persons" v-for="(v, i) in onlinePeople" :key="i" @click="showCard">
           <img :src="v.avatar" class="circle person-avatar"/>
         </div>
       </div>
       <div class="white more f13 flex flex-align-center" @click="onlineVisible = true"><span>更多</span><svg-icon  @click.native="onlineVisible = true" icon-class="arrow-right"/></div>
     </div>
     <div class="flex-1 main-content" ref="scrollWrapper">
-      <infinite-loading @infinite="infiniteHandler" direction="top" :distance="0"></infinite-loading>
+      <infinite-loading @infinite="infiniteHandler" direction="top" :distance="0">
+        <div class="typing-indicator" slot="spinner">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </infinite-loading>
       <template v-for="(v, i) in chatlist">
         <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 0" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
         <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 1" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-img>
@@ -232,6 +239,7 @@ export default {
         this.chatlist = temp.concat(this.chatlist)
         this.height = this.$refs.scrollWrapper.scrollHeight
         $state.loaded()
+        // $state.complete()
       }, 1000)
     },
     showCard (data) {
@@ -308,6 +316,8 @@ export default {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     margin-left: 0.24rem;
+    font-size: 0;
+    white-space: nowrap;
   }
   .person-avatar {
     display: block;
@@ -318,6 +328,7 @@ export default {
     margin-right: 0.2rem;
     width: 0.64rem;
     height: 0.64rem;
+    display: inline-block;
     &:last-child {
       margin-right: 0;
     }
@@ -345,6 +356,13 @@ export default {
   width: 100%;
   height: 100%;
   line-height: 0.4rem;
+  transform: translate3d(100%, 0, 0);
+  animation: scrollNotice 15s linear 0s infinite;
+}
+@keyframes scrollNotice {
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
 }
 .main-content {
   overflow-x: hidden;
@@ -405,10 +423,9 @@ export default {
 .close-u-dialog-btn.svg-icon {
   width: 0.7rem;
   height: 0.7rem;
-  padding: 0.5rem 0;
   box-sizing: content-box;
   display: block;
-  margin: 0 auto;
+  margin: 0.5rem auto;
 }
 .qrcode-info {
   width: 4.75rem;
@@ -427,6 +444,52 @@ export default {
     color: #3d404f;
   }
 }
+.typing-indicator {
+  background-color: rgba(157, 157, 157, 0.2);
+  will-change: transform;
+  width: auto;
+  border-radius: 50px;
+  padding: 0.2rem;
+  display: table;
+  margin: 5px auto;
+  position: relative;
+}
+
+.typing-indicator span {
+  height: 0.2rem;
+  width: 0.2rem;
+  float: left;
+  margin: 0 1px;
+  background-color: #9E9EA1;
+  display: block;
+  border-radius: 50%;
+  opacity: 0.4;
+}
+.typing-indicator span:nth-of-type(1) {
+  -webkit-animation: 1s blink infinite 0.3333s;
+          animation: 1s blink infinite 0.3333s;
+}
+.typing-indicator span:nth-of-type(2) {
+  -webkit-animation: 1s blink infinite 0.6666s;
+          animation: 1s blink infinite 0.6666s;
+}
+.typing-indicator span:nth-of-type(3) {
+  -webkit-animation: 1s blink infinite 0.9999s;
+          animation: 1s blink infinite 0.9999s;
+}
+
+@-webkit-keyframes blink {
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 1;
+  }
+}
+
 @media screen and (min-width: 320px) and (max-width: 374px) {
   /* .nickname {
     font-size: 13px;
