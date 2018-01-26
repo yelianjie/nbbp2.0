@@ -116,6 +116,13 @@ export default new Router({
       component: (resolve) => {
         require(['@/pages/Main'], resolve)
       }
+    },
+    {
+      path: '/Charge',
+      name: 'Charge',
+      component: (resolve) => {
+        require(['@/pages/Charge'], resolve)
+      }
     }
   ]
 })

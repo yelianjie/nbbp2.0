@@ -45,6 +45,9 @@ export default {
       let _this = this
       this.src = src
       this.$nextTick(() => {
+        this.$vux.loading.show({
+          text: '正在加载'
+        })
         this.crop = new Croppie(document.getElementById('img'), {
           showZoomer: false,
           viewport: {
@@ -53,17 +56,20 @@ export default {
             type: 'square'
           }
         })
+        this.$vux.loading.hide()
       })
     },
     clip () {
-      this.$mask()
+      this.$vux.loading.show({
+        text: '正在裁剪'
+      })
       this.crop.result({
         type: 'base64',
         size: 'original'
       }).then((base64) => {
         this.cancel()
-        this.$mask.hide()
         this.$emit('on-clip', base64)
+        this.$vux.loading.hide()
       })
     },
     cancel () {
