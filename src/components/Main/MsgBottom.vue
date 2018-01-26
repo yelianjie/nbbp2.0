@@ -13,8 +13,8 @@
         <span class="icon-wrap"><img src="../../assets/ba-b-icon.png"/></span>
         <span class="num f12">3</span>
       </div>
-      <div class="msg-btn msg-btn-big msg-share flex flex-1 flex-align-center" @click="share">
-        <svg-icon icon-class="share" @click.native="share" @touchstart.native="touch"/>
+      <div class="msg-btn msg-btn-big msg-share flex flex-1 flex-align-center">
+        <svg-icon icon-class="share" @click.native.self="share" />
       </div>
     </template>
     <template v-else>
