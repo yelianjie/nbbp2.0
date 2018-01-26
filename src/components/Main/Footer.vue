@@ -21,7 +21,7 @@
         <div class="chat-input flex-1" :class="{'move': textImgVisible}">
           <input type="text" placeholder="说点什么吧！">
         </div>
-        <div class="chat-submit-btn flex flex-align-center" @click="buy">
+        <div class="chat-submit-btn flex flex-align-center" @click="sendMsg">
           <svg-icon icon-class="plane"/>
         </div>
       </div>
@@ -39,8 +39,8 @@ export default {
     }
   },
   methods: {
-    buy () {
-      this.$emit('onBuy')
+    sendMsg () {
+      this.$emit('onSendMsg')
     },
     msgImgUploadPreview (base64) {
       console.log('111')

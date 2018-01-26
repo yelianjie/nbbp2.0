@@ -2,25 +2,25 @@
 const namespaced = true
 
 const state = {
-  msg: 'Hello, Vue!'
+  buyDialogInfo: {}
 }
 
 // getters
 const getters = {
-  msg: () => state.msg
+  buyDialogInfo: () => state.buyDialogInfo
 }
 
 // actions
 const actions = {
-  ChangeMsg ({commit, state}, data) {
-    commit('ChaneMsg', 'Hello, Vue-cli!')
+  ChangeBuyDialogInfo ({commit, state}, data) {
+    commit('_ChangeBuyDialogInfo', data)
   }
 }
 
 // mutations
 const mutations = {
-  ChaneMsg (state, data) {
-    state.msg = data
+  _ChangeBuyDialogInfo (state, data) {
+    state.buyDialogInfo = data
   }
 }
 

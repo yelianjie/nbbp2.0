@@ -11,7 +11,7 @@ import 'vux/src/styles/reset.less'
 import './styles/global.less'
 import bpDialog from './plugins/bpDialog'
 import maskPlugin from './plugins/mask'
-import { ToastPlugin, ConfirmPlugin, LoadingPlugin } from 'vux'
+import { ToastPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin } from 'vux'
 import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 Validator.localize('ch', ZH_CN)
@@ -19,6 +19,7 @@ Validator.localize('ch')
 Vue.use(VeeValidate, {
   errorBagName: 'vErrors'
 })
+Vue.use(WechatPlugin)
 Vue.use(bpDialog)
 Vue.use(maskPlugin)
 Vue.use(ToastPlugin)

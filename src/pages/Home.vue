@@ -1,6 +1,6 @@
 <template>
   <div class="container flex flex-v" style="background-color:#121420;">
-    <div class="home-header"><svg-icon icon-class="hot" className="hot-icon"/>热门推荐<span class="city-now" @click="showAddress = true">{{cityName}}<svg-icon icon-class="arrow-down" className="arrow-down-icon"/></span></div>
+    <div class="home-header"><svg-icon icon-class="hot" className="hot-icon"/><span class="h-title f16">热门推荐</span><span class="city-now" @click="showAddress = true">{{cityName}}<svg-icon icon-class="arrow-down" className="arrow-down-icon"/></span></div>
     <div class="flex-1 scroll">
       <BarsList :barsList="barsList" enter="home"></BarsList>
     </div>
@@ -63,6 +63,10 @@ export default {
   text-align: center;
   color: #fff;
   position: relative;
+  font-size: 0;
+  .h-title {
+    vertical-align: middle;
+  }
   .city-now {
     position: absolute;
     left: 0.3rem;
@@ -70,10 +74,11 @@ export default {
     font-size: 14px;
   }
   .hot-icon {
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
     fill: #fd2a3d;
     margin-right: 4px;
+    vertical-align: middle;
   }
   .arrow-down-icon {
     margin-left: 4px;

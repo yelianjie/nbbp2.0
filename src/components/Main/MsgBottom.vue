@@ -69,12 +69,12 @@ export default {
     display: block;
   }
   img, svg {
-    width: 0.24rem;
-    height: 0.24rem;
+    width: 0.32rem;
+    height: 0.32rem;
   }
   .icon-wrap {
-    width: 0.4rem;
-    height: 0.4rem;
+    width: 0.48rem;
+    height: 0.48rem;
     background-color: #fff;
     border-radius: 50%;
   }
@@ -95,8 +95,8 @@ export default {
     margin-right: 0;
     .svg-icon {
       margin: 0;
-      width: 0.4rem;
-      height: 0.4rem;
+      width: 0.48rem;
+      height: 0.48rem;
     }
   }
 }

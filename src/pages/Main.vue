@@ -13,11 +13,11 @@
     <div class="main-header flex flex-align-center">
       <div class="flex main-header-left flex-align-center">
         <div class="main-header-avatar">
-          <img src="../assets/logo.png" class="circle">
+          <router-link :to="{path: '/UserCenter'}"><img src="../assets/logo.png" class="circle"></router-link>
         </div>
       </div>
       <div class="flex-1 main-header-right flex-align-center flex">
-        <div class="online-persons" v-for="(v, i) in onlinePeople" :key="i" @click="showCard">
+        <div class="online-persons flex" v-for="(v, i) in onlinePeople" :key="i" @click="showCard">
           <img :src="v.avatar" class="circle person-avatar"/>
         </div>
       </div>
@@ -33,14 +33,14 @@
         <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 4" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
       </template>
     </div>
-    <footer-main @onBuy="buyDialogVisible = true"></footer-main>
+    <footer-main @onSendMsg=""></footer-main>
   </div>
   <div id="fixed-bgds-btns">
     <div class="f-btn" @click="bpWindowVisible = true"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="dsindowVisible = true"><img src="../assets/ds-btn.png"/></div>
   </div>
-  <bp-window v-model="bpWindowVisible"></bp-window>
-  <ds-window v-model="dsindowVisible"></ds-window>
+  <bp-window v-model="bpWindowVisible"  @onBuy="buyDialogVisible = true"></bp-window>
+  <ds-window v-model="dsindowVisible"  @onBuy="buyDialogVisible = true"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
       <div class="user-info flex flex-v flex-align-center">
@@ -87,12 +87,12 @@
       </div>
     </div>
   </x-dialog>
-  <!-- <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy">
+  <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy">
     <div class="">
-      <div class="" style="font-size: 20px;margin-bottom: 10px;">30<img src="../assets/small.png"/></div>
-      <p style="color: #88878f;"><svg-icon icon-class="close" />当前剩余余额可用：<svg-icon icon-class="close" />45</p>
+      <div class="" style="font-size: 20px;margin-bottom: 10px;">{{buyDialogInfo.price}}<img src="../assets/small.png"/></div>
+      <p style="color: #88878f;"><svg-icon icon-class="close" />当前剩余余额可用：<svg-icon icon-class="close" />{{buyDialogInfo.rest}}</p>
     </div>
-  </bp-dialog> -->
+  </bp-dialog>
   <!--<bp-dialog :bg-title="true" :bgSrc="chargeBg" v-model="buyDialogVisible" @onConfirm="confirmBuy">
     <div class="">
       <p style="font-size: 13px;color:#6c6a75;text-align: left;
@@ -127,6 +127,7 @@ import DsMsg from '../components/Main/DsMsg'
 import BpWindow from '../components/Main/BpWindow'
 import DsWindow from '../components/Main/DsWindow'
 import Onlines from '../components/Main/Onlines'
+import { mapGetters } from 'vuex'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   data () {
@@ -251,10 +252,16 @@ export default {
       this.dsindowVisible = true
     },
     confirmBuy () {
-      setTimeout(() => {
+      this.buyDialogVisible = false
+      /* setTimeout(() => {
         this.buyDialogVisible = false
-      }, 3000)
+      }, 3000) */
     }
+  },
+  computed: {
+    ...mapGetters('app', {
+      buyDialogInfo: 'buyDialogInfo'
+    })
   },
   components: {
     FooterMain,
@@ -398,6 +405,8 @@ export default {
   height: 0.7rem;
   padding: 0.5rem 0;
   box-sizing: content-box;
+  display: block;
+  margin: 0 auto;
 }
 .qrcode-info {
   width: 4.75rem;

@@ -87,8 +87,8 @@ export default {
   z-index: 3;
   background-image: linear-gradient(to top, rgba(0,0,0,.4), rgba(0,0,0,0));
   .svg-icon {
-    width: 0.6rem;
-    height: 0.6rem;
+    width: 0.72rem;
+    height: 0.72rem;
   }
 }
 </style>

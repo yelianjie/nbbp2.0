@@ -34,7 +34,7 @@
         <div class="window-bottom f13 flex flex-align-center">
           <div class="account  flex-1">总计：<svg-icon icon-class="coin" className="coin" />104</div>
           <div class="repeat"><svg-icon icon-class="substract"/><span>连续送礼</span><svg-icon icon-class="plus"/></div>
-          <div class="submit"><button class="bp-button bp-submit">购买</button></div>
+          <div class="submit"><button class="bp-button bp-submit" @click="buy">购买</button></div>
         </div>
       </div>
     </transition>  
@@ -44,7 +44,7 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-
+import { mapActions } from 'vuex'
 export default {
   model: {
     prop: 'visible',
@@ -65,8 +65,18 @@ export default {
   },
   props: ['visible'],
   methods: {
+    ...mapActions('app', {
+      ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
+    }),
     closeWindow () {
       this.$emit('closeWindow', false)
+    },
+    buy () {
+      this.ChangeBuyDialogInfo({price: Math.floor(Math.random() * 100), rest: 30})
+      this.$emit('onBuy')
+    },
+    reset () {
+      this.dsGiftIndex = -1
     }
   },
   components: {
@@ -141,8 +151,9 @@ export default {
 }
 .bp-input {
   width: 100%;
-  height: 0.3rem;
-  padding: 0.2rem;
+  height: 0.5rem;
+  line-height: 0.5rem;
+  padding: 0.1rem;
   background-color: transparent;
   border: 1px solid @borderColor;
   outline: none;
@@ -154,7 +165,7 @@ export default {
     color: rgba(255, 255, 255, 0.5);
     text-align: center;
     font-size: 15px;
-    line-height: 0.95rem;
+    
   }
 }
 

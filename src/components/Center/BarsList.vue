@@ -34,7 +34,11 @@ export default {
   },
   methods: {
     pageToBarInfo () {
-      this.$router.push({path: '/AgentBarInfo'})
+      if (this.enter === 'home') {
+        this.$router.push({path: '/Main'})
+      } else {
+        this.$router.push({path: '/AgentBarInfo'})
+      }
     }
   },
   filters: {

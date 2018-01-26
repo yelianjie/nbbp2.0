@@ -50,7 +50,7 @@
         <div class="window-bottom f13 flex flex-align-center">
           <div class="account flex-1">总计：<svg-icon icon-class="coin" className="coin" />104</div>
           <div class="repeat"><svg-icon icon-class="substract"/><span>连续霸屏</span><svg-icon icon-class="plus"/></div>
-          <div class="submit"><button class="bp-button bp-submit">购买</button></div>
+          <div class="submit"><button class="bp-button bp-submit" @click="buy">购买</button></div>
         </div>
       </div>
     </transition>  
@@ -60,6 +60,7 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { mapActions } from 'vuex'
 import Upload from '../Upload'
 export default {
   model: {
@@ -83,11 +84,22 @@ export default {
     }
   },
   methods: {
+    ...mapActions('app', {
+      ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
+    }),
     closeWindow () {
       this.$emit('closeWindow', false)
     },
     afterClip (base64) {
       this.base64Img = base64
+    },
+    buy () {
+      this.ChangeBuyDialogInfo({price: Math.floor(Math.random() * 100), rest: 30})
+      this.$emit('onBuy')
+    },
+    reset () {
+      this.bpThemeIndex = -1
+      this.bpTimeIndex = -1
     }
   },
   components: {

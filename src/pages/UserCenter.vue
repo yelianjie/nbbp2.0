@@ -4,7 +4,7 @@
       <div class="user-box1 flex flex-align-center">
         <div class="flex-1 avatar flex flex-align-center"><img src="../assets/logo.png"/></div>
         <div class="edit-user flex flex-align-center">
-          <span class=""><router-link :to="{path: '/'}">编辑资料</router-link></span>
+          <span class=""><router-link :to="{path: '/Profile'}">编辑资料</router-link></span>
           <span class=""><svg-icon icon-class="share"/></span>
         </div>
       </div>
@@ -30,11 +30,11 @@
     <div class="user-middle">
       <div class="user-wallet flex">
         <div class="w1 flex-1 tc">
-          <h3 class="white">300</h3>
+          <h3 class="white"><countup :start-val="0" :end-val="300" :duration="2" class="demo1"></countup></h3>
           <h5>我的余额/牛角</h5>
         </div>
         <div class="w2 flex-1 tc">
-          <h3>30</h3>
+          <h3><countup :start-val="0" :end-val="30" :duration="2" class="demo2"></countup></h3>
           <h5>我的收益/员</h5>
         </div>
       </div>
@@ -50,8 +50,11 @@
 </template>
 
 <script>
+import { Countup } from 'vux'
 export default {
-
+  components: {
+    Countup
+  }
 }
 </script>
 
