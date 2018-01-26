@@ -318,6 +318,23 @@ export default {
     margin-left: 0.24rem;
     font-size: 0;
     white-space: nowrap;
+    padding: 2px 0;
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 0px rgba(0, 0, 0, 0);
+      box-shadow: inset 0 0 0px rgba(0, 0, 0, 0);
+      background-color: #e8e8e8;
+    }
+
+    &::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+      background-color: #F5F5F5;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #000000;
+      border: 0px solid #555555;
+    }
   }
   .person-avatar {
     display: block;

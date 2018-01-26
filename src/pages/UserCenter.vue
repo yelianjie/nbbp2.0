@@ -10,7 +10,7 @@
       </div>
       <div class="user-box2">
         <p class="white">鲜花</p>
-        <div class="flex u2">
+        <div class="flex u2 flex-align-center">
           <span class="level level-1">V1</span>
           <span class="f12 point">234积分</span>
         </div>

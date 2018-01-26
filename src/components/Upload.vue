@@ -73,7 +73,11 @@ export default {
       var height = img.height
       var canvas = this.canvas
       var ctx = canvas.getContext('2d')
-      var tCanvas = this.tCanvas
+      canvas.width = width
+      canvas.height = height
+      ctx.fillStyle = '#fff'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      /* var tCanvas = this.tCanvas
       // 如果图片大于四百万像素，计算压缩比并将大小压至400万以下
       var ratio
       if ((ratio = width * height / 2000000) > 1) {
@@ -102,13 +106,14 @@ export default {
         }
       } else {
         ctx.drawImage(img, 0, 0, width, height)
-      }
+      } */
+      ctx.drawImage(img, 0, 0, width, height)
       // 进行最小压缩
       var ndata = canvas.toDataURL('image/jpeg', 0.6)
       console.log('压缩前：' + initSize)
       console.log('压缩后：' + ndata.length)
       console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + '%')
-      tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
+      // tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
       return ndata
     }
   },
