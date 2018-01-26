@@ -4,31 +4,42 @@
       <div class="u-avatar"><img src="../assets/logo.png"/></div>
       <div class="flex flex-v flex-pack-center flex-1 u-middle">
         <p class="f16 uanme overflow white">鲜花</p>
-        <p class="f12 coin-tip darker1"><span class="ver-mid">已拥有的牛角币</span><svg-icon icon-class="coin" className="ml4"/></p>
+        <p class="f12 coin-tip darker1"><span class="ver-mid">已拥有的牛角币</span><svg-icon icon-class="coin" className="f14 ml4"/></p>
       </div>
-      <div class="coin-color f18">5</div>
+      <div class="coin-color" style="font-size: 24px;">5</div>
     </div>
     <div class="charge-container">
       <div class="charge-tab">
         <span class="ct ncolor">充值购买</span>
-        <span class="ct darker2">交易明细</span>
+        <span class="ct darker1">交易明细</span>
       </div>
       <div class="charge-price-list white">
         <div class="charge-price-item" v-for="i in 6" :key="i" :class="{'selected': bpValueIndex == i}" @click="bpValueIndex = i">
-          <div class="value f13"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{i * 10}}</span><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-          <div class="value-price f12">10</div>
+          <div class="value f14"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{i * 10}}</span><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+          <div class="value-price f14">¥10</div>
         </div>
       </div>
+      <x-button :gradients="['#f31374', '#f31374']" style="margin-top: 25px;">确认支付</x-button>
+      <p class="darker1 f12" style="margin-top: 10px;">充值说明</p>
+      <ul class="darker1 f12">
+        <li>1、1牛角=1元人民币</li>
+        <li>2、充值的牛角只能消费，不能提现</li>
+      </ul>
+      
     </div>
   </div>
 </template>
 
 <script>
+import { XButton } from 'vux'
 export default {
   data () {
     return {
       bpValueIndex: -1
     }
+  },
+  components: {
+    XButton
   }
 }
 </script>
@@ -61,7 +72,7 @@ export default {
 .charge-price-item {
   display: inline-block;
   width: 1.5rem;
-  margin-right: 0.6rem;
+  margin-right: 0.9rem;
   margin-bottom: 0.4rem;
   &:nth-child(3n+3) {
     margin-right: 0;
@@ -118,4 +129,9 @@ export default {
       background-color: #fff;
     }
   }
+@media screen and (min-width: 768px){
+  .charge-price-item:nth-child(3n+3) {
+    margin-right: 0.9rem;
+  }
+}
 </style>

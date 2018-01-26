@@ -29,31 +29,35 @@
     </div>
     <div class="user-middle">
       <div class="user-wallet flex">
-        <div class="w1 flex-1 tc">
+        <div class="w1 flex-1 tc" @click="$router.push({path: '/Charge'})">
           <h3 class="white"><countup :start-val="0" :end-val="300" :duration="2" class="demo1"></countup></h3>
           <h5>我的余额/牛角</h5>
         </div>
-        <div class="w2 flex-1 tc">
+        <div class="w2 flex-1 tc" @click="$router.push({path: '/Income'})">
           <h3><countup :start-val="0" :end-val="30" :duration="2" class="demo2"></countup></h3>
           <h5>我的收益/员</h5>
         </div>
       </div>
-      <div class="group">
-        <ul>
-          <li><router-link :to="{path: '/'}" class="flex group-link f14 flex-align-center"><span style="color: #e8401b;"><svg-icon icon-class="heart" /></span>推荐给好友<svg-icon icon-class="arrow-right" className="arrow-right"/></router-link></li>
-          <li><router-link :to="{path: '/'}" class="flex group-link f14 flex-align-center"><span style="color: #5bf475;"><svg-icon icon-class="about" /></span>关于我们<svg-icon icon-class="arrow-right" className="arrow-right"/></router-link></li>
-          <li><router-link :to="{path: '/'}" class="flex group-link f14 flex-align-center"><span style="color: #317fe3;"><svg-icon icon-class="cooperate" /></span>商户加盟<svg-icon icon-class="arrow-right" className="arrow-right"/></router-link></li>
-        </ul>
-      </div>
+      <group>
+        <cell title="推荐给好友" color="#e8401b" :is-link="true" icon-name="heart"></cell>
+        <cell title="关于我们" color="#5bf475" :is-link="true" icon-name="about"></cell>
+        <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate"></cell>
+      </group>
     </div>
   </div>
 </template>
 
 <script>
 import { Countup } from 'vux'
+import Group from '../components/User/Group'
+import Cell from '../components/User/Cell'
 export default {
   components: {
-    Countup
+    Countup,
+    Group,
+    Cell
+  },
+  methods: {
   }
 }
 </script>

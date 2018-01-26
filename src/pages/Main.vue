@@ -100,28 +100,10 @@
       <p style="color: #88878f;"><svg-icon icon-class="close" />当前剩余余额可用：<svg-icon icon-class="close" />{{buyDialogInfo.rest}}</p>
     </div>
   </bp-dialog>
-  <!--<bp-dialog :bg-title="true" :bgSrc="chargeBg" v-model="buyDialogVisible" @onConfirm="confirmBuy">
-    <div class="">
-      <p style="font-size: 13px;color:#6c6a75;text-align: left;
-      margin-bottom: 10px;">当前有102元收益可兑换成牛角</p>
-      <div><input type="number" class="boderbox" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
-      <div style="color:#6c6a75;text-align: left;font-size: 12px;margin-top:10px;"><svg-icon icon-class="notice"/><span style="margin-left:6px;">1牛角=1元</span></div>
-    </div>
-  </bp-dialog>-->
-  <!--<bp-dialog :bg-title="true" :bgSrc="despoitBg" v-model="buyDialogVisible" @onConfirm="confirmBuy">
-    <div class="">
-      <p style="font-size: 13px;color:#6c6a75;text-align: left;
-      margin-bottom: 10px;">当前收益：102元</p>
-      <div><input type="number" class="boderbox" placeholder="请输入要提现的金额" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
-      <div style="color:#6c6a75;text-align: left;font-size: 12px;margin-top:10px;"><svg-icon icon-class="notice"/><span>目前仅支持整百数提现</span></div>
-    </div>
-  </bp-dialog>-->
   </div>
 </template>
 
 <script>
-import chargeBg from '../assets/charge-bg.png'
-import despoitBg from '../assets/despoit-bg.png'
 import { XDialog } from 'vux'
 import BpDialog from '../components/bpDialog'
 import InfiniteLoading from 'vue-infinite-loading'
@@ -139,8 +121,6 @@ import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      chargeBg: chargeBg,
-      despoitBg: despoitBg,
       chatlist: [],
       list: [{
         content: '重金霸屏，献给未来的你你你你你啊~',

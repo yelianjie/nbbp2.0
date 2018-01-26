@@ -123,6 +123,13 @@ export default new Router({
       component: (resolve) => {
         require(['@/pages/Charge'], resolve)
       }
+    },
+    {
+      path: '/Income',
+      name: 'Income',
+      component: (resolve) => {
+        require(['@/pages/Income'], resolve)
+      }
     }
   ]
 })

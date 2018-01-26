@@ -250,6 +250,11 @@ export default {
   right: -1px;
   border-radius: 6px;
 }
+@media screen and (min-width: 768px){
+  .bp-time-item:nth-child(4n+4) {
+    margin-right: 0.7rem;
+  }
+}
 /* .base64-img {
   z-index: 2;
   background-size: cover;
