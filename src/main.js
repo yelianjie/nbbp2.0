@@ -31,6 +31,15 @@ FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 
+router.beforeEach(function (to, from, next) {
+  store.commit('updateLoadingStatus', {isLoading: true})
+  next()
+})
+
+router.afterEach(function (to) {
+  store.commit('updateLoadingStatus', {isLoading: false})
+})
+
 /* eslint-disable no-new */
 new Vue({
   router,

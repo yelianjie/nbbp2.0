@@ -316,6 +316,8 @@ export default {
   }
   .online-persons {
     margin-right: 0.2rem;
+    width: 0.64rem;
+    height: 0.64rem;
     &:last-child {
       margin-right: 0;
     }

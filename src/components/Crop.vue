@@ -1,4 +1,5 @@
 <template>
+<div v-transfer-dom>
   <div class="crop-box fullscreen flex flex-v" v-show="visible">
     <div class="fullscreen crop-inner" v-if="src">
       <img :src="src" id="img"/>
@@ -8,14 +9,19 @@
       <button @click="clip" class="flex-1">确定</button>
     </div>
   </div>
+</div>
 </template>
 
 <script>
 // import '../vendor/touch'
 // import '../vendor/veCrop'
+import { TransferDomDirective as TransferDom } from 'vux'
 import 'croppie/croppie.css'
 import Croppie from 'croppie'
 export default {
+  directives: {
+    TransferDom
+  },
   model: {
     prop: 'visible',
     event: 'croptrigger'

@@ -4,8 +4,20 @@ import app from './modules/app'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   modules: {
     app
   }
 })
+
+store.registerModule('vux', {
+  state: {
+    isLoading: false
+  },
+  mutations: {
+    updateLoadingStatus (state, payload) {
+      state.isLoading = payload.isLoading
+    }
+  }
+})
+export default store
