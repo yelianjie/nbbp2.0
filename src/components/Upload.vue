@@ -61,14 +61,13 @@ export default {
         var img = new Image()
         img.onload = function () {
           // _this.$emit('onPreview', img)
-          var n = document.createElement('img')
-          n.setAttribute('src', img.src)
-          document.body.appendChild(n)
           EXIF.EXIF.getData(img, function () {
             var orientation = EXIF.EXIF.getTag(this, 'Orientation')
             if (_this.isCrop) {
               _this.cropVisible = true
-              _this.$refs.crop.updateImg(base64, orientation)
+              var _base642 = _this.compress(img)
+              console.log(_base642)
+              _this.$refs.crop.updateImg(_base642, orientation)
             } else {
               // 压缩直接返回
               var _base64 = _this.compress(img)
@@ -121,7 +120,7 @@ export default {
       } */
       ctx.drawImage(img, 0, 0, width, height)
       // 进行最小压缩
-      var ndata = canvas.toDataURL('image/jpeg', 0.6)
+      var ndata = canvas.toDataURL('image/jpeg', 0.1)
       console.log('压缩前：' + initSize)
       console.log('压缩后：' + ndata.length)
       console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + '%')
