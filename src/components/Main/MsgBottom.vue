@@ -14,7 +14,7 @@
         <span class="num f12">3</span>
       </div>
       <div class="msg-btn msg-btn-big msg-share flex flex-1 flex-align-center">
-        <svg-icon icon-class="share" @touchstart.native="share" />
+        <svg-icon icon-class="share" @click.native="share" />
       </div>
     </template>
     <template v-else>
@@ -98,8 +98,8 @@ export default {
     margin-right: 0;
     .svg-icon {
       margin: 0;
-      width: 0.48rem;
-      height: 0.48rem;
+      width: 0.9rem;
+      height: 0.9rem;
     }
   }
 }

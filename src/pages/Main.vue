@@ -347,7 +347,7 @@ export default {
 .boardcast-scroller {
   width: 3.68rem;
   height: 0.4rem;
-  overflow: auto;
+  overflow: hidden;
 }
 .scroller-wrap {
   width: 100%;

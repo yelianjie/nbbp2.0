@@ -50,6 +50,7 @@ export default {
         })
         this.crop = new Croppie(document.getElementById('img'), {
           showZoomer: false,
+          enableExif: true,
           viewport: {
             width: _this.clipWidth,
             height: _this.clipHeight,
