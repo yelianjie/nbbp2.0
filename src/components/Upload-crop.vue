@@ -1,7 +1,7 @@
 <template>
   <div>
     <slot></slot>
-    <input type="file" accept="image/*" :id="name" :name="name" @change="fileChange"/>
+    <input type="file" accept="image/*" :id="name" :name="name" @change="fileChange" ref="fileInput"/>
     <template v-if="isCrop">
       <crop v-model="cropVisible" ref="crop" @on-clip="finishClip" :crop-radio="cropRadio"></crop>
     </template>
@@ -10,6 +10,8 @@
 
 <script>
 import Crop from '../components/Crop'
+// import { Exif } from '../utils/exif.min.js'
+var EXIF = require('../utils/exif.js')
 export default {
   props: {
     name: {
@@ -37,6 +39,10 @@ export default {
     this.canvas = document.createElement('canvas')
     // 瓦片canvas
     this.tCanvas = document.createElement('canvas')
+    /* window.EXIF.getData(document.getElementById(this.name), function () {
+      var allMetaData = window.EXIF.getAllTags(this)
+      console.log(allMetaData)
+    }) */
   },
   methods: {
     finishClip (base64) {
@@ -55,14 +61,18 @@ export default {
         var img = new Image()
         img.onload = function () {
           // _this.$emit('onPreview', img)
-          if (_this.isCrop) {
-            _this.cropVisible = true
-            _this.$refs.crop.updateImg(base64)
-          } else {
-            // 压缩直接返回
-            var _base64 = _this.compress(img)
-            _this.$emit('on-preview', _base64)
-          }
+          EXIF.EXIF.getData(img, function () {
+            var orientation = EXIF.EXIF.getTag(this, 'Orientation')
+            if (_this.isCrop) {
+              _this.cropVisible = true
+              _this.$refs.crop.updateImg(base64, orientation)
+            } else {
+              // 压缩直接返回
+              var _base64 = _this.compress(img)
+              _this.$emit('on-preview', _base64)
+            }
+          })
+          img = null
         }
         img.src = base64
       }
