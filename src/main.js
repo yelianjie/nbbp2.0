@@ -26,7 +26,7 @@ Vue.use(ToastPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)
 Vue.use(VueRouter)
-
+window.URL = window.URL || window.webkitURL
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false

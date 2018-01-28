@@ -91,7 +91,14 @@ export default {
       this.$emit('closeWindow', false)
     },
     afterClip (base64) {
-      this.base64Img = base64
+      var img = new Image()
+      img.onload = () => {
+        this.base64Img = base64
+        setTimeout(() => {
+          window.URL.revokeObjectURL(img.src)
+        }, 100)
+      }
+      img.src = base64
     },
     buy () {
       this.ChangeBuyDialogInfo({price: Math.floor(Math.random() * 100), rest: 30})

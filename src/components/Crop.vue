@@ -2,7 +2,7 @@
 <div v-transfer-dom>
   <div class="crop-box fullscreen flex flex-v" v-show="visible">
     <div class="fullscreen crop-inner" v-if="src">
-      <img :src="src" id="img"/>
+      <div id="img"></div>
     </div>
     <div class="flex buttons">
       <button @click="cancel" class="flex-1">取消</button>
@@ -41,7 +41,7 @@ export default {
     this.clipHeight = Math.floor(6 * fsize * this.cropRadio)
   },
   methods: {
-    updateImg (src) {
+    updateImg (src, orientation) {
       let _this = this
       this.src = src
       this.$nextTick(() => {
@@ -50,7 +50,6 @@ export default {
         })
         this.crop = new Croppie(document.getElementById('img'), {
           showZoomer: false,
-          enableExif: true,
           enableOrientation: true,
           viewport: {
             width: _this.clipWidth,
@@ -58,6 +57,11 @@ export default {
             type: 'square'
           }
         })
+        this.crop.bind({
+          url: src,
+          orientation: orientation
+        })
+
         this.$vux.loading.hide()
       })
     },
@@ -66,11 +70,11 @@ export default {
         text: '正在裁剪'
       })
       this.crop.result({
-        type: 'base64',
+        type: 'blob',
         size: 'original'
-      }).then((base64) => {
+      }).then((blob) => {
         this.cancel()
-        this.$emit('on-clip', base64)
+        this.$emit('on-clip', window.URL.createObjectURL(blob))
         this.$vux.loading.hide()
       })
     },

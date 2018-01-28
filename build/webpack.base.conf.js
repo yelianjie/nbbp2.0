@@ -35,7 +35,7 @@ let webpackConfig = {
         loader: 'eslint-loader',
         enforce: 'pre',
         include: [resolve('src'), resolve('test')],
-        exclude: [resolve('src/vendor')],
+        exclude: [resolve('src/vendor'), resolve('src/utils')],
         options: {
           formatter: require('eslint-friendly-formatter'),
           emitWarning: !config.dev.showEslintErrorsInOverlay
