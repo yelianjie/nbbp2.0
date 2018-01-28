@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=	gqwAbhpew0rdL9sZei9dL2PQWGqW7beB"></script>
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=	gqwAbhpew0rdL9sZei9dL2PQWGqW7beB"></script>
   <style>
   * {
     margin: 0;
@@ -269,6 +269,7 @@ ul,li {
    var nears = new BMap.Geocoder();
    nears.getLocation(cp, function(rs) {
      var addComp = rs.addressComponents; 
+     console.log(addComp)
      formatHTML(rs.surroundingPois)
      scroll.refresh()
      scroll.scrollTo(0,0,0)
