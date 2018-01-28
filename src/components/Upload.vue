@@ -2,7 +2,7 @@
   <div>
     <slot></slot>
     <input type="file" accept="image/*" :id="name" :name="name" @change="fileChange" ref="fileInput"/>
-    <div v-transfer-dom>
+    <div v-transfer-dom v-if="isCrop">
       <div class="crop-box fullscreen flex flex-v" v-show="cropVisible">
         <div class="fullscreen crop-inner" ref="crop"></div>
         <div class="flex buttons">
@@ -18,6 +18,7 @@
 import Crop from '../components/Crop'
 import PhotoClip from 'photoclip'
 import { TransferDomDirective as TransferDom } from 'vux'
+var EXIF = require('../utils/exif.js')
 export default {
   directives: {
     TransferDom
@@ -52,10 +53,16 @@ export default {
     var fsize = parseInt(document.documentElement.style.fontSize)
     this.clipWidth = Math.floor(6 * fsize)
     this.clipHeight = Math.floor(6 * fsize * this.cropRadio)
+    if (!this.isCrop) {
+      return
+    }
     this.crop = new PhotoClip(this.$refs.crop, {
       size: [this.clipWidth, this.clipHeight],
       lrzOption: {
         quality: 0.8
+      },
+      style: {
+        maskBorder: '1px dashed #fff'
       },
       outputQuality: 1
     })
@@ -66,19 +73,48 @@ export default {
       this.crop.clear()
     },
     finishClip () {
+      this.$vux.loading.show({
+        text: '正在裁剪'
+      })
       var base64 = this.crop.clip()
       this.$emit('on-clip', base64)
       this.cancel()
+      this.$vux.loading.hide()
     },
     fileChange (event) {
       var file = event.target.files[0]
       if (!file) {
         return
       }
-      this.cropVisible = true
-      this.crop.load(file)
+      this.$vux.loading.show({
+        text: '正在加载图片'
+      })
+      if (this.isCrop) {
+        this.crop.load(file)
+        this.cropVisible = true
+        this.$vux.loading.hide()
+      } else {
+        var _this = this
+        var reader = new FileReader()
+        reader.readAsDataURL(file) // 将文件以Data URL形式进行读入页面
+        reader.onload = function () {
+          var base64 = this.result
+          var img = new Image()
+          img.onload = function () {
+            // _this.$emit('onPreview', img)
+            EXIF.EXIF.getData(img, function () {
+              var orientation = EXIF.EXIF.getTag(this, 'Orientation')
+              var _base64 = _this.compress(img, orientation)
+              _this.$emit('on-preview', _base64)
+              _this.$vux.loading.hide()
+            })
+            img = null
+          }
+          img.src = base64
+        }
+      }
     },
-    compress (img) {
+    compress (img, Orientation) {
       var initSize = img.src.length
       var width = img.width
       var height = img.height
@@ -119,6 +155,22 @@ export default {
         ctx.drawImage(img, 0, 0, width, height)
       } */
       ctx.drawImage(img, 0, 0, width, height)
+      // 修复ios上传图片的时候 被旋转的问题
+      if (Orientation !== '' && Orientation !== 1) {
+        switch (Orientation) {
+          case 6:// 需要顺时针（向左）90度旋转
+            this.rotateImg(img, 'left', canvas)
+            break
+          case 8:// 需要逆时针（向右）90度旋转
+            this.rotateImg(img, 'right', canvas)
+            break
+          case 3:// 需要180度旋转
+            this.rotateImg(img, 'right', canvas)// 转两次
+            this.rotateImg(img, 'right', canvas)
+            break
+        }
+      }
+
       // 进行最小压缩
       var ndata = canvas.toDataURL('image/jpeg', 0.6)
       console.log('压缩前：' + initSize)
@@ -126,6 +178,57 @@ export default {
       console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + '%')
       // tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
       return ndata
+    },
+    rotateImg (img, direction, canvas) {
+      // 最小与最大旋转方向，图片旋转4次后回到原方向
+      const minStep = 0
+      const maxStep = 3
+      if (img == null) {
+        return
+      }
+      // img的高度和宽度不能在img元素隐藏后获取，否则会出错
+      let height = img.height
+      let width = img.width
+      let step = 2
+      if (step == null) {
+        step = minStep
+      }
+      if (direction === 'right') {
+        step++
+        // 旋转到原位置，即超过最大值
+        step > maxStep && (step = minStep)
+      } else {
+        step--
+        step < minStep && (step = maxStep)
+      }
+      // 旋转角度以弧度值为参数
+      let degree = step * 90 * Math.PI / 180
+      let ctx = canvas.getContext('2d')
+      switch (step) {
+        case 0:
+          canvas.width = width
+          canvas.height = height
+          ctx.drawImage(img, 0, 0)
+          break
+        case 1:
+          canvas.width = height
+          canvas.height = width
+          ctx.rotate(degree)
+          ctx.drawImage(img, 0, -height)
+          break
+        case 2:
+          canvas.width = width
+          canvas.height = height
+          ctx.rotate(degree)
+          ctx.drawImage(img, -width, -height)
+          break
+        case 3:
+          canvas.width = height
+          canvas.height = width
+          ctx.rotate(degree)
+          ctx.drawImage(img, -width, 0)
+          break
+      }
     }
   },
   components: {
