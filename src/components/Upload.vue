@@ -10,6 +10,7 @@
 
 <script>
 import Crop from '../components/Crop'
+// import { dataURLtoBlob } from '../utils/utils'
 // import { Exif } from '../utils/exif.min.js'
 var EXIF = require('../utils/exif.js')
 export default {
@@ -65,20 +66,25 @@ export default {
             var orientation = EXIF.EXIF.getTag(this, 'Orientation')
             if (_this.isCrop) {
               _this.cropVisible = true
-              var _base642 = _this.compress(img)
-              console.log(_base642)
-              _this.$refs.crop.updateImg(_base642, orientation)
+              _this.compress(img, (bloburl) => {
+                _this.$refs.crop.updateImg(bloburl, orientation)
+                setTimeout(() => {
+                  window.URL.revokeObjectURL(bloburl)
+                }, 100)
+              })
             } else {
               // 压缩直接返回
-              var _base64 = _this.compress(img)
-              _this.$emit('on-preview', _base64)
+              _this.compress(img, (bloburl) => {
+                _this.$emit('on-preview', bloburl)
+              })
             }
+            img = null
           })
         }
         img.src = base64
       }
     },
-    compress (img) {
+    compress (img, cb) {
       var initSize = img.src.length
       var width = img.width
       var height = img.height
@@ -87,7 +93,7 @@ export default {
       canvas.width = width
       canvas.height = height
       ctx.fillStyle = '#fff'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.fillRect(0, 0, canvas.width / 2, canvas.height / 2)
       /* var tCanvas = this.tCanvas
       // 如果图片大于四百万像素，计算压缩比并将大小压至400万以下
       var ratio
@@ -120,12 +126,15 @@ export default {
       } */
       ctx.drawImage(img, 0, 0, width, height)
       // 进行最小压缩
-      var ndata = canvas.toDataURL('image/jpeg', 0.1)
-      console.log('压缩前：' + initSize)
-      console.log('压缩后：' + ndata.length)
-      console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + '%')
-      // tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
-      return ndata
+      // var ndata = canvas.toDataURL('image/jpeg', 0.1)
+      canvas.toBlob(function (blob) {
+        var ndata = window.URL.createObjectURL(blob)
+        console.log('压缩前：' + initSize)
+        console.log('压缩后：' + ndata.length)
+        console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + '%')
+        // tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0
+        cb(ndata)
+      }, 'image/jpeg', 0.5)
     }
   },
   components: {
