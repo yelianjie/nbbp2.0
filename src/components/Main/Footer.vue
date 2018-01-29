@@ -19,7 +19,7 @@
           <svg-icon icon-class="close-no-circle" @click.native="deleteMsgImg"/>
         </div>
         <div class="chat-input flex-1" :class="{'move': textImgVisible}">
-          <input type="text" placeholder="说点什么吧！" @click="showFace = false">
+          <input type="text" placeholder="说点什么吧！" @click="onInputClick" @blur="onInputBlur">
         </div>
         <div class="chat-submit-btn flex flex-align-center" @click="sendMsg">
           <svg-icon icon-class="plane"/>
@@ -41,6 +41,13 @@ export default {
     }
   },
   methods: {
+    onInputClick () {
+      document.documentElement.classList.add('noscroll')
+      this.showFace = false
+    },
+    onInputBlur () {
+      document.documentElement.classList.remove('noscroll')
+    },
     sendMsg () {
       this.$emit('onSendMsg')
     },
