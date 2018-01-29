@@ -19,7 +19,7 @@
           <svg-icon icon-class="close-no-circle" @click.native="deleteMsgImg"/>
         </div>
         <div class="chat-input flex-1" :class="{'move': textImgVisible}">
-          <input type="text" placeholder="说点什么吧！">
+          <input type="text" placeholder="说点什么吧！" @click="showFace = false">
         </div>
         <div class="chat-submit-btn flex flex-align-center" @click="sendMsg">
           <svg-icon icon-class="plane"/>
@@ -64,9 +64,13 @@ export default {
 @import '../../styles/main.less';
 .footer {
   &.up {
-    margin-bottom: 0;
+    bottom: 0;
   }
-  margin-bottom: -2.15rem;
+  position: absolute;
+  left: 0;
+  bottom: -2.15rem;
+  right: 0;
+  z-index: 1;
   transition: all .3s ease-out;
   padding: 0.15rem;
   border-top: 0.5px solid rgba(255, 255, 255, 0.4);
