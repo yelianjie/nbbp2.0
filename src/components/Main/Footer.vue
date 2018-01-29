@@ -3,7 +3,7 @@
     <div class="flex">
       <div class="footer-left flex">
         <div class="footer-icons flex">
-          <div class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="home"/></div>
+          <div class="icon flex flex-align-center flex-pack-center" @click="$router.go(-1)"><svg-icon icon-class="home"/></div>
           <div class="icon flex flex-align-center flex-pack-center">
             <upload name="msg-upload-img" @on-preview="msgImgUploadPreview">
               <svg-icon icon-class="img"/>

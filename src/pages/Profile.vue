@@ -20,7 +20,7 @@
         <x-address title="城市" hide-district v-model="form.adsValue" :list="addressData" value-text-align="left"></x-address>
       </group>
       <group label-width="4.5em" label-align="center">
-        <x-input class="desc-input" title="简介" v-model="form.desc" placeholder="一句精致的简介，让别人更懂你" value-text-align="left"></x-input>
+        <x-input class="desc-input" title="简介" :max="15" v-model="form.desc" placeholder="一句精致的简介，让别人更懂你" value-text-align="left"></x-input>
       </group>
     </div>
     <div id="profile-submit-btn">

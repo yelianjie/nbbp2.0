@@ -1,6 +1,6 @@
 <template>
-  <div class="container" style="background-color:#121420;">
-    <div class="user-top">
+  <div class="container bg1">
+    <div class="user-top bg2">
       <div class="user-box1 flex flex-align-center">
         <div class="flex-1 avatar flex flex-align-center"><img src="../assets/logo.png"/></div>
         <div class="edit-user flex flex-align-center">
@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <div class="user-middle">
+    <div class="user-middle bg2">
       <div class="user-wallet flex">
         <div class="w1 flex-1 tc" @click="$router.push({path: '/Charge'})">
           <h3 class="white"><countup :start-val="0" :end-val="300" :duration="2" class="demo1"></countup></h3>
@@ -39,9 +39,9 @@
         </div>
       </div>
       <group>
-        <cell title="推荐给好友" color="#e8401b" :is-link="true" icon-name="heart"></cell>
-        <cell title="关于我们" color="#5bf475" :is-link="true" icon-name="about"></cell>
-        <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate"></cell>
+        <cell title="推荐给好友" color="#e8401b" :is-link="true" icon-name="heart" :link-path="{path: '/'}"></cell>
+        <cell title="关于我们" color="#5bf475" :is-link="true" icon-name="about" :link-path="{path: '/About'}"></cell>
+        <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/'}"></cell>
       </group>
     </div>
   </div>
@@ -66,12 +66,10 @@ export default {
 @import (reference) '../styles/global.less';
 @iconBg: #21313a;
 @darkerColor: #61667a;
-@bgColor: #181b2a;
 @marginBottom: 0.2rem;
 .user-top {
   padding: 0.2rem 0.4rem;
   margin-bottom: 0.2rem;
-  background-color: @bgColor;
   .user-box1 {
     margin-bottom: @marginBottom;
   }
@@ -130,41 +128,6 @@ export default {
     }
     .text {
       color: @darkerColor;
-    }
-  }
-}
-.user-middle {
-  background-color: @bgColor;
-  .group ul li {
-    display: block;
-  }
-  .group-link {
-    padding: 0.35rem 0;
-    margin: 0 0.4rem;
-    color: #fff;
-    position: relative;
-    &::before {
-      content: "";
-      .setTopLine(#12151e);
-    }
-    span {
-      display: block;
-      width: 0.56rem;
-      height: 0.56rem;
-      line-height: 0.56rem;
-      text-align: center;
-      background-color: #2e313a;
-      border-radius: 50%; 
-      margin-right: 10px;
-    }
-    .arrow-right {
-      width: 0.4rem;
-      height: 0.4rem;
-      fill: #5d5e63;
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
     }
   }
 }

@@ -22,7 +22,7 @@
           <div class="bp-theme-container">
             <swiper :options="swiperThemeOption">
               <swiper-slide v-for="(v, i) in 8" :key="i">
-                <div class="bp-theme-item boderbox" :class="{'selected': bpThemeIndex == i}" @click="bpThemeIndex = i">
+                <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i}" @click="bpThemeIndex = i">
                   <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="theme-icon"><img src="../../assets/logo.png"></div>
                   <div class="theme-name f13 overflow">生日霸屏</div>
@@ -33,11 +33,11 @@
           </div>
           <div class="bp-input-area flex">
             <div class="bp-textarea flex-1">
-              <textarea class="bp-input boderbox" placeholder="请输入霸屏上墙语，30字以内"></textarea>
+              <textarea class="bp-input borderbox" placeholder="请输入霸屏上墙语，30字以内"></textarea>
             </div>
             <div class="bp-upload">
               <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip" :cropRadio="0.5625">
-                <div class="upload-inner boderbox flex flex-v flex-align-center flex-pack-center">
+                <div class="upload-inner borderbox flex flex-v flex-align-center flex-pack-center">
                   <svg-icon icon-class="camera"/>
                   <p class="f13">添加照片</p>
                   <label for="bp-upload-img" class="n-label" id="base64Img" :style="{'background-image':'url('+base64Img+')'}"></label>
@@ -149,7 +149,7 @@ export default {
   display: inline-block;
   width: 1.15rem;
   margin-right: 0.7rem;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.3rem;
   &:nth-child(4n+4) {
     margin-right: 0;
   }

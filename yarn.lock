@@ -3483,7 +3483,7 @@ isarray@1.0.0, isarray@^1.0.0, isarray@~1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/isarray/download/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
 
-"iscroll@github:baijunjie/iscroll":
+iscroll@baijunjie/iscroll:
   version "5.2.0-snapshot"
   resolved "https://codeload.github.com/baijunjie/iscroll/tar.gz/7d09eba093215e04897fe8e1106d54cc607c3254"
 

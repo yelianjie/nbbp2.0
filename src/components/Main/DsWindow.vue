@@ -17,7 +17,7 @@
           <div class="ds-gift-container">
             <swiper :options="swiperDsGiftOption">
               <swiper-slide v-for="(v, i) in 8" :key="i">
-                <div class="ds-gift-item boderbox ds-item" :class="{'selected': dsGiftIndex == i}" @click="dsGiftIndex = i">
+                <div class="ds-gift-item borderbox ds-item" :class="{'selected': dsGiftIndex == i}" @click="dsGiftIndex = i">
                   <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="gift-icon ds-img"><img src="../../assets/logo.png"></div>
                   <div class="gift-name ds-text overflow f13">兰博基尼</div>
@@ -28,7 +28,7 @@
             </swiper>
           </div>
           <div class="bp-input-area flex">
-            <input class="bp-input boderbox" placeholder="请输入送礼上墙语，15字以内" />
+            <input class="bp-input borderbox" placeholder="请输入送礼上墙语，15字以内" />
           </div>
         </div>
         <div class="window-bottom f13 flex flex-align-center">
