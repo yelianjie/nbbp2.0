@@ -47,7 +47,8 @@ export default {
 <style lang="less" scoped>
 .onlines {
   z-index: 2;
-  background-image: linear-gradient(to bottom, #2b112e, #683440 45%, #683440 55%, #2b112e);
+  background: url(../../assets/online-bg.jpg) no-repeat center;
+  background-size: cover;
 }
 .online-img {
   height: 1.2rem;
