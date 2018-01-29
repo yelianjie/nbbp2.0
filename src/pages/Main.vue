@@ -365,7 +365,6 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  margin-bottom: 1rem;
 }
 
 #fixed-bgds-btns {

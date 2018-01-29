@@ -1,5 +1,5 @@
 <template>
-  <div class="footer" :class="{'up': showFace}">
+  <div class="footer">
     <div class="flex">
       <div class="footer-left flex">
         <div class="footer-icons flex">
@@ -10,7 +10,7 @@
             </upload>
             <label for="msg-upload-img" class="n-label"></label>
           </div>
-          <div class="icon flex flex-align-center flex-pack-center" @click="showFace = !showFace"><svg-icon icon-class="face"/></div>
+          <div class="icon flex flex-align-center flex-pack-center"><svg-icon icon-class="face"/></div>
         </div>
       </div>
       <div class="footer-right flex flex-1">
@@ -19,14 +19,13 @@
           <svg-icon icon-class="close-no-circle" @click.native="deleteMsgImg"/>
         </div>
         <div class="chat-input flex-1" :class="{'move': textImgVisible}">
-          <input type="text" placeholder="说点什么吧！" @click="onInputClick" @blur="onInputBlur">
+          <input type="text" placeholder="说点什么吧！">
         </div>
         <div class="chat-submit-btn flex flex-align-center" @click="sendMsg">
           <svg-icon icon-class="plane"/>
         </div>
       </div>
     </div>
-    <div style="height: 2rem;background-color:red;margin-top:0.15rem;"></div>
   </div>
 </template>
 
@@ -36,18 +35,10 @@ export default {
   data () {
     return {
       textImgVisible: false,
-      base64: '',
-      showFace: false
+      base64: ''
     }
   },
   methods: {
-    onInputClick () {
-      document.documentElement.classList.add('noscroll')
-      this.showFace = false
-    },
-    onInputBlur () {
-      document.documentElement.classList.remove('noscroll')
-    },
     sendMsg () {
       this.$emit('onSendMsg')
     },
@@ -70,15 +61,6 @@ export default {
 <style lang="less" scoped>
 @import '../../styles/main.less';
 .footer {
-  &.up {
-    bottom: 0;
-  }
-  position: absolute;
-  left: 0;
-  bottom: -2.15rem;
-  right: 0;
-  z-index: 1;
-  transition: all .3s ease-out;
   padding: 0.15rem;
   border-top: 0.5px solid rgba(255, 255, 255, 0.4);
   .svg-icon {
