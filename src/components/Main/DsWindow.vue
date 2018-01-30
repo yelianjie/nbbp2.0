@@ -33,7 +33,7 @@
         </div>
         <div class="window-bottom f13 flex flex-align-center">
           <div class="account  flex-1">总计：<svg-icon icon-class="coin" className="coin" />104</div>
-          <div class="repeat"><svg-icon icon-class="substract"/><span>连续送礼</span><svg-icon icon-class="plus"/></div>
+          <div class="repeat"><svg-icon icon-class="substract" @click.native="dsTimes == 1 ? '' : dsTimes--"/><span>{{timesDsText}}</span><svg-icon icon-class="plus" @click.native="dsTimes == 3 ? dsTimes = 1 : dsTimes++"/></div>
           <div class="submit"><button class="bp-button bp-submit" @click="buy">购买</button></div>
         </div>
       </div>
@@ -52,6 +52,7 @@ export default {
   },
   data () {
     return {
+      dsTimes: 1,
       dsGiftIndex: -1,
       swiperDsGiftOption: {
         slidesPerColumn: 2,
@@ -82,6 +83,12 @@ export default {
   components: {
     swiper,
     swiperSlide
+  },
+  computed: {
+    timesDsText () {
+      const texts = ['一', '二', '三']
+      return texts[this.dsTimes - 1] + '连送礼'
+    }
   }
 
 }

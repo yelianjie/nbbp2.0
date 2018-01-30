@@ -49,7 +49,7 @@
         </div>
         <div class="window-bottom f13 flex flex-align-center">
           <div class="account flex-1">总计：<svg-icon icon-class="coin" className="coin" />104</div>
-          <div class="repeat"><svg-icon icon-class="substract"/><span>连续霸屏</span><svg-icon icon-class="plus"/></div>
+          <div class="repeat"><svg-icon icon-class="substract" @click.native="bpTimes == 1 ? '' : bpTimes--"/><span>{{timesBpText}}</span><svg-icon icon-class="plus" @click.native="bpTimes == 3 ? bpTimes = 1 : bpTimes++"/></div>
           <div class="submit"><button class="bp-button bp-submit" @click="buy">购买</button></div>
         </div>
       </div>
@@ -70,6 +70,7 @@ export default {
   props: ['visible'],
   data () {
     return {
+      bpTimes: 1,
       bpTimeIndex: -1,
       bpThemeIndex: -1,
       swiperThemeOption: {
@@ -113,8 +114,13 @@ export default {
     Upload,
     swiper,
     swiperSlide
+  },
+  computed: {
+    timesBpText () {
+      const texts = ['一', '二', '三']
+      return texts[this.bpTimes - 1] + '连霸屏'
+    }
   }
-
 }
 </script>
 

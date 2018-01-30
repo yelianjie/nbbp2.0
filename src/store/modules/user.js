@@ -2,12 +2,13 @@
 const namespaced = false
 
 const state = {
-  buyDialogInfo: {}
+  userInfo: {},
+  token: ''
 }
 
 // getters
 const getters = {
-  buyDialogInfo: () => state.buyDialogInfo
+  userInfo: () => state.userInfo
 }
 
 // actions
@@ -19,8 +20,8 @@ const actions = {
 
 // mutations
 const mutations = {
-  _ChangeBuyDialogInfo (state, data) {
-    state.buyDialogInfo = data
+  SET_TOKEN (state, data) {
+    state.token = data
   }
 }
 
