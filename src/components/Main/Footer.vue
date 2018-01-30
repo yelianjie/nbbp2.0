@@ -26,12 +26,13 @@
         </div>
       </div>
     </div>
-    <div style="height: 2rem;background-color:red;margin-top:0.15rem;"></div>
+    <!-- <chat-face></chat-face> -->
   </div>
 </template>
 
 <script>
 import Upload from '../Upload'
+/* import ChatFace from '../ChatFace' */
 export default {
   data () {
     return {
@@ -56,6 +57,7 @@ export default {
   },
   components: {
     Upload
+    /* ChatFace */
   }
 }
 </script>
@@ -63,13 +65,13 @@ export default {
 <style lang="less" scoped>
 @import '../../styles/main.less';
 .footer {
-  &.up {
+  /* &.up {
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.05);
-  }
+  } */
   position: absolute;
   left: 0;
-  bottom: -2.15rem;
+  bottom: 0;
   right: 0;
   z-index: 1;
   transition: all .3s ease-out;
