@@ -7,7 +7,7 @@
     <template v-if="type == 1">
       <group>
         <x-input title="酒吧名称" name="barname" placeholder="" type="text"  data-vv-as="酒吧名称" v-model="r_business.baranme" v-validate.initial="'required'"></x-input>
-        <x-input title="手机号码" name="mobile" placeholder="" type="number"  data-vv-as="手机号码" v-model="r_business.mobile" v-validate.initial="'required|numeric|min:11|max:11'"></x-input>
+        <x-input title="手机号码" name="mobile" placeholder="" type="number"  data-vv-as="手机号码" v-model="r_business.mobile" v-validate.initial="'required|numeric|min:11|max:11|mobile'"></x-input>
         <x-input title="推荐人" name="mobile" placeholder="" type="text"  data-vv-as="推荐人" v-model="r_business.recommender" v-validate.initial="'required'"></x-input>
       </group>
     </template>

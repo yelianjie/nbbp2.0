@@ -14,10 +14,34 @@ import maskPlugin from './plugins/mask'
 import { ToastPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin } from 'vux'
 import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
+import { validateRules } from './utils/validateRules'
+const dictionary = {
+  ch: {
+    messages: {
+      email: () => '请输入正确的邮箱格式',
+      required: (field) => field + '不能为空'
+    }
+  }
+}
+// custom validator
+Object.keys(validateRules).forEach((key) => {
+  Validator.extend(key, validateRules[key].validate)
+  // merge the validator messages
+  Object.keys(validateRules[key].messages).forEach(locale => {
+    Validator.localize({
+      [locale]: {
+        messages: {
+          [key]: validateRules[key].messages[locale]
+        }
+      }
+    })
+  })
+})
+
 Validator.localize('ch', ZH_CN)
-Validator.localize('ch')
 Vue.use(VeeValidate, {
-  errorBagName: 'vErrors'
+  errorBagName: 'vErrors',
+  dictionary: dictionary
 })
 Vue.use(WechatPlugin)
 Vue.use(bpDialog)
