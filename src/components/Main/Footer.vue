@@ -19,26 +19,28 @@
           <svg-icon icon-class="close-no-circle" @click.native="deleteMsgImg"/>
         </div>
         <div class="chat-input flex-1" :class="{'move': textImgVisible}">
-          <input type="text" placeholder="说点什么吧！" @click="showFace = false">
+          <input type="text" placeholder="说点什么吧！" @click="showFace = false" v-model="msg">
         </div>
         <div class="chat-submit-btn flex flex-align-center" @click="sendMsg">
           <svg-icon icon-class="plane"/>
         </div>
       </div>
     </div>
-    <!-- <chat-face></chat-face> -->
+    <div style="height: 0.15rem;"></div>
+    <chat-face @onFaceClick="handleFaceInput"></chat-face>
   </div>
 </template>
 
 <script>
 import Upload from '../Upload'
-/* import ChatFace from '../ChatFace' */
+import ChatFace from '../ChatFace'
 export default {
   data () {
     return {
       textImgVisible: false,
       base64: '',
-      showFace: false
+      showFace: false,
+      msg: ''
     }
   },
   methods: {
@@ -46,18 +48,20 @@ export default {
       this.$emit('onSendMsg')
     },
     msgImgUploadPreview (base64) {
-      console.log('111')
       this.textImgVisible = true
       this.base64 = base64
     },
     deleteMsgImg () {
       this.textImgVisible = false
       this.base64 = ''
+    },
+    handleFaceInput (value) {
+      this.msg = this.msg + value
     }
   },
   components: {
-    Upload
-    /* ChatFace */
+    Upload,
+    ChatFace
   }
 }
 </script>
@@ -65,13 +69,13 @@ export default {
 <style lang="less" scoped>
 @import '../../styles/main.less';
 .footer {
-  /* &.up {
+  &.up {
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.05);
-  } */
+    background-color: rgba(58, 10, 59, 0.9);
+  }
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: -2.95rem;
   right: 0;
   z-index: 1;
   transition: all .3s ease-out;

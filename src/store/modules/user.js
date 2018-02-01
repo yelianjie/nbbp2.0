@@ -1,5 +1,5 @@
-// initial state
-const namespaced = false
+import { getMemberInfo, saveMemberInfo } from '@/api/'
+const namespaced = true
 
 const state = {
   userInfo: {},
@@ -13,8 +13,23 @@ const getters = {
 
 // actions
 const actions = {
-  ChangeBuyDialogInfo ({commit, state}, data) {
-    commit('_ChangeBuyDialogInfo', data)
+  async getUserInfo ({commit, state}, data) {
+    try {
+      let response = await getMemberInfo()
+      commit('SET_USER_INFO', response.result)
+      return Promise.resolve(response.result)
+    } catch (e) {
+
+    }
+  },
+  async saveUserInfo ({commit, state}, data) {
+    try {
+      let response = await saveMemberInfo(data)
+      // commit('SET_USER_INFO', response.result)
+      return Promise.resolve(response.result)
+    } catch (e) {
+
+    }
   }
 }
 
@@ -22,6 +37,9 @@ const actions = {
 const mutations = {
   SET_TOKEN (state, data) {
     state.token = data
+  },
+  SET_USER_INFO (state, data) {
+    state.userInfo = data
   }
 }
 

@@ -10,14 +10,37 @@ Vue.http.interceptors.request.use(function (config) {
     }
   } */
   // Do something before request is sent
-  if (localStorage.getItem('token_guoguo')) {
+  /* if (localStorage.getItem('token_guoguo')) {
     config.headers['Authorization'] = localStorage.getItem('token_guoguo')
-  }
+  } */
   return config
 }, function (error) {
   // Do something with request error
   return Promise.reject(error)
 })
+
+/**
+ * 获取会员信息
+ */
+export const getMemberInfo = () => {
+  return Vue.http.post('/weixin/members/getMember', {}).then((response) => {
+    return Promise.resolve(response.data)
+  }, (error) => {
+    return Promise.reject(error.response.data)
+  })
+}
+
+/**
+ * 更新会员信息
+ * @param {*} data
+ */
+export const saveMemberInfo = (data) => {
+  return Vue.http.post('/weixin/members/saveMcMsg', data).then((response) => {
+    return Promise.resolve(response.data)
+  }, (error) => {
+    return Promise.reject(error.response.data)
+  })
+}
 
 export const GetAlbums = (data) => {
   return Vue.http.get('/albums', {params: data}).then((response) => {

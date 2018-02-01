@@ -1,5 +1,5 @@
 // initial state
-const namespaced = false
+const namespaced = true
 
 const state = {
   buyDialogInfo: {}
