@@ -10,6 +10,9 @@ export default new Router({
       name: 'Home',
       component: (resolve) => {
         require(['@/pages/Home'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
       }
     },
     {
@@ -17,6 +20,9 @@ export default new Router({
       name: 'Register',
       component: (resolve) => {
         require(['@/pages/Register'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
       }
     },
     {
@@ -24,6 +30,9 @@ export default new Router({
       name: 'UserCenter',
       component: (resolve) => {
         require(['@/pages/UserCenter'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
       }
     },
     {
@@ -31,6 +40,9 @@ export default new Router({
       name: 'Profile',
       component: (resolve) => {
         require(['@/pages/Profile'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
       }
     },
     {
@@ -38,6 +50,9 @@ export default new Router({
       name: 'AgentCenter',
       component: (resolve) => {
         require(['@/pages/AgentCenter'], resolve)
+      },
+      meta: {
+        roles: ['agent']
       }
     },
     {
@@ -45,6 +60,9 @@ export default new Router({
       name: 'BusinessCenter',
       component: (resolve) => {
         require(['@/pages/BusinessCenter'], resolve)
+      },
+      meta: {
+        roles: ['business']
       }
     },
     {
@@ -52,6 +70,9 @@ export default new Router({
       name: 'Deposit',
       component: (resolve) => {
         require(['@/pages/Deposit'], resolve)
+      },
+      meta: {
+        roles: ['agent', 'business']
       }
     },
     {
@@ -59,6 +80,9 @@ export default new Router({
       name: 'BasicBusiness',
       component: (resolve) => {
         require(['@/pages/BasicBusiness'], resolve)
+      },
+      meta: {
+        roles: ['business']
       }
     },
     {
@@ -66,6 +90,9 @@ export default new Router({
       name: 'NoticeSetting',
       component: (resolve) => {
         require(['@/pages/NoticeSetting'], resolve)
+      },
+      meta: {
+        roles: ['business']
       }
     },
     {
@@ -73,6 +100,9 @@ export default new Router({
       name: 'AdSetting',
       component: (resolve) => {
         require(['@/pages/AdSetting'], resolve)
+      },
+      meta: {
+        roles: ['business']
       }
     },
     {
@@ -80,6 +110,9 @@ export default new Router({
       name: 'BapingSetting',
       component: (resolve) => {
         require(['@/pages/BapingSetting'], resolve)
+      },
+      meta: {
+        roles: ['business']
       }
     },
     {
@@ -87,6 +120,9 @@ export default new Router({
       name: 'BgSetting',
       component: (resolve) => {
         require(['@/pages/BgSetting'], resolve)
+      },
+      meta: {
+        roles: ['business']
       }
     },
     {
@@ -94,6 +130,9 @@ export default new Router({
       name: 'Manager',
       component: (resolve) => {
         require(['@/pages/Manager'], resolve)
+      },
+      meta: {
+        roles: ['business']
       }
     },
     {
@@ -101,6 +140,9 @@ export default new Router({
       name: 'AgentBarInfo',
       component: (resolve) => {
         require(['@/pages/AgentBarInfo'], resolve)
+      },
+      meta: {
+        roles: ['agent']
       }
     },
     {
@@ -108,6 +150,9 @@ export default new Router({
       name: 'BindManage',
       component: (resolve) => {
         require(['@/pages/BindManage'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
       }
     },
     {
@@ -115,6 +160,9 @@ export default new Router({
       name: 'Main',
       component: (resolve) => {
         require(['@/pages/Main'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
       }
     },
     {
@@ -122,6 +170,9 @@ export default new Router({
       name: 'Charge',
       component: (resolve) => {
         require(['@/pages/Charge'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
       }
     },
     {
@@ -129,6 +180,9 @@ export default new Router({
       name: 'Income',
       component: (resolve) => {
         require(['@/pages/Income'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
       }
     },
     {
@@ -136,6 +190,9 @@ export default new Router({
       name: 'About',
       component: (resolve) => {
         require(['@/pages/About'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
       }
     }
   ]

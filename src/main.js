@@ -9,6 +9,7 @@ import router from './router'
 import './icons'
 import 'vux/src/styles/reset.less'
 import './styles/global.less'
+import * as filters from './filters' // global filters
 import bpDialog from './plugins/bpDialog'
 import maskPlugin from './plugins/mask'
 import { ToastPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin } from 'vux'
@@ -56,12 +57,37 @@ FastClick.attach(document.body)
 Vue.config.productionTip = false
 
 router.beforeEach(function (to, from, next) {
+  // 判断当前角色有没有权限进入这个路由
+  // if (store.getters['user/role'])
+  /* let role = store.getters['user/role']
+  let userInfo = store.getters['user/userInfo']
+  if (Object.keys(userInfo).length === 0) {
+    store.dispatch('user/getUserInfo').then(() => {
+      if (role.some((v) => to.meta.roles.includes(v))) {
+        store.commit('updateLoadingStatus', {isLoading: true})
+        next()
+      } else {
+        next({path: '/'})
+      }
+    })
+  } else {
+    if (role.some((v) => to.meta.roles.includes(v))) {
+      store.commit('updateLoadingStatus', {isLoading: true})
+      next()
+    } else {
+      next({path: '/'})
+    }
+  } */
   store.commit('updateLoadingStatus', {isLoading: true})
   next()
 })
 
 router.afterEach(function (to) {
   store.commit('updateLoadingStatus', {isLoading: false})
+})
+
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
 })
 
 /* eslint-disable no-new */

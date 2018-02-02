@@ -15,7 +15,7 @@
       </div>
       <div class="footer-right flex flex-1">
         <div class="upload-img flex flex-pack-center flex-align-center" v-show="textImgVisible">
-          <img :src="base64"/>
+          <img :src="base64 | prefixImageUrl"/>
           <svg-icon icon-class="close-no-circle" @click.native="deleteMsgImg"/>
         </div>
         <div class="chat-input flex-1" :class="{'move': textImgVisible}">

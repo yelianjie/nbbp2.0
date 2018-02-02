@@ -10,7 +10,7 @@
 
 <script>
 import BarsList from '@/components/Center/BarsList'
-import jsonp from 'jsonp'
+// import jsonp from 'jsonp'
 import { XAddress, ChinaAddressV4Data } from 'vux'
 export default {
   data () {
@@ -22,13 +22,13 @@ export default {
     }
   },
   mounted () {
-    jsonp('http://api.map.baidu.com/geoconv/v1/?coords=114.21892734521,29.575429778924&from=1&to=5&ak=gqwAbhpew0rdL9sZei9dL2PQWGqW7beB', null, (err, data) => {
+    /* jsonp('http://api.map.baidu.com/geoconv/v1/?coords=114.21892734521,29.575429778924&from=1&to=5&ak=gqwAbhpew0rdL9sZei9dL2PQWGqW7beB', null, (err, data) => {
       if (err) {
         console.error(err.message)
       } else {
         console.log(data)
       }
-    })
+    }) */
     this.$vux.loading.show({
       text: 'Loading'
     })

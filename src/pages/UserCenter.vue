@@ -2,46 +2,52 @@
   <div class="container bg1">
     <div class="user-top bg2">
       <div class="user-box1 flex flex-align-center">
-        <div class="flex-1 avatar flex flex-align-center"><img src="../assets/logo.png"/></div>
+        <div class="flex-1 avatar flex flex-align-center"><img v-show="userInfo.headimgurl" :src="userInfo.headimgurl"/></div>
         <div class="edit-user flex flex-align-center">
           <span class=""><router-link :to="{path: '/Profile'}">编辑资料</router-link></span>
           <span class=""><svg-icon icon-class="share"/></span>
         </div>
       </div>
       <div class="user-box2">
-        <p class="white">鲜花</p>
+        <p class="white">{{userInfo.nickname}}</p>
         <div class="flex u2 flex-align-center">
-          <span class="level level-1">V1</span>
-          <span class="f12 point">234积分</span>
+          <span class="level level-1">{{userInfo.grade_title}}</span>
+          <span class="f12 point">{{userInfo.mc_integral}}积分</span>
         </div>
         <div class="rpxline" style="background-color: #333743;"></div>
-        <p class="sign f14 flex"><span style="white-space: nowrap;">签名：</span><span>最开心的事就是你很好最开心</span></p>
+        <p class="sign f14 flex"><span style="white-space: nowrap;">签名：</span><span>{{userInfo.autograph}}</span></p>
         <div class="flex white tag1">
-          <span class="sex sex-male flex flex-align-center"><svg-icon icon-class="male" /></span>
-          <span class="tag tagcity">宁波</span>
+          <span class="sex sex-male flex flex-align-center"><svg-icon icon-class="male" v-if="userInfo.sex == 1"/><svg-icon icon-class="female" v-if="userInfo.sex == 2"/></span>
+          <span class="tag tagcity">{{userInfo.city}}</span>
         </div>
         <div class="count-current flex">
-          <div class="ucount"><span class="f20 number">9</span><span class="f14 text">点赞</span></div>
-          <div class="ucount"><span class="f20 number">20</span><span class="f14 text">霸屏</span></div>
-          <div class="ucount"><span class="f20 number">55</span><span class="f14 text">礼物</span></div>
+          <div class="ucount"><span class="f20 number">{{userInfo.fabulous_count}}</span><span class="f14 text">点赞</span></div>
+          <div class="ucount"><span class="f20 number">{{userInfo.screen_count}}</span><span class="f14 text">霸屏</span></div>
+          <div class="ucount"><span class="f20 number">{{userInfo.reward_count}}</span><span class="f14 text">礼物</span></div>
         </div>
       </div>
     </div>
-    <div class="user-middle bg2">
-      <div class="user-wallet flex">
+    <div class="user-middle">
+      <div class="user-wallet flex bg2">
         <div class="w1 flex-1 tc" @click="$router.push({path: '/Charge'})">
-          <h3 class="white"><countup :start-val="0" :end-val="300" :duration="2" class="demo1"></countup></h3>
+          <h3 class="white"><countup v-if="userInfo.balance" :start-val="0.000" :end-val="Number(userInfo.balance)" :duration="2" class="demo1" :decimals="3"></countup></h3>
           <h5>我的余额/牛角</h5>
         </div>
         <div class="w2 flex-1 tc" @click="$router.push({path: '/Income'})">
-          <h3><countup :start-val="0" :end-val="30" :duration="2" class="demo2"></countup></h3>
+          <h3><countup v-if="userInfo.profit_balance" :start-val="0.000" :end-val="Number(userInfo.profit_balance)" :duration="2" class="demo2" :decimals="3"></countup></h3>
           <h5>我的收益/员</h5>
         </div>
       </div>
-      <group>
+      <group class="bg2">
         <cell title="推荐给好友" color="#e8401b" :is-link="true" icon-name="heart" :link-path="{path: '/'}"></cell>
         <cell title="关于我们" color="#5bf475" :is-link="true" icon-name="about" :link-path="{path: '/About'}"></cell>
         <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/'}"></cell>
+      </group>
+      <group class="bg2" v-if="userInfo.isAgent > 0" style="margin-top: 0.2rem;">
+        <cell title="代理管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/AgentCenter'}"></cell>
+      </group>
+      <group class="bg2" v-if="userInfo.isMM > 0" style="margin-top: 0.2rem;">
+        <cell title="商户管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/BusinessCenter'}"></cell>
       </group>
     </div>
   </div>
@@ -51,13 +57,41 @@
 import { Countup } from 'vux'
 import Group from '../components/User/Group'
 import Cell from '../components/User/Cell'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     Countup,
     Group,
     Cell
   },
+  created () {
+    if (Object.keys(this.$store.getters['user/userInfo']).length === 0) {
+      this.$vux.loading.show({
+        text: '正在加载'
+      })
+      this.getUserInfo().then((res) => {
+        this.$vux.loading.hide()
+      }).catch(() => {
+        this.$vux.toast.show({
+          text: '获取信息失败',
+          position: 'bottom',
+          type: 'text',
+          time: 1500,
+          width: '10em'
+        })
+        this.$vux.loading.hide()
+      })
+    }
+  },
+  computed: {
+    ...mapGetters('user', [
+      'userInfo'
+    ])
+  },
   methods: {
+    ...mapActions('user', [
+      'getUserInfo'
+    ])
   }
 }
 </script>

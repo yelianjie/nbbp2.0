@@ -18,6 +18,7 @@
 import Crop from '../components/Crop'
 import PhotoClip from 'photoclip'
 import { TransferDomDirective as TransferDom } from 'vux'
+import { uploadImage } from '@/api/'
 var EXIF = require('../utils/exif.js')
 export default {
   directives: {
@@ -43,7 +44,8 @@ export default {
       canvas: null,
       tCanvas: null,
       ctx: null,
-      crop: null
+      crop: null,
+      curFile: null
     }
   },
   mounted () {
@@ -74,10 +76,22 @@ export default {
     },
     finishClip () {
       this.$vux.loading.show({
-        text: '正在裁剪'
+        text: '正在上传'
       })
       var base64 = this.crop.clip()
-      this.$emit('on-clip', base64)
+      uploadImage(base64, this.curFile.type, (res) => {
+        this.$vux.loading.hide()
+        this.$vux.toast.show({
+          text: res.msg,
+          position: 'bottom',
+          type: 'text',
+          time: 1500,
+          width: '10em'
+        })
+        if (!res.error) {
+          this.$emit('on-clip', res.res)
+        }
+      })
       this.cancel()
       this.$vux.loading.hide()
     },
@@ -86,8 +100,10 @@ export default {
       if (!file) {
         return
       }
+      this.curFile = file
+      let msg = this.isCrop ? '正在加载图片' : '正在上传'
       this.$vux.loading.show({
-        text: '正在加载图片'
+        text: msg
       })
       if (this.isCrop) {
         this.crop.load(file)
@@ -105,8 +121,19 @@ export default {
             EXIF.EXIF.getData(img, function () {
               var orientation = EXIF.EXIF.getTag(this, 'Orientation')
               var _base64 = _this.compress(img, orientation)
-              _this.$emit('on-preview', _base64)
-              _this.$vux.loading.hide()
+              uploadImage(_base64, _this.curFile.type, (res) => {
+                _this.$vux.loading.hide()
+                _this.$vux.toast.show({
+                  text: res.msg,
+                  position: 'bottom',
+                  type: 'text',
+                  time: 1500,
+                  width: '10em'
+                })
+                if (!res.error) {
+                  _this.$emit('on-preview', res.res)
+                }
+              })
             })
             img = null
           }

@@ -5,7 +5,7 @@
       <div id="avatar-select">
         <upload name="avatar-input" @on-clip="afterClip" :is-crop="true">
           <div class="avatar flex flex-v flex-align-center">
-            <img :src="form.headimgurl"/>
+            <img :src="form.headimgurl | prefixImageUrl"/>
             <p class="f13">点击更换头像</p>
             <label class="n-label" for="avatar-input"></label>
           </div>
@@ -32,7 +32,7 @@
 <script>
 import { Group, XInput, PopupPicker, Datetime, ChinaAddressData, XAddress, XButton } from 'vux'
 import Upload from '@/components/Upload'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 let heights = []
 let weights = []
 for (var i = 150; i <= 200; i++) {
@@ -87,19 +87,20 @@ export default {
     }
   },
   created () {
-    if (Object.keys(this.$store.getters['user/userInfo']).length === 0) {
+    let userInfo = Object.assign({}, this.$store.getters['user/userInfo'])
+    if (Object.keys(userInfo).length === 0) {
       this.getUserInfo().then((res) => {
         res.sex = [res.sex.toString()]
         res.weight = [res.weight.toString()]
         res.stature = [res.stature.toString()]
         this.form = Object.assign({}, res)
       })
+    } else {
+      userInfo.sex = [userInfo.sex.toString()]
+      userInfo.weight = [userInfo.weight.toString()]
+      userInfo.stature = [userInfo.stature.toString()]
+      this.form = Object.assign({}, userInfo)
     }
-  },
-  computed: {
-    ...mapGetters('user', [
-      'userInfo'
-    ])
   },
   methods: {
     ...mapActions('user', [
@@ -129,6 +130,13 @@ export default {
           formData.sex = formData.sex.join()
           formData.stature = formData.stature.join()
           this.saveUserInfo(formData).then((res) => {
+            this.$vux.toast.show({
+              text: '保存成功',
+              position: 'bottom',
+              type: 'text',
+              time: 1500,
+              width: '10em'
+            })
             this.loading = false
           })
         }

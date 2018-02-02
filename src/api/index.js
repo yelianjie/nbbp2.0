@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import { AjaxPlugin } from 'vux'
+import { dataURLtoBlob } from '@/utils/utils'
 require('es6-promise').polyfill()
 Vue.use(AjaxPlugin)
-Vue.http.defaults.baseURL = process.env.NODE_ENV === 'production' ? '/api' : 'http://192.168.5.37/xinNiuBa/public'
+const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/prod.env').BASE_API : require('../../config/dev.env').BASE_API
+Vue.http.defaults.baseURL = baseURL
 Vue.http.interceptors.request.use(function (config) {
   /* for (var i in config.params) {
     if (typeof config.params[i] === 'string' && config.params[i].indexOf('?') !== -1) {
@@ -40,6 +42,31 @@ export const saveMemberInfo = (data) => {
   }, (error) => {
     return Promise.reject(error.response.data)
   })
+}
+
+/**
+ * 上传图片
+ * @param {*} blob
+ */
+export function uploadImage (base64, type, cb) {
+  const blob = dataURLtoBlob(base64, type)
+  var xhr = new XMLHttpRequest()
+  var formdata = new FormData()
+  formdata.append('file', blob, 'image.png')
+  xhr.open('post', baseURL + '/weixin/file_upload/uploadImg')
+  xhr.onreadystatechange = function () {
+    console.log('readyState' + xhr.readyState)
+    console.log('status' + xhr.status)
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var response = JSON.parse(xhr.responseText)
+      const res1 = {error: false, msg: '上传成功', res: response.result}
+      cb(res1)
+    } else {
+      const res2 = {error: true, msg: '上传失败'}
+      cb(res2)
+    }
+  }
+  xhr.send(formdata)
 }
 
 export const GetAlbums = (data) => {

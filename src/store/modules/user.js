@@ -3,12 +3,14 @@ const namespaced = true
 
 const state = {
   userInfo: {},
-  token: ''
+  token: '',
+  role: ['user']
 }
 
 // getters
 const getters = {
-  userInfo: () => state.userInfo
+  userInfo: () => state.userInfo,
+  role: () => state.role
 }
 
 // actions
@@ -17,6 +19,12 @@ const actions = {
     try {
       let response = await getMemberInfo()
       commit('SET_USER_INFO', response.result)
+      if (response.result.isAgent > 0) {
+        commit('SET_ROLE', ['user', 'agent'])
+      }
+      if (response.result.isMM > 0) {
+        commit('SET_ROLE', ['user', 'business'])
+      }
       return Promise.resolve(response.result)
     } catch (e) {
 
@@ -40,6 +48,9 @@ const mutations = {
   },
   SET_USER_INFO (state, data) {
     state.userInfo = data
+  },
+  SET_ROLE (state, data) {
+    state.role = data
   }
 }
 
