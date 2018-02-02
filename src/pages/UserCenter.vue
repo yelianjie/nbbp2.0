@@ -2,7 +2,7 @@
   <div class="container bg1">
     <div class="user-top bg2">
       <div class="user-box1 flex flex-align-center">
-        <div class="flex-1 avatar flex flex-align-center"><img v-show="userInfo.headimgurl" :src="userInfo.headimgurl | prefixImageUrl"/></div>
+        <div class="flex-1 avatar flex flex-align-center"><img v-if="userInfo.headimgurl" :src="userInfo.headimgurl | prefixImageUrl"/></div>
         <div class="edit-user flex flex-align-center">
           <span class=""><router-link :to="{path: '/Profile'}">编辑资料</router-link></span>
           <span class=""><svg-icon icon-class="share"/></span>
@@ -44,13 +44,12 @@
         <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/'}"></cell>
       </group>
       <!-- v-if="userInfo.isAgent > 0" v-if="userInfo.isMM > 0"  -->
-      <group class="bg2" style="margin-top: 0.2rem;">
+      <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isAgent > 0">
         <cell title="代理管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/AgentCenter'}"></cell>
+      </group>
+      <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isMM > 0">
         <cell title="商户管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/BusinessCenter'}"></cell>
       </group>
-      <!-- <group class="bg2" style="margin-top: 0.2rem;">
-        <cell title="商户管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/BusinessCenter'}"></cell>
-      </group> -->
     </div>
   </div>
 </template>

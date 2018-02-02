@@ -45,6 +45,18 @@ export const saveMemberInfo = (data) => {
 }
 
 /**
+ * 代理注册
+ * @param {*} data
+ */
+export const agentRegiste = (data) => {
+  return Vue.http.post('/weixin/agent/registeragent', data).then((response) => {
+    return Promise.resolve(response.data)
+  }, (error) => {
+    return Promise.reject(error.response.data)
+  })
+}
+
+/**
  * 上传图片
  * @param {*} blob
  */

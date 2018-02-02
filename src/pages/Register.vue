@@ -13,8 +13,8 @@
     </template>
     <template v-if="type == 2">
       <group>
-        <x-input title="用户名" name="agentname" placeholder="" type="text" data-vv-as="用户名" v-model="r_agent.username" v-validate.initial="'required'"></x-input>
-        <x-input title="手机号码" name="mobile" placeholder="" type="number" data-vv-as="手机号码" v-model="r_agent.mobile" v-validate.initial="'required|numeric'"></x-input>
+        <x-input title="用户名" name="agentname" placeholder="" type="text" data-vv-as="用户名" v-model="r_agent.name" v-validate.initial="'required'"></x-input>
+        <x-input title="手机号码" name="mobile" placeholder="" type="number" data-vv-as="手机号码" v-model="r_agent.phone" v-validate.initial="'required|numeric'"></x-input>
       </group>
     </template>
     <div class="footer-btn">
@@ -25,6 +25,7 @@
 
 <script>
 import { Group, XInput, XButton } from 'vux'
+import { agentRegiste } from '@/api/'
 export default {
   name: 'Register',
   data () {
@@ -36,8 +37,8 @@ export default {
         recommender: ''
       },
       r_agent: {
-        username: '',
-        mobile: ''
+        name: '',
+        phone: ''
       }
     }
   },
@@ -68,6 +69,10 @@ export default {
             width: '10em'
           })
           console.log(getErrors[0])
+        } else {
+          agentRegiste(this.r_agent).then((res) => {
+
+          })
         }
       })
     }
