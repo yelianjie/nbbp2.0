@@ -15,15 +15,17 @@
       </div>
       <div class="charge-price-list white">
         <div class="charge-price-item" v-for="i in 6" :key="i" :class="{'selected': bpValueIndex == i}" @click="bpValueIndex = i">
-          <div class="value f14"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{i * 10}}</span><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+          <div class="value f14"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{i * 10}}</span><div class="f12 jingyan"><span class="jy-value">+800经验值</span></div><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
           <div class="value-price f14">¥10</div>
         </div>
       </div>
       <x-button :gradients="['#f31374', '#f31374']" style="margin-top: 25px;">确认支付</x-button>
-      <p class="darker1 f12" style="margin-top: 10px;">充值说明</p>
+      <p class="darker1 f12" style="margin-top: 10px;">充值说明：</p>
       <ul class="darker1 f12">
+        <li>1、充值即拥有牛霸贵族会员尊贵身份</li>
         <li>1、1牛角=1元人民币</li>
         <li>2、充值的牛角只能消费，不能提现</li>
+        <li>4、充值赠送的经验值用于贵族等级升级</li>
       </ul>
       
     </div>
@@ -78,12 +80,26 @@ export default {
     margin-right: 0;
   }
   .value {
-    height: 0.72rem;
     line-height: 0.72rem;
     text-align: center;
     border: 1px solid @borderColor;
-    border-radius: 3px;
+    border-radius: 10px;
     position: relative;
+  }
+  .jingyan {
+    height: 0.36rem;
+    background-color: #3f414e;
+    position: relative;
+    border-radius: 0 0 10px 10px;
+  }
+  .jy-value {
+    transform: translate3d(-50%, -50%, 0) scale(1);
+    color: #82858e;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    line-height: 1;
+    white-space: nowrap;
   }
   &.selected {
     .value {
@@ -92,11 +108,22 @@ export default {
     .selected-icon {
       display: block;
     }
+    .jingyan {
+      background-color: @mainColor;
+    }
+    .jy-value {
+      color: #fff;
+    }
   }
   .value-price {
     vertical-align: middle;
     text-align: center;
     margin-top: 4px;
+  }
+}
+@media screen and (min-width: 320px) and (max-width: 374px) {
+  .charge-price-item .jy-value {
+    transform: translate3d(-50%, -50%, 0) scale(0.8);
   }
 }
 .selected-icon {
