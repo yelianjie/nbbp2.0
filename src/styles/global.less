@@ -165,6 +165,9 @@ input[type="file"] {
 .f20 {
   font-size: 20px;
 }
+.pr {
+  position: relative;
+}
 .tc {
   text-align: center;
 }
@@ -199,6 +202,13 @@ input[type="file"] {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+.mask-enter, .mask-leave-active {
+  opacity: 0;
+}
+.mask-leave-active, .mask-enter-active {
+  transition: opacity 300ms;
 }
 
 /*popup city picker*/

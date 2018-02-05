@@ -112,7 +112,6 @@ export default {
     },
     saveInfo () {
       this.$validator.validateAll().then(result => {
-        console.log(result)
         let getErrors = this.vErrors.all()
         if (getErrors.length > 0) {
           this.$vux.toast.show({
@@ -122,7 +121,6 @@ export default {
             time: 1500,
             width: '10em'
           })
-          console.log(getErrors[0])
         } else {
           this.loading = true
           const formData = Object.assign({}, this.form)

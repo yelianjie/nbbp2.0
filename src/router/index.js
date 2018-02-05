@@ -194,6 +194,16 @@ export default new Router({
       meta: {
         roles: ['user', 'agent', 'business']
       }
+    },
+    {
+      path: '/MyLevel',
+      name: 'MyLevel',
+      component: (resolve) => {
+        require(['@/pages/MyLevel'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
+      }
     }
   ]
 })

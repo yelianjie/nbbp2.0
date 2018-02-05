@@ -73,13 +73,6 @@ export default {
       this.getUserInfo().then((res) => {
         this.$vux.loading.hide()
       }).catch(() => {
-        this.$vux.toast.show({
-          text: '获取信息失败',
-          position: 'bottom',
-          type: 'text',
-          time: 1500,
-          width: '10em'
-        })
         this.$vux.loading.hide()
       })
     }

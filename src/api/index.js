@@ -1,35 +1,12 @@
-import Vue from 'vue'
-import { AjaxPlugin } from 'vux'
 import { dataURLtoBlob } from '@/utils/utils'
-require('es6-promise').polyfill()
-Vue.use(AjaxPlugin)
+import request from '@/utils/request'
 const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/prod.env').BASE_API : require('../../config/dev.env').BASE_API
-Vue.http.defaults.baseURL = baseURL
-Vue.http.interceptors.request.use(function (config) {
-  /* for (var i in config.params) {
-    if (typeof config.params[i] === 'string' && config.params[i].indexOf('?') !== -1) {
-      config.params[i] = config.params[i].substring(0, config.params[i].indexOf('?'))
-    }
-  } */
-  // Do something before request is sent
-  /* if (localStorage.getItem('token_guoguo')) {
-    config.headers['Authorization'] = localStorage.getItem('token_guoguo')
-  } */
-  return config
-}, function (error) {
-  // Do something with request error
-  return Promise.reject(error)
-})
 
 /**
  * 获取会员信息
  */
 export const getMemberInfo = () => {
-  return Vue.http.post('/weixin/members/getMember', {}).then((response) => {
-    return Promise.resolve(response.data)
-  }, (error) => {
-    return Promise.reject(error.response.data)
-  })
+  return request('/weixin/members/getMember', 'POST')
 }
 
 /**
@@ -37,11 +14,7 @@ export const getMemberInfo = () => {
  * @param {*} data
  */
 export const saveMemberInfo = (data) => {
-  return Vue.http.post('/weixin/members/saveMcMsg', data).then((response) => {
-    return Promise.resolve(response.data)
-  }, (error) => {
-    return Promise.reject(error.response.data)
-  })
+  return request('/weixin/members/saveMcMsg', 'POST', data)
 }
 
 /**
@@ -49,11 +22,23 @@ export const saveMemberInfo = (data) => {
  * @param {*} data
  */
 export const agentRegiste = (data) => {
-  return Vue.http.post('/weixin/agent/registeragent', data).then((response) => {
-    return Promise.resolve(response.data)
-  }, (error) => {
-    return Promise.reject(error.response.data)
-  })
+  return request('/weixin/agent/registeragent', 'POST', data)
+}
+
+/**
+ * 获取酒吧公告
+ * @param {*} data
+ */
+export const getNotice = () => {
+  return request('/weixin/notice/getNotice', 'POST')
+}
+
+/**
+ * 保存酒吧公告
+ * @param {*} data
+ */
+export const saveNotice = (data) => {
+  return request('/weixin/notice/saveNotice', 'POST', data)
 }
 
 /**
@@ -79,12 +64,4 @@ export function uploadImage (base64, type, cb) {
     }
   }
   xhr.send(formdata)
-}
-
-export const GetAlbums = (data) => {
-  return Vue.http.get('/albums', {params: data}).then((response) => {
-    return Promise.resolve(response.data)
-  }, (error) => {
-    return Promise.reject(error.response.data)
-  })
 }

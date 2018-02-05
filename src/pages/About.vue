@@ -1,5 +1,5 @@
 <template>
-  <div class="container min-h bg1 about-container boderbox">
+  <div class="container min-h bg1 about-container borderbox">
     <div class="tc">
       <img src="../assets/logo.png" style="width: 1.6rem;height: 1.6rem;"/>
       <p class="white" style="margin: 20px 0;">牛霸</p>

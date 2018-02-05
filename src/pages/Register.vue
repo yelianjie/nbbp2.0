@@ -14,7 +14,7 @@
     <template v-if="type == 2">
       <group>
         <x-input title="用户名" name="agentname" placeholder="" type="text" data-vv-as="用户名" v-model="r_agent.name" v-validate.initial="'required'"></x-input>
-        <x-input title="手机号码" name="mobile" placeholder="" type="number" data-vv-as="手机号码" v-model="r_agent.phone" v-validate.initial="'required|numeric'"></x-input>
+        <x-input title="手机号码" name="mobile" placeholder="" type="number" data-vv-as="手机号码" v-model="r_agent.phone" v-validate.initial="'required|numeric|mobile'"></x-input>
       </group>
     </template>
     <div class="footer-btn">
@@ -26,6 +26,7 @@
 <script>
 import { Group, XInput, XButton } from 'vux'
 import { agentRegiste } from '@/api/'
+import { mapActions } from 'vuex'
 export default {
   name: 'Register',
   data () {
@@ -56,9 +57,11 @@ export default {
 
   },
   methods: {
+    ...mapActions('user', [
+      'getUserInfo'
+    ]),
     SubmitRegister () {
       this.$validator.validateAll().then(result => {
-        console.log(result)
         let getErrors = this.vErrors.all()
         if (getErrors.length > 0) {
           this.$vux.toast.show({
@@ -68,11 +71,25 @@ export default {
             time: 1500,
             width: '10em'
           })
-          console.log(getErrors[0])
         } else {
-          agentRegiste(this.r_agent).then((res) => {
+          if (this.type === 1) {
 
-          })
+          } else {
+            // 代理注册
+            agentRegiste(this.r_agent).then((res) => {
+              this.getUserInfo().then((res) => {
+                this.$vux.toast.show({
+                  text: '注册成功',
+                  position: 'bottom',
+                  type: 'text',
+                  time: 1500
+                })
+                this.$router.push('/AgentCenter')
+              })
+            }).catch((error) => {
+              console.log(error)
+            })
+          }
         }
       })
     }
