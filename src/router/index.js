@@ -56,7 +56,7 @@ export default new Router({
       }
     },
     {
-      path: '/BusinessCenter',
+      path: '/BusinessCenter/:barId',
       name: 'BusinessCenter',
       component: (resolve) => {
         require(['@/pages/BusinessCenter'], resolve)
@@ -203,6 +203,16 @@ export default new Router({
       },
       meta: {
         roles: ['user', 'agent', 'business']
+      }
+    },
+    {
+      path: '/MyBars',
+      name: 'MyBars',
+      component: (resolve) => {
+        require(['@/pages/MyBars'], resolve)
+      },
+      meta: {
+        roles: ['business']
       }
     }
   ]

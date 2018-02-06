@@ -6,10 +6,10 @@
         <span class="u-name">{{name}}</span>
       </div>
     </div>
-    <div class="middle">
-      <p class="t1">当前收益</p>
+    <div class="middle tc">
+      <p class="f14">当前收益</p>
       <p class="benefit-account">{{currentMoney}}</p>
-      <p class="t2">总收益：{{totalMoney}} 元</p>
+      <p class="f16">总收益：{{totalMoney}} 元</p>
     </div>
     <group class="actions">
       <cell title="我要提现" is-link :link="{path: '/Deposit'}"></cell>
@@ -52,16 +52,9 @@ export default {
 }
 .middle {
   margin: 10px auto 30px;
-  text-align: center;
-  .t1 {
-    font-size: 14px;
-  }
   .benefit-account {
     font-size: 24px;
     font-weight: bold;
-  }
-  .t2 {
-    font-size: 16px;
   }
 }
 

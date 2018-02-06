@@ -14,7 +14,8 @@
     <div class="main-header flex flex-align-center">
       <div class="flex main-header-left flex-align-center">
         <div class="main-header-avatar">
-          <router-link :to="{path: '/UserCenter'}"><img src="../assets/logo.png" class="circle"></router-link>
+          <router-link :to="{path: '/UserCenter'}"><span class="level-icon-avatar"></span></router-link>
+          <img :src="userInfo.headimgurl | prefixImageUrl" class="circle">
         </div>
       </div>
       <div class="flex-1 main-header-right">
@@ -50,16 +51,20 @@
   <ds-window v-model="dsindowVisible"  @onBuy="buyDialogVisible = true"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
-      <div class="user-info flex flex-v flex-align-center">
-        <img src="../assets/logo.png" class="avatar"/>
-        <p class="uname f18">鲜花</p>
-        <div class="msg-item-top flex flex-align-center">
-          <span class="level level-1">V1</span>
+      <div class="user-info">
+        <div class="pr">
+          <span class="level-icon-id level1"></span>
+          <img src="../assets/logo.png" class="avatar" style="border: 0;"/>
+        </div>
+        <!--<img src="../assets/logo.png" class="avatar"/>-->
+        <p class="uname f18 white">鲜花</p>
+        <div class="msg-item-top flex flex-pack-center">
           <span class="sex sex-male"><svg-icon icon-class="male" /></span>
-          <span class="msg-name">游侠</span>
+          <span class="level" style="background-color: #625bc3;">宁波</span>
+          <span class="level level-1">游侠</span>
         </div>
         <p class="sign f14">签名：暂无签名</p>
-        <div class="user-dialog-bottom flex-1 flex" style="width:100%;">
+        <div class="user-dialog-bottom flex" style="width:100%;">
           <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="bp">
             <img src="../assets/gift-b-icon.png"/>
             <span>为TA送礼</span>
@@ -116,7 +121,9 @@ import DsMsg from '../components/Main/DsMsg'
 import BpWindow from '../components/Main/BpWindow'
 import DsWindow from '../components/Main/DsWindow'
 import Onlines from '../components/Main/Onlines'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import '@/vendor/tween'
+import '@/vendor/animation'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   data () {
@@ -200,7 +207,18 @@ export default {
       noMore: false
     }
   },
+  created () {
+    if (Object.keys(this.userInfo).length === 0) {
+      this.getUserInfo()
+    }
+  },
   mounted () {
+    /* setTimeout(() => {
+      var content = document.querySelector('.main-content')
+      Math.animation(content.scrollTop, content.scrollHeight - content.offsetHeight, function (value) {
+        content.scrollTop = value
+      }, 'Linear', 400)
+    }, 5000) */
   },
   watch: {
     height: function (newVal, oldVal) {
@@ -209,6 +227,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions('user', [
+      'getUserInfo'
+    ]),
     infiniteHandler ($state) {
       setTimeout(() => {
         const temp = []
@@ -249,6 +270,9 @@ export default {
   computed: {
     ...mapGetters('app', {
       buyDialogInfo: 'buyDialogInfo'
+    }),
+    ...mapGetters('user', {
+      userInfo: 'userInfo'
     })
   },
   components: {
@@ -270,6 +294,18 @@ export default {
 
 <style lang="less" scoped>
 @import '../styles/main.less';
+.level-icon-avatar {
+  display: block;
+  position: absolute;
+  left: -0.4rem;
+  top: -0.3rem;
+  width: 1.6rem;
+  height: 1.42rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-image: url(/static/level-show/level-8.png);
+}
 .container {
   color: #fff;
   overflow: hidden;
@@ -281,7 +317,7 @@ export default {
 .main-header {
   padding: 0.1rem 0;
   .main-header-left {
-    margin-left: 0.24rem;
+    margin-left: 0.32rem;
     position: relative;
   }
   .main-header-avatar {
@@ -295,7 +331,7 @@ export default {
     overflow-y: hidden;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    margin-left: 0.24rem;
+    margin-left: 0.4rem;
     font-size: 0;
     white-space: nowrap;
     padding: 2px 0;
@@ -379,7 +415,7 @@ export default {
 
 .user-info {
   width: 5.4rem;
-  background: #fff url('../assets/card-bg.png') no-repeat top;
+  background: #4c446b url('../assets/card-bg.png') no-repeat top;
   background-size: contain;
   border-radius: 15px;
   margin: 0 auto;
@@ -391,20 +427,19 @@ export default {
     margin: 0.6rem 0 0.4rem;
   }
   .uname {
-    color: #161a25;
     margin-bottom: 0.2rem;
   }
   .msg-name {
     color: #161a25;
   }
   .sign {
-    color: #88878f;
+    color: #9b97a8;
     margin-top: 0.2rem;
     margin-bottom: 0.2rem;
   }
 }
 .user-dialog-bottom {
-  background-color: #d9dbea;
+  background-color: #60557d;
   border-radius: 0 0 15px 15px;
   padding: 0.25rem 0;
   .u-d {
@@ -413,7 +448,7 @@ export default {
     }
     span {
       font-size: 13px;
-      color: #6c6a75;
+      color: #fff;
       margin-top: 4px;
     }
   }
@@ -487,7 +522,42 @@ export default {
     opacity: 1;
   }
 }
-
+.level-icon-id {
+  position: absolute;
+  width: 3.39rem;
+  height: 3rem;
+  left: 50%;
+  top: 0;
+  transform: translate3d(-50%, 0, 0);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: block;
+  &.level1 {
+    background-image: url(../assets/level/level-1.png);
+  }
+  &.level2 {
+    background-image: url(../assets/level/level-2.png);
+  }
+  &.level3 {
+    background-image: url(../assets/level/level-3.png);
+  }
+  &.level4 {
+    background-image: url(../assets/level/level-4.png);
+  }
+  &.level5 {
+    background-image: url(../assets/level/level-5.png);
+  }
+  &.level6 {
+    background-image: url(../assets/level/level-6.png);
+  }
+  &.level7 {
+    background-image: url(../assets/level/level-7.png);
+  }
+  &.level8 {
+    background-image: url(../assets/level/level-8.png);
+  }
+}
 @media screen and (min-width: 320px) and (max-width: 374px) {
   /* .nickname {
     font-size: 13px;

@@ -128,12 +128,14 @@ export default {
           formData.sex = formData.sex.join()
           formData.stature = formData.stature.join()
           this.saveUserInfo(formData).then((res) => {
-            this.$vux.toast.show({
-              text: '保存成功',
-              position: 'bottom',
-              type: 'text',
-              time: 1500,
-              width: '10em'
+            this.getUserInfo().then((res) => {
+              this.$vux.toast.show({
+                text: '保存成功',
+                position: 'bottom',
+                type: 'text',
+                time: 1500,
+                width: '10em'
+              })
             })
             this.loading = false
           })

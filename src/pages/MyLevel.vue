@@ -1,14 +1,15 @@
 <template>
   <div class="container min-h bg2 about-container borderbox" style="padding: 0.2rem;">
-    <div class="img-level flex flex-pack-center">
-      <div class="img-wrap">
+    <div class="img-level">
+      <div class="img-wrap flex flex-pack-center pr">
+        <span class="level-icon-id level1"></span>
         <img src="../assets/logo.png"/>
       </div>
     </div>
     <p class="f16 tc white">鲜花&nbsp;·&nbsp;伯爵</p>
     <div class="flex flex-align-center flex-pack-center">
       <div class="level-box flex flex-pack-center">
-        <img src="../assets/logo.png" class="level-icon"/>
+        <img src="/static/level-show/level-show-3.png" class="level-icon"/>
       </div>
       <div class="level-progressbar flex-1 flex flex-align-center">
         <svg width="100%" height="0.16rem" xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +27,7 @@
         </svg>
       </div>
       <div class="level-box flex flex-pack-center">
-        <img src="../assets/logo.png" class="level-icon"/>
+        <img src="/static/level-show/level-show-3.png" class="level-icon"/>
       </div>
     </div>
     <p class="tc white f14">距离成为“子爵”还差800经验值</p>
@@ -37,15 +38,9 @@
         <div class="radient-line line-right flex-1"></div>
       </div>
       <div class="level-all" style="font-size: 0;">
-        <div class="level-item pr">
-          <img src="../assets/logo.png" class="level-item-icon"/>
-          <p class="white f15 tc">游侠</p>
-          <p class="f13 darker1 tc">80经验值</p>
-          <div class="lock-layer"></div>
-        </div>
-        <div class="level-item pr" @click="levelVisible = true">
-          <img src="../assets/logo.png" class="level-item-icon"/>
-          <p class="white f15 tc">游侠</p>
+        <div class="level-item pr" @click="showLevel(v.bigIcon)" v-for="(v, i) in levels" :key="i">
+          <img :src="v.icon" class="level-item-icon"/>
+          <p class="white f15 tc">{{v.value}}</p>
           <p class="f13 darker1 tc">80经验值</p>
         </div>
       </div>
@@ -65,8 +60,8 @@
     <x-dialog v-model="levelVisible" :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
       <div class="level-container flex flex-v flex-pack-center" style="height: 100%;">
         <div class="flex flex-v flex-pack-center flex-align-center">
-          <img src="../assets/logo.png" style="width:3.4rem;height:3.4rem;" class="level-big-icon"/>
-          <p class="white f20">伯爵</p>
+          <img :src="curLevelIcon" style="width:5rem;height:5.18rem;margin-top:-1.2rem;" class="level-big-icon"/>
+          <p class="white f20" style="margin-top:-1.2rem;">伯爵</p>
           <div class="powers f13 white">
             <ul>
               <li
@@ -87,14 +82,21 @@
 
 <script>
 import { XDialog } from 'vux'
+import levels from '@/assets/level/level-show'
 export default {
   data () {
     return {
       powsers: ['贵族身份头衔；', '昵称加贵族称呼；', '更多特权暂未开发，敬请期待！'],
-      levelVisible: false
+      curLevelIcon: '',
+      levelVisible: false,
+      levels: levels
     }
   },
   methods: {
+    showLevel (icon) {
+      this.curLevelIcon = icon
+      this.levelVisible = true
+    }
   },
   components: {
     XDialog
@@ -118,8 +120,8 @@ export default {
   width: 1.2rem;
 }
 .level-icon {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.8rem;
+  height: 0.71rem;
 }
 .level-next-tip {
   position: absolute;
@@ -175,8 +177,8 @@ export default {
   }
 }
 .level-item-icon {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 2rem;
+  height: 1.77rem;
   display: block;
   margin: 0 auto;
 }
@@ -194,6 +196,22 @@ export default {
   padding: 10px;
   border: 1px solid #fff;
   border-radius: 5px;
+  li {
+    text-align: left;
+    position: relative;
+    padding-left: 10px;
+    &::before {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background-color: #fff;
+      border-radius: 50%;
+      content: "";
+      left: 0;
+      top: 50%;
+      margin-top: -2px;
+    }
+  }
 }
 .close-box {
   height: 1.1rem;
@@ -206,6 +224,21 @@ export default {
   .svg-icon {
     width: 0.72rem;
     height: 0.72rem;
+  }
+}
+.level-icon-id {
+  position: absolute;
+  width: 3.39rem;
+  height: 3rem;
+  left: 50%;
+  top: -0.78rem;
+  transform: translate3d(-50%, 0, 0);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: block;
+  &.level1 {
+    background-image: url(../assets/level/level-5.png);
   }
 }
 </style>

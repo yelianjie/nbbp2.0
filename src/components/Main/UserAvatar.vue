@@ -1,5 +1,6 @@
 <template>
-  <div class="msg-item-user-avatar">
+  <div class="msg-item-user-avatar pr">
+    <span class="level-icon-avatar"></span>
     <img src="../../assets/logo.png" @click="avatar"/>
   </div>
 </template>

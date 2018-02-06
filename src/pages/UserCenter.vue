@@ -2,28 +2,32 @@
   <div class="container bg1">
     <div class="user-top bg2">
       <div class="user-box1 flex flex-align-center">
-        <div class="flex-1 avatar flex flex-align-center"><img v-if="userInfo.headimgurl" :src="userInfo.headimgurl | prefixImageUrl"/></div>
-        <div class="edit-user flex flex-align-center">
+        <div class="flex-1 avatar flex flex-pack-center pr">
+          <span class="level-icon-id" v-if="userInfo.grade_title != '平民'"></span>
+          <img v-if="userInfo.headimgurl" :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/>
+        </div>
+        <!-- <div class="edit-user flex flex-align-center">
           <span class=""><router-link :to="{path: '/Profile'}">编辑资料</router-link></span>
           <span class=""><svg-icon icon-class="share"/></span>
-        </div>
+        </div> -->
       </div>
       <div class="user-box2">
-        <p class="white">{{userInfo.nickname}}</p>
-        <div class="flex u2 flex-align-center">
+        <p class="white tc" style="margin: 0.2rem auto;">{{userInfo.nickname}}</p>
+        <!-- <div class="flex u2 flex-align-center">
           <span class="level level-1">{{userInfo.grade_title}}</span>
           <span class="f12 point">{{userInfo.mc_integral}}积分</span>
-        </div>
-        <div class="rpxline" style="background-color: #333743;"></div>
-        <p class="sign f14 flex"><span style="white-space: nowrap;">签名：</span><span>{{userInfo.autograph}}</span></p>
-        <div class="flex white tag1">
+        </div> -->
+        
+        <div class="flex white tag1 flex flex-align-center flex-pack-center">
           <span class="sex sex-male flex flex-align-center"><svg-icon icon-class="male" v-if="userInfo.sex == 1"/><svg-icon icon-class="female" v-if="userInfo.sex == 2"/></span>
           <span class="tag tagcity">{{userInfo.city}}</span>
+          <span class="level level-1">{{userInfo.grade_title}}</span>
         </div>
+        <p class="sign f14 tc"><span style="white-space: nowrap;">签名：</span><span>{{userInfo.autograph}}</span></p>
         <div class="count-current flex">
-          <div class="ucount"><span class="f20 number">{{userInfo.fabulous_count}}</span><span class="f14 text">点赞</span></div>
-          <div class="ucount"><span class="f20 number">{{userInfo.screen_count}}</span><span class="f14 text">霸屏</span></div>
-          <div class="ucount"><span class="f20 number">{{userInfo.reward_count}}</span><span class="f14 text">礼物</span></div>
+          <div class="ucount flex-1 tc"><span class="f20 number">{{userInfo.fabulous_count}}</span><span class="f14 text">点赞</span></div>
+          <div class="ucount flex-1 tc"><span class="f20 number">{{userInfo.screen_count}}</span><span class="f14 text">霸屏</span></div>
+          <div class="ucount flex-1 tc"><span class="f20 number">{{userInfo.reward_count}}</span><span class="f14 text">礼物</span></div>
         </div>
       </div>
     </div>
@@ -108,6 +112,13 @@ export default {
       height: 1.7rem;
       border: 0.1rem solid @iconBg;
       border-radius: 50%;
+      &.hasLevel {
+        margin-top: 0.72rem;
+        border: 0;
+        width: 1.4rem;
+        height: 1.4rem;
+        margin-bottom: 0.2rem;
+      }
     }
   }
   .edit-user {
@@ -178,5 +189,17 @@ export default {
   .w2 h3 {
     color: @mainColor;   
   }
+}
+.level-icon-id {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 3.2rem;
+  height: 2.83rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-image: url(/static/level-show/level-8.png);
+  transform: translate3d(-50%, 0 ,0);
 }
 </style>
