@@ -1,5 +1,6 @@
 <template>
-  <li @click="$router.push(linkPath)"><div class="flex group-cell f14 flex-align-center" :class="{'link': isLink}"><span :style="{'color': color}"><svg-icon :icon-class="iconName" className="left-icon" /></span><div class="flex-1 f15">{{title}}</div><svg-icon v-if="isLink" icon-class="arrow-right" className="arrow-right"/><div class="slot-content"><slot></slot></div></div></li>
+  <li v-if="linkPath" @click="$router.push(linkPath)"><div class="flex group-cell f14 flex-align-center" :class="{'link': isLink}"><span :style="{'color': color}"><svg-icon :icon-class="iconName" className="left-icon" /></span><div class="flex-1 f15">{{title}}</div><svg-icon v-if="isLink" icon-class="arrow-right" className="arrow-right"/><div class="slot-content"><slot></slot></div></div></li>
+  <li v-else><div class="flex group-cell f14 flex-align-center" :class="{'link': isLink}"><span :style="{'color': color}"><svg-icon :icon-class="iconName" className="left-icon" /></span><div class="flex-1 f15">{{title}}</div><svg-icon v-if="isLink" icon-class="arrow-right" className="arrow-right"/><div class="slot-content"><slot></slot></div></div></li>
 </template>
 
 <script>
