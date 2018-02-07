@@ -56,7 +56,7 @@ export default new Router({
       }
     },
     {
-      path: '/BusinessCenter/:barId',
+      path: '/BusinessCenter/:id',
       name: 'BusinessCenter',
       component: (resolve) => {
         require(['@/pages/BusinessCenter'], resolve)
@@ -66,7 +66,7 @@ export default new Router({
       }
     },
     {
-      path: '/Deposit',
+      path: '/Deposit/:id',
       name: 'Deposit',
       component: (resolve) => {
         require(['@/pages/Deposit'], resolve)
@@ -76,7 +76,7 @@ export default new Router({
       }
     },
     {
-      path: '/BasicBusiness',
+      path: '/BasicBusiness/:id',
       name: 'BasicBusiness',
       component: (resolve) => {
         require(['@/pages/BasicBusiness'], resolve)
@@ -86,7 +86,7 @@ export default new Router({
       }
     },
     {
-      path: '/NoticeSetting',
+      path: '/NoticeSetting/:id',
       name: 'NoticeSetting',
       component: (resolve) => {
         require(['@/pages/NoticeSetting'], resolve)
@@ -96,7 +96,7 @@ export default new Router({
       }
     },
     {
-      path: '/AdSetting',
+      path: '/AdSetting/:id',
       name: 'AdSetting',
       component: (resolve) => {
         require(['@/pages/AdSetting'], resolve)
@@ -106,7 +106,7 @@ export default new Router({
       }
     },
     {
-      path: '/BapingSetting',
+      path: '/BapingSetting/:id',
       name: 'BapingSetting',
       component: (resolve) => {
         require(['@/pages/BapingSetting'], resolve)
@@ -116,7 +116,7 @@ export default new Router({
       }
     },
     {
-      path: '/BgSetting',
+      path: '/BgSetting/:id',
       name: 'BgSetting',
       component: (resolve) => {
         require(['@/pages/BgSetting'], resolve)
@@ -126,7 +126,7 @@ export default new Router({
       }
     },
     {
-      path: '/Manager',
+      path: '/Manager/:id',
       name: 'Manager',
       component: (resolve) => {
         require(['@/pages/Manager'], resolve)
@@ -136,7 +136,7 @@ export default new Router({
       }
     },
     {
-      path: '/AgentBarInfo',
+      path: '/AgentBarInfo/:id',
       name: 'AgentBarInfo',
       component: (resolve) => {
         require(['@/pages/AgentBarInfo'], resolve)

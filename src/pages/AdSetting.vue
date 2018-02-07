@@ -3,7 +3,11 @@
     <div class="fff">
       <div class="flex flex-h ad-item-set">
         <div class="ad-img">
-          <div class="placeholder-add-btn"></div>
+          <div class="placeholder-add-btn pr">
+            <img class="bg" v-if="adScreenBg" :src="adScreenBg | prefixImageUrl"/>
+            <upload name="upload-ad-screen" @on-preview="adScreenUpload"></upload>
+            <label for="upload-ad-screen" class="n-label"></label>
+          </div>
         </div>
         <div class="flex-1 ad-desc">
           <p class="title">大屏幕端</p>
@@ -12,7 +16,11 @@
       </div>
       <div class="flex flex-h ad-item-set">
         <div class="ad-img">
-          <div class="placeholder-add-btn"></div>
+          <div class="placeholder-add-btn pr">
+            <img class="bg" v-if="adMobileBg" :src="adMobileBg | prefixImageUrl" />
+            <upload name="upload-ad-mobile" @on-preview="adMobileUpload"></upload>
+            <label for="upload-ad-mobile" class="n-label"></label>
+          </div>
         </div>
         <div class="flex-1 ad-desc">
           <p class="title">手机端</p>
@@ -26,15 +34,26 @@
 
 <script>
 import { Group, XTextarea, XButton } from 'vux'
+import Upload from '../components/Upload'
 export default {
   components: {
     Group,
     XTextarea,
-    XButton
+    XButton,
+    Upload
   },
   data () {
     return {
-
+      adScreenBg: '',
+      adMobileBg: ''
+    }
+  },
+  methods: {
+    adScreenUpload (url) {
+      this.adScreenBg = url
+    },
+    adMobileUpload (url) {
+      this.adMobileBg = url
     }
   }
 }
@@ -85,5 +104,14 @@ export default {
 .tip {
   padding:5px 15px;
   font-size: 14px;
+}
+.bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

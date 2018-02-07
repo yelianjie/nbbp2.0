@@ -42,6 +42,64 @@ export const saveNotice = (data) => {
 }
 
 /**
+ * 获取代理首页信息
+ */
+export const getAgentIndex = () => {
+  return request('/weixin/agent/getAgentIndex', 'POST')
+}
+
+/**
+ * 获取当前酒吧的霸屏主题、时间、礼物列表
+ * @param {*} data
+ */
+export const getBpScreenThemes = (data) => {
+  return request('/weixin/hotel/getHtScreenTheme', 'POST')
+}
+
+/**
+ * 注册酒吧
+ * @param {*} data
+ */
+export const registerBar = (data) => {
+  return request('/weixin/hotel/registerHotel', 'POST', data)
+}
+
+/**
+ * 获取商户所有酒吧
+ */
+export const getBars = () => {
+  return request('/weixin/merchant/HotelList', 'POST')
+}
+
+/**
+ * 删除酒吧
+ */
+export const deleteBar = (data) => {
+  return request('/weixin/hotel/hotelDelete', 'POST', data)
+}
+
+/**
+ * 更新酒吧基本信息
+ */
+export const updateBarInfo = (data) => {
+  return request('/weixin/hotel/updateHotel', 'POST', data)
+}
+
+/**
+ * 获取酒吧霸屏主题、礼物、时间
+ */
+export const getBpDatas = (data) => {
+  return request('/weixin/product/getProduct', 'POST', data)
+}
+
+/**
+ * 修改霸屏主题、礼物、时间价格和勾选状态
+ */
+export const updateBpSelectInfo = (data) => {
+  return request('/weixin/product/getProduct', 'POST', data)
+}
+
+/**
  * 上传图片
  * @param {*} blob
  */

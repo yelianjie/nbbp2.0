@@ -24,7 +24,7 @@
         <span class="num f12">1</span>
       </div>
       <div class="msg-btn flex flex-align-center" @click="bp">
-        <img src="../../assets/ba-icon.png"/>
+        <svg-icon icon-class="ba" @click.native="ds"/>
         <span class="num f12">3</span>
       </div>
       <div class="msg-btn flex flex-align-center" @click="liked">

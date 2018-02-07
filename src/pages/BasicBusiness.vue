@@ -3,18 +3,18 @@
     <div class="inner">
       <div class="top flex flex-v flex-align-center">
         <upload name="upload-logo" @on-preview="logoUploadPreview" class="pr">
-          <img :src="form.logo ? form.logo : defaultLogo">
+          <img :src="showLogo ? showLogo : defaultLogo" class="circle">
           <label for="upload-logo" class="n-label"></label>
         </upload>
         
         <p>酒吧logo，将展示在二维码、酒吧首页上</p>
       </div>
       <group label-width="4.5em" label-margin-right="2em" label-align="right">
-        <x-input title="昵&emsp;&emsp;称"></x-input>
+        <x-input title="昵&emsp;&emsp;称" v-model="form.name"></x-input>
         <cell title="酒吧地址" :value="form.address" is-link value-align="left" @click.native="showMap"></cell>
       </group>
       <div class="bottom_abs">
-        <x-button :gradients="['#1D62F0', '#1D62F0']" link="/">保存</x-button>
+        <x-button :gradients="['#1D62F0', '#1D62F0']" @click.native="updateInfo">保存</x-button>
       </div>
       <transition name="slide-fade">
         <iframe src="" id="iframe" frameborder="0" v-show="mapVisible" allowTransparency="true" style="background-color:#fff;"></iframe>
@@ -27,6 +27,8 @@
 import { XInput, Group, Cell, XButton } from 'vux'
 import Upload from '../components/Upload'
 import defaultLogo from '../assets/logo.png'
+import { prefixImageUrl } from '@/utils/utils'
+import { updateBarInfo } from '@/api/'
 export default {
   name: 'BasicBusiness',
   components: {
@@ -45,9 +47,17 @@ export default {
       mapVisible: false,
       mapLoad: false,
       defaultLogo: defaultLogo,
+      showLogo: '',
       form: {
+        id: this.$route.params.id ? this.$route.params.id : '',
+        name: '',
         logo: '',
-        address: ''
+        address: '',
+        locationLng: '',
+        locationLat: '',
+        province_name: '',
+        city_name: '',
+        area_name: ''
       }
     }
   },
@@ -60,13 +70,34 @@ export default {
     window.removeEventListener('message', this.onSelectAddress, false)
   },
   methods: {
+    updateInfo () {
+      updateBarInfo(this.form).then((res) => {
+        this.$vux.toast.show({
+          text: '修改成功',
+          position: 'bottom',
+          type: 'text',
+          time: 1500,
+          width: '10em'
+        })
+      })
+    },
     logoUploadPreview (base64) {
       console.log(base64)
       this.form.logo = base64
+      this.showLogo = prefixImageUrl(base64)
     },
     onSelectAddress (e) {
       if (!e.data.type) {
-        this.form = Object.assign({}, this.form, JSON.parse(e.data))
+        const res = JSON.parse(e.data)
+        const o = {
+          address: res.address,
+          locationLng: res.point.lng,
+          locationLat: res.point.lat,
+          province_name: res.addressComponents.province,
+          city_name: res.addressComponents.city,
+          area_name: res.addressComponents.district
+        }
+        this.form = Object.assign({}, this.form, o)
         this.mapVisible = false
         console.log(e.data)
       }

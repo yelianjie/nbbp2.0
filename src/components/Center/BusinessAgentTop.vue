@@ -2,7 +2,7 @@
   <div class="center-wrap">
     <div class="top">
       <div class="logo-line">
-        <img :src="logo" class="logo-img">
+        <img :src="logo" class="logo-img circle">
         <span class="u-name">{{name}}</span>
       </div>
     </div>
@@ -12,7 +12,7 @@
       <p class="f16">总收益：{{totalMoney}} 元</p>
     </div>
     <group class="actions">
-      <cell title="我要提现" is-link :link="{path: '/Deposit'}"></cell>
+      <cell title="我要提现" is-link :link="{path: '/Deposit/' + this.$route.params.id}"></cell>
     </group>
   </div>
 </template>

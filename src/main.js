@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 import App from './App'
 import store from './store'
 import router from './router'
+import VueJsonp from 'vue-jsonp'
 import './icons'
 import 'vux/src/styles/reset.less'
 import './styles/global.less'
@@ -45,6 +46,7 @@ Vue.use(VeeValidate, {
   dictionary: dictionary
 })
 Vue.use(WechatPlugin)
+Vue.use(VueJsonp)
 Vue.use(bpDialog)
 Vue.use(maskPlugin)
 Vue.use(ToastPlugin)

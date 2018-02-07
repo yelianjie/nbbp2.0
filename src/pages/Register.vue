@@ -6,9 +6,9 @@
     </div>
     <template v-if="type == 1">
       <group>
-        <x-input title="酒吧名称" name="barname" placeholder="" type="text"  data-vv-as="酒吧名称" v-model="r_business.baranme" v-validate.initial="'required'"></x-input>
-        <x-input title="手机号码" name="mobile" placeholder="" type="number"  data-vv-as="手机号码" v-model="r_business.mobile" v-validate.initial="'required|numeric|mobile'"></x-input>
-        <x-input title="推荐人" name="mobile" placeholder="" type="text"  data-vv-as="推荐人" v-model="r_business.recommender" v-validate.initial="'required'"></x-input>
+        <x-input title="酒吧名称" name="name" placeholder="" type="text"  data-vv-as="酒吧名称" v-model="r_business.name" v-validate.initial="'required'"></x-input>
+        <x-input title="手机号码" name="phone" placeholder="" type="number"  data-vv-as="手机号码" v-model="r_business.phone" v-validate.initial="'required|numeric|mobile'"></x-input>
+        <x-input title="推荐码" name="code" placeholder="" type="text"  data-vv-as="推荐码" v-model="r_business.code"></x-input>
       </group>
     </template>
     <template v-if="type == 2">
@@ -25,7 +25,7 @@
 
 <script>
 import { Group, XInput, XButton } from 'vux'
-import { agentRegiste } from '@/api/'
+import { agentRegiste, registerBar } from '@/api/'
 import { mapActions } from 'vuex'
 export default {
   name: 'Register',
@@ -33,9 +33,9 @@ export default {
     return {
       type: 0,
       r_business: {
-        baranme: '',
-        mobile: '',
-        recommender: ''
+        name: '',
+        phone: '',
+        code: ''
       },
       r_agent: {
         name: '',
@@ -44,9 +44,9 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    if (to.query.type === 1) {
+    if (Number(to.query.type) === 1) {
       document.title = '牛霸商户入驻'
-    } else if (to.query.type === 2) {
+    } else if (Number(to.query.type) === 2) {
       document.title = '牛霸代理入驻'
     }
     next(vm => {
@@ -72,8 +72,17 @@ export default {
             width: '10em'
           })
         } else {
-          if (this.type === 1) {
-
+          if (Number(this.type) === 1) {
+            // 商户注册
+            registerBar(this.r_business).then((res) => {
+              this.$vux.toast.show({
+                text: '注册成功',
+                position: 'bottom',
+                type: 'text',
+                time: 1500
+              })
+              this.$router.push('/MyBars')
+            })
           } else {
             // 代理注册
             agentRegiste(this.r_agent).then((res) => {

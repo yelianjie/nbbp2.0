@@ -5,12 +5,12 @@
         <checker-item :value="i" :key="i" @on-item-click="onClick">
           <div class="flex flex-align-center">
             <div class="baping-icon flex flex-pack-center">
-              <img src="../../assets/logo.png"/>
+              <img :src="v.icon | prefixImageUrl"/>
             </div>
             <div class="baping-info flex flex-v flex-pack-center flex-1">
               <p class="baping-title">{{v.title}}</p>
               <div class="baping-price flex flex-align-center">
-                <div class="flex1 baping-price-tip">价格：{{v.price}}元</div>
+                <div class="flex1 baping-price-tip">价格：{{v.default_price}}元</div>
                 <div><a class="baping-edit" @click.prevent.stop="edit(i)">编辑</a></div>
               </div>
             </div>
@@ -26,27 +26,32 @@
 
 <script>
 import { Checker, CheckerItem, CheckIcon } from 'vux'
+import { getBpDatas, updateBpSelectInfo } from '@/api/'
 export default {
+  props: ['list'],
   data () {
     return {
-      themeSelected: [1, 2],
-      themes: [{
-        id: 1,
-        title: '生日霸屏',
-        price: '10'
-      }, {
-        id: 2,
-        title: '求约霸屏',
-        price: '15'
-      }, {
-        id: 3,
-        title: '示爱霸屏',
-        price: '20'
-      }]
+      themeSelected: [],
+      orginSelected: [],
+      themes: []
     }
   },
+  created () {
+    getBpDatas({ht_id: this.$route.params.id, type: 2}).then((res) => {
+      let selecteds = []
+      res.result.forEach((v, i) => {
+        if (Number(v.selected) === 1) {
+          selecteds.push(i)
+        }
+      })
+      this.themeSelected = selecteds
+      this.orginSelected = selecteds
+      this.themes = res.result
+      console.log(this.themeSelected, this.orginSelected)
+    })
+  },
   mounted () {
-    console.log('111')
+
   },
   methods: {
     onClick (itemValue, itemDisabled) {
@@ -62,7 +67,7 @@ export default {
         title: '请输入价格',
         onShow () {
           console.log('promt show')
-          _this.$vux.confirm.setInputValue(_this.themes[index].price)
+          _this.$vux.confirm.setInputValue(_this.themes[index].default_price)
         },
         onHide () {
           console.log('prompt hide')
@@ -71,7 +76,17 @@ export default {
           console.log('prompt cancel')
         },
         onConfirm (msg) {
-          alert(msg)
+          // alert(msg)
+          let data = {
+            price: msg,
+            id: _this.$route.params.id,
+            selected: 1
+          }
+          console.log(_this.orginSelected)
+          let filter = _this.orginSelected.filter((v) => {
+            return _this.themeSelected.indexOf(v) === -1
+          })
+          console.log(filter, data, updateBpSelectInfo)
         }
       })
     }

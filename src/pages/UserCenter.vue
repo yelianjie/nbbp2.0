@@ -4,7 +4,7 @@
       <div class="user-box1 flex flex-align-center">
         <div class="flex-1 avatar flex flex-pack-center pr">
           <span class="level-icon-id" v-if="userInfo.grade_title != '平民'"></span>
-          <img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/>
+          <router-link :to="{path: '/Profile'}"><img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/></router-link>
         </div>
         <!-- <div class="edit-user flex flex-align-center">
           <span class=""><router-link :to="{path: '/Profile'}">编辑资料</router-link></span>
@@ -79,6 +79,10 @@ export default {
     Group,
     Cell,
     XDialog
+  },
+  beforeRouteEnter (to, from, next) {
+    document.title = '个人中心'
+    next()
   },
   created () {
     if (Object.keys(this.$store.getters['user/userInfo']).length === 0) {

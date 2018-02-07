@@ -14,7 +14,7 @@
     <div class="main-header flex flex-align-center">
       <div class="flex main-header-left flex-align-center">
         <div class="main-header-avatar">
-          <router-link :to="{path: '/UserCenter'}"><span class="level-icon-avatar"></span></router-link>
+          <!-- <router-link :to="{path: '/UserCenter'}"><span class="level-icon-avatar"></span></router-link> -->
           <img :src="userInfo.headimgurl | prefixImageUrl" class="circle">
         </div>
       </div>

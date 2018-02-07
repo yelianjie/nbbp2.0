@@ -10,8 +10,8 @@
 
 <script>
 import BarsList from '@/components/Center/BarsList'
-// import jsonp from 'jsonp'
 import { XAddress, ChinaAddressV4Data } from 'vux'
+import { getDistance } from '@/utils/utils'
 export default {
   data () {
     return {
@@ -21,35 +21,65 @@ export default {
       barsList: []
     }
   },
+  beforeRouteEnter (to, from, next) {
+    document.title = '牛霸霸屏'
+    next()
+  },
   mounted () {
-    /* jsonp('http://api.map.baidu.com/geoconv/v1/?coords=114.21892734521,29.575429778924&from=1&to=5&ak=gqwAbhpew0rdL9sZei9dL2PQWGqW7beB', null, (err, data) => {
-      if (err) {
-        console.error(err.message)
-      } else {
-        console.log(data)
-      }
-    }) */
     this.$vux.loading.show({
       text: 'Loading'
     })
     setTimeout(() => {
-      this.barsList = [{
-        distance: '5000',
+      let arr = [{
         name: '牛霸酒吧',
-        address: '鄞州区首南街道500号'
+        address: '鄞州区首南街道500号',
+        lat: '114.21892734521',
+        lng: '29.575429778924'
       }, {
-        distance: '5000',
         name: '牛霸酒吧',
-        address: '鄞州区首南街道500号'
+        address: '鄞州区首南街道500号',
+        lat: '114.21692734521',
+        lng: '29.575429778924'
       }, {
-        distance: '6000',
         name: '牛霸酒吧',
-        address: '鄞州区首南街道500号'
+        address: '鄞州区首南街道500号',
+        lat: '114.21992734521',
+        lng: '29.575429778924'
       }]
+      this.wxCoordsToBaidu(arr)
       this.$vux.loading.hide()
     }, 1000)
   },
   methods: {
+    wxCoordsToBaidu (data) {
+      let coords = ''
+      data.forEach((v, i) => {
+        coords += v.lat + ',' + v.lng + ';'
+      })
+      coords = coords.substring(0, coords.length - 1)
+      this.$jsonp('http://api.map.baidu.com/geoconv/v1/', {
+        coords: coords,
+        from: 1,
+        to: 5,
+        ak: 'gqwAbhpew0rdL9sZei9dL2PQWGqW7beB'
+      }).then(json => {
+        console.log(json)
+        if (!json.result) {
+          return
+        }
+        var distances = []
+        json.result.forEach((v, i) => {
+          distances.push(getDistance(v.y, v.x, 30.575429778924, 114.31992734521))
+        })
+        data.map((v, i) => {
+          v.distance = distances[i]
+        })
+        this.barsList = data
+      // 返回数据 json， 返回的数据就是json格式
+      }).catch(err => {
+        console.log(err)
+      })
+    }
   },
   computed: {
     cityName () {

@@ -18,7 +18,10 @@
 
 <script>
 export default {
-
+  beforeRouteEnter (to, from, next) {
+    document.title = '关于我们'
+    next()
+  }
 }
 </script>
 

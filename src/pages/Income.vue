@@ -59,6 +59,10 @@ export default {
       toRMBValue: ''
     }
   },
+  beforeRouteEnter (to, from, next) {
+    document.title = '我的收益'
+    next()
+  },
   methods: {
     exchange () {
       this.exchangeVisible = false

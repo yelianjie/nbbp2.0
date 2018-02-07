@@ -1,7 +1,7 @@
 <template>
   <div class="container fff">
-    <BusinessAgentTop :name="'牛霸酒吧'" :logo="logo" :currentMoney="'324'" :totalMoney="'10000'"></BusinessAgentTop>
-    <BarsList :barsList="barsList"></BarsList>
+    <BusinessAgentTop :name="info.user.nickname" :logo="info.user.headimgurl | prefixImageUrl" :currentMoney="info.user.profit_balance" :totalMoney="info.user.total_profit_balance"></BusinessAgentTop>
+    <BarsList :barsList="info.hotel"></BarsList>
     <Footer :footList="footList"></Footer>
   </div>
 </template>
@@ -11,16 +11,18 @@ import BusinessAgentTop from '@/components/Center/BusinessAgentTop'
 import BarsList from '@/components/Center/BarsList'
 import Footer from '@/components/Center/Footer'
 import logo from '../assets/logo.png'
+import { getAgentIndex } from '@/api/'
 export default {
   name: 'AgentCenter',
   data () {
     return {
       logo: logo,
-      barsList: [{
-        distance: '5000',
-        name: '牛霸酒吧',
-        address: '鄞州区首南街道500号'
-      }],
+      info: {
+        user: {
+          profit_balance: 0.000,
+          total_profit_balance: 0.000
+        }
+      },
       footList: [{
         name: '管理首页',
         icon: ''
@@ -32,6 +34,11 @@ export default {
         icon: ''
       }]
     }
+  },
+  created () {
+    getAgentIndex().then((res) => {
+      this.info = res.result
+    })
   },
   mounted () {
   },

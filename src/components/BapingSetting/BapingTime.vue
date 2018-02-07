@@ -5,9 +5,9 @@
         <checker-item :value="i" :key="i" @on-item-click="onClick">
           <div class="flex flex-align-center">
             <div class="baping-info flex flex-v flex-pack-center flex-1">
-              <p class="baping-title">{{v.title}}</p>
+              <p class="baping-title">{{v.time}}</p>
               <div class="baping-price flex flex-align-center">
-                <div class="flex1 baping-price-tip">价格：{{v.price}}元</div>
+                <div class="flex1 baping-price-tip">价格：{{v.default_price}}元</div>
                 <div><a class="baping-edit" @click.prevent.stop="edit(i)">编辑</a></div>
               </div>
             </div>
@@ -23,24 +23,25 @@
 
 <script>
 import { Checker, CheckerItem, CheckIcon } from 'vux'
+import { getBpDatas } from '@/api/'
 export default {
   data () {
     return {
-      timeSelected: [1, 2],
-      times: [{
-        id: 1,
-        title: '10秒',
-        price: '10'
-      }, {
-        id: 2,
-        title: '30秒',
-        price: '15'
-      }, {
-        id: 3,
-        title: '60秒',
-        price: '20'
-      }]
+      timeSelected: [],
+      times: []
     }
+  },
+  created () {
+    getBpDatas({ht_id: this.$route.params.id, type: 3}).then((res) => {
+      let selecteds = []
+      res.result.forEach((v, i) => {
+        if (Number(v.selected) === 1) {
+          selecteds.push(i)
+        }
+      })
+      this.timeSelected = selecteds
+      this.times = res.result
+    })
   },
   mounted () {
 
@@ -59,7 +60,7 @@ export default {
         title: '请输入价格',
         onShow () {
           console.log('promt show')
-          _this.$vux.confirm.setInputValue(_this.times[index].price)
+          _this.$vux.confirm.setInputValue(_this.times[index].default_price)
         },
         onHide () {
           console.log('prompt hide')

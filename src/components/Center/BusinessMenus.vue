@@ -22,42 +22,42 @@ export default {
         img: logo,
         tip: '酒吧名称',
         route: {
-          path: '/BasicBusiness'
+          path: '/BasicBusiness/' + this.$route.params.id
         }
       }, {
         name: '酒吧公告',
         img: '',
         tip: '公告编辑',
         route: {
-          path: '/NoticeSetting'
+          path: '/NoticeSetting/' + this.$route.params.id
         }
       }, {
         name: '霸屏管理',
         img: '',
         tip: '价格、类型、时长等',
         route: {
-          path: '/BaPingSetting'
+          path: '/BaPingSetting/' + this.$route.params.id
         }
       }, {
         name: '背景设置',
         img: '',
         tip: '大屏幕背景',
         route: {
-          path: '/BgSetting'
+          path: '/BgSetting/' + this.$route.params.id
         }
       }, {
         name: '广告设置',
         img: '',
         tip: '广告图片设置',
         route: {
-          path: '/AdSetting'
+          path: '/AdSetting/' + this.$route.params.id
         }
       }, {
         name: '管理员',
         img: '',
         tip: '管理员编辑',
         route: {
-          path: '/Manager'
+          path: '/Manager/' + this.$route.params.id
         }
       }, {
         name: '帮助说明',

@@ -86,6 +86,10 @@ export default {
       loading: false
     }
   },
+  beforeRouteEnter (to, from, next) {
+    document.title = '个人资料编辑'
+    next()
+  },
   created () {
     let userInfo = Object.assign({}, this.$store.getters['user/userInfo'])
     if (Object.keys(userInfo).length === 0) {

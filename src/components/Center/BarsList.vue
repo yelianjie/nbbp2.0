@@ -1,15 +1,15 @@
 <template>
   <div class="bar-list" :class="{'home' : enter == 'home'}">
       <ul>
-        <li class="bar-item flex" v-for="(v,i) in barsList" :key="i" @click="pageToBarInfo">
+        <li class="bar-item flex" v-for="(v,i) in list" :key="i" @click="pageToBarInfo(v.id)">
           <div class="bar-img">
-            <img src="../../assets/logo.png" alt="">
+            <img :src="v.logo | prefixImageUrl" alt="">
           </div>
           <div class="bar-info flex flex-1 flex-v flex-pack-center">
             <h2 class="bar-name">{{v.name}}</h2>
             <div class="bar-address">{{v.address}}</div>
           </div>
-          <div class="bar-distance flex flex flex-align-center">
+          <div class="bar-distance flex flex flex-align-center" v-if="enter == 'home'">
             <svg-icon icon-class="position"/><span>{{v.distance | distance}}</span>
           </div>
         </li>
@@ -18,7 +18,6 @@
 </template>
 
 <script>
-
 export default {
   props: ['barsList', 'enter'],
   components: {
@@ -26,18 +25,21 @@ export default {
   },
   data () {
     return {
-      title: '你好',
-      page: '5'
     }
   },
   mounted () {
   },
+  computed: {
+    list () {
+      return this.barsList ? this.barsList : []
+    }
+  },
   methods: {
-    pageToBarInfo () {
+    pageToBarInfo (id) {
       if (this.enter === 'home') {
         this.$router.push({path: '/Main'})
       } else {
-        this.$router.push({path: '/AgentBarInfo'})
+        this.$router.push({path: `/AgentBarInfo/${id}`})
       }
     }
   },

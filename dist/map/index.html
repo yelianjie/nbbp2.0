@@ -407,7 +407,8 @@ ul,li {
     g.getLocation(seletInfo.point, function(res){
       var data = {
         address: seletInfo.address,
-        addressComponents: res.addressComponents
+        addressComponents: res.addressComponents,
+        point: seletInfo.point
       }
       window.parent.postMessage(JSON.stringify(data), '*')
     })

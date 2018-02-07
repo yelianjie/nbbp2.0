@@ -7,15 +7,15 @@
     </div>
     <div class="bars">
       <swipeout>
-        <swipeout-item :sensitivity="15" transition-mode="reveal" :auto-close-on-button-click="false">
+        <swipeout-item :sensitivity="15" transition-mode="reveal" :auto-close-on-button-click="false" v-for="(v, i) in barList" :key="i">
           <div slot="right-menu">
-            <swipeout-button @click.native="onDeleteBar()" type="primary" background-color="#D23934">删除</swipeout-button>
+            <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
           </div>
-          <div slot="content" class="vux-1px-t flex flex-align-center bg2" style="padding: 0.2rem 0.25rem;" @click="goToBar(1)">
-            <img src="../assets/logo.png" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
+          <div slot="content" class="vux-1px-t flex flex-align-center bg2" style="padding: 0.2rem 0.25rem;" @click="goToBar(v.id)">
+            <img :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
             <div class="flex-1 flex flex-v">
-              <p class="white f16">胡桃里音乐酒吧</p>
-              <p class="f14" style="color: #ddd;">注册时间：20115-01-23 14:00:00</p>
+              <p class="white f16">{{v.name}}</p>
+              <p class="f14" style="color: #ddd;">注册时间：{{v.add_time}}</p>
             </div>
           </div>
         </swipeout-item>
@@ -31,19 +31,38 @@
 
 <script>
 import { Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
+import { getBars, deleteBar } from '@/api/'
 import BpDialog from '../components/bpDialog'
 export default {
   data () {
     return {
-      confirmVisible: false
+      confirmVisible: false,
+      barList: [],
+      deleteInfo: null
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    document.title = '我的酒吧'
+    next()
+  },
+  created () {
+    getBars().then((res) => {
+      this.barList = res.result.hotelList
+    })
   },
   methods: {
     confirmDelete () {
-      this.confirmVisible = false
+      deleteBar({ht_id: this.deleteInfo.id}).then((res) => {
+        this.barList.splice(this.deleteInfo.index, 1)
+        this.confirmVisible = false
+      })
     },
-    onDeleteBar () {
+    onDeleteBar (index, id) {
       this.confirmVisible = true
+      this.deleteInfo = {
+        index: index,
+        id: id
+      }
     },
     goToBar (barId) {
       this.$router.push({
@@ -61,5 +80,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

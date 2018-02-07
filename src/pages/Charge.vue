@@ -40,6 +40,10 @@ export default {
       bpValueIndex: -1
     }
   },
+  beforeRouteEnter (to, from, next) {
+    document.title = '我的账户'
+    next()
+  },
   components: {
     XButton
   }
