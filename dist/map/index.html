@@ -246,6 +246,8 @@ ul,li {
   }
 </script>
 <script type="text/javascript">
+  var seletInfo = null,
+  confirmDatas = null
   var scroll,searchScroll
   var container = document.getElementById("container")
   container.style.height = window.innerHeight - 240 + 'px'
@@ -321,8 +323,9 @@ ul,li {
   function formatHTML (data) {
     var _html = ''
     if (data.length > 0) {
+      confirmDatas = data
       for(var i = 0; i < data.length; i++){
-        _html += '<li class="confirmPoint" data-lng="'+ data[i].point.lng +'" data-lat="'+ data[i].point.lat +'"><p class="title">'+ data[i].title +'</p><p class="address">'+ data[i].address +'</p></li>'
+        _html += '<li class="confirmPoint" data-index="'+i+'" +" data-lng="'+ data[i].point.lng +'" data-lat="'+ data[i].point.lat +'"><p class="title">'+ data[i].title +'</p><p class="address">'+ data[i].address +'</p></li>'
       }
     } else {
       _html = '<li style="text-align:center;"><p class="address">无搜索结果</p></li>'
@@ -370,6 +373,7 @@ ul,li {
     local.search(word.value)
   } 
   $('body').on('tap', '.point', function(e) {
+    seletInfo = null
     var lat = $(this).attr('data-lat')
     var lng = $(this).attr('data-lng')
     var point = new BMap.Point(lng, lat)
@@ -380,13 +384,33 @@ ul,li {
     surroundingPoisShow(point)
   })
 
+  
+
   $('body').on('tap', '.confirmPoint', function(e) {
     $('.confirmPoint').removeClass('active')
     $(this).addClass('active')
     var lat = $(this).attr('data-lat')
     var lng = $(this).attr('data-lng')
+    var index = $(this).attr('data-index')
+    seletInfo = {
+      address: confirmDatas[index].address,
+      point: confirmDatas[index].point
+    }
     var point = new BMap.Point(lng, lat)
     mp.centerAndZoom(point, 15);
   })
   
+  $('#saveAddress').on('click', function() {
+    if (!seletInfo)
+      return false
+    var g = new BMap.Geocoder()
+    g.getLocation(seletInfo.point, function(res){
+      var data = {
+        address: seletInfo.address,
+        addressComponents: res.addressComponents
+      }
+      window.parent.postMessage(JSON.stringify(data), '*')
+    })
+    
+  })
 </script>

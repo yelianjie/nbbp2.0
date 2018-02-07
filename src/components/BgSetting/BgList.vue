@@ -29,7 +29,6 @@ export default {
   methods: {
     onClick (itemValue, itemDisabled) {
       console.log(itemValue)
-      console.log(this.timeSelected)
     }
   },
   components: {

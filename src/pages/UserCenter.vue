@@ -4,7 +4,7 @@
       <div class="user-box1 flex flex-align-center">
         <div class="flex-1 avatar flex flex-pack-center pr">
           <span class="level-icon-id" v-if="userInfo.grade_title != '平民'"></span>
-          <img v-if="userInfo.headimgurl" :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/>
+          <img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/>
         </div>
         <!-- <div class="edit-user flex flex-align-center">
           <span class=""><router-link :to="{path: '/Profile'}">编辑资料</router-link></span>
@@ -43,7 +43,7 @@
         </div>
       </div>
       <group class="bg2">
-        <cell title="推荐给好友" color="#e8401b" :is-link="true" icon-name="heart" :link-path="{path: '/'}"></cell>
+        <cell title="推荐给好友" color="#e8401b" :is-link="true" icon-name="heart" @click.native.prevent="shareMaskVisible = true"></cell>
         <cell title="关于我们" color="#5bf475" :is-link="true" icon-name="about" :link-path="{path: '/About'}"></cell>
         <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/'}"></cell>
       </group>
@@ -55,19 +55,30 @@
         <cell title="商户管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/MyBars'}"></cell>
       </group>
     </div>
+    <x-dialog v-model="shareMaskVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
+    <div class="fullscreen"  @click="shareMaskVisible = false">
+      <img src="../assets/share.png" style="max-width: 100%;float:right;width: 4.2rem;margin: 0.2rem 0.2rem 0 0;"/>
+    </div>
+  </x-dialog>
   </div>
 </template>
 
 <script>
-import { Countup } from 'vux'
+import { Countup, XDialog } from 'vux'
 import Group from '../components/User/Group'
 import Cell from '../components/User/Cell'
 import { mapActions, mapGetters } from 'vuex'
 export default {
+  data () {
+    return {
+      shareMaskVisible: false
+    }
+  },
   components: {
     Countup,
     Group,
-    Cell
+    Cell,
+    XDialog
   },
   created () {
     if (Object.keys(this.$store.getters['user/userInfo']).length === 0) {
