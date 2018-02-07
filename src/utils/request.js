@@ -4,6 +4,7 @@ require('es6-promise').polyfill()
 Vue.use(AjaxPlugin)
 const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/prod.env').BASE_API : require('../../config/dev.env').BASE_API
 Vue.http.defaults.baseURL = baseURL
+Vue.http.defaults.timeout = 5000
 Vue.http.interceptors.request.use(function (config) {
   /* for (var i in config.params) {
     if (typeof config.params[i] === 'string' && config.params[i].indexOf('?') !== -1) {
@@ -43,7 +44,7 @@ const request = (url, method = 'POST', data = {}) => {
       } else if (error.request) {
         errors = error.request
       } else {
-        errors = error.message
+        errors = error.message.indexOf('timeout') !== -1 ? '请求超时' : error.message
       }
       Vue.$vux.toast.show({
         text: errors,

@@ -4,7 +4,7 @@
         <div class="bp-mask" v-show="visible"></div>
     </transition>
     <transition name="bp-dialog">
-        <div class="bp-dialog" :style="{'background': bgTitle ? 'transparent' : '#fff'}" v-show="visible">
+        <div class="bp-dialog" :class="{'bp-dialog-top': position == 'top'}" :style="{'background': bgTitle ? 'transparent' : '#fff'}" v-show="visible">
             <div class="bp-dialog__hd" v-if="!bgTitle">
               <strong class="bp-dialog__title">{{title}}</strong>
             </div>
@@ -33,6 +33,10 @@ export default {
     visible: {
       type: Boolean,
       default: false
+    },
+    position: {
+      type: String,
+      default: 'middle'
     },
     title: {
       type: String,
