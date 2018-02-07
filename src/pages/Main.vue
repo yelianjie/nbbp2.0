@@ -5,17 +5,18 @@
       <div class="flex boardcast flex-align-center">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
         <div class="boardcast-scroller flex-1">
-          <div class="scroller-wrap f14">
+          <MarqueeTips content="我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强刷本领强粉刷本领强刷本领强粉刷本领强" :speed="15"></MarqueeTips>
+          <!--<div class="scroller-wrap f14">
             我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强刷本领强粉刷本领强刷本领强粉刷本领强
-            <!--<marquee direction="left" befavior="scroll" scrollamount="4">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>-->
-          </div>
+            <marquee direction="left" befavior="scroll" scrollamount="4">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>
+          </div>-->
         </div>
       </div>
     <div class="main-header flex flex-align-center">
       <div class="flex main-header-left flex-align-center">
         <div class="main-header-avatar">
           <!-- <router-link :to="{path: '/UserCenter'}"><span class="level-icon-avatar"></span></router-link> -->
-          <img :src="userInfo.headimgurl | prefixImageUrl" class="circle">
+          <router-link :to="{path: '/UserCenter'}"><img :src="userInfo.headimgurl | prefixImageUrl" class="circle"></router-link>
         </div>
       </div>
       <div class="flex-1 main-header-right">
@@ -101,8 +102,8 @@
   </x-dialog>
   <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy">
     <div class="">
-      <div class="" style="font-size: 20px;margin-bottom: 10px;">{{buyDialogInfo.price}}<img src="../assets/small.png"/></div>
-      <p style="color: #88878f;"><svg-icon icon-class="close" />当前剩余余额可用：<svg-icon icon-class="close" />{{buyDialogInfo.rest}}</p>
+      <div class="" style="font-size: 20px;margin-bottom: 10px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;"/></div>
+      <p style="color: #88878f;"><svg-icon icon-class="tip" />当前剩余余额可用：<svg-icon icon-class="coin" />{{buyDialogInfo.rest}}</p>
     </div>
   </bp-dialog>
   </div>
@@ -110,6 +111,7 @@
 
 <script>
 import { XDialog } from 'vux'
+import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
 import InfiniteLoading from 'vue-infinite-loading'
 import FooterMain from '../components/Main/Footer'
@@ -276,6 +278,7 @@ export default {
     })
   },
   components: {
+    MarqueeTips,
     FooterMain,
     BpDialog,
     Msg,
@@ -442,6 +445,10 @@ export default {
   background-color: #60557d;
   border-radius: 0 0 15px 15px;
   padding: 0.25rem 0;
+  img {
+    width: 0.48rem;
+    height: 0.48rem;
+  }
   .u-d {
     * {
       display: block;
