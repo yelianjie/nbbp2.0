@@ -15,6 +15,7 @@
     "es6-promise": "^4.2.2",
     "fastclick": "^1.0.6",
     "photoclip": "^3.3.6",
+    "promise.prototype.finally": "^3.1.0",
     "vee-validate": "^2.0.0",
     "vue": "^2.5.2",
     "vue-awesome-swiper": "^3.1.2",

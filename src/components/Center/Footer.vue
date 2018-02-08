@@ -1,20 +1,16 @@
 <template>
-  <footer class="footer">
-     <grid>
-      <grid-item :label="v.name" v-for="(v,i) in footList" :key="i">
-        <img slot="icon" :src="v.icon">
-      </grid-item>
-    </grid>
+  <footer class="footer flex">
+    <div class="flex-1 flex-v tc flex-pack-center flex-align-center" v-for="(v, i) in footList" :key="i">
+      <svg-icon :icon-class="v.icon"/>
+      <p>{{v.name}}</p>
+    </div>
   </footer>
 </template>
 
 <script>
-import { Grid, GridItem } from 'vux'
 export default {
   props: ['footList'],
   components: {
-    Grid,
-    GridItem
   },
   data () {
     return {
@@ -31,7 +27,17 @@ export default {
   left: 0;
   width: 100%;
   z-index: 1;
-  background-color: #fff;
+  background-color: #f7f7f7;
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    transform: scaleY(0.5);
+    content: "";
+    background-color: #fafafa;
+  }
   /deep/ .weui-grid {
     padding: 6px 0;
   }

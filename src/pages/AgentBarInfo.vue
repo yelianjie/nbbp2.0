@@ -1,46 +1,46 @@
 <template>
-  <div class="container padding-bottom-btn">
+  <div class="container padding-bottom-btn borderbox">
     <div class="top flex flex-v flex-align-center fff">
-      <img src="../assets/logo.png">
+      <img :src="barInfo.logo | prefixImageUrl" class="circle">
       <p>酒吧logo，将展示在二维码、酒吧首页上</p>
     </div>
     <group label-width="4.5em" label-margin-right="2em" label-align="right">
-      <x-input title="酒吧名称" readonly value="牛霸酒吧" :should-toast-error="false"></x-input>
-      <x-input title="酒吧地址" readonly value="浙江省宁波市鄞州区首南街道777号" :should-toast-error="false"></x-input>
+      <x-input title="酒吧名称" readonly :value="barInfo.name" :should-toast-error="false"></x-input>
+      <x-input title="酒吧地址" readonly :value="barInfo.address" :should-toast-error="false"></x-input>
     </group>
     <div class="percent-divide fff">
       <p class="set-title">分成比例设置</p>
       <div class="flex flex-h percent-box">
         <div class="percent-item">
           <p class="percent-title">用户比例<span class="small-tip">（此项含用户分成的项目才生效）</span></p>
-          <x-number :value="50" fillable align="left"></x-number>
+          <x-number :value="barInfo.users_separate" fillable align="left"></x-number>
         </div>
       </div>
       <div class="flex flex-h percent-box">
         <div class="percent-item flex-1">
           <p class="percent-title">商户比例</p>
-          <x-number :value="50" fillable align="left"></x-number>
+          <x-number :value="barInfo.ht_separate" fillable align="left"></x-number>
         </div>
         <div class="percent-item  flex-1">
           <p class="percent-title">代理比例</p>
-          <x-number :value="50" fillable align="left"></x-number>
+          <x-number :value="barInfo.yewu_separate" fillable align="left"></x-number>
         </div>
       </div>
       <div class="flex flex-h percent-box">
         <div class="percent-item">
           <p class="percent-title">酒吧管理</p>
-          <x-number :value="50" fillable align="left"></x-number>
+          <x-number :value="barInfo.manage_separate" fillable align="left"></x-number>
+        </div>
+        <div class="percent-item">
+          <p class="percent-title">绑定二维码</p>
+          <div class="bindif">
+            <x-button :gradients="['#1D62F0', '#1D62F0']" mini @click.native="maskVisible = true">去绑定</x-button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="percent-divide fff">
-      <p class="set-title">绑定二维码</p>
-      <div class="bindif">
-        <x-button :gradients="['#1D62F0', '#1D62F0']" mini @click.native="maskVisible = true">去绑定</x-button>
-      </div>
-    </div>
     <div class="bottom_fix">
-      <x-button :gradients="['#1D62F0', '#1D62F0']" link="/">保存</x-button>
+      <x-button :gradients="['#1D62F0', '#1D62F0']" @click.native="setBarPercent">保存</x-button>
     </div>
 
     <div id="maskQrcode" v-show="maskVisible" @click="maskVisible = false">
@@ -54,6 +54,7 @@
 
 <script>
 import { XNumber, XInput, Group, XButton } from 'vux'
+import { getBarInfo } from '@/api/'
 // import bpDialog from '@/components/bpDialog.vue'
 export default {
   name: 'AgentBarInfo',
@@ -66,10 +67,15 @@ export default {
   data () {
     return {
       maskVisible: false,
-      dialogVisible: false
+      dialogVisible: false,
+      barInfo: {},
+      mePercent: 25
     }
   },
   created () {
+    getBarInfo({ht_id: this.$route.params.id}).then((res) => {
+      this.barInfo = res.result
+    })
   },
   mounted () {
   },
@@ -79,6 +85,23 @@ export default {
         document.documentElement.classList.add('noscroll')
       } else {
         document.documentElement.classList.remove('noscroll')
+      }
+    }
+  },
+  methods: {
+    setBarPercent () {
+      if (!this.barInfo.id && this.calPercent()) {
+        return false
+      }
+    },
+    calPercent () {
+      if (this.barInfo.ht_separate + this.barInfo.manage_separate + this.barInfo.yewu_separate + this.barInfo.company_separate > 100) {
+        this.$vux.toast.show({
+          text: '商户、代理和酒吧管理比例之和不能超过' + (100 - this.barInfo.company_separate)
+        })
+        return false
+      } else {
+        return true
       }
     }
   }
@@ -123,7 +146,7 @@ export default {
   font-size: 12px;
 }
 .bindif {
-  padding: 0 15px 10px;
+  padding: 10px 0;
 }
 #maskQrcode {
   position: fixed;

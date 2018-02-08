@@ -3,7 +3,7 @@
       <ul>
         <li class="bar-item flex" v-for="(v,i) in list" :key="i" @click="pageToBarInfo(v.id)">
           <div class="bar-img">
-            <img :src="v.logo | prefixImageUrl" alt="">
+            <img :src="v.logo | prefixImageUrl" alt="" class="circle">
           </div>
           <div class="bar-info flex flex-1 flex-v flex-pack-center">
             <h2 class="bar-name">{{v.name}}</h2>

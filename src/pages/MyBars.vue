@@ -11,8 +11,8 @@
           <div slot="right-menu">
             <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
           </div>
-          <div slot="content" class="vux-1px-t flex flex-align-center bg2" style="padding: 0.2rem 0.25rem;" @click="goToBar(v.id)">
-            <img :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
+          <div slot="content" class="vux-1px-t flex flex-align-center bg2" style="padding: 0.2rem 0.25rem;" @click="goToBar(v.id, v.name)">
+            <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
             <div class="flex-1 flex flex-v">
               <p class="white f16">{{v.name}}</p>
               <p class="f14" style="color: #ddd;">注册时间：{{v.add_time}}</p>
@@ -64,9 +64,12 @@ export default {
         id: id
       }
     },
-    goToBar (barId) {
+    goToBar (barId, barName) {
       this.$router.push({
-        path: `/BusinessCenter/${barId}`
+        path: `/BusinessCenter/${barId}`,
+        query: {
+          name: encodeURI(barName)
+        }
       })
     }
   },

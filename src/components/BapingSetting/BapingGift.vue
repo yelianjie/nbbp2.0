@@ -10,7 +10,7 @@
             <div class="baping-info flex flex-v flex-pack-center flex-1">
               <p class="baping-title">{{v.title}}</p>
               <div class="baping-price flex flex-align-center">
-                <div class="flex1 baping-price-tip">价格：{{v.default_price}}元</div>
+                <div class="flex1 baping-price-tip">价格：{{v.price}}元</div>
                 <div><a class="baping-edit" @click.prevent.stop="edit(i)">编辑</a></div>
               </div>
             </div>
@@ -26,12 +26,13 @@
 
 <script>
 import { Checker, CheckerItem, CheckIcon } from 'vux'
-import { getBpDatas } from '@/api/'
+import { getBpDatas, updateBpPrice, updateBpSelect } from '@/api/'
 export default {
   data () {
     return {
       giftSelected: [],
-      gifts: []
+      gifts: [],
+      editIndex: -1
     }
   },
   created () {
@@ -48,19 +49,25 @@ export default {
   },
   methods: {
     onClick (itemValue, itemDisabled) {
-      console.log(itemValue)
-      console.log(this.giftSelected)
+      this.gifts[itemValue].selected = Number(this.gifts[itemValue].selected) === 1 ? 0 : 1
+      let data = {
+        id: this.gifts[itemValue].id,
+        selected: this.gifts[itemValue].selected
+      }
+      updateBpSelect(data)
+      console.log(data)
     },
     change (event) {
       console.log(event)
     },
     edit (index) {
       let _this = this
+      this.editIndex = index
       this.$vux.confirm.prompt('价格', {
         title: '请输入价格',
         onShow () {
           console.log('promt show')
-          _this.$vux.confirm.setInputValue(_this.gifts[index].default_price)
+          _this.$vux.confirm.setInputValue(_this.gifts[index].price)
         },
         onHide () {
           console.log('prompt hide')
@@ -69,7 +76,14 @@ export default {
           console.log('prompt cancel')
         },
         onConfirm (msg) {
-          alert(msg)
+          let data = {
+            price: msg,
+            id: _this.gifts[_this.editIndex].id
+            // selected: _this.gifts[_this.editIndex].selected
+          }
+          updateBpPrice(data).then((res) => {
+            _this.gifts[_this.editIndex].price = Number(msg).toFixed(2)
+          })
         }
       })
     }

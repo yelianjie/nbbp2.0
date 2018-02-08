@@ -1,11 +1,17 @@
 <template>
   <div class="flex flex-h flex-align-center result-item">
     <div class="u-img">
-      <img src="../../assets/logo.png">
+      <img :src="result.headimgurl | prefixImageUrl" class="circle">
     </div>
-    <div class="u-nickname flex-1">{{result.nickname}}</div>
+    <div class="u-nickname overflow flex-1">{{result.nickname}}</div>
     <div class="u-op">
-      <x-button mini :gradients="['#1D62F0', '#1D62F0']">添加</x-button>
+      <template v-if="from === 'searchResults'">
+        <x-button mini :gradients="['#1D62F0', '#1D62F0']" :show-loading="loading1" @click.native="addManager(result.id, index)" v-if="result.flag === null">添加</x-button>
+        <x-button mini type="warn" :show-loading="loading2" @click.native="deleteManager(result.id, index)" v-if="result.flag">删除</x-button>
+      </template>
+      <template v-else>
+        <x-button mini type="warn" :show-loading="loading2" @click.native="deleteManager(result.mc_id, index)">删除</x-button>
+      </template>
     </div>
   </div>
 </template>
@@ -13,14 +19,36 @@
 <script>
 import { XButton } from 'vux'
 export default {
-  props: ['result'],
+  props: ['result', 'from', 'index'],
   data () {
     return {
-
+      loading1: false,
+      loading2: false
     }
   },
   components: {
     XButton
+  },
+  methods: {
+    addManager (id) {
+      this.loading1 = true
+      this.$emit('on-add', {
+        id: id,
+        index: this.index,
+        cb: () => {
+          this.loading1 = false
+        }
+      })
+    },
+    deleteManager (id) {
+      this.$emit('on-delete', {
+        id: id,
+        index: this.index,
+        cb: () => {
+          this.loading2 = false
+        }
+      })
+    }
   }
 }
 </script>

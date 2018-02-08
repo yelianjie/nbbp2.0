@@ -65,21 +65,14 @@ export default {
         let getErrors = this.vErrors.all()
         if (getErrors.length > 0) {
           this.$vux.toast.show({
-            text: getErrors[0],
-            position: 'bottom',
-            type: 'text',
-            time: 1500,
-            width: '10em'
+            text: getErrors[0]
           })
         } else {
           if (Number(this.type) === 1) {
             // 商户注册
             registerBar(this.r_business).then((res) => {
               this.$vux.toast.show({
-                text: '注册成功',
-                position: 'bottom',
-                type: 'text',
-                time: 1500
+                text: '注册成功'
               })
               this.$router.push('/MyBars')
             })
@@ -88,10 +81,7 @@ export default {
             agentRegiste(this.r_agent).then((res) => {
               this.getUserInfo().then((res) => {
                 this.$vux.toast.show({
-                  text: '注册成功',
-                  position: 'bottom',
-                  type: 'text',
-                  time: 1500
+                  text: '注册成功'
                 })
                 this.$router.push('/AgentCenter')
               })

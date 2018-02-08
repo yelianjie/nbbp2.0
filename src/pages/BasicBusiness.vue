@@ -14,7 +14,7 @@
         <cell title="酒吧地址" :value="form.address" is-link value-align="left" @click.native="showMap"></cell>
       </group>
       <div class="bottom_abs">
-        <x-button :gradients="['#1D62F0', '#1D62F0']" @click.native="updateInfo">保存</x-button>
+        <x-button :gradients="['#1D62F0', '#1D62F0']" @click.native="updateInfo" :show-loading="loading">保存</x-button>
       </div>
       <transition name="slide-fade">
         <iframe src="" id="iframe" frameborder="0" v-show="mapVisible" allowTransparency="true" style="background-color:#fff;"></iframe>
@@ -28,7 +28,7 @@ import { XInput, Group, Cell, XButton } from 'vux'
 import Upload from '../components/Upload'
 import defaultLogo from '../assets/logo.png'
 import { prefixImageUrl } from '@/utils/utils'
-import { updateBarInfo } from '@/api/'
+import { updateBarInfo, getBarInfo } from '@/api/'
 export default {
   name: 'BasicBusiness',
   components: {
@@ -39,7 +39,7 @@ export default {
     Upload
   },
   beforeRouteEnter (to, from, next) {
-    document.title = '牛霸霸屏商户管理-基础信息'
+    document.title = '基础信息'
     next()
   },
   data () {
@@ -48,6 +48,7 @@ export default {
       mapLoad: false,
       defaultLogo: defaultLogo,
       showLogo: '',
+      loading: false,
       form: {
         id: this.$route.params.id ? this.$route.params.id : '',
         name: '',
@@ -61,6 +62,12 @@ export default {
       }
     }
   },
+  created () {
+    getBarInfo({ht_id: this.$route.params.id}).then((res) => {
+      this.form = res.result
+      this.showLogo = prefixImageUrl(res.result.logo)
+    })
+  },
   mounted () {
     document.getElementById('iframe').style.width = window.innerWidth + 'px'
     document.getElementById('iframe').style.height = window.innerHeight + 'px'
@@ -71,14 +78,19 @@ export default {
   },
   methods: {
     updateInfo () {
+      if (this.form.name === '') {
+        this.$vux.toast.show({
+          text: '酒吧名称不能为空'
+        })
+        return
+      }
+      this.loading = true
       updateBarInfo(this.form).then((res) => {
         this.$vux.toast.show({
-          text: '修改成功',
-          position: 'bottom',
-          type: 'text',
-          time: 1500,
-          width: '10em'
+          text: '修改成功'
         })
+      }).finally(() => {
+        this.loading = false
       })
     },
     logoUploadPreview (base64) {
@@ -108,7 +120,8 @@ export default {
         return
       }
       setTimeout(() => {
-        document.getElementById('iframe').src = '/dist/map/index.html'
+        // /dist/map/index.html
+        document.getElementById('iframe').src = './map/index.html'
         this.mapLoad = true
       }, 300)
     }

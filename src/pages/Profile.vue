@@ -119,11 +119,7 @@ export default {
         let getErrors = this.vErrors.all()
         if (getErrors.length > 0) {
           this.$vux.toast.show({
-            text: getErrors[0],
-            position: 'bottom',
-            type: 'text',
-            time: 1500,
-            width: '10em'
+            text: getErrors[0]
           })
         } else {
           this.loading = true
@@ -134,11 +130,7 @@ export default {
           this.saveUserInfo(formData).then((res) => {
             this.getUserInfo().then((res) => {
               this.$vux.toast.show({
-                text: '保存成功',
-                position: 'bottom',
-                type: 'text',
-                time: 1500,
-                width: '10em'
+                text: '保存成功'
               })
             })
             this.loading = false

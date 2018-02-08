@@ -21,7 +21,7 @@ export default {
     BapingTime
   },
   beforeRouteEnter (to, from, next) {
-    document.title = '牛霸霸屏商户管理-霸屏设置'
+    document.title = '霸屏设置'
     next()
   },
   data () {

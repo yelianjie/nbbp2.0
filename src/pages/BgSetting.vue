@@ -1,48 +1,66 @@
 <template>
   <div class="container min-h">
     <div class="flex tab-wrap">
-      <a class="flex-1 tab" :class="{'active': activeName== 'VideoBg'}" @click.prevent="activeName = 'VideoBg'">视频背景</a>
-      <a class="flex-1 tab" :class="{'active': activeName== 'ImageBg'}" @click.prevent="activeName = 'ImageBg'">图片背景</a>
+      <a class="flex-1 tab" :class="{'active': activeType== 2}" @click.prevent="activeType = 2">视频背景</a>
+      <a class="flex-1 tab" :class="{'active': activeType== 1}" @click.prevent="activeType = 1">图片背景</a>
     </div>
-    <bg-list type="video" :selected="videoSelected" :list="videos" v-show="activeName== 'VideoBg'"></bg-list>
-    <bg-list type="image" :selected="imageSelected" :list="images" v-show="activeName== 'ImageBg'"></bg-list>
+    <bg-list :type="2" :selected="videoSelected" :list="videos" v-show="activeType== 2" @on-select="setBgCheck"></bg-list>
+    <bg-list :type="1" :selected="imageSelected" :list="images" v-show="activeType== 1" @on-select="setBgCheck"></bg-list>
   </div>
 </template>
 
 <script>
 import BgList from '../components/BgSetting/BgList'
+import { getBg, setBg } from '@/api/'
 export default {
   name: 'BgSetting',
   components: {
     BgList
   },
   beforeRouteEnter (to, from, next) {
-    document.title = '牛霸霸屏商户管理-背景设置'
+    document.title = '背景设置'
     next()
   },
   data () {
     return {
-      imageSelected: 1,
-      images: [{
-        id: 1
-      }, {
-        id: 2
-      }, {
-        id: 3
-      }],
-      activeName: 'VideoBg',
-      videoSelected: 2,
-      videos: [{
-        id: 1
-      }, {
-        id: 2
-      }, {
-        id: 3
-      }]
+      imageSelected: -1,
+      images: [],
+      activeType: 2,
+      videoSelected: -1,
+      videos: []
     }
+  },
+  created () {
+    var find = -1
+    getBg({ht_id: this.$route.params.id, type: 2}).then((res) => {
+      if (res.result.ht_selected) {
+        find = res.result.default.findIndex(v => v.id === res.result.ht_selected.video_id)
+        if (find > -1) {
+          this.videoSelected = find
+        }
+      }
+      this.videos = res.result.default
+    })
+    getBg({ht_id: this.$route.params.id, type: 1}).then((res) => {
+      if (res.result.ht_selected) {
+        find = res.result.default.findIndex(v => v.id === res.result.ht_selected.pic_id)
+        if (find > -1) {
+          this.imageSelected = find
+        }
+      }
+      this.images = res.result.default
+    })
   },
   mounted () {
 
+  },
+  methods: {
+    setBgCheck (index) {
+      let bgId = this.activeType === 1 ? this.images[index].id : this.videos[index].id
+      setBg({ht_id: this.$route.params.id, type: this.activeType, background_id: bgId}).then((res) => {
+        console.log(res)
+      })
+    }
   }
 }
 </script>
@@ -92,7 +110,7 @@ export default {
       border-bottom: 1px solid #f2f2f2;
     }
     .bg-icon {
-      img {
+      img, video {
         display: block;
         width: 180px;
         height: 108px;

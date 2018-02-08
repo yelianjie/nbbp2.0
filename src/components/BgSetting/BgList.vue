@@ -5,7 +5,8 @@
         <checker-item :value="i" :key="i" @on-item-click="onClick">
           <div class="flex flex-align-center">
             <div class="bg-icon flex flex-1">
-              <img src="../../assets/logo.png"/>
+              <img :src="v.url | prefixImageUrl" v-if="type == 1"/>
+              <video :src="v.url | prefixImageUrl" v-if="type == 2"></video>
             </div>
             <div class="bg-check">
               <check-icon :value="select == i" type="plain"></check-icon>
@@ -20,15 +21,23 @@
 <script>
 import { Checker, CheckerItem, CheckIcon } from 'vux'
 export default {
-  props: ['selected', 'list'],
+  props: ['selected', 'list', 'type'],
   data () {
     return {
-      select: this.selected
+      select: -1
+    }
+  },
+  watch: {
+    selected (newV, oldV) {
+      this.select = newV
     }
   },
   methods: {
     onClick (itemValue, itemDisabled) {
-      console.log(itemValue)
+      if (this.select === itemValue) {
+        return
+      }
+      this.$emit('on-select', itemValue)
     }
   },
   components: {

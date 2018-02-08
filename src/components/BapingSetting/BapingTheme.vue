@@ -10,7 +10,7 @@
             <div class="baping-info flex flex-v flex-pack-center flex-1">
               <p class="baping-title">{{v.title}}</p>
               <div class="baping-price flex flex-align-center">
-                <div class="flex1 baping-price-tip">价格：{{v.default_price}}元</div>
+                <div class="flex1 baping-price-tip">价格：{{v.price}}元</div>
                 <div><a class="baping-edit" @click.prevent.stop="edit(i)">编辑</a></div>
               </div>
             </div>
@@ -26,14 +26,14 @@
 
 <script>
 import { Checker, CheckerItem, CheckIcon } from 'vux'
-import { getBpDatas, updateBpSelectInfo } from '@/api/'
+import { getBpDatas, updateBpPrice, updateBpSelect } from '@/api/'
 export default {
   props: ['list'],
   data () {
     return {
       themeSelected: [],
-      orginSelected: [],
-      themes: []
+      themes: [],
+      editIndex: -1
     }
   },
   created () {
@@ -45,9 +45,7 @@ export default {
         }
       })
       this.themeSelected = selecteds
-      this.orginSelected = selecteds
       this.themes = res.result
-      console.log(this.themeSelected, this.orginSelected)
     })
   },
   mounted () {
@@ -55,19 +53,22 @@ export default {
   },
   methods: {
     onClick (itemValue, itemDisabled) {
-      console.log(itemValue)
-      console.log(this.themeSelected)
-    },
-    change (event) {
-      console.log(event)
+      this.themes[itemValue].selected = Number(this.themes[itemValue].selected) === 1 ? 0 : 1
+      let data = {
+        id: this.themes[itemValue].id,
+        selected: this.themes[itemValue].selected
+      }
+      updateBpSelect(data)
+      console.log(data)
     },
     edit (index) {
       let _this = this
+      this.editIndex = index
       this.$vux.confirm.prompt('价格', {
         title: '请输入价格',
         onShow () {
           console.log('promt show')
-          _this.$vux.confirm.setInputValue(_this.themes[index].default_price)
+          _this.$vux.confirm.setInputValue(_this.themes[index].price)
         },
         onHide () {
           console.log('prompt hide')
@@ -76,17 +77,14 @@ export default {
           console.log('prompt cancel')
         },
         onConfirm (msg) {
-          // alert(msg)
           let data = {
             price: msg,
-            id: _this.$route.params.id,
-            selected: 1
+            id: _this.themes[_this.editIndex].id
+            // selected: _this.themes[_this.editIndex].selected
           }
-          console.log(_this.orginSelected)
-          let filter = _this.orginSelected.filter((v) => {
-            return _this.themeSelected.indexOf(v) === -1
+          updateBpPrice(data).then((res) => {
+            _this.themes[_this.editIndex].price = Number(msg).toFixed(2)
           })
-          console.log(filter, data, updateBpSelectInfo)
         }
       })
     }

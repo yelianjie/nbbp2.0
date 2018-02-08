@@ -49,7 +49,12 @@ Vue.use(WechatPlugin)
 Vue.use(VueJsonp)
 Vue.use(bpDialog)
 Vue.use(maskPlugin)
-Vue.use(ToastPlugin)
+Vue.use(ToastPlugin, {
+  position: 'bottom',
+  time: 1500,
+  type: 'text',
+  isShowMask: true
+})
 Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)
 Vue.use(VueRouter)

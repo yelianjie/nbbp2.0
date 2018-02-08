@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { AjaxPlugin } from 'vux'
 require('es6-promise').polyfill()
+require('promise.prototype.finally').shim()
 Vue.use(AjaxPlugin)
 const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/prod.env').BASE_API : require('../../config/dev.env').BASE_API
 Vue.http.defaults.baseURL = baseURL

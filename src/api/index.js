@@ -79,6 +79,20 @@ export const deleteBar = (data) => {
 }
 
 /**
+ * 获取当前商户当前酒吧的基本信息和收益情况
+ */
+export const getBarInfoById = (data) => {
+  return request('/weixin/merchant/merchantInfo', 'POST', data)
+}
+
+/**
+ * 获取酒吧基本信息
+ */
+export const getBarInfo = (data) => {
+  return request('/weixin/hotel/getHotel', 'POST', data)
+}
+
+/**
  * 更新酒吧基本信息
  */
 export const updateBarInfo = (data) => {
@@ -93,10 +107,96 @@ export const getBpDatas = (data) => {
 }
 
 /**
- * 修改霸屏主题、礼物、时间价格和勾选状态
+ * 修改霸屏主题、礼物、时间价格
  */
-export const updateBpSelectInfo = (data) => {
-  return request('/weixin/product/getProduct', 'POST', data)
+export const updateBpPrice = (data) => {
+  return request('/weixin/product/savePrice', 'POST', data)
+}
+
+/**
+ * 修改霸屏主题、礼物、时间勾选状态
+ */
+export const updateBpSelect = (data) => {
+  return request('/weixin/product/saveProduct', 'POST', data)
+}
+
+/**
+ * 保存酒吧公告
+ * @param {*} data
+ */
+export const saveBarNotice = (data) => {
+  return request('/weixin/notice/saveNotice', 'POST', data)
+}
+
+/**
+ * 获取酒吧公告
+ */
+export const getBarNotice = (data) => {
+  return request('/weixin/notice/getNotice', 'POST', data)
+}
+
+/**
+ * 获取背景信息
+ * @param {*} data
+ */
+export const getBg = (data) => {
+  return request('/weixin/background/getBackground', 'POST', data)
+}
+
+/**
+ * 勾选背景
+ * @param {*} data
+ */
+export const setBg = (data) => {
+  return request('/weixin/background/saveBackground', 'POST', data)
+}
+
+/**
+ * 获取酒吧广告
+ * @param {*} data
+ */
+export const getAd = (data) => {
+  return request('/weixin/advert/getAdvert', 'POST', data)
+}
+
+/**
+ * 修改广告图
+ * @param {*} data
+ */
+export const updateAdImage = (data) => {
+  return request('/weixin/advert/saveAdvert', 'POST', data)
+}
+
+/**
+ * 获取酒吧管理员
+ * @param {*} data
+ */
+export const getBarManagers = (data) => {
+  return request('/weixin/hotel/getHotelManager', 'POST', data)
+}
+
+/**
+ * 昵称搜索会员列表
+ * @param {*} data
+ */
+export const getMembersByName = (data) => {
+  return request('/weixin/members/getSubscribeMember', 'POST', data)
+}
+
+/**
+ * 删除酒吧管理员
+ * @param {*} data
+ */
+export const deleteManager = (data) => {
+  return request('/weixin/hotel/delManager', 'POST', data)
+}
+
+/**
+ * 添加酒吧管理员
+ * @param {*} data
+ */
+export const addManager = (data) => {
+  return request('/weixin/hotel/addManager', 'POST', data)
 }
 
 /**

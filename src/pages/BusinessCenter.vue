@@ -16,17 +16,14 @@ export default {
   data () {
     return {
       logo: logo,
-      footList: [{
-        name: '管理首页',
-        icon: ''
-      }, {
-        name: '酒吧首页',
-        icon: ''
+      footList: [ {
+        name: '我的酒吧',
+        icon: 'business-bar-icon'
       }]
     }
   },
   beforeRouteEnter (to, from, next) {
-    document.title = '牛霸霸屏商户管理'
+    document.title = decodeURI(to.query.name) + '管理'
     next()
   },
   components: {

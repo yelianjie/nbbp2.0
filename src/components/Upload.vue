@@ -82,11 +82,7 @@ export default {
       uploadImage(base64, this.curFile.type, (res) => {
         this.$vux.loading.hide()
         this.$vux.toast.show({
-          text: res.msg,
-          position: 'bottom',
-          type: 'text',
-          time: 1500,
-          width: '10em'
+          text: res.msg
         })
         if (!res.error) {
           this.$emit('on-clip', res.res)
@@ -124,11 +120,7 @@ export default {
               uploadImage(_base64, _this.curFile.type, (res) => {
                 _this.$vux.loading.hide()
                 _this.$vux.toast.show({
-                  text: res.msg,
-                  position: 'bottom',
-                  type: 'text',
-                  time: 1500,
-                  width: '10em'
+                  text: res.msg
                 })
                 if (!res.error) {
                   _this.$emit('on-preview', res.res)
