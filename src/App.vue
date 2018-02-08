@@ -39,7 +39,7 @@ body, html, #app {
 }
 .container {
   position: relative;
-  height: 100%;
+  min-height: 100%;
 }
 .padding-bar {
   padding-bottom: 62px;

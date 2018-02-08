@@ -4,8 +4,8 @@
     <div class="main flex flex-v">
       <div class="flex boardcast flex-align-center">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
-        <div class="boardcast-scroller flex-1">
-          <MarqueeTips content="我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强刷本领强粉刷本领强刷本领强粉刷本领强" :speed="15"></MarqueeTips>
+        <div class="boardcast-scroller flex-1 flex flex-align-center">
+          <MarqueeTips class="f15" content="我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强刷本领强粉刷本领强刷本领强粉刷本领强" :speed="15"></MarqueeTips>
           <!--<div class="scroller-wrap f14">
             我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强刷本领强粉刷本领强刷本领强粉刷本领强
             <marquee direction="left" befavior="scroll" scrollamount="4">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>
@@ -312,6 +312,7 @@ export default {
 .container {
   color: #fff;
   overflow: hidden;
+  height: 100%;
 }
 .main {
   height: 100%;
