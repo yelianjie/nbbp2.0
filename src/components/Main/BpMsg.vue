@@ -1,7 +1,7 @@
 <template>
   <div class="msg-item flex">
     <div class="msg-item-left">
-      <user-avatar :data="{uid: data.initiator_mc_id, levelIcon: data.levelIcon, headImg: data.initiator_headimgurl}" @onAvatar="avatar"></user-avatar>
+      <user-avatar :data="{uid: data.initiator_mc_id, levelName: data.grade_title, levelIcon: data.levelIcon, headImg: data.initiator_headimgurl, nickname: data.initiator_nickname, sex: data.sex}" @onAvatar="avatar"></user-avatar>
     </div>
     <div class="msg-item-right flex-1">
       <msg-user></msg-user>
@@ -38,7 +38,7 @@ export default {
       this.$emit('onLike', this.data)
     },
     avatar () {
-      this.$emit('onAvatar', this.data)
+      this.$emit('onAvatar')
     },
     share () {
       this.$emit('onShare')

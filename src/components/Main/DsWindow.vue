@@ -7,8 +7,8 @@
       <div class="window" id="ds-model" v-show="visible">
         <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close" @click.native="closeWindow"/></span>
         <div class="window-top">
-          <p class="window-title f14 flex flex-align-center" v-if="true">为<img src="../../assets/logo.png" class="for-who circle"/>鲜花送礼</p>
-          <p class="window-title f14 flex flex-align-center" v-else>为全场观众送礼</p>
+          <p class="window-title f14 flex flex-align-center" v-if="currentUserInfo.hasOwnProperty('uid')">为<img :src="currentUserInfo.headImg | prefixImageUrl"  class="for-who circle"/>{{currentUserInfo.nickname}}送礼</p>
+          <p class="window-title f14 flex flex-align-center" style="line-height:0.64rem;" v-else>为全场观众送礼</p>
         </div>
         <div class="window-middle">
           <div class="ds-person-container">
@@ -17,7 +17,7 @@
           <div class="ds-gift-container">
             <swiper :options="swiperDsGiftOption">
               <swiper-slide v-for="(v, i) in gifts" :key="i">
-                <div class="ds-gift-item borderbox ds-item" :class="{'selected': dsGiftIndex == i}" @click="dsGiftIndex = i">
+                <div class="ds-gift-item borderbox ds-item" :class="{'selected': dsGiftIndex == i}" @click="dsGiftIndex != i ? dsGiftIndex = i : dsGiftIndex = -1">
                   <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="gift-icon ds-img"><img :src="v.icon | prefixImageUrl"></div>
                   <div class="gift-name ds-text overflow f13">{{v.title}}</div>
@@ -32,7 +32,7 @@
           </div>
         </div>
         <div class="window-bottom f13 flex flex-align-center">
-          <div class="account  flex-1">总计：<svg-icon icon-class="coin" className="coin" />104</div>
+          <div class="account  flex-1">总计：<svg-icon icon-class="coin" className="coin" />{{total}}</div>
           <div class="repeat"><svg-icon icon-class="substract" @click.native="dsTimes == 1 ? '' : dsTimes--"/><span>{{timesDsText}}</span><svg-icon icon-class="plus" @click.native="dsTimes == 3 ? dsTimes = 1 : dsTimes++"/></div>
           <div class="submit"><button class="bp-button bp-submit" @click="buy">购买</button></div>
         </div>
@@ -44,7 +44,7 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   model: {
     prop: 'visible',
@@ -74,6 +74,12 @@ export default {
       this.$emit('closeWindow', false)
     },
     buy () {
+      if (this.dsGiftIndex === -1) {
+        this.$vux.toast.show({
+          text: '请选择打赏礼物'
+        })
+        return false
+      }
       this.ChangeBuyDialogInfo({price: Math.floor(Math.random() * 100), rest: 30})
       this.$emit('onBuy')
     },
@@ -86,10 +92,17 @@ export default {
     swiperSlide
   },
   computed: {
+    total () {
+      const giftPrice = this.dsGiftIndex !== -1 ? Number(this.gifts[this.dsGiftIndex].price) : 0
+      return Number(giftPrice * this.dsTimes).toFixed(2)
+    },
     timesDsText () {
       const texts = ['一', '二', '三']
       return texts[this.dsTimes - 1] + '连送礼'
-    }
+    },
+    ...mapGetters('main', {
+      currentUserInfo: 'currentUserInfo'
+    })
   }
 
 }

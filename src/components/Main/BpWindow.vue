@@ -7,13 +7,13 @@
       <div class="window" id="bp-model" v-show="visible">
         <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close" @click.native="closeWindow"/></span>
         <div class="window-top">
-          <p class="window-title f14 flex flex-align-center" v-if="true">为<img src="../../assets/logo.png" class="for-who circle"/>鲜花霸屏</p>
-          <p class="window-title f14 flex flex-align-center" v-else>为全场观众霸屏</p>
+          <p class="window-title f14 flex flex-align-center" v-if="currentUserInfo.hasOwnProperty('uid')">为<img :src="currentUserInfo.headImg | prefixImageUrl"  class="for-who circle"/>{{currentUserInfo.nickname}}霸屏</p>
+          <p class="window-title f14 flex flex-align-center" style="line-height:0.64rem;" v-else>为全场观众霸屏</p>
         </div>
         <div class="rpxline" style="margin-bottom: 0.4rem;"></div>
         <div class="window-middle">
           <div class="bp-time-container">
-            <div class="bp-time-item" v-for="(v, i) in times" :key="i" :class="{'selected': bpTimeIndex == i}" @click="bpTimeIndex = i">
+            <div class="bp-time-item" v-for="(v, i) in times" :key="i" :class="{'selected': bpTimeIndex == i}" @click="bpTimeIndex != i ? bpTimeIndex = i : bpTimeIndex = -1">
               <div class="time f13">{{v.time}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
               <div class="time-price f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
             </div>
@@ -22,7 +22,7 @@
           <div class="bp-theme-container">
             <swiper :options="swiperThemeOption">
               <swiper-slide v-for="(v, i) in screens" :key="i">
-                <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i}" @click="bpThemeIndex = i">
+                <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i}" @click="bpThemeIndex != i ? bpThemeIndex = i : bpThemeIndex = -1">
                   <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="theme-icon"><img :src="v.icon | prefixImageUrl"></div>
                   <div class="theme-name f13 overflow">{{v.title}}</div>
@@ -33,7 +33,7 @@
           </div>
           <div class="bp-input-area flex">
             <div class="bp-textarea flex-1">
-              <textarea class="bp-input borderbox" placeholder="请输入霸屏上墙语，30字以内"></textarea>
+              <textarea class="bp-input borderbox" v-model="content" placeholder="请输入霸屏上墙语，30字以内"></textarea>
             </div>
             <div class="bp-upload">
               <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip" :cropRadio="0.5625">
@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class="window-bottom f13 flex flex-align-center">
-          <div class="account flex-1">总计：<svg-icon icon-class="coin" className="coin" />104</div>
+          <div class="account flex-1">总计：<svg-icon icon-class="coin" className="coin" />{{total}}</div>
           <div class="repeat"><svg-icon icon-class="substract" @click.native="bpTimes == 1 ? '' : bpTimes--"/><span>{{timesBpText}}</span><svg-icon icon-class="plus" @click.native="bpTimes == 3 ? bpTimes = 1 : bpTimes++"/></div>
           <div class="submit"><button class="bp-button bp-submit" @click="buy">购买</button></div>
         </div>
@@ -60,7 +60,7 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { prefixImageUrl } from '@/utils/utils'
 import Upload from '../Upload'
 export default {
@@ -74,6 +74,7 @@ export default {
       bpTimes: 1,
       bpTimeIndex: -1,
       bpThemeIndex: -1,
+      content: '',
       swiperThemeOption: {
         slidesPerColumn: 2,
         slidesPerView: 4,
@@ -105,6 +106,18 @@ export default {
       img.src = src
     },
     buy () {
+      if (this.bpTimeIndex === -1) {
+        this.$vux.toast.show({
+          text: '请选择霸屏时间'
+        })
+        return false
+      }
+      if (this.content === '') {
+        this.$vux.toast.show({
+          text: '请输入文字'
+        })
+        return false
+      }
       this.ChangeBuyDialogInfo({price: Math.floor(Math.random() * 100), rest: 30})
       this.$emit('onBuy')
     },
@@ -119,10 +132,18 @@ export default {
     swiperSlide
   },
   computed: {
+    total () {
+      const timePrice = this.bpTimeIndex !== -1 ? Number(this.times[this.bpTimeIndex].price) : 0
+      const themePrice = this.bpThemeIndex !== -1 ? Number(this.screens[this.bpThemeIndex].price) : 0
+      return Number((timePrice + themePrice) * this.bpTimes).toFixed(2)
+    },
     timesBpText () {
       const texts = ['一', '二', '三']
       return texts[this.bpTimes - 1] + '连霸屏'
-    }
+    },
+    ...mapGetters('main', {
+      currentUserInfo: 'currentUserInfo'
+    })
   }
 }
 </script>

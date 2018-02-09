@@ -50,32 +50,37 @@
     <footer-main></footer-main>
   </div>
   <div id="fixed-bgds-btns">
-    <div class="f-btn" @click="bpWindowVisible = true"><img src="../assets/bp-btn.png"/></div>
-    <div class="f-btn" @click="dsindowVisible = true"><img src="../assets/ds-btn.png"/></div>
+    <div class="f-btn" @click="screenForAll"><img src="../assets/bp-btn.png"/></div>
+    <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>
   </div>
   <bp-window v-model="bpWindowVisible" :times="barDataInfo.time" :screens="barDataInfo.screen" @onBuy="buyDialogVisible = true"></bp-window>
-  <ds-window v-model="dsindowVisible" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
+  <ds-window v-model="dsWindowVisible" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
       <div class="user-info">
         <div class="pr">
-          <span class="level-icon-id level1"></span>
-          <img src="../assets/logo.png" class="avatar" style="border: 0;"/>
+          <template v-if="currentUserInfo.levelIcon">
+            <span class="level-icon-id"></span>
+            <img :src="currentUserInfo.headImg | prefixImageUrl" class="avatar" style="border: 0;"/>
+          </template>
+          <template v-else>
+            <img :src="currentUserInfo.headImg | prefixImageUrl" class="avatar"/>
+          </template>
         </div>
         <!--<img src="../assets/logo.png" class="avatar"/>-->
-        <p class="uname f18 white">鲜花</p>
+        <p class="uname f18 white">{{currentUserInfo.nickname}}</p>
         <div class="msg-item-top flex flex-pack-center">
-          <span class="sex sex-male"><svg-icon icon-class="male" /></span>
+          <span class="sex sex-male"><svg-icon icon-class="male" v-if="currentUserInfo.sex == 1"/><svg-icon icon-class="female" v-if="currentUserInfo.sex == 2"/></span>
           <span class="level" style="background-color: #625bc3;">宁波</span>
-          <span class="level level-1">游侠</span>
+          <span class="level level-1" v-if="currentUserInfo.levelIcon">{{currentUserInfo.levelName}}</span>
         </div>
         <p class="sign f14">签名：暂无签名</p>
         <div class="user-dialog-bottom flex" style="width:100%;">
-          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="bp">
+          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="ds">
             <img src="../assets/gift-b-icon.png"/>
             <span>为TA送礼</span>
           </div>
-          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="ds">
+          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="bp">
             <img src="../assets/ba-b-icon.png"/>
             <span>为TA霸屏</span>
           </div>
@@ -187,13 +192,12 @@ export default {
         avatar: 'https://tvax4.sinaimg.cn/crop.0.1.509.509.50/73a68773ly8fea294f5i0j20e50e83yq.jpg'
       }],
       bpWindowVisible: false,
-      dsindowVisible: false,
+      dsWindowVisible: false,
       userDialogVisible: false,
       shareMaskVisible: false,
       buyDialogVisible: false,
       concernVisible: false,
       onlineVisible: false,
-      currentUserInfo: {},
       height: 0,
       noMore: false,
       barDataInfo: {},
@@ -301,8 +305,7 @@ export default {
         }
       })
     },
-    showCard (data) {
-      this.currentUserInfo = data
+    showCard () {
       this.userDialogVisible = true
     },
     like (data) {
@@ -318,13 +321,21 @@ export default {
     ds () {
       this.onlineVisible = false
       this.userDialogVisible = false
-      this.dsindowVisible = true
+      this.dsWindowVisible = true
     },
     confirmBuy () {
       this.buyDialogVisible = false
       /* setTimeout(() => {
         this.buyDialogVisible = false
       }, 3000) */
+    },
+    screenForAll () {
+      this.$store.commit('main/SET_CURRENT_USER_INFO', {})
+      this.bpWindowVisible = true
+    },
+    rewardForAll () {
+      this.$store.commit('main/SET_CURRENT_USER_INFO', {})
+      this.dsWindowVisible = true
     }
   },
   computed: {
@@ -333,6 +344,9 @@ export default {
     }),
     ...mapGetters('user', {
       userInfo: 'userInfo'
+    }),
+    ...mapGetters('main', {
+      currentUserInfo: 'currentUserInfo'
     })
   },
   components: {

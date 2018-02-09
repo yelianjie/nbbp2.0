@@ -2,27 +2,25 @@
 const namespaced = true
 
 const state = {
-  normalMsg: {},
-  bpDsMsg: {}
+  currentUserInfo: {}
 }
 
 // getters
 const getters = {
-  normalMsg: () => state.normalMsg,
-  bpDsMsg: () => state.bpDsMsg
+  currentUserInfo: () => state.currentUserInfo
 }
 
 // actions
 const actions = {
-  setNormalMsg ({commit, state}, data) {
-    commit('SET_NORMAL_MSG', data)
-  }
 }
 
 // mutations
 const mutations = {
   SET_NORMAL_MSG (state, {field, value}) {
     state.normalMsg[field] = value
+  },
+  SET_CURRENT_USER_INFO (state, data) {
+    state.currentUserInfo = data
   }
 }
 
