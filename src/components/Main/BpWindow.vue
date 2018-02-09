@@ -13,19 +13,19 @@
         <div class="rpxline" style="margin-bottom: 0.4rem;"></div>
         <div class="window-middle">
           <div class="bp-time-container">
-            <div class="bp-time-item" v-for="i in 8" :key="i" :class="{'selected': bpTimeIndex == i}" @click="bpTimeIndex = i">
-              <div class="time f13">{{i * 10}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-              <div class="time-price f12"><svg-icon icon-class="coin" className="coin" />10</div>
+            <div class="bp-time-item" v-for="(v, i) in times" :key="i" :class="{'selected': bpTimeIndex == i}" @click="bpTimeIndex = i">
+              <div class="time f13">{{v.time}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+              <div class="time-price f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
             </div>
           </div>
           <div class="rpxline" style="margin-bottom: 0.2rem;"></div>
           <div class="bp-theme-container">
             <swiper :options="swiperThemeOption">
-              <swiper-slide v-for="(v, i) in 8" :key="i">
+              <swiper-slide v-for="(v, i) in screens" :key="i">
                 <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i}" @click="bpThemeIndex = i">
                   <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-                  <div class="theme-icon"><img src="../../assets/logo.png"></div>
-                  <div class="theme-name f13 overflow">生日霸屏</div>
+                  <div class="theme-icon"><img :src="v.icon | prefixImageUrl"></div>
+                  <div class="theme-name f13 overflow">{{v.title}}</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -61,13 +61,14 @@
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapActions } from 'vuex'
+import { prefixImageUrl } from '@/utils/utils'
 import Upload from '../Upload'
 export default {
   model: {
     prop: 'visible',
     event: 'closeWindow'
   },
-  props: ['visible'],
+  props: ['visible', 'times', 'screens'],
   data () {
     return {
       bpTimes: 1,
@@ -76,6 +77,7 @@ export default {
       swiperThemeOption: {
         slidesPerColumn: 2,
         slidesPerView: 4,
+        slidesPerColumnFill: 'row',
         freeMode: true,
         pagination: {
           el: '.swiper-pagination'
@@ -93,13 +95,14 @@ export default {
     },
     afterClip (base64) {
       var img = new Image()
+      var src = prefixImageUrl(base64)
       img.onload = () => {
-        this.base64Img = base64
+        this.base64Img = src
         setTimeout(() => {
           window.URL.revokeObjectURL(img.src)
         }, 100)
       }
-      img.src = base64
+      img.src = src
     },
     buy () {
       this.ChangeBuyDialogInfo({price: Math.floor(Math.random() * 100), rest: 30})

@@ -156,7 +156,7 @@ export default new Router({
       }
     },
     {
-      path: '/Main',
+      path: '/Main/:id',
       name: 'Main',
       component: (resolve) => {
         require(['@/pages/Main'], resolve)

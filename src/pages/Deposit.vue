@@ -4,7 +4,7 @@
       <img src="../assets/logo.png">
     </div>
     <div class="canDespoit-wrap">
-      <p class="money">¥345</p>
+      <p class="money">¥{{barInfo.merchant_balance}}</p>
       <p class="m-tip">当前可提现金额</p>
     </div>
     <div class="despoit-btn">
@@ -15,6 +15,7 @@
 
 <script>
 import { XButton } from 'vux'
+import { getBarMoney } from '@/api/'
 export default {
   name: 'Deposit',
   components: {
@@ -22,12 +23,17 @@ export default {
   },
   data () {
     return {
-
+      barInfo: {}
     }
   },
   beforeRouteEnter (to, from, next) {
     document.title = '我要提现'
     next()
+  },
+  created () {
+    getBarMoney({ht_id: this.$route.params.id}).then((res) => {
+      this.barInfo = res.result
+    })
   }
 }
 </script>

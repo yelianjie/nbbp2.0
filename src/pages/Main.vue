@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="show">
     <onlines :peoples="onlinePeople" @onShowCard="showCard" v-model="onlineVisible"></onlines>
     <div class="main flex flex-v">
       <div class="flex boardcast flex-align-center">
@@ -15,8 +15,13 @@
     <div class="main-header flex flex-align-center">
       <div class="flex main-header-left flex-align-center">
         <div class="main-header-avatar">
-          <!-- <router-link :to="{path: '/UserCenter'}"><span class="level-icon-avatar"></span></router-link> -->
-          <router-link :to="{path: '/UserCenter'}"><img :src="userInfo.headimgurl | prefixImageUrl" class="circle"></router-link>
+          <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'">
+            <router-link :to="{path: '/UserCenter'}" v-if="userInfo.grade_title && userInfo.grade_title == '平民'"><span class="level-icon-avatar" :style="{'background-image': 'url('+Levels[userInfo.grade_title]+')'}"></span></router-link>
+            <img :src="userInfo.headimgurl | prefixImageUrl" class="circle">
+          </template>
+          <template v-else>
+            <router-link :to="{path: '/UserCenter'}"><img :src="userInfo.headimgurl | prefixImageUrl" class="circle"></router-link>
+          </template>
         </div>
       </div>
       <div class="flex-1 main-header-right">
@@ -35,21 +40,21 @@
         </div>
       </infinite-loading>
       <template v-for="(v, i) in chatlist">
-        <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 0" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
-        <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 1" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-img>
-        <msg-only-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 2" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-only-img>
-        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 3" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></bp-msg>
-        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.type == 4" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
+        <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
+        <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-img>
+        <msg-only-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-only-img>
+        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 3" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></bp-msg>
+        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 4" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
       </template>
     </div>
-    <footer-main @onSendMsg=""></footer-main>
+    <footer-main></footer-main>
   </div>
   <div id="fixed-bgds-btns">
     <div class="f-btn" @click="bpWindowVisible = true"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="dsindowVisible = true"><img src="../assets/ds-btn.png"/></div>
   </div>
-  <bp-window v-model="bpWindowVisible"  @onBuy="buyDialogVisible = true"></bp-window>
-  <ds-window v-model="dsindowVisible"  @onBuy="buyDialogVisible = true"></ds-window>
+  <bp-window v-model="bpWindowVisible" :times="barDataInfo.time" :screens="barDataInfo.screen" @onBuy="buyDialogVisible = true"></bp-window>
+  <ds-window v-model="dsindowVisible" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
       <div class="user-info">
@@ -106,10 +111,15 @@
       <p style="color: #88878f;"><svg-icon icon-class="tip" />当前剩余余额可用：<svg-icon icon-class="coin" />{{buyDialogInfo.rest}}</p>
     </div>
   </bp-dialog>
+  <transition name="fade-out">
+    <div class="adbg fullscreen" v-if="adVisible && barDataInfo.advert" :style="{'background-image': 'url('+barDataInfo.advert.phone.url+')'}"></div>
+  </transition>
   </div>
 </template>
 
 <script>
+import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg } from '@/api/'
+import { prefixImageUrl } from '@/utils/utils'
 import { XDialog } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -123,6 +133,7 @@ import DsMsg from '../components/Main/DsMsg'
 import BpWindow from '../components/Main/BpWindow'
 import DsWindow from '../components/Main/DsWindow'
 import Onlines from '../components/Main/Onlines'
+import Levels from '@/assets/level/level-show'
 import { mapGetters, mapActions } from 'vuex'
 import '@/vendor/tween'
 import '@/vendor/animation'
@@ -130,32 +141,10 @@ import '@/vendor/animation'
 export default {
   data () {
     return {
+      Levels: Levels,
+      show: false,
       chatlist: [],
-      list: [{
-        content: '重金霸屏，献给未来的你你你你你啊~',
-        likes: 666,
-        type: 3
-      }, {
-        content: '每一秒钟就有我的笑容~',
-        likes: 688,
-        type: 4
-      }, {
-        content: '黑夜问白天，能不能赦免，灰色的人间',
-        likes: 5,
-        type: 0
-      }, {
-        content: '冰封的眼泪，一滴就很咸',
-        likes: 15,
-        type: 1
-      }, {
-        content: '你说你有点难追',
-        likes: 666,
-        type: 2
-      }, {
-        content: '你会怎么',
-        likes: 666,
-        type: 0
-      }],
+      list: [],
       onlinePeople: [{
         sex: 2,
         name: '娄艺潇',
@@ -206,13 +195,43 @@ export default {
       onlineVisible: false,
       currentUserInfo: {},
       height: 0,
-      noMore: false
+      noMore: false,
+      barDataInfo: {},
+      adVisible: true,
+      newsTimer: null,
+      requestParams: {
+        ht_id: this.$route.params.id,
+        min_id: 0
+      },
+      requestNewParams: {
+        ht_id: this.$route.params.id,
+        id: 0
+      },
+      firstLoading: true
     }
   },
   created () {
     if (Object.keys(this.userInfo).length === 0) {
       this.getUserInfo()
     }
+    getBarAllInfo({ht_id: this.$route.params.id}).then((res) => {
+      // prefixImageUrl
+      res.result.advert && (res.result.advert.phone.url = prefixImageUrl(res.result.advert.phone.url))
+      this.barDataInfo = res.result
+      var img = new Image()
+      img.onload = () => {
+        this.show = true
+        setTimeout(() => {
+          this.adVisible = false
+        }, 1000)
+      }
+      img.src = res.result.advert.phone.url
+    })
+    isSubscribe().then(() => {
+    }).catch(() => {
+      this.concernVisible = true
+    })
+    this.loopGetNewMsg()
   },
   mounted () {
     /* setTimeout(() => {
@@ -232,24 +251,63 @@ export default {
     ...mapActions('user', [
       'getUserInfo'
     ]),
+    loopGetNewMsg () {
+      this.newsTimer = setTimeout(() => {
+        getMaxMsg(this.requestNewParams).then((res) => {
+          if (Array.isArray(res.result) && res.result.length > 0) {
+            this.chatlist = this.chatlist.concat(res.result)
+            this.$nextTick(() => {
+              this.scrollToEnd()
+            })
+            res.result.sort((a, b) => b.id - a.id)
+            this.requestNewParams.id = res.result[0].id
+          }
+          clearTimeout(this.newsTimer)
+          this.loopGetNewMsg()
+        })
+      }, 5000)
+    },
+    scrollToEnd () {
+      var content = document.querySelector('.main-content')
+      Math.animation(content.scrollTop, content.scrollHeight - content.offsetHeight, function (value) {
+        content.scrollTop = value
+      }, 'Linear', 400)
+    },
     infiniteHandler ($state) {
-      setTimeout(() => {
-        const temp = []
-        for (var i = 0; i < 5; i++) {
-          var index = Math.floor(Math.random(0, 1) * this.list.length)
-          temp.push(this.list[index])
+      let params = Object.assign({}, this.requestParams)
+      getNewestMsg(params).then((res) => {
+        if (!Array.isArray(res.result)) {
+          return false
         }
-        this.chatlist = temp.concat(this.chatlist)
+        var resLength = res.result.length
+        if (resLength > 0) {
+          this.requestParams.min_id = res.result[resLength - 1].id
+        }
+        res.result.sort((a, b) => a.id - b.id)
+        res.result.map((v) => {
+          v.levelIcon = this.Levels[v.grade_title] ? this.Levels[v.grade_title] : null
+        })
+        this.chatlist = res.result.concat(this.chatlist)
+        this.$nextTick(() => {
+          // this.scrollToEnd()
+          var chatLength = this.chatlist.length
+          this.requestNewParams.id = chatLength > 0 ? this.chatlist[chatLength - 1].id : 0
+        })
         this.height = this.$refs.scrollWrapper.scrollHeight
-        $state.loaded()
-        // $state.complete()
-      }, 1000)
+        if (res.result.length < 10) {
+          $state.complete()
+        } else {
+          $state.loaded()
+        }
+      })
     },
     showCard (data) {
       this.currentUserInfo = data
       this.userDialogVisible = true
     },
-    like () {
+    like (data) {
+      console.log(data)
+      data.likes++
       // this.chatlist[index].likes++
     },
     bp () {
@@ -297,6 +355,12 @@ export default {
 
 <style lang="less" scoped>
 @import '../styles/main.less';
+.adbg {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 9999999;
+}
 .level-icon-avatar {
   display: block;
   position: absolute;
@@ -307,7 +371,6 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  background-image: url(/static/level-show/level-8.png);
 }
 .container {
   color: #fff;
@@ -570,5 +633,12 @@ export default {
   /* .nickname {
     font-size: 13px;
   } */
+}
+.fade-out-leave-to {
+  opacity: 0;
+  transform: scale(1.2);
+}
+.fade-out-leave-active, .fade-out-enter-active {
+  transition: all 1s;
 }
 </style>

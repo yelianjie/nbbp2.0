@@ -14,10 +14,10 @@
       <group label-width="4.5em" label-align="center">
         <x-input title="昵称" v-model="form.nickname" value-text-align="left" data-vv-as="昵称" v-validate.initial="'required'"></x-input>
         <popup-picker title="性别" :data="sexs" v-model="form.sex" value-text-align="left" show-name></popup-picker>
-        <datetime title="生日" v-model="form.birthday" value-text-align="left" placeholder="选择出生日期"></datetime>
+        <datetime title="生日" :min-year="1940" v-model="form.birthday" value-text-align="left" placeholder="选择出生日期"></datetime>
         <popup-picker title="身高" :data="heights" v-model="form.stature" value-text-align="left" placeholder="选择身高"></popup-picker>
         <popup-picker title="体重" :data="weights" v-model="form.weight" value-text-align="left" placeholder="选择体重"></popup-picker>
-        <x-address title="城市" hide-district v-model="form.adsValue" :list="addressData" value-text-align="left"></x-address>
+        <x-address title="城市" hide-district v-model="adsValue" :list="addressData" value-text-align="left"></x-address>
       </group>
       <group label-width="4.5em" label-align="center">
         <x-input class="autograph-input" title="简介" :max="15" v-model="form.autograph" placeholder="一句精致的简介，让别人更懂你" value-text-align="left"></x-input>
@@ -30,9 +30,11 @@
 </template>
 
 <script>
-import { Group, XInput, PopupPicker, Datetime, ChinaAddressData, XAddress, XButton } from 'vux'
+import { Group, XInput, PopupPicker, Datetime, XAddress, XButton } from 'vux'
 import Upload from '@/components/Upload'
 import { mapActions } from 'vuex'
+import { getRegionData } from '@/api/'
+import { filterRegionByName, filterRegionById } from '@/utils/utils'
 let heights = []
 let weights = []
 for (var i = 150; i <= 200; i++) {
@@ -69,10 +71,10 @@ export default {
         birthday: '',
         stature: [],
         weight: [],
-        adsValue: ['330000', '330200'],
         autograph: '',
         headimgurl: ''
       },
+      adsValue: [],
       sexs: [[{
         name: '男',
         value: '1'
@@ -82,7 +84,7 @@ export default {
       }]],
       heights: [heights],
       weights: [weights],
-      addressData: ChinaAddressData,
+      addressData: [],
       loading: false
     }
   },
@@ -92,18 +94,31 @@ export default {
   },
   created () {
     let userInfo = Object.assign({}, this.$store.getters['user/userInfo'])
+    this.$vux.loading.show({
+      text: '正在加载'
+    })
     if (Object.keys(userInfo).length === 0) {
-      this.getUserInfo().then((res) => {
-        res.sex = [res.sex.toString()]
-        res.weight = [res.weight.toString()]
-        res.stature = [res.stature.toString()]
-        this.form = Object.assign({}, res)
+      this.getRegions(() => {
+        this.getUserInfo().then((res) => {
+          res.sex = [res.sex.toString()]
+          res.weight = [res.weight.toString()]
+          res.stature = [res.stature.toString()]
+          let region = filterRegionByName(res.province, res.city, this.addressData)
+          this.adsValue = [region.province_id, region.city_id]
+          this.form = Object.assign({}, res)
+          this.$vux.loading.hide()
+        })
       })
     } else {
-      userInfo.sex = [userInfo.sex.toString()]
-      userInfo.weight = [userInfo.weight.toString()]
-      userInfo.stature = [userInfo.stature.toString()]
-      this.form = Object.assign({}, userInfo)
+      this.getRegions(() => {
+        userInfo.sex = [userInfo.sex.toString()]
+        userInfo.weight = [userInfo.weight.toString()]
+        userInfo.stature = [userInfo.stature.toString()]
+        let region = filterRegionByName(userInfo.province, userInfo.city, this.addressData)
+        this.adsValue = [region.province_id, region.city_id]
+        this.form = Object.assign({}, userInfo)
+        this.$vux.loading.hide()
+      })
     }
   },
   methods: {
@@ -111,6 +126,19 @@ export default {
       'getUserInfo',
       'saveUserInfo'
     ]),
+    getRegions (cb) {
+      getRegionData().then((res) => {
+        for (var i = 0; i < res.result.length; i++) {
+          if (res.result[i].parent !== '100000') {
+            break
+          } else {
+            delete res.result[i].parent
+          }
+        }
+        this.addressData = res.result
+        cb && cb()
+      })
+    },
     afterClip (base64) {
       this.form.headimgurl = base64
     },
@@ -123,7 +151,7 @@ export default {
           })
         } else {
           this.loading = true
-          const formData = Object.assign({}, this.form)
+          const formData = Object.assign({}, this.form, filterRegionById(this.adsValue[0], this.adsValue[1], this.addressData))
           formData.weight = formData.weight.join()
           formData.sex = formData.sex.join()
           formData.stature = formData.stature.join()
@@ -138,6 +166,8 @@ export default {
         }
       })
     }
+  },
+  computed: {
   }
 }
 </script>

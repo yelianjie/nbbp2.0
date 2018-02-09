@@ -3,15 +3,15 @@
     <template v-if="display == 1">
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="ds">
         <span class="icon-wrap"><img src="../../assets/gift-b-icon.png"/></span>
-        <span class="num f12">1</span>
+        <span class="num f12">{{reward}}</span>
       </div>
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="liked">
         <span class="icon-wrap"><img src="../../assets/like-b-icon.png"/></span>
-        <span class="num f12">2</span>
+        <span class="num f12">{{fabulous}}</span>
       </div>
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="bp">
         <span class="icon-wrap"><img src="../../assets/ba-b-icon.png"/></span>
-        <span class="num f12">3</span>
+        <span class="num f12">{{screen}}</span>
       </div>
       <div class="msg-btn msg-btn-big msg-share flex flex-1 flex-align-center">
         <span class="msg-share-wrap" style="padding-left:10px;"  @click="share" ><svg-icon icon-class="share"/></span>
@@ -20,16 +20,16 @@
     </template>
     <template v-else>
       <div class="msg-btn flex flex-align-center" @click="ds">
-        <svg-icon icon-class="gift" @click.native="ds"/>
-        <span class="num f12">1</span>
+        <svg-icon icon-class="gift"/>
+        <span class="num f12">{{reward}}</span>
       </div>
       <div class="msg-btn flex flex-align-center" @click="bp">
-        <svg-icon icon-class="ba" @click.native="ds"/>
-        <span class="num f12">3</span>
+        <svg-icon icon-class="ba"/>
+        <span class="num f12">{{screen}}</span>
       </div>
       <div class="msg-btn flex flex-align-center" @click="liked">
-        <svg-icon icon-class="like" @click.native="like"/>
-        <span class="num f12">2</span>
+        <svg-icon icon-class="like"/>
+        <span class="num f12">{{fabulous}}</span>
       </div>
       
     </template>
@@ -40,7 +40,7 @@
 
 <script>
 export default {
-  props: ['like', 'display'],
+  props: ['fabulous', 'screen', 'reward', 'display'],
   data () {
     return {
 

@@ -126,4 +126,8 @@ body, html, #app {
     background-color: #645bc4;
   }
 }
+.face-icon {
+  width: 0.8rem;
+  height: 0.6rem;
+}
 </style>

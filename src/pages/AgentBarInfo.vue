@@ -13,23 +13,23 @@
       <div class="flex flex-h percent-box">
         <div class="percent-item">
           <p class="percent-title">用户比例<span class="small-tip">（此项含用户分成的项目才生效）</span></p>
-          <x-number :value="barInfo.users_separate" fillable align="left"></x-number>
+          <x-number v-model.number="barInfo.users_separate" fillable align="left"></x-number>
         </div>
       </div>
       <div class="flex flex-h percent-box">
         <div class="percent-item flex-1">
           <p class="percent-title">商户比例</p>
-          <x-number :value="barInfo.ht_separate" fillable align="left"></x-number>
+          <x-number v-model.number="barInfo.ht_separate" fillable align="left"></x-number>
         </div>
         <div class="percent-item  flex-1">
           <p class="percent-title">代理比例</p>
-          <x-number :value="barInfo.yewu_separate" fillable align="left"></x-number>
+          <x-number v-model.number="barInfo.yewu_separate" fillable align="left"></x-number>
         </div>
       </div>
       <div class="flex flex-h percent-box">
         <div class="percent-item">
           <p class="percent-title">酒吧管理</p>
-          <x-number :value="barInfo.manage_separate" fillable align="left"></x-number>
+          <x-number v-model.number="barInfo.manage_separate" fillable align="left"></x-number>
         </div>
         <div class="percent-item">
           <p class="percent-title">绑定二维码</p>
@@ -54,7 +54,7 @@
 
 <script>
 import { XNumber, XInput, Group, XButton } from 'vux'
-import { getBarInfo } from '@/api/'
+import { getBarInfo, updateRate } from '@/api/'
 // import bpDialog from '@/components/bpDialog.vue'
 export default {
   name: 'AgentBarInfo',
@@ -74,6 +74,11 @@ export default {
   },
   created () {
     getBarInfo({ht_id: this.$route.params.id}).then((res) => {
+      res.result.users_separate = Number(res.result.users_separate)
+      res.result.ht_separate = Number(res.result.ht_separate)
+      res.result.yewu_separate = Number(res.result.yewu_separate)
+      res.result.manage_separate = Number(res.result.manage_separate)
+      res.result.company_separate = Number(res.result.company_separate)
       this.barInfo = res.result
     })
   },
@@ -82,26 +87,39 @@ export default {
   watch: {
     maskVisible (newVal, oldVal) {
       if (newVal) {
-        document.documentElement.classList.add('noscroll')
+        this.$noscroll()
       } else {
-        document.documentElement.classList.remove('noscroll')
+        this.$noscroll.cancel()
       }
     }
   },
   methods: {
     setBarPercent () {
-      if (!this.barInfo.id && this.calPercent()) {
+      if (!this.barInfo.id || this.calPercent()) {
         return false
       }
+      let form = {
+        ht_id: this.barInfo.id,
+        users_separate: this.barInfo.users_separate,
+        ht_separate: this.barInfo.ht_separate,
+        yewu_separate: this.barInfo.yewu_separate,
+        manage_separate: this.barInfo.manage_separate
+      }
+      updateRate(form).then((res) => {
+        this.$vux.toast.show({
+          text: '保存成功'
+        })
+      })
     },
     calPercent () {
       if (this.barInfo.ht_separate + this.barInfo.manage_separate + this.barInfo.yewu_separate + this.barInfo.company_separate > 100) {
         this.$vux.toast.show({
-          text: '商户、代理和酒吧管理比例之和不能超过' + (100 - this.barInfo.company_separate)
+          text: '商户、代理和酒吧管理比例之和不能超过' + (100 - this.barInfo.company_separate) + '%',
+          width: '12em'
         })
-        return false
-      } else {
         return true
+      } else {
+        return false
       }
     }
   }

@@ -121,7 +121,7 @@ export default {
       }
       setTimeout(() => {
         // /dist/map/index.html
-        document.getElementById('iframe').src = './map/index.html'
+        document.getElementById('iframe').src = '/dist/map/index.html'
         this.mapLoad = true
       }, 300)
     }

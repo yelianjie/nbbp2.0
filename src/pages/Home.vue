@@ -4,57 +4,92 @@
     <div class="flex-1 scroll">
       <BarsList :barsList="barsList" enter="home"></BarsList>
     </div>
-    <x-address style="display:none;" hide-district popup-title="选择城市" v-model="adsValue" title="" :list="addressData" placeholder="请选择地址" :show.sync="showAddress"></x-address>
+    <x-address style="display:none;" hide-district popup-title="选择城市" v-model="adsValue" title="" @on-hide="closeAddress" :list="addressData" placeholder="请选择地址" :show.sync="showAddress"></x-address>
   </div>  
 </template>
 
 <script>
 import BarsList from '@/components/Center/BarsList'
-import { XAddress, ChinaAddressV4Data } from 'vux'
-import { getDistance } from '@/utils/utils'
+import { XAddress } from 'vux'
+import { getDistance, filterRegionByName } from '@/utils/utils'
+import { getRegionData, getBarsByCity } from '@/api/'
 export default {
   data () {
     return {
-      adsValue: ['330000', '330200'],
-      addressData: ChinaAddressV4Data,
+      adsValue: [],
+      addressData: [],
       showAddress: false,
-      barsList: []
+      barsList: [],
+      userAllow: true,
+      userPosition: {
+        lat: '',
+        lng: ''
+      }
     }
   },
   beforeRouteEnter (to, from, next) {
     document.title = '牛霸霸屏'
     next()
   },
-  mounted () {
-    this.$vux.loading.show({
-      text: 'Loading'
+  created () {
+    getRegionData().then((res) => {
+      for (var i = 0; i < res.result.length; i++) {
+        if (res.result[i].parent !== '100000') {
+          break
+        } else {
+          delete res.result[i].parent
+        }
+      }
+      this.addressData = res.result
+      this.getPosition()
     })
-    setTimeout(() => {
-      let arr = [{
-        name: '牛霸酒吧',
-        address: '鄞州区首南街道500号',
-        lat: '114.21892734521',
-        lng: '29.575429778924'
-      }, {
-        name: '牛霸酒吧',
-        address: '鄞州区首南街道500号',
-        lat: '114.21692734521',
-        lng: '29.575429778924'
-      }, {
-        name: '牛霸酒吧',
-        address: '鄞州区首南街道500号',
-        lat: '114.21992734521',
-        lng: '29.575429778924'
-      }]
-      this.wxCoordsToBaidu(arr)
-      this.$vux.loading.hide()
-    }, 1000)
+  },
+  mounted () {
   },
   methods: {
+    closeAddress (flag) {
+      if (!flag) {
+        return false
+      }
+      let find = this.addressData.find((v, i) => v.value === this.adsValue[1])
+      this.$vux.loading.show({
+        text: '正在加载'
+      })
+      getBarsByCity({region_code: find.value}).then((res) => {
+        if (Array.isArray(res.result)) {
+          if (this.userAllow) {
+            // this.wxCoordsToBaidu(res.result)
+            res.result.map((v, i) => {
+              v.distance = getDistance(v.locationLat, v.locationLng, this.userPosition.lat, this.userPosition.lng)
+            })
+          } else {
+            res.result.map((v, i) => {
+              v.distance = '未知'
+            })
+          }
+          this.barsList = res.result
+        }
+      }).finally(() => {
+        this.$vux.loading.hide()
+      })
+    },
+    getPosition () {
+      this.$jsonp('http://api.map.baidu.com/location/ip', {
+        coor: 'bd09ll',
+        ak: 'gqwAbhpew0rdL9sZei9dL2PQWGqW7beB'
+      }).then(json => {
+        var detail = json.content.address_detail
+        var data = filterRegionByName(detail.province, detail.city, this.addressData)
+        this.adsValue = [data.province_id, data.city_id]
+        this.userPosition.lng = json.content.point.x
+        this.userPosition.lat = json.content.point.y
+        this.closeAddress(true)
+      })
+    },
     wxCoordsToBaidu (data) {
       let coords = ''
       data.forEach((v, i) => {
-        coords += v.lat + ',' + v.lng + ';'
+        coords += v.locationLat + ',' + v.locationLng + ';'
       })
       coords = coords.substring(0, coords.length - 1)
       this.$jsonp('http://api.map.baidu.com/geoconv/v1/', {
@@ -84,7 +119,11 @@ export default {
   computed: {
     cityName () {
       let find = this.addressData.find((v, i) => v.value === this.adsValue[1])
-      return find.name
+      if (find) {
+        return find.name
+      } else {
+        return ''
+      }
     }
   },
   components: {

@@ -13,6 +13,7 @@ import './styles/global.less'
 import * as filters from './filters' // global filters
 import bpDialog from './plugins/bpDialog'
 import maskPlugin from './plugins/mask'
+import noscrollPlugin from './plugins/noscroll'
 import { ToastPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin } from 'vux'
 import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
@@ -49,6 +50,7 @@ Vue.use(WechatPlugin)
 Vue.use(VueJsonp)
 Vue.use(bpDialog)
 Vue.use(maskPlugin)
+Vue.use(noscrollPlugin)
 Vue.use(ToastPlugin, {
   position: 'bottom',
   time: 1500,

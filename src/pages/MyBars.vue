@@ -7,7 +7,7 @@
     </div>
     <div class="bars">
       <swipeout>
-        <swipeout-item :sensitivity="15" transition-mode="reveal" :auto-close-on-button-click="false" v-for="(v, i) in barList" :key="i">
+        <swipeout-item :sensitivity="15" :ref="'swipeoutItem' + i" transition-mode="reveal" :auto-close-on-button-click="false" v-for="(v, i) in barList" :key="i">
           <div slot="right-menu">
             <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
           </div>

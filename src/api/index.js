@@ -100,6 +100,13 @@ export const updateBarInfo = (data) => {
 }
 
 /**
+ * 获取酒吧收益和信息
+ * @param {*} data
+ */
+export const getBarMoney = (data) => {
+  return request('/weixin/hotel/getHotelMoney', 'POST', data)
+}
+/**
  * 获取酒吧霸屏主题、礼物、时间
  */
 export const getBpDatas = (data) => {
@@ -199,6 +206,66 @@ export const addManager = (data) => {
   return request('/weixin/hotel/addManager', 'POST', data)
 }
 
+/**
+ * 保存百分比
+ * @param {*} data
+ */
+export const updateRate = (data) => {
+  return request('/weixin/hotel/updateRate', 'POST', data)
+}
+
+/**
+ * 获取省市区数据
+ */
+export const getRegionData = () => {
+  return request('/weixin/index/getRegion', 'POST')
+}
+
+/**
+ * 根据城市获取酒吧列表
+ * @param {*} data
+ */
+export const getBarsByCity = (data) => {
+  return request('/weixin/hotel/getHotelList', 'POST', data)
+}
+
+/**
+ * 获取酒吧基本信息、主题、礼物、时间
+ * @param {*} data
+ */
+export const getBarAllInfo = (data) => {
+  return request('/weixin/hotel/getHotelAllMsg', 'POST', data)
+}
+
+/**
+ * 添加普通消息
+ * @param {*} data
+ */
+export const addNormalMsg = (data) => {
+  return request('/weixin/message/addMsg', 'POST', data)
+}
+
+/**
+ * 获取最新10条消息
+ * @param {*} data
+ */
+export const getNewestMsg = (data) => {
+  return request('/weixin/message/getNewestMsg', 'POST', data)
+}
+
+/**
+ * 获取最新消息
+ * @param {*} data
+ */
+export const getMaxMsg = (data) => {
+  return request('/weixin/message/getMaxMsg', 'POST', data)
+}
+/**
+ * 当前用户是否已关注
+ */
+export const isSubscribe = () => {
+  return request('/weixin/members/isSubscribe')
+}
 /**
  * 上传图片
  * @param {*} blob

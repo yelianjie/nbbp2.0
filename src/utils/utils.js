@@ -62,6 +62,47 @@ export const getDistance = (lon1, lat1, lon2, lat2) => {
   return distance
 }
 
+/**
+ * 根据名字返回省市信息
+ * @param {*} province
+ * @param {*} city
+ * @param {*} datas
+ */
+export const filterRegionByName = (province, city, datas) => {
+  let findProvice = datas.find((v, i) => v.name.indexOf(province) !== -1)
+  let findCity = datas.find((v, i) => v.name.indexOf(city) !== -1)
+  if (findProvice && findCity) {
+    return {
+      province: findProvice.name,
+      province_id: findProvice.value,
+      city: findCity.name,
+      city_id: findCity.value
+    }
+  } else {
+    return {}
+  }
+}
+
+/**
+ * 根据省市ID返回信息
+ * @param {*} provinceId
+ * @param {*} cityId
+ * @param {*} datas
+ */
+export const filterRegionById = (provinceId, cityId, datas) => {
+  let findProvice = datas.find((v, i) => v.value === provinceId)
+  let findCity = datas.find((v, i) => v.value === cityId)
+  if (findProvice && findCity) {
+    return {
+      province: findProvice.name,
+      province_id: findProvice.value,
+      city: findCity.name,
+      city_id: findCity.value
+    }
+  } else {
+    return {}
+  }
+}
 /* export const dataURLtoBlob = function (dataurl) {
   var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);

@@ -99,8 +99,10 @@ export default {
     },
     onFocus () {
       this.focus = true
+      this.$noscroll()
     },
     onBlur () {
+      this.$noscroll.cancel()
       this.focus = false
     },
     onCancel () {

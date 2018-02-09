@@ -10,7 +10,7 @@
       <x-button :gradients="['#f31374', '#f31374']" @click.native="depositVisible = true" style="margin-top: 10px;">我要提现</x-button>
     </div>
     <div v-transfer-dom>
-      <bp-dialog :bg-title="true" :bgSrc="exchangeBg" position="top" v-model="exchangeVisible" @onConfirm="exchange">
+      <bp-dialog :bg-title="true" :bgSrc="exchangeBg" v-model="exchangeVisible" @onConfirm="exchange">
         <div class="">
           <p style="font-size: 13px;color:#6c6a75;text-align: left;
           margin-bottom: 10px;">当前有102元收益可兑换成牛角</p>
@@ -20,7 +20,7 @@
       </bp-dialog>
     </div>
     <div v-transfer-dom>
-      <bp-dialog :bg-title="true" :bgSrc="depositBg"  position="top" v-model="depositVisible" @onConfirm="deposit">
+      <bp-dialog :bg-title="true" :bgSrc="depositBg" v-model="depositVisible" @onConfirm="deposit">
       <div class="">
         <p style="font-size: 13px;color:#6c6a75;text-align: left;
         margin-bottom: 10px;">当前收益：102元</p>

@@ -34,6 +34,7 @@
 <script>
 import Upload from '../Upload'
 import ChatFace from '../ChatFace'
+import { addNormalMsg } from '@/api/'
 export default {
   data () {
     return {
@@ -45,7 +46,21 @@ export default {
   },
   methods: {
     sendMsg () {
-      this.$emit('onSendMsg')
+      if (!this.msg && !this.base64) {
+        this.$vux.toast.show({
+          text: '请上传图片或输入文字',
+          width: '12em'
+        })
+        return false
+      }
+      addNormalMsg({ht_id: this.$route.params.id, content: this.msg, img: this.base64}).then((res) => {
+        this.$vux.toast.show({
+          text: '发送成功'
+        })
+        this.deleteMsgImg()
+        this.msg = ''
+        this.showFace = false
+      })
     },
     msgImgUploadPreview (base64) {
       this.textImgVisible = true
@@ -144,7 +159,7 @@ export default {
 }
 
 .chat-submit-btn {
-  margin-right: 0.3rem;
+  padding-right: 0.3rem;
 }
 </style>
 

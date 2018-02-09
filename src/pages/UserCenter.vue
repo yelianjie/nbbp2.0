@@ -3,8 +3,13 @@
     <div class="user-top bg2">
       <div class="user-box1 flex flex-align-center">
         <div class="flex-1 avatar flex flex-pack-center pr">
-          <span class="level-icon-id" v-if="userInfo.grade_title != '平民'"></span>
-          <router-link :to="{path: '/Profile'}"><img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/></router-link>
+          <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'">
+            <span class="level-icon-id" :style="{'background-image': 'url('+Levels[userInfo.grade_title]+')'}"></span>
+            <router-link :to="{path: '/Profile'}"><img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/></router-link>
+          </template>
+          <template v-else>
+            <router-link :to="{path: '/Profile'}"><img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/></router-link>
+          </template>
         </div>
         <!-- <div class="edit-user flex flex-align-center">
           <span class=""><router-link :to="{path: '/Profile'}">编辑资料</router-link></span>
@@ -21,7 +26,7 @@
         <div class="flex white tag1 flex flex-align-center flex-pack-center">
           <span class="sex sex-male flex flex-align-center"><svg-icon icon-class="male" v-if="userInfo.sex == 1"/><svg-icon icon-class="female" v-if="userInfo.sex == 2"/></span>
           <span class="tag tagcity">{{userInfo.city}}</span>
-          <span class="level level-1">{{userInfo.grade_title}}</span>
+          <span class="level level-1" v-if="userInfo.grade_title && userInfo.grade_title != '平民'">{{userInfo.grade_title}}</span>
         </div>
         <p class="sign f14 tc"><span style="white-space: nowrap;">签名：</span><span>{{userInfo.autograph}}</span></p>
         <div class="count-current flex">
@@ -68,9 +73,11 @@ import { Countup, XDialog } from 'vux'
 import Group from '../components/User/Group'
 import Cell from '../components/User/Cell'
 import { mapActions, mapGetters } from 'vuex'
+import Levels from '@/assets/level/level-show'
 export default {
   data () {
     return {
+      Levels: Levels,
       shareMaskVisible: false
     }
   },
@@ -214,7 +221,6 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  background-image: url(/static/level-show/level-8.png);
   transform: translate3d(-50%, 0 ,0);
 }
 </style>

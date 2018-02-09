@@ -37,7 +37,7 @@ export default {
   methods: {
     pageToBarInfo (id) {
       if (this.enter === 'home') {
-        this.$router.push({path: '/Main'})
+        this.$router.push({path: `/Main/${id}`})
       } else {
         this.$router.push({path: `/AgentBarInfo/${id}`})
       }
@@ -45,6 +45,9 @@ export default {
   },
   filters: {
     distance (value) {
+      if (typeof value === 'string') {
+        return value
+      }
       var d = Number(value / 1000).toFixed(2) + 'km'
       return d
     }

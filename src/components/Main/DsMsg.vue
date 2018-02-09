@@ -1,7 +1,7 @@
 <template>
   <div class="msg-item flex">
     <div class="msg-item-left">
-      <user-avatar @onAvatar="avatar"></user-avatar>
+      <user-avatar :data="{uid: data.initiator_mc_id, levelIcon: data.levelIcon, headImg: data.initiator_headimgurl}" @onAvatar="avatar"></user-avatar>
     </div>
     <div class="msg-item-right flex-1">
       <msg-user></msg-user>
@@ -20,7 +20,7 @@
         </div>
         <div class="content">{{data.content}}</div>
         <div class="msg-item-bottom">
-          <msg-bottom :like="data.likes" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds" :display="1"></msg-bottom>
+          <msg-bottom :fabulous="data.fabulous_count" :screen="data.screen_count" :reward="data.reward_count" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds" :display="1"></msg-bottom>
         </div>
       </div>
       

@@ -16,12 +16,12 @@
           <div class="rpxline" style="margin-bottom: 0.2rem;"></div>
           <div class="ds-gift-container">
             <swiper :options="swiperDsGiftOption">
-              <swiper-slide v-for="(v, i) in 8" :key="i">
+              <swiper-slide v-for="(v, i) in gifts" :key="i">
                 <div class="ds-gift-item borderbox ds-item" :class="{'selected': dsGiftIndex == i}" @click="dsGiftIndex = i">
                   <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-                  <div class="gift-icon ds-img"><img src="../../assets/logo.png"></div>
-                  <div class="gift-name ds-text overflow f13">兰博基尼</div>
-                  <div class="gift-price f12"><svg-icon icon-class="coin" className="coin" />10</div>
+                  <div class="gift-icon ds-img"><img :src="v.icon | prefixImageUrl"></div>
+                  <div class="gift-name ds-text overflow f13">{{v.title}}</div>
+                  <div class="gift-price f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -57,6 +57,7 @@ export default {
       swiperDsGiftOption: {
         slidesPerColumn: 2,
         slidesPerView: 4,
+        slidesPerColumnFill: 'row',
         freeMode: true,
         pagination: {
           el: '.swiper-pagination'
@@ -64,7 +65,7 @@ export default {
       }
     }
   },
-  props: ['visible'],
+  props: ['visible', 'gifts'],
   methods: {
     ...mapActions('app', {
       ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
