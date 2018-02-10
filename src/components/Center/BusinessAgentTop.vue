@@ -35,7 +35,7 @@ export default {
 
 <style lang="less" scoped>
 .center-wrap {
-  background-color: #2b2b2b;
+  background-color: #2481d2;
   color: #fff;
 }
 .top {
@@ -60,14 +60,14 @@ export default {
 
 .center-wrap {
   /deep/ .weui-cells {
-    background-color: #333;
+    background-color: #237dcb;
     &:after,
     &:before {
       border: 0;
     }
   }
   /deep/ .weui-cell_access:active {
-    background-color: #3e3e3e;
+    background-color: #3d8dd3;
   }
 }
 

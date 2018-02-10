@@ -65,6 +65,9 @@ body, html, #app {
   bottom: 0;
   left: 0;
   width: 100%;
+  box-sizing: border-box;
+  padding: 4px 15px;
+  background-color: #fff;
 }
 .fff {
   background-color: #fff;

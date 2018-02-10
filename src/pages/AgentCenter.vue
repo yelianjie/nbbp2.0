@@ -1,20 +1,25 @@
 <template>
-  <div class="container fff">
-    <div data-v-7de79557="" class="middle tc white bg2" style="padding: 0.36rem 0;margin-bottom:0.1rem;">
+  <div class="container" style="backgournd-color:#f7f7f7;">
+    <div data-v-7de79557="" class="middle tc white bg3" style="padding: 0.36rem 0;margin-bottom:10px;">
       <p data-v-7de79557="" class="f14">当前累计未提现收益</p>
       <p data-v-7de79557="" class="benefit-account">{{info.money.merchant_balance}}</p>
       <p data-v-7de79557="" class="f16">累计总收益：{{info.money.merchant_income}} 元</p>
     </div>
-    <BarsList :barsList="info.hotel"></BarsList>
-    <Footer :footList="footList"></Footer>
+    <p style="padding: 0.2rem 0.3rem;" class="f18 fff">代理酒吧列表</p>
+    <BarsList :barsList="info.hotel" class="fff"></BarsList>
+    <div class="menus-horizontal fff" style="margin-top:10px;padding:0 10px;">
+      <template v-for="(v,i) in horizontalMenus" @click="route(i)">
+        <menu-item :data="v" @click.native="route(i)" :key="i"></menu-item>
+      </template>
+    </div>
   </div>
 </template>
 
 <script>
 import BarsList from '@/components/Center/BarsList'
-import Footer from '@/components/Center/Footer'
 import logo from '../assets/logo.png'
 import { getAgentIndex } from '@/api/'
+import MenuItem from '@/components/Center/MenuItem'
 export default {
   name: 'AgentCenter',
   data () {
@@ -27,15 +32,13 @@ export default {
           total_profit_balance: 0.000
         }
       },
-      footList: [{
-        name: '管理首页',
-        icon: ''
-      }, {
-        name: '酒吧列表',
-        icon: ''
-      }, {
+      horizontalMenus: [{
         name: '帮助说明',
-        icon: ''
+        icon: 'business-help-icon',
+        tip: '设置帮助',
+        route: {
+          path: '/Help'
+        }
       }]
     }
   },
@@ -48,11 +51,23 @@ export default {
   },
   components: {
     BarsList,
-    Footer
+    MenuItem
   }
 }
 </script>
 
 <style lang="less" scoped>
-
+.container /deep/ .bar-item {
+  position: relative;
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 0.3rem;
+    right: 0.3rem;
+    height: 1px;
+    background-color: #f2f2f2;
+    content: "";
+    transform: scaleY(0.5);
+  }
+}
 </style>

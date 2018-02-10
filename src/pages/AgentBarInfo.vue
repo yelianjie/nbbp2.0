@@ -4,23 +4,25 @@
     <div class="percent-divide fff">
       <p class="set-title">分成比例设置</p>
       <div class="flex flex-h percent-box">
-        <div class="percent-item">
+        <div class="percent-item percent">
           <p class="percent-title">用户比例<span class="small-tip">（此项含用户分成的项目才生效）</span></p>
           <x-number v-model.number="barInfo.users_separate" fillable align="left"></x-number>
         </div>
       </div>
       <div class="flex flex-h percent-box">
-        <div class="percent-item flex-1">
+        <div class="percent-item flex-1 percent">
           <p class="percent-title">商户比例</p>
           <x-number v-model.number="barInfo.ht_separate" fillable align="left"></x-number>
         </div>
-        <div class="percent-item  flex-1">
+      </div>
+      <div class="flex flex-h percent-box">
+        <div class="percent-item  flex-1 percent">
           <p class="percent-title">代理比例</p>
           <x-number v-model.number="barInfo.yewu_separate" fillable align="left"></x-number>
         </div>
       </div>
       <div class="flex flex-h percent-box">
-        <div class="percent-item">
+        <div class="percent-item percent">
           <p class="percent-title">酒吧管理</p>
           <x-number v-model.number="barInfo.manage_separate" fillable align="left"></x-number>
         </div>
@@ -148,6 +150,13 @@ export default {
 }
 .percent-item {
   padding: 10px 15px;
+  position: relative;
+  &.percent:after {
+    position: absolute;
+    left: 150px;
+    top: 50px;
+    content: "%";
+  }
   /deep/ .weui-cell {
     padding: 10px 0;
     &:before {

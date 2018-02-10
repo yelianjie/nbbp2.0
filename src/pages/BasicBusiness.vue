@@ -2,7 +2,7 @@
   <div class="container min-h">
     <div class="inner">
       <div class="top flex flex-v flex-align-center">
-        <upload name="upload-logo" @on-preview="logoUploadPreview" class="pr">
+        <upload name="upload-logo" @on-preview="logoUploadPreview" :limitSize="400" class="pr">
           <img :src="showLogo ? showLogo : defaultLogo" class="circle">
           <label for="upload-logo" class="n-label"></label>
         </upload>

@@ -36,6 +36,10 @@ export default {
     cropRadio: {
       type: Number,
       default: 1
+    },
+    limitSize: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -139,6 +143,15 @@ export default {
       var height = img.height
       var canvas = this.canvas
       var ctx = canvas.getContext('2d')
+      if (width > this.limitSize || height > this.limitSize) {
+        if (width >= height) {
+          height = ~~(this.limitSize * height / width)
+          width = this.limitSize
+        } else {
+          width = ~~(this.limitSize * width / height)
+          height = this.limitSize
+        }
+      }
       canvas.width = width
       canvas.height = height
       ctx.fillStyle = '#fff'

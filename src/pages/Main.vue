@@ -236,6 +236,9 @@ export default {
           this.adVisible = false
         }, 1000)
       }
+      img.onerror = () => {
+        this.show = true
+      }
       img.src = res.result.advert.phone.url
     })
     isSubscribe().then(() => {

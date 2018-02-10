@@ -1,15 +1,18 @@
 <template>
-  <div class="container padding-bar fff">
+  <div class="container padding-bar f7f7f7 borderbox">
     <BusinessAgentTop :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.merchant_balance" :totalMoney="barInfo.ht_income"></BusinessAgentTop>
     <BusinessMenus></BusinessMenus>
-    <Footer :footList="footList"></Footer>
+    <footer class="footer flex">
+      <div class="flex-1 flex-v tc flex-pack-center flex-align-center">
+        <router-link :to="{path: '/Main/' + $route.params.id}" class="enter-bar">进入我的酒吧</router-link>
+      </div>
+    </footer>
   </div>
 </template>
 
 <script>
 import BusinessAgentTop from '@/components/Center/BusinessAgentTop'
 import BusinessMenus from '@/components/Center/BusinessMenus'
-import Footer from '@/components/Center/Footer'
 import logo from '../assets/logo.png'
 import { getBarMoney } from '@/api/'
 export default {
@@ -35,12 +38,25 @@ export default {
   },
   components: {
     BusinessAgentTop,
-    BusinessMenus,
-    Footer
+    BusinessMenus
   }
 }
 </script>
 
 <style lang="less" scoped>
-
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  background-color: #f7f7f7;
+  .enter-bar {
+    display: block;
+    height: 44px;
+    line-height: 44px;
+    color: #fff;
+    background-color: #2481d2;
+  }
+}
 </style>

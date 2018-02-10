@@ -1,18 +1,20 @@
 <template>
-  <div class="menus clearfix">
-    <div class="menu-item flex" v-for="(v,i) in menus" :key="i" @click="route(i)">
-      <div class="menu-icon flex flex-align-center">
-        <svg-icon :icon-class="v.icon"/>
-      </div>
-      <div class="menu-info flex flex-1 flex-v flex-pack-center">
-        <span class="mname">{{v.name}}</span>
-        <span class="mtip">{{v.tip}}</span>
-      </div>
+  <div class="">
+    <div class="menus fff clearfix">
+      <template v-for="(v,i) in menus">
+        <menu-item :data="v" @click.native="route(i)" :key="i"></menu-item>
+      </template>
+    </div>
+    <div class="menus-horizontal fff" style="margin-top:10px;padding:0 10px;">
+      <template v-for="(v,i) in horizontalMenus" @click="route(i)">
+        <menu-item :data="v" @click.native="route(i)" :key="i"></menu-item>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+import MenuItem from './MenuItem'
 export default {
   data () {
     return {
@@ -58,7 +60,8 @@ export default {
         route: {
           path: '/Manager/' + this.$route.params.id
         }
-      }, {
+      }],
+      horizontalMenus: [{
         name: '帮助说明',
         icon: 'business-help-icon',
         tip: '设置帮助',
@@ -69,6 +72,7 @@ export default {
     }
   },
   components: {
+    MenuItem
   },
   methods: {
     route (index) {
@@ -81,48 +85,30 @@ export default {
 <style lang="less" scoped>
 .menus {
   font-size: 0;
-  padding: 10px;
+  padding: 0 10px;
+  margin-top: 10px;
   .menu-item {
-    float: left;
     width: 50%;
-    padding: 10px 4px;
-    box-sizing: border-box;
-    position: relative;
-    /* &:nth-child(2n+1):after {
+    float: left;
+    &:nth-child(2n+1):after {
       content: '';
       position: absolute;
       width: 1px;
       height: 100%;
-      background-color: #ccc;
+      background-color: #ebebeb;
       right: 0;
       top: 0;
-    } */
-  }
-  .menu-icon {
-    width: 1rem;
-    color: #717171;
-    .svg-icon {
-      width: 0.6rem;
-      height: 0.6rem;
-      display: block;
-      margin:0 auto;
+    }
+    &:before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background-color: #ebebeb;
+      left: 0;
+      bottom: 0;
     }
   }
-  .menu-info {
-    line-height: 1;
-  }
-  .mname {
-    font-size: 16px;
-    color: #000;
-    height: 16px;
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  .mtip {
-    font-size: 14px;
-    height: 14px;
-    color: #ccc;
-    overflow: hidden;
-  }
 }
+
 </style>
