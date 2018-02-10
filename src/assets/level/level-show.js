@@ -29,8 +29,8 @@ const levels = {
     icon: './static/level-show/level-show-5.png',
     bigIcon: './static/level-show/level-show-big-5.png'
   },
-  '候爵': {
-    value: '候爵',
+  '侯爵': {
+    value: '侯爵',
     avatarIcon: './static/level-show/level-6.png',
     icon: './static/level-show/level-show-6.png',
     bigIcon: './static/level-show/level-show-big-6.png'

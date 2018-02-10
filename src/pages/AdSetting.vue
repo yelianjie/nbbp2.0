@@ -36,7 +36,6 @@
 import { Group, XTextarea, XButton } from 'vux'
 import Upload from '../components/Upload'
 import { getAd, updateAdImage } from '@/api/'
-import { prefixImageUrl } from '@/utils/utils'
 export default {
   components: {
     Group,
@@ -56,9 +55,8 @@ export default {
   },
   created () {
     getAd({ht_id: this.$route.params.id}).then((res) => {
-      console.log(res)
-      this.adScreenBg = prefixImageUrl(res.result.screen.url)
-      this.adMobileBg = prefixImageUrl(res.result.phone.url)
+      this.adScreenBg = res.result.screen.url
+      this.adMobileBg = res.result.phone.url
     })
   },
   methods: {

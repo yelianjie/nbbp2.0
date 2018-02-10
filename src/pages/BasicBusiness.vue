@@ -3,7 +3,7 @@
     <div class="inner">
       <div class="top flex flex-v flex-align-center">
         <upload name="upload-logo" @on-preview="logoUploadPreview" :limitSize="400" class="pr">
-          <img :src="showLogo ? showLogo : defaultLogo" class="circle">
+          <img :src="showLogo ? $options.filters.prefixImageUrl(showLogo) : defaultLogo" class="circle">
           <label for="upload-logo" class="n-label"></label>
         </upload>
         
@@ -27,7 +27,6 @@
 import { XInput, Group, Cell, XButton } from 'vux'
 import Upload from '../components/Upload'
 import defaultLogo from '../assets/logo.png'
-import { prefixImageUrl } from '@/utils/utils'
 import { updateBarInfo, getBarInfo } from '@/api/'
 export default {
   name: 'BasicBusiness',
@@ -65,7 +64,7 @@ export default {
   created () {
     getBarInfo({ht_id: this.$route.params.id}).then((res) => {
       this.form = res.result
-      this.showLogo = prefixImageUrl(res.result.logo)
+      this.showLogo = res.result.logo
     })
   },
   mounted () {
@@ -96,7 +95,7 @@ export default {
     logoUploadPreview (base64) {
       console.log(base64)
       this.form.logo = base64
-      this.showLogo = prefixImageUrl(base64)
+      this.showLogo = base64
     },
     onSelectAddress (e) {
       if (!e.data.type) {

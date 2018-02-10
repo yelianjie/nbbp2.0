@@ -5,7 +5,7 @@
       <div class="flex boardcast flex-align-center">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
         <div class="boardcast-scroller flex-1 flex flex-align-center">
-          <MarqueeTips class="f15" content="我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强刷本领强粉刷本领强刷本领强粉刷本领强" :speed="15"></MarqueeTips>
+          <MarqueeTips v-if="notice" class="f15" :content="notice" :speed="15"></MarqueeTips>
           <!--<div class="scroller-wrap f14">
             我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强刷本领强粉刷本领强刷本领强粉刷本领强
             <marquee direction="left" befavior="scroll" scrollamount="4">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>
@@ -16,7 +16,7 @@
       <div class="flex main-header-left flex-align-center">
         <div class="main-header-avatar">
           <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'">
-            <router-link :to="{path: '/UserCenter'}" v-if="userInfo.grade_title && userInfo.grade_title == '平民'"><span class="level-icon-avatar" :style="{'background-image': 'url('+Levels[userInfo.grade_title]+')'}"></span></router-link>
+            <router-link :to="{path: '/UserCenter'}" v-if="userInfo.grade_title && userInfo.grade_title == '平民'"><span class="level-icon-avatar" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span></router-link>
             <img :src="userInfo.headimgurl | prefixImageUrl" class="circle">
           </template>
           <template v-else>
@@ -127,8 +127,7 @@
 </template>
 
 <script>
-import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg } from '@/api/'
-import { prefixImageUrl } from '@/utils/utils'
+import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice } from '@/api/'
 import { XDialog } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -142,7 +141,6 @@ import DsMsg from '../components/Main/DsMsg'
 import BpWindow from '../components/Main/BpWindow'
 import DsWindow from '../components/Main/DsWindow'
 import Onlines from '../components/Main/Onlines'
-import Levels from '@/assets/level/level-show'
 import { mapGetters, mapActions } from 'vuex'
 import '@/vendor/tween'
 import '@/vendor/animation'
@@ -150,7 +148,7 @@ import '@/vendor/animation'
 export default {
   data () {
     return {
-      Levels: Levels,
+      notice: '',
       show: false,
       chatlist: [],
       list: [],
@@ -207,6 +205,7 @@ export default {
       barDataInfo: {},
       adVisible: true,
       newsTimer: null,
+      noticeTimer: null,
       requestParams: {
         ht_id: this.$route.params.id,
         min_id: 0
@@ -220,6 +219,7 @@ export default {
   },
   beforeDestroy () {
     clearTimeout(this.newsTimer)
+    clearTimeout(this.noticeTimer)
   },
   created () {
     if (Object.keys(this.userInfo).length === 0) {
@@ -227,7 +227,7 @@ export default {
     }
     getBarAllInfo({ht_id: this.$route.params.id}).then((res) => {
       // prefixImageUrl
-      res.result.advert && (res.result.advert.phone.url = prefixImageUrl(res.result.advert.phone.url))
+      res.result.advert && (res.result.advert.phone.url = this.$options.filters.prefixImageUrl(res.result.advert.phone.url))
       this.barDataInfo = res.result
       var img = new Image()
       img.onload = () => {
@@ -246,6 +246,7 @@ export default {
       this.concernVisible = true
     })
     this.loopGetNewMsg()
+    this.loopGetNotice(0)
   },
   mounted () {
     /* setTimeout(() => {
@@ -265,6 +266,16 @@ export default {
     ...mapActions('user', [
       'getUserInfo'
     ]),
+    loopGetNotice (time) {
+      this.noticeTimer = setTimeout(() => {
+        getBarNotice({ht_id: this.$route.params.id}).then((res) => {
+          this.notice = res.result ? res.result.content : ''
+        }).finally(() => {
+          clearTimeout(this.noticeTimer)
+          this.loopGetNotice(5 * 60000)
+        })
+      }, time)
+    },
     loopGetNewMsg () {
       this.newsTimer = setTimeout(() => {
         getMaxMsg(this.requestNewParams).then((res) => {
@@ -276,7 +287,8 @@ export default {
             res.result.sort((a, b) => b.id - a.id)
             this.requestNewParams.id = res.result[0].id
           }
-          clearTimeout(this.newsTimer)
+        }).finally(() => {
+          clearTimeout(this.noticeTimer)
           this.loopGetNewMsg()
         })
       }, 5000)
@@ -298,9 +310,9 @@ export default {
           this.requestParams.min_id = res.result[resLength - 1].id
         }
         res.result.sort((a, b) => a.id - b.id)
-        res.result.map((v) => {
+        /* res.result.map((v) => {
           v.levelIcon = this.Levels[v.grade_title] ? this.Levels[v.grade_title] : null
-        })
+        }) */
         this.chatlist = res.result.concat(this.chatlist)
         this.$nextTick(() => {
           this.height = this.$refs.scrollWrapper.scrollHeight

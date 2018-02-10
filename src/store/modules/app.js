@@ -2,12 +2,14 @@
 const namespaced = true
 
 const state = {
-  buyDialogInfo: {}
+  buyDialogInfo: {},
+  direction: 'forward'
 }
 
 // getters
 const getters = {
-  buyDialogInfo: () => state.buyDialogInfo
+  buyDialogInfo: () => state.buyDialogInfo,
+  direction: () => state.direction
 }
 
 // actions
@@ -21,6 +23,9 @@ const actions = {
 const mutations = {
   _ChangeBuyDialogInfo (state, data) {
     state.buyDialogInfo = data
+  },
+  UPDATE_DIRECTION (state, direction) {
+    state.direction = direction
   }
 }
 

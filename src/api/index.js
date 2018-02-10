@@ -268,6 +268,13 @@ export const getNewestMsg = (data) => {
 export const getMaxMsg = (data) => {
   return request('/weixin/message/getMaxMsg', 'POST', data)
 }
+
+/**
+ * 获取用户等级及等级说明
+ */
+export const getLevelInfo = () => {
+  return request('/weixin/members/getMemberGradeInfo', 'POST')
+}
 /**
  * 当前用户是否已关注
  */

@@ -4,7 +4,7 @@
       <div class="user-box1 flex flex-align-center">
         <div class="flex-1 avatar flex flex-pack-center pr">
           <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'">
-            <span class="level-icon-id" :style="{'background-image': 'url('+Levels[userInfo.grade_title]+')'}"></span>
+            <span class="level-icon-id" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span>
             <router-link :to="{path: '/Profile'}"><img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/></router-link>
           </template>
           <template v-else>
@@ -73,11 +73,9 @@ import { Countup, XDialog } from 'vux'
 import Group from '../components/User/Group'
 import Cell from '../components/User/Cell'
 import { mapActions, mapGetters } from 'vuex'
-import Levels from '@/assets/level/level-show'
 export default {
   data () {
     return {
-      Levels: Levels,
       shareMaskVisible: false
     }
   },

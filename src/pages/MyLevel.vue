@@ -2,11 +2,11 @@
   <div class="container min-h bg2 about-container borderbox" style="padding: 0.2rem;">
     <div class="img-level">
       <div class="img-wrap flex flex-pack-center pr">
-        <span class="level-icon-id level1"></span>
-        <img src="../assets/logo.png"/>
+        <span class="level-icon-id" v-if="userInfo.grade_title && userInfo.grade_title == '平民'" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span>
+        <img :src="userInfo.headimgurl | prefixImageUrl" class="circle"/>
       </div>
     </div>
-    <p class="f16 tc white">鲜花&nbsp;·&nbsp;伯爵</p>
+    <p class="f16 tc white">{{userInfo.nickname}}<template v-if="userInfo.grade_title != '平民'">&nbsp;·&nbsp;{{userInfo.grade_title}}</template></p>
     <div class="flex flex-align-center flex-pack-center">
       <div class="level-box flex flex-pack-center">
         <img src="/static/level-show/level-show-3.png" class="level-icon"/>
@@ -15,7 +15,7 @@
         <svg width="100%" height="0.16rem" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <clipPath id="clipPath">
-              <rect x="0" y="0" width="50%" height="0.16rem" />
+              <rect x="0" y="0" :width="calRest" height="0.16rem" />
             </clipPath>
             <linearGradient y2="0" x2="1" y1="0" x1="0" id="svg_2">
               <stop stop-color="#19bb82" offset="0"/>
@@ -26,11 +26,11 @@
           <rect id="level-progress" height="0.16rem" width="100%" y="0" x="0" stroke-width="1" stroke="rgab(0,0,0,0)" fill="url(#svg_2)" clip-path="url(#clipPath)" />
         </svg>
       </div>
-      <div class="level-box flex flex-pack-center">
-        <img src="/static/level-show/level-show-3.png" class="level-icon"/>
+      <div class="level-box flex flex-pack-center" v-if="userInfo.next_grade_id">
+        <img :src="$options.filters.filterLevel(userInfo.next_grade_title, 'icon')" class="level-icon"/>
       </div>
     </div>
-    <p class="tc white f14">距离成为“子爵”还差800经验值</p>
+    <p class="tc white f14">距离成为“{{userInfo.next_grade_title}}”还差{{userInfo.experience_less}}经验值</p>
     <div class="level-list bg1" style="padding: 0.3rem 0;margin-top: 0.36rem;border-radius: 5px;">
       <div class="flex flex-h">
         <div class="radient-line line-left flex-1"></div>
@@ -38,10 +38,11 @@
         <div class="radient-line line-right flex-1"></div>
       </div>
       <div class="level-all" style="font-size: 0;">
-        <div class="level-item pr" @click="showLevel(v.bigIcon)" v-for="(v, i) in levels" :key="i">
-          <img :src="v.icon" class="level-item-icon"/>
-          <p class="white f15 tc">{{v.value}}</p>
-          <p class="f13 darker1 tc">80经验值</p>
+        <div class="level-item pr" @click="showLevel(v)" v-for="(v, i) in grades" :key="i" v-if="v.experience != 0">
+          <img :src="$options.filters.filterLevel(v.grade_title, 'icon')" class="level-item-icon"/>
+          <p class="white f15 tc">{{v.grade_title}}</p>
+          <p class="f13 darker1 tc">{{v.experience}}经验值</p>
+          <div class="lock-layer" v-if="userInfo.total_mc_experience < v.experience" @click="showLevel(v)"><svg-icon icon-class="lock"/></div>
         </div>
       </div>
     </div>
@@ -54,14 +55,14 @@
         </ul>
       </div>
       <div class="level-up-fast">
-        <button class="bp-button bp-submit">快速升级</button>
+        <button class="bp-button bp-submit" @click="$router.push('/Charge')">快速升级</button>
       </div>
     </div>
     <x-dialog v-model="levelVisible" :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
       <div class="level-container flex flex-v flex-pack-center" style="height: 100%;">
         <div class="flex flex-v flex-pack-center flex-align-center">
-          <img :src="curLevelIcon" style="width:5rem;height:5.18rem;margin-top:-1.2rem;" class="level-big-icon"/>
-          <p class="white f20" style="margin-top:-1.2rem;">伯爵</p>
+          <img :src="curLevel.icon" style="width:5rem;height:5.18rem;margin-top:-1.2rem;" class="level-big-icon"/>
+          <p class="white f20" style="margin-top:-1.2rem;">{{curLevel.value}}</p>
           <div class="powers f13 white">
             <ul>
               <li
@@ -82,20 +83,40 @@
 
 <script>
 import { XDialog } from 'vux'
-import levels from '@/assets/level/level-show'
+import { getLevelInfo } from '@/api/'
 export default {
   data () {
     return {
       powsers: ['贵族身份头衔；', '昵称加贵族称呼；', '更多特权暂未开发，敬请期待！'],
-      curLevelIcon: '',
+      curLevel: {},
       levelVisible: false,
-      levels: levels
+      userInfo: {},
+      grades: []
     }
   },
+  created () {
+    getLevelInfo().then((res) => {
+      this.userInfo = res.result.user
+      this.grades = res.result.grade
+    })
+  },
   methods: {
-    showLevel (icon) {
-      this.curLevelIcon = icon
+    showLevel (data) {
+      this.curLevel.icon = this.$options.filters.filterLevel(data.grade_title, 'bigIcon')
+      this.curLevel.value = data.grade_title
       this.levelVisible = true
+    }
+  },
+  computed: {
+    calRest () {
+      if (this.userInfo.hasOwnProperty('mc_level_id')) {
+        var find = this.grades.find(v => v.id === this.userInfo.next_grade_id)
+        if (find) {
+          return ~~((find.experience - this.userInfo.experience_less) / find.experience * 100)
+        } else {
+          return 0
+        }
+      }
     }
   },
   components: {
@@ -168,12 +189,21 @@ export default {
     position: absolute;
     left: 50%;
     top: 0;
-    width: 1.1rem;
-    height: 1.1rem;
-    margin-left: -0.55rem;
-    background-color: rgba(0,0,0,.5);
+    width: 2rem;
+    height: 1.77rem;
+    margin-left: -1rem;
+    background-color: rgba(18, 20, 32, 0.6);
     border-radius: 50%;
     z-index: 1;
+    color: #fff;
+    .svg-icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0.5rem;
+      height: 0.5rem;
+      transform: translate3d(-50%, -50%, 0);
+    }
   }
 }
 .level-item-icon {
@@ -237,8 +267,5 @@ export default {
   background-position: center;
   background-repeat: no-repeat;
   display: block;
-  &.level1 {
-    background-image: url(../assets/level/level-5.png);
-  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex flex-v bg1" id="profile">
+  <div class="container flex flex-v bg1" id="profile" style="height:100%;">
     <div class="flex-1 scroll">
       <div style="height:1.5rem;"></div>
       <div id="avatar-select">

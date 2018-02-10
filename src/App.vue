@@ -1,13 +1,15 @@
 <template>
   <div id="app">
     <loading v-model="isLoading" text="正在加载..."></loading>
-    <router-view></router-view>
+    <transition :name="viewTransition">
+      <router-view class="router-view" ></router-view>
+    </transition>
   </div>
 </template>
 
 <script>
 import { Loading } from 'vux'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   name: 'app',
   components: {
@@ -16,12 +18,53 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.vux.isLoading
-    })
+    }),
+    ...mapGetters('app', {
+      direction: 'direction'
+    }),
+    viewTransition () {
+      if (!this.direction) return ''
+      return 'vux-pop-' + (this.direction === 'forward' ? 'in' : 'out')
+    }
   }
 }
 </script>
 
 <style lang="less">
+ .vux-pop-out-enter-active,
+ .vux-pop-out-leave-active,
+ .vux-pop-in-enter-active,
+ .vux-pop-in-leave-active {
+  will-change: transform;
+  transition: all 500ms;
+  height: 100%;
+  top: 0;
+  position: absolute!important;
+  backface-visibility: hidden;
+  perspective: 1000;
+ }
+ .router-view {
+   width: 100%;
+ }
+ .vux-pop-out-enter {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+ }
+ 
+ .vux-pop-out-leave-active {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+ }
+ 
+ .vux-pop-in-enter {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+ }
+ 
+ .vux-pop-in-leave-active {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+ }
 .noscroll,
 .noscroll body {
   overflow: hidden;

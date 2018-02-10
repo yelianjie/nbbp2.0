@@ -40,7 +40,7 @@
                 <div class="upload-inner borderbox flex flex-v flex-align-center flex-pack-center">
                   <svg-icon icon-class="camera"/>
                   <p class="f13">添加照片</p>
-                  <label for="bp-upload-img" class="n-label" id="base64Img" :style="{'background-image':'url('+base64Img+')'}"></label>
+                  <label for="bp-upload-img" class="n-label" id="base64Img" :style="{'background-image':'url('+$options.filters.prefixImageUrl(base64Img)+')'}"></label>
                   <!--<div class="n-label base64-img" v-show="base64Img" :style="{'background-image':'url('+base64Img+')'}"></div>-->
                 </div>
               </upload>
@@ -98,7 +98,7 @@ export default {
       var img = new Image()
       var src = prefixImageUrl(base64)
       img.onload = () => {
-        this.base64Img = src
+        this.base64Img = base64
         setTimeout(() => {
           window.URL.revokeObjectURL(img.src)
         }, 100)
@@ -119,7 +119,15 @@ export default {
         return false
       }
       let isCharge = Boolean(this.total > this.userInfo.balance)
-      this.ChangeBuyDialogInfo({price: this.total, confirmText: isCharge ? '充值' : '确定', isCharge: isCharge})
+      let postParams = {
+        themeId: this.bpThemeIndex === -1 ? 0 : this.screens[this.bpThemeIndex].id,
+        timeId: this.times[this.bpTimeIndex].id,
+        times: this.bpTimes,
+        content: this.content,
+        img: this.base64Img
+      }
+      postParams = {postParams: postParams, price: this.total, confirmText: isCharge ? '充值' : '确定', isCharge: isCharge}
+      this.ChangeBuyDialogInfo(postParams)
       this.$emit('onBuy')
     },
     reset () {
