@@ -6,7 +6,7 @@
           <div class="flex flex-align-center">
             <div class="bg-icon flex flex-1">
               <img :src="v.url | prefixImageUrl" v-if="type == 1"/>
-              <video :src="v.url | prefixImageUrl" v-if="type == 2"></video>
+              <video :src="v.url | prefixImageUrl" controls v-if="type == 2" x-webkit-airplay="true" webkit-playsinline="" playsinline="" airplay="allow" x5-video-player-type="h5"></video>
             </div>
             <div class="bg-check">
               <check-icon :value="select == i" type="plain"></check-icon>

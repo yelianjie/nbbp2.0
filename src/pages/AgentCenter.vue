@@ -1,13 +1,16 @@
 <template>
   <div class="container fff">
-    <BusinessAgentTop :name="info.user.nickname" :logo="info.user.headimgurl | prefixImageUrl" :currentMoney="info.user.profit_balance" :totalMoney="info.user.total_profit_balance"></BusinessAgentTop>
+    <div data-v-7de79557="" class="middle tc white bg2" style="padding: 0.36rem 0;margin-bottom:0.1rem;">
+      <p data-v-7de79557="" class="f14">当前累计未提现收益</p>
+      <p data-v-7de79557="" class="benefit-account">{{info.money.merchant_balance}}</p>
+      <p data-v-7de79557="" class="f16">累计总收益：{{info.money.merchant_income}} 元</p>
+    </div>
     <BarsList :barsList="info.hotel"></BarsList>
     <Footer :footList="footList"></Footer>
   </div>
 </template>
 
 <script>
-import BusinessAgentTop from '@/components/Center/BusinessAgentTop'
 import BarsList from '@/components/Center/BarsList'
 import Footer from '@/components/Center/Footer'
 import logo from '../assets/logo.png'
@@ -18,6 +21,7 @@ export default {
     return {
       logo: logo,
       info: {
+        money: {},
         user: {
           profit_balance: 0.000,
           total_profit_balance: 0.000
@@ -43,7 +47,6 @@ export default {
   mounted () {
   },
   components: {
-    BusinessAgentTop,
     BarsList,
     Footer
   }

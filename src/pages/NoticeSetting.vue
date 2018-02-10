@@ -31,7 +31,7 @@ export default {
   },
   created () {
     getBarNotice({ht_id: this.$route.params.id}).then((res) => {
-      this.content = res.result.content
+      this.content = res.result ? res.result.content : ''
     })
   },
   methods: {

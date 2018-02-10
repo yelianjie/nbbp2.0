@@ -1,12 +1,12 @@
 <template>
   <div class="container min-h bg2">
     <div class="charge-header bg1 flex flex-align-center">
-      <div class="u-avatar"><img src="../assets/logo.png"/></div>
+      <div class="u-avatar"><img :src="userInfo.headimgurl | prefixImageUrl" class="circle"/></div>
       <div class="flex flex-v flex-pack-center flex-1 u-middle">
-        <p class="f16 uanme overflow white">鲜花</p>
+        <p class="f16 uanme overflow white">{{userInfo.nickname}}</p>
         <p class="f12 coin-tip darker1"><span class="ver-mid">已拥有的牛角币</span><svg-icon icon-class="coin" className="f14 ml4"/></p>
       </div>
-      <div class="coin-color" style="font-size: 24px;">5</div>
+      <div class="coin-color" style="font-size: 24px;">{{userInfo.balance}}</div>
     </div>
     <div class="charge-container">
       <div class="charge-tab">
@@ -34,6 +34,7 @@
 
 <script>
 import { XButton } from 'vux'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -44,8 +45,24 @@ export default {
     document.title = '我的账户'
     next()
   },
+  created () {
+    this.getUserInfo().then((res) => {
+    }).finally(() => {
+      this.$vux.loading.hide()
+    })
+  },
   components: {
     XButton
+  },
+  computed: {
+    ...mapGetters('user', [
+      'userInfo'
+    ])
+  },
+  methods: {
+    ...mapActions('user', [
+      'getUserInfo'
+    ])
   }
 }
 </script>

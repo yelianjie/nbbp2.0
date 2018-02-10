@@ -38,6 +38,8 @@
           <span></span>
           <span></span>
         </div>
+        <span slot="no-more" class="f13">再往上拉就没有了~</span>
+        <span slot="no-results" class="f13">还没有人来聊天~</span>
       </infinite-loading>
       <template v-for="(v, i) in chatlist">
         <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
@@ -71,10 +73,11 @@
         <p class="uname f18 white">{{currentUserInfo.nickname}}</p>
         <div class="msg-item-top flex flex-pack-center">
           <span class="sex sex-male"><svg-icon icon-class="male" v-if="currentUserInfo.sex == 1"/><svg-icon icon-class="female" v-if="currentUserInfo.sex == 2"/></span>
-          <span class="level" style="background-color: #625bc3;">宁波</span>
+          <span class="level" style="background-color: #625bc3;">{{currentUserInfo.city}}</span>
           <span class="level level-1" v-if="currentUserInfo.levelIcon">{{currentUserInfo.levelName}}</span>
         </div>
-        <p class="sign f14">签名：暂无签名</p>
+        <p class="sign f14" v-if="currentUserInfo.autograph">签名：{{currentUserInfo.autograph}}</p>
+        <p class="sign f14" v-else>签名：暂无</p>
         <div class="user-dialog-bottom flex" style="width:100%;">
           <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="ds">
             <img src="../assets/gift-b-icon.png"/>
@@ -110,10 +113,11 @@
       </div>
     </div>
   </x-dialog>
-  <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy">
+  <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy" :confirmText="buyDialogInfo.confirmText">
     <div class="">
-      <div class="" style="font-size: 20px;margin-bottom: 10px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;"/></div>
-      <p style="color: #88878f;"><svg-icon icon-class="tip" />当前剩余余额可用：<svg-icon icon-class="coin" />{{buyDialogInfo.rest}}</p>
+      <div class="" style="font-size: 20px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;"/></div>
+      <p style="color: #88878f;"><svg-icon icon-class="tip" />当前剩余余额可用：<svg-icon icon-class="coin" />{{userInfo.balance}}</p>
+      <p class="f13" v-if="buyDialogInfo.isCharge" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
     </div>
   </bp-dialog>
   <transition name="fade-out">
@@ -214,6 +218,9 @@ export default {
       firstLoading: true
     }
   },
+  beforeDestroy () {
+    clearTimeout(this.newsTimer)
+  },
   created () {
     if (Object.keys(this.userInfo).length === 0) {
       this.getUserInfo()
@@ -293,16 +300,19 @@ export default {
         })
         this.chatlist = res.result.concat(this.chatlist)
         this.$nextTick(() => {
-          // this.scrollToEnd()
+          this.height = this.$refs.scrollWrapper.scrollHeight
           var chatLength = this.chatlist.length
           this.requestNewParams.id = chatLength > 0 ? this.chatlist[chatLength - 1].id : 0
+          if (this.firstLoading) {
+            this.firstLoading = false
+            this.scrollToEnd()
+          }
+          if (res.result.length < 10) {
+            $state.complete()
+          } else {
+            $state.loaded()
+          }
         })
-        this.height = this.$refs.scrollWrapper.scrollHeight
-        if (res.result.length < 10) {
-          $state.complete()
-        } else {
-          $state.loaded()
-        }
       })
     },
     showCard () {
@@ -324,7 +334,13 @@ export default {
       this.dsWindowVisible = true
     },
     confirmBuy () {
-      this.buyDialogVisible = false
+      if (this.buyDialogInfo.isCharge) {
+        // 需要充值跳转充值页
+        this.$router.push('/Charge')
+      } else {
+        // 直接购买
+        this.buyDialogVisible = false
+      }
       /* setTimeout(() => {
         this.buyDialogVisible = false
       }, 3000) */

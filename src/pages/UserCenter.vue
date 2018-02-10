@@ -92,7 +92,15 @@ export default {
     next()
   },
   created () {
-    if (Object.keys(this.$store.getters['user/userInfo']).length === 0) {
+    this.$vux.loading.show({
+      text: '正在加载'
+    })
+    this.getUserInfo().then((res) => {
+      this.$vux.loading.hide()
+    }).catch(() => {
+      this.$vux.loading.hide()
+    })
+    /* if (Object.keys(this.$store.getters['user/userInfo']).length === 0) {
       this.$vux.loading.show({
         text: '正在加载'
       })
@@ -101,7 +109,7 @@ export default {
       }).catch(() => {
         this.$vux.loading.hide()
       })
-    }
+    } */
   },
   computed: {
     ...mapGetters('user', [

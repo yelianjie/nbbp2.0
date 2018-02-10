@@ -106,6 +106,14 @@ export const updateBarInfo = (data) => {
 export const getBarMoney = (data) => {
   return request('/weixin/hotel/getHotelMoney', 'POST', data)
 }
+
+/**
+ * 获取酒吧的代理的收益和基本信息
+ * @param {*} data
+ */
+export const getAgentBar = (data) => {
+  return request('/weixin/agent/getAgentHotel', 'POST', data)
+}
 /**
  * 获取酒吧霸屏主题、礼物、时间
  */

@@ -2,8 +2,8 @@
   <div class="container min-h bg1">
     <div data-v-7de79557="" class="middle tc white bg2" style="padding: 0.36rem 0;margin-bottom:0.1rem;">
       <p data-v-7de79557="" class="f14">当前累计未提现收益</p>
-      <p data-v-7de79557="" class="benefit-account">325</p>
-      <p data-v-7de79557="" class="f16">累计总收益：10000 元</p>
+      <p data-v-7de79557="" class="benefit-account">{{moneyInfo.merchant_balance}}</p>
+      <p data-v-7de79557="" class="f16">累计总收益：{{moneyInfo.merchant_income}} 元</p>
     </div>
     <div class="bars">
       <swipeout>
@@ -37,6 +37,7 @@ export default {
   data () {
     return {
       confirmVisible: false,
+      moneyInfo: {},
       barList: [],
       deleteInfo: null
     }
@@ -47,6 +48,7 @@ export default {
   },
   created () {
     getBars().then((res) => {
+      this.moneyInfo = res.result.money
       this.barList = res.result.hotelList
     })
   },
@@ -83,4 +85,7 @@ export default {
 </script>
 
 <style scoped>
+.bars /deep/ .vux-1px-t::after {
+  border: 0;
+}
 </style>

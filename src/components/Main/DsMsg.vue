@@ -1,7 +1,7 @@
 <template>
   <div class="msg-item flex">
     <div class="msg-item-left">
-      <user-avatar :data="{uid: data.initiator_mc_id, levelName: data.grade_title, levelIcon: data.levelIcon, headImg: data.initiator_headimgurl, nickname: data.initiator_nickname, sex: data.sex}" @onAvatar="avatar"></user-avatar>
+      <user-avatar :data="{uid: data.initiator_mc_id, autograph: data.autograph, city: data.city, levelName: data.grade_title, levelIcon: data.levelIcon, headImg: data.initiator_headimgurl, nickname: data.initiator_nickname, sex: data.sex}" @onAvatar="avatar"></user-avatar>
     </div>
     <div class="msg-item-right flex-1">
       <msg-user></msg-user>

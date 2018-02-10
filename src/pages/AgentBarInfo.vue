@@ -1,13 +1,6 @@
 <template>
   <div class="container padding-bottom-btn borderbox">
-    <div class="top flex flex-v flex-align-center fff">
-      <img :src="barInfo.logo | prefixImageUrl" class="circle">
-      <p>酒吧logo，将展示在二维码、酒吧首页上</p>
-    </div>
-    <group label-width="4.5em" label-margin-right="2em" label-align="right">
-      <x-input title="酒吧名称" readonly :value="barInfo.name" :should-toast-error="false"></x-input>
-      <x-input title="酒吧地址" readonly :value="barInfo.address" :should-toast-error="false"></x-input>
-    </group>
+    <BusinessAgentTop :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.agent_balance" :totalMoney="barInfo.agent_income"></BusinessAgentTop>
     <div class="percent-divide fff">
       <p class="set-title">分成比例设置</p>
       <div class="flex flex-h percent-box">
@@ -54,7 +47,8 @@
 
 <script>
 import { XNumber, XInput, Group, XButton } from 'vux'
-import { getBarInfo, updateRate } from '@/api/'
+import BusinessAgentTop from '@/components/Center/BusinessAgentTop'
+import { getAgentBar, updateRate } from '@/api/'
 // import bpDialog from '@/components/bpDialog.vue'
 export default {
   name: 'AgentBarInfo',
@@ -62,7 +56,8 @@ export default {
     XNumber,
     XInput,
     Group,
-    XButton
+    XButton,
+    BusinessAgentTop
   },
   data () {
     return {
@@ -73,7 +68,7 @@ export default {
     }
   },
   created () {
-    getBarInfo({ht_id: this.$route.params.id}).then((res) => {
+    getAgentBar({ht_id: this.$route.params.id}).then((res) => {
       res.result.users_separate = Number(res.result.users_separate)
       res.result.ht_separate = Number(res.result.ht_separate)
       res.result.yewu_separate = Number(res.result.yewu_separate)

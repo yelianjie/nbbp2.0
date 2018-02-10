@@ -80,7 +80,8 @@ export default {
         })
         return false
       }
-      this.ChangeBuyDialogInfo({price: Math.floor(Math.random() * 100), rest: 30})
+      let isCharge = Boolean(this.total > this.userInfo.balance)
+      this.ChangeBuyDialogInfo({price: this.total, confirmText: isCharge ? '充值' : '确定', isCharge: isCharge})
       this.$emit('onBuy')
     },
     reset () {
@@ -102,6 +103,9 @@ export default {
     },
     ...mapGetters('main', {
       currentUserInfo: 'currentUserInfo'
+    }),
+    ...mapGetters('user', {
+      userInfo: 'userInfo'
     })
   }
 
