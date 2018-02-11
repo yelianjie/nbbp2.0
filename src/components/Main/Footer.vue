@@ -3,7 +3,7 @@
     <div class="flex">
       <div class="footer-left flex">
         <div class="footer-icons flex">
-          <div class="icon flex flex-align-center flex-pack-center" @click="$router.go(-1)"><svg-icon icon-class="home"/></div>
+          <div class="icon flex flex-align-center flex-pack-center" @click="$router.push('/')"><svg-icon icon-class="home"/></div>
           <div class="icon flex flex-align-center flex-pack-center">
             <upload name="msg-upload-img" @on-preview="msgImgUploadPreview">
               <svg-icon icon-class="img"/>
@@ -19,7 +19,7 @@
           <svg-icon icon-class="close-no-circle" @click.native="deleteMsgImg"/>
         </div>
         <div class="chat-input flex-1" :class="{'move': textImgVisible}">
-          <input type="text" placeholder="说点什么吧！" @click="showFace = false" v-model="msg">
+          <input type="text" placeholder="说点什么吧！" @click="showFace = false" v-model="msg" ref="msg">
         </div>
         <div class="chat-submit-btn flex flex-align-center" @click="sendMsg">
           <svg-icon icon-class="plane"/>
@@ -72,6 +72,19 @@ export default {
     },
     handleFaceInput (value) {
       this.msg = this.msg + value
+      this.moveEnd(this.$refs.msg)
+    },
+    moveEnd (obj) {
+      obj.focus()
+      var len = obj.value.length
+      if (document.selection) {
+        var sel = obj.createTextRange()
+        sel.moveStart('character', len)
+        sel.collapse()
+        sel.select()
+      } else if (typeof obj.selectionStart === 'number' && typeof obj.selectionEnd === 'number') {
+        obj.selectionStart = obj.selectionEnd = len
+      }
     }
   },
   components: {

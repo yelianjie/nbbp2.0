@@ -28,7 +28,7 @@
             </swiper>
           </div>
           <div class="bp-input-area flex">
-            <input class="bp-input borderbox" placeholder="请输入送礼上墙语，15字以内" />
+            <input class="bp-input borderbox" placeholder="请输入送礼上墙语，15字以内"  v-model="content"/>
           </div>
         </div>
         <div class="window-bottom f13 flex flex-align-center">
@@ -54,6 +54,7 @@ export default {
     return {
       dsTimes: 1,
       dsGiftIndex: -1,
+      content: '',
       swiperDsGiftOption: {
         slidesPerColumn: 2,
         slidesPerView: 4,
@@ -80,8 +81,18 @@ export default {
         })
         return false
       }
-      let isCharge = Boolean(this.total > this.userInfo.balance)
-      this.ChangeBuyDialogInfo({price: this.total, confirmText: isCharge ? '充值' : '确定', isCharge: isCharge})
+      let isCharge = Number(this.total) > Number(this.userInfo.balance)
+      let postParams = {
+        ht_id: this.$route.params.id,
+        type: 1,
+        count: this.dsTimes,
+        content: this.content,
+        gift_id: this.gifts[this.dsGiftIndex].id,
+        reward_uid: this.currentUserInfo.uid ? this.currentUserInfo.uid : 0,
+        img: ''
+      }
+      postParams = {postParams: postParams, price: this.total, confirmText: isCharge ? '充值' : '确定', isCharge: isCharge}
+      this.ChangeBuyDialogInfo(postParams)
       this.$emit('onBuy')
     },
     reset () {

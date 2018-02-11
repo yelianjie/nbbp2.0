@@ -45,8 +45,8 @@
         <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
         <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-img>
         <msg-only-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-only-img>
-        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 3" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></bp-msg>
-        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 4" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
+        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 2" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></bp-msg>
+        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
       </template>
     </div>
     <footer-main></footer-main>
@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice } from '@/api/'
+import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg } from '@/api/'
 import { XDialog } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -354,7 +354,10 @@ export default {
         this.$router.push('/Charge')
       } else {
         // 直接购买
-        this.buyDialogVisible = false
+        addBpDsMsg(this.buyDialogInfo.postParams).then(() => {
+          this.buyDialogVisible = false
+          this.bpWindowVisible = false
+        })
       }
       /* setTimeout(() => {
         this.buyDialogVisible = false

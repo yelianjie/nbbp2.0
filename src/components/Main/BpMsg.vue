@@ -1,20 +1,23 @@
 <template>
   <div class="msg-item flex">
     <div class="msg-item-left">
-      <user-avatar :data="{uid: data.initiator_mc_id, autograph: data.autograph, city: data.city, levelName: data.grade_title, headImg: data.initiator_headimgurl, nickname: data.initiator_nickname, sex: data.sex}" @onAvatar="avatar"></user-avatar>
+      <user-avatar :data="data" @onAvatar="avatar"></user-avatar>
     </div>
     <div class="msg-item-right flex-1">
-      <msg-user></msg-user>
-      <div class="msg-item-middle bpmsg" v-bind:class="{'theme-propose': true}">
+      <msg-user :data="data"></msg-user>
+      <div class="msg-item-middle bpmsg" :style="{'background': '-webkit-linear-gradient(top, ' + data.bg.split(',')[0] + ',' + data.bg.split(',')[1] + ' 70%' +',' + data.bg.split(',')[1] + ')'}">
         <div class="flex">
-          <div class="msg-item-info flex flex-1 flex-v flex-align-center">
-            <div class="msg-bp-title">求婚霸屏60秒</div>
+          <div class="msg-item-info flex-1 tc">
+              <div class="msg-bp-title" :style="{'background': data.lable_bg}">{{data.title}}{{data.odr_show_time}}秒
+                <span class="arrow arrow-left" :style="{'border-right-color': data.lable_bg}"></span>
+                <span class="arrow arrow-right" :style="{'border-left-color': data.lable_bg}"></span>
+              </div>
             <div class="content">{{data.content}}</div>
           </div>
-          <div class="img"><img src="../../assets/jj.jpg"/></div>
+          <div class="img"><img :src="data.img ? $options.filters.prefixImageUrl(data.img) : logo"/></div>
         </div>
         <div class="msg-item-bottom">
-          <msg-bottom :fabulous="data.fabulous_count" :screen="data.screen_count" :reward="data.reward_count" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds" :display="1"></msg-bottom>
+          <msg-bottom :data="data" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds" :display="1"></msg-bottom>
         </div>
       </div>
       
@@ -26,8 +29,14 @@
 import MsgBottom from './MsgBottom'
 import MsgUser from './MsgUser'
 import UserAvatar from './UserAvatar'
+import logo from '@/assets/logo.png'
 export default {
   props: ['data', 'index'],
+  data () {
+    return {
+      logo: logo
+    }
+  },
   components: {
     MsgBottom,
     MsgUser,
@@ -74,28 +83,31 @@ export default {
     line-height: 0.4rem;
     margin-bottom: @msgpadTop;
     position: relative;
-    &:before, &:after {
-      position: absolute;
-      top: 0;
-      width: 0;
-      height: 0;
-      content: "";
-    }
-    &:before {
-      left: 0;
-      transform: translateX(-100%);
-      border-top: 0.2rem solid transparent;
-      border-right: 0.2rem solid #dd4b3c;
-      border-bottom: 0.2rem solid transparent;
-    }
-    &:after {
-      right: 0;
-      transform: translateX(100%);
-      border-top: 0.2rem solid transparent;
-      border-left: 0.2rem solid #dd4b3c;
-      border-bottom: 0.2rem solid transparent;
-    }
+    display: inline-block;
   }
+  .arrow {
+    width: 0.2rem;
+    border-top: 0.2rem solid transparent;
+    border-bottom: 0.2rem solid transparent;
+    
+    position: absolute;
+    top: 0;
+  }
+  .arrow-left {
+    left: 0;
+    border-right-width: 0.2rem;
+    border-right-style: solid;
+    transform: translateX(-100%);
+  }
+  .arrow-right {
+    right: 0;
+    border-left-width: 0.2rem;
+    border-left-style: solid;
+    transform: translateX(100%);
+  }
+}
+.content {
+  text-align: left;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   .msg-bp-title {

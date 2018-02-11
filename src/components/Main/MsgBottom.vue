@@ -3,15 +3,15 @@
     <template v-if="display == 1">
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="ds">
         <span class="icon-wrap"><img src="../../assets/gift-b-icon.png"/></span>
-        <span class="num f12">{{reward}}</span>
+        <span class="num f12">{{data.reward_count}}</span>
       </div>
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="liked">
         <span class="icon-wrap"><img src="../../assets/like-b-icon.png"/></span>
-        <span class="num f12">{{fabulous}}</span>
+        <span class="num f12">{{data.fabulous_count}}</span>
       </div>
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="bp">
         <span class="icon-wrap"><img src="../../assets/ba-b-icon.png"/></span>
-        <span class="num f12">{{screen}}</span>
+        <span class="num f12">{{data.screen_count}}</span>
       </div>
       <div class="msg-btn msg-btn-big msg-share flex flex-1 flex-align-center">
         <span class="msg-share-wrap" style="padding-left:10px;"  @click="share" ><svg-icon icon-class="share"/></span>
@@ -21,15 +21,15 @@
     <template v-else>
       <div class="msg-btn flex flex-align-center" @click="ds">
         <svg-icon icon-class="gift"/>
-        <span class="num f12">{{reward}}</span>
+        <span class="num f12">{{data.reward_count}}</span>
       </div>
       <div class="msg-btn flex flex-align-center" @click="bp">
         <svg-icon icon-class="ba"/>
-        <span class="num f12">{{screen}}</span>
+        <span class="num f12">{{data.screen_count}}</span>
       </div>
       <div class="msg-btn flex flex-align-center" @click="liked">
         <svg-icon icon-class="like"/>
-        <span class="num f12">{{fabulous}}</span>
+        <span class="num f12">{{data.fabulous_count}}</span>
       </div>
       
     </template>
@@ -40,7 +40,7 @@
 
 <script>
 export default {
-  props: ['fabulous', 'screen', 'reward', 'display'],
+  props: ['data', 'display'],
   data () {
     return {
 
@@ -57,10 +57,16 @@ export default {
       this.$emit('onShare')
     },
     ds () {
+      this.setUserInfo()
       this.$emit('onDs')
     },
     bp () {
+      this.setUserInfo()
       this.$emit('onBp')
+    },
+    setUserInfo () {
+      var data = {uid: this.data.initiator_mc_id, autograph: this.data.autograph, city: this.data.city, levelName: this.data.grade_title, headImg: this.data.initiator_headimgurl, nickname: this.data.initiator_nickname, sex: this.data.sex}
+      this.$store.commit('main/SET_CURRENT_USER_INFO', data)
     }
   }
 }

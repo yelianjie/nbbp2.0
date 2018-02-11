@@ -112,6 +112,12 @@ export default {
         })
         return false
       }
+      if (this.bpThemeIndex === -1) {
+        this.$vux.toast.show({
+          text: '请选择霸屏主题'
+        })
+        return false
+      }
       if (this.content === '') {
         this.$vux.toast.show({
           text: '请输入文字'
@@ -120,11 +126,14 @@ export default {
       }
       let isCharge = Boolean(this.total > this.userInfo.balance)
       let postParams = {
-        themeId: this.bpThemeIndex === -1 ? 0 : this.screens[this.bpThemeIndex].id,
-        timeId: this.times[this.bpTimeIndex].id,
-        times: this.bpTimes,
+        ht_id: this.$route.params.id,
+        type: 2,
+        screen_id: this.bpThemeIndex === -1 ? 0 : this.screens[this.bpThemeIndex].id,
+        time_id: this.times[this.bpTimeIndex].id,
+        count: this.bpTimes,
         content: this.content,
-        img: this.base64Img
+        img: this.base64Img,
+        reward_uid: this.currentUserInfo.uid ? this.currentUserInfo.uid : ''
       }
       postParams = {postParams: postParams, price: this.total, confirmText: isCharge ? '充值' : '确定', isCharge: isCharge}
       this.ChangeBuyDialogInfo(postParams)

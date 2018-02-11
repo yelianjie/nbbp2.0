@@ -15,13 +15,13 @@ const getters = {
 // actions
 const actions = {
   ChangeBuyDialogInfo ({commit, state}, data) {
-    commit('_ChangeBuyDialogInfo', data)
+    commit('CHANGE_BUY_DIALOG_INFO', data)
   }
 }
 
 // mutations
 const mutations = {
-  _ChangeBuyDialogInfo (state, data) {
+  CHANGE_BUY_DIALOG_INFO (state, data) {
     state.buyDialogInfo = data
   },
   UPDATE_DIRECTION (state, direction) {

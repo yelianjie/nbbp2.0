@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <loading v-model="isLoading" text="正在加载..."></loading>
-    <transition :name="viewTransition">
+    <transition name="fade">
       <router-view class="router-view" ></router-view>
     </transition>
   </div>

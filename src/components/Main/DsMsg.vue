@@ -1,26 +1,26 @@
 <template>
   <div class="msg-item flex">
     <div class="msg-item-left">
-      <user-avatar :data="{uid: data.initiator_mc_id, autograph: data.autograph, city: data.city, levelName: data.grade_title, headImg: data.initiator_headimgurl, nickname: data.initiator_nickname, sex: data.sex}" @onAvatar="avatar"></user-avatar>
+      <user-avatar :data="data" @onAvatar="avatar"></user-avatar>
     </div>
     <div class="msg-item-right flex-1">
-      <msg-user></msg-user>
+      <msg-user :data="data"></msg-user>
       <div class="msg-item-middle dsmsg">
-        <p class="send-for">送么么哒给鲜花</p>
+        <p class="send-for">送{{data.title}}给{{toWho}}</p>
         <div class="ds-box flex">
           <div class="ds-box-gift flex-align-center">
-            <img src="../../assets/jj.jpg"/>
+            <img :src="data.pro_img | prefixImageUrl" class="circle"/>
           </div>
           <div class="ds-box-arrow flex flex-align-center flex-pack-center flex-1">
             <svg-icon icon-class="arrow-ds"/>
           </div>
           <div class="ds-box-to flex flex-align-center">
-            <img src="../../assets/logo.png"/>
+            <img :src="data.sendee_headimgurl | prefixImageUrl" class="circle"/>
           </div>
         </div>
         <div class="content">{{data.content}}</div>
         <div class="msg-item-bottom">
-          <msg-bottom :fabulous="data.fabulous_count" :screen="data.screen_count" :reward="data.reward_count" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds" :display="1"></msg-bottom>
+          <msg-bottom :data="data" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds" :display="1"></msg-bottom>
         </div>
       </div>
       
@@ -54,6 +54,11 @@ export default {
     },
     ds () {
       this.$emit('onDs')
+    }
+  },
+  computed: {
+    toWho () {
+      return Number(this.data.sendee_mc_id) ? this.data.sendee_nickname : '全场观众'
     }
   }
 }
@@ -102,9 +107,8 @@ export default {
   }
   .ds-box-to {
     img {
-      width: 0.9rem;
-      height: 0.9rem;
-      .radius();
+      width: 1.2rem;
+      height: 1.2rem;
     }
   }
   .content {

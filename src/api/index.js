@@ -254,6 +254,14 @@ export const addNormalMsg = (data) => {
 }
 
 /**
+ * 添加霸屏打赏消息
+ * @param {*} data
+ */
+export const addBpDsMsg = (data) => {
+  return request('/weixin/order/addOrder', 'POST', data)
+}
+
+/**
  * 获取最新10条消息
  * @param {*} data
  */

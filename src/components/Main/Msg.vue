@@ -1,7 +1,7 @@
 <template>
   <div class="msg-item flex">
     <div class="msg-item-left">
-      <user-avatar :data="{uid: data.initiator_mc_id, autograph: data.autograph, city: data.city, levelName: data.grade_title, headImg: data.initiator_headimgurl, nickname: data.initiator_nickname, sex: data.sex}" @onAvatar="avatar"></user-avatar>
+      <user-avatar :data="data" @onAvatar="avatar"></user-avatar>
     </div>
     <div class="msg-item-right flex-1">
       <msg-user :data="data"></msg-user>
@@ -9,7 +9,7 @@
         
       </div>
       <div class="msg-item-bottom">
-        <msg-bottom :fabulous="data.fabulous_count" :screen="data.screen_count" :reward="data.reward_count" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds"></msg-bottom>
+        <msg-bottom :data="data" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds"></msg-bottom>
       </div>
     </div>
     
