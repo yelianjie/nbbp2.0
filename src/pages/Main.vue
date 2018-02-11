@@ -25,8 +25,8 @@
         </div>
       </div>
       <div class="flex-1 main-header-right">
-        <div class="online-persons" v-for="(v, i) in onlinePeople" :key="i" @click="showCard">
-          <img :src="v.avatar" class="circle person-avatar"/>
+        <div class="online-persons" v-for="(v, i) in onlinePeople" :key="i" @click="showCard(v)">
+          <img :src="v.headimgurl | prefixImageUrl" class="circle person-avatar"/>
         </div>
       </div>
       <div class="white more f13 flex flex-align-center" @click="onlineVisible = true"><span>更多</span><svg-icon  @click.native="onlineVisible = true" icon-class="arrow-right"/></div>
@@ -116,7 +116,7 @@
   <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy" :confirmText="buyDialogInfo.confirmText">
     <div class="">
       <div class="" style="font-size: 20px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;"/></div>
-      <p style="color: #88878f;"><svg-icon icon-class="tip" />当前剩余余额可用：<svg-icon icon-class="coin" />{{userInfo.balance}}</p>
+      <p style="color: #88878f;"><svg-icon icon-class="tip" />当前余额可用：<svg-icon icon-class="coin" />{{userInfo.balance}}</p>
       <p class="f13" v-if="buyDialogInfo.isCharge" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
     </div>
   </bp-dialog>
@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg } from '@/api/'
+import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines } from '@/api/'
 import { XDialog } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -152,47 +152,7 @@ export default {
       show: false,
       chatlist: [],
       list: [],
-      onlinePeople: [{
-        sex: 2,
-        name: '娄艺潇',
-        avatar: 'https://tvax2.sinaimg.cn/crop.0.0.512.512.50/4e7f0c83ly8fe9xa2lqksj20e80e83z3.jpg'
-      }, {
-        sex: 1,
-        name: '思想聚焦',
-        avatar: 'https://tva4.sinaimg.cn/crop.0.0.180.180.50/67dd74e0jw1e8qgp5bmzyj2050050aa8.jpg'
-      }, {
-        sex: 1,
-        name: '西门町在宁波',
-        avatar: 'https://tvax3.sinaimg.cn/crop.0.0.512.512.50/8216df68ly8ff1b8rtm8zj20e80e83yn.jpg'
-      }, {
-        sex: 1,
-        name: '人民日报',
-        avatar: 'https://tva1.sinaimg.cn/crop.0.3.1018.1018.50/a716fd45gw1ev7q2k8japj20sg0sg779.jpg'
-      }, {
-        sex: 1,
-        name: '当时我就震惊了',
-        avatar: 'https://tva1.sinaimg.cn/crop.0.0.440.440.50/6927e7a5jw8ezf44123d4j20c80c80tg.jpg'
-      }, {
-        sex: 1,
-        name: '同道大叔',
-        avatar: 'https://tva4.sinaimg.cn/crop.0.0.512.512.50/b6f28977jw8eqb042gir6j20e80e8aa9.jpg'
-      }, {
-        sex: 2,
-        name: '短腿王怼怼',
-        avatar: 'https://tvax4.sinaimg.cn/crop.0.0.750.750.50/a0c1fb53ly8fn3kukoes5j20ku0kudh5.jpg'
-      }, {
-        sex: 2,
-        name: '头大就是硬道理',
-        avatar: 'https://tvax1.sinaimg.cn/crop.0.9.494.494.50/bd30a422ly8fj0d8js9zwj20dq0e874q.jpg'
-      }, {
-        sex: 2,
-        name: '林依晨Ariel',
-        avatar: 'https://tvax1.sinaimg.cn/crop.0.0.512.512.50/6a661712ly8fnshg7z2z7j20e80e8js8.jpg'
-      }, {
-        sex: 1,
-        name: 'jasonchenmusic',
-        avatar: 'https://tvax4.sinaimg.cn/crop.0.1.509.509.50/73a68773ly8fea294f5i0j20e50e83yq.jpg'
-      }],
+      onlinePeople: [],
       bpWindowVisible: false,
       dsWindowVisible: false,
       userDialogVisible: false,
@@ -206,6 +166,7 @@ export default {
       adVisible: true,
       newsTimer: null,
       noticeTimer: null,
+      onlineTimer: null,
       requestParams: {
         ht_id: this.$route.params.id,
         min_id: 0
@@ -220,6 +181,7 @@ export default {
   beforeDestroy () {
     clearTimeout(this.newsTimer)
     clearTimeout(this.noticeTimer)
+    clearTimeout(this.onlineTimer)
   },
   created () {
     if (Object.keys(this.userInfo).length === 0) {
@@ -247,6 +209,7 @@ export default {
     })
     this.loopGetNewMsg()
     this.loopGetNotice(0)
+    this.loopOnlines(0)
   },
   mounted () {
     /* setTimeout(() => {
@@ -266,13 +229,23 @@ export default {
     ...mapActions('user', [
       'getUserInfo'
     ]),
+    loopOnlines (time) {
+      this.onlineTimer = setTimeout(() => {
+        getOnlines({ht_id: this.$route.params.id}).then((res) => {
+          Array.isArray(res.result) && (this.onlinePeople = res.result)
+        }).finally(() => {
+          clearTimeout(this.onlineTimer)
+          this.loopOnlines(1000 * 10)
+        })
+      }, time)
+    },
     loopGetNotice (time) {
       this.noticeTimer = setTimeout(() => {
         getBarNotice({ht_id: this.$route.params.id}).then((res) => {
           this.notice = res.result ? res.result.content : ''
         }).finally(() => {
           clearTimeout(this.noticeTimer)
-          this.loopGetNotice(5 * 60000)
+          this.loopGetNotice(1000 * 60 * 5)
         })
       }, time)
     },
@@ -291,7 +264,7 @@ export default {
           clearTimeout(this.noticeTimer)
           this.loopGetNewMsg()
         })
-      }, 5000)
+      }, 1000)
     },
     scrollToEnd () {
       var content = document.querySelector('.main-content')
@@ -330,7 +303,11 @@ export default {
         })
       })
     },
-    showCard () {
+    showCard (info) {
+      if (info) {
+        var data = {uid: info.id, autograph: info.autograph, city: info.city, levelName: info.grade_title, headImg: info.headimgurl, nickname: info.nickname, sex: info.sex}
+        this.$store.commit('main/SET_CURRENT_USER_INFO', data)
+      }
       this.userDialogVisible = true
     },
     like (data) {
@@ -354,9 +331,11 @@ export default {
         this.$router.push('/Charge')
       } else {
         // 直接购买
-        addBpDsMsg(this.buyDialogInfo.postParams).then(() => {
+        addBpDsMsg(this.buyDialogInfo.postParams).then((res) => {
+          this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
           this.buyDialogVisible = false
           this.bpWindowVisible = false
+          this.dsWindowVisible = false
         })
       }
       /* setTimeout(() => {

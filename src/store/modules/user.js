@@ -51,6 +51,9 @@ const mutations = {
   },
   SET_ROLE (state, data) {
     state.role = data
+  },
+  SET_USER_INFO_BALANCE (state, data) {
+    state.userInfo.balance = data
   }
 }
 

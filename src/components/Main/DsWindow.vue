@@ -28,7 +28,7 @@
             </swiper>
           </div>
           <div class="bp-input-area flex">
-            <input class="bp-input borderbox" placeholder="请输入送礼上墙语，15字以内"  v-model="content"/>
+            <input class="bp-input borderbox" maxlength="15" placeholder="请输入送礼上墙语，15字以内"  v-model="content"/>
           </div>
         </div>
         <div class="window-bottom f13 flex flex-align-center">
@@ -77,7 +77,7 @@ export default {
     buy () {
       if (this.dsGiftIndex === -1) {
         this.$vux.toast.show({
-          text: '请选择打赏礼物'
+          text: '请选择礼物'
         })
         return false
       }

@@ -39,26 +39,28 @@
     <div class="user-middle">
       <div class="user-wallet flex bg2">
         <div class="w1 flex-1 tc" @click="$router.push({path: '/Charge'})">
-          <h3 class="white"><countup v-if="userInfo.balance" :start-val="0.000" :end-val="Number(userInfo.balance)" :duration="2" class="demo1" :decimals="3"></countup></h3>
+          <h3 class="white"><countup v-if="userInfo.balance" :start-val="0.00" :end-val="Number(userInfo.balance)" :duration="2" class="demo1" :decimals="2"></countup></h3>
           <h5>我的余额/牛角</h5>
         </div>
         <div class="w2 flex-1 tc" @click="$router.push({path: '/Income'})">
-          <h3><countup v-if="userInfo.profit_balance" :start-val="0.000" :end-val="Number(userInfo.profit_balance)" :duration="2" class="demo2" :decimals="3"></countup></h3>
+          <h3><countup v-if="userInfo.profit_balance" :start-val="0.00" :end-val="Number(userInfo.profit_balance)" :duration="2" class="demo2" :decimals="2"></countup></h3>
           <h5>我的收益/员</h5>
         </div>
       </div>
-      <group class="bg2">
-        <cell title="推荐给好友" color="#e8401b" :is-link="true" icon-name="heart" @click.native.prevent="shareMaskVisible = true"></cell>
-        <cell title="关于我们" color="#5bf475" :is-link="true" icon-name="about" :link-path="{path: '/About'}"></cell>
-        <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/'}"></cell>
-      </group>
-      <!-- v-if="userInfo.isAgent > 0" v-if="userInfo.isMM > 0"  -->
       <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isAgent > 0">
         <cell title="代理管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/AgentCenter'}"></cell>
       </group>
       <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isMM > 0">
         <cell title="商户管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/MyBars'}"></cell>
       </group>
+      <group class="bg2" style="margin-top: 0.2rem;">
+        <cell title="了解贵族特权" color="#f2c06c" :is-link="true" icon-name="royal" :link-path="{path: '/MyLevel'}"></cell>
+        <cell title="推荐给好友" color="#e8401b" :is-link="true" icon-name="heart" @click.native.prevent="shareMaskVisible = true"></cell>
+        <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/'}"></cell>
+        <cell title="代理加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/'}"></cell>
+        <cell title="关于我们" color="#5bf475" :is-link="true" icon-name="about" :link-path="{path: '/About'}"></cell>
+      </group>
+      <!-- v-if="userInfo.isAgent > 0" v-if="userInfo.isMM > 0"  -->
     </div>
     <x-dialog v-model="shareMaskVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
     <div class="fullscreen"  @click="shareMaskVisible = false">

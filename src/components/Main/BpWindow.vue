@@ -33,7 +33,7 @@
           </div>
           <div class="bp-input-area flex">
             <div class="bp-textarea flex-1">
-              <textarea class="bp-input borderbox" v-model="content" placeholder="请输入霸屏上墙语，30字以内"></textarea>
+              <textarea class="bp-input borderbox" maxlength="30" v-model="content" placeholder="请输入霸屏上墙语，30字以内"></textarea>
             </div>
             <div class="bp-upload">
               <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip" :cropRadio="0.5625">

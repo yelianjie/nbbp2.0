@@ -120,7 +120,7 @@ export default {
       }
       setTimeout(() => {
         // /dist/map/index.html
-        document.getElementById('iframe').src = '/dist/map/index.html'
+        document.getElementById('iframe').src = process.env.NODE_ENV === 'production' ? './map/index.html' : '/dist/map/index.html'
         this.mapLoad = true
       }, 300)
     }

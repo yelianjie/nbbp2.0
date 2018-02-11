@@ -3,17 +3,17 @@
     <div class="flex-1 scroll" style="padding: 0.4rem 0.4rem 0.95rem;">
       <ul>
         <li v-for="(v, i) in peoples" :key="i" class="online-item" @click="showCard">
-          <div class="online-img"><img :src="v.avatar" class="circle"></div>
-          <div class="online-text overflow flex f12">
+          <div class="online-img"><img :src="v.headimgurl | prefixImageUrl" class="circle"></div>
+          <div class="online-text overflow flex f12 flex-pack-center">
             <template v-if="v.sex == 1">
               <span class="sex sex-male" >
                 <svg-icon icon-class="male" />
-              </span>{{v.name}}
+              </span>{{v.nickname}}
             </template>
             <template v-if="v.sex == 2">
               <span class="sex sex-female" >
                 <svg-icon icon-class="female"/>
-              </span>{{v.name}}
+              </span>{{v.nickname}}
             </template>
           </div>
         </li>

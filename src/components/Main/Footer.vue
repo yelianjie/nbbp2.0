@@ -19,7 +19,7 @@
           <svg-icon icon-class="close-no-circle" @click.native="deleteMsgImg"/>
         </div>
         <div class="chat-input flex-1" :class="{'move': textImgVisible}">
-          <input type="text" placeholder="说点什么吧！" @click="showFace = false" v-model="msg" ref="msg">
+          <input type="text" class="borderbox" placeholder="说点什么吧！" @click="showFace = false" v-model="msg" ref="msg">
         </div>
         <div class="chat-submit-btn flex flex-align-center" @click="sendMsg">
           <svg-icon icon-class="plane"/>
@@ -75,7 +75,7 @@ export default {
       this.moveEnd(this.$refs.msg)
     },
     moveEnd (obj) {
-      obj.focus()
+      // obj.focus()
       var len = obj.value.length
       if (document.selection) {
         var sel = obj.createTextRange()
@@ -149,7 +149,7 @@ export default {
 }
 
 .chat-input {
-  margin-right: 10px;
+  margin-right: 8px;
   &.move input {
     padding: 0.2rem 0 0.2rem 1.4rem;
   }

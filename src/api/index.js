@@ -246,6 +246,14 @@ export const getBarAllInfo = (data) => {
 }
 
 /**
+ * 获取在线用户
+ * @param {*} data
+ */
+export const getOnlines = (data) => {
+  return request('/weixin/hotel/getOnlineMc', 'POST', data)
+}
+
+/**
  * 添加普通消息
  * @param {*} data
  */
@@ -283,12 +291,22 @@ export const getMaxMsg = (data) => {
 export const getLevelInfo = () => {
   return request('/weixin/members/getMemberGradeInfo', 'POST')
 }
+
+/**
+ * 绑定酒吧管理
+ * @param {*} data
+ */
+export const bindBarManager = (data) => {
+  return request('/weixin/hotel/bindPriManage', 'POST', data)
+}
+
 /**
  * 当前用户是否已关注
  */
 export const isSubscribe = () => {
   return request('/weixin/members/isSubscribe')
 }
+
 /**
  * 上传图片
  * @param {*} blob

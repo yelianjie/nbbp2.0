@@ -146,7 +146,7 @@ export default new Router({
       }
     },
     {
-      path: '/BindManage',
+      path: '/BindManage/:id',
       name: 'BindManage',
       component: (resolve) => {
         require(['@/pages/BindManage'], resolve)

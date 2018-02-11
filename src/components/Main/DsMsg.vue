@@ -15,7 +15,8 @@
             <svg-icon icon-class="arrow-ds"/>
           </div>
           <div class="ds-box-to flex flex-align-center">
-            <img :src="data.sendee_headimgurl | prefixImageUrl" class="circle"/>
+            <img :src="data.sendee_headimgurl | prefixImageUrl" class="circle" v-if="data.sendee_mc_id != 0"/>
+            <img v-else src="../../assets/all.png" class="circle"/>
           </div>
         </div>
         <div class="content">{{data.content}}</div>

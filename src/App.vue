@@ -31,6 +31,9 @@ export default {
 </script>
 
 <style lang="less">
+.weui-loading_toast {
+  z-index: 9999999999;
+}
  .vux-pop-out-enter-active,
  .vux-pop-out-leave-active,
  .vux-pop-in-enter-active,

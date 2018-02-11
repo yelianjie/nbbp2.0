@@ -8,9 +8,9 @@
       <div class="msg-item-middle bpmsg" :style="{'background': '-webkit-linear-gradient(top, ' + data.bg.split(',')[0] + ',' + data.bg.split(',')[1] + ' 70%' +',' + data.bg.split(',')[1] + ')'}">
         <div class="flex">
           <div class="msg-item-info flex-1 tc">
-              <div class="msg-bp-title" :style="{'background': data.lable_bg}">{{data.title}}{{data.odr_show_time}}秒
-                <span class="arrow arrow-left" :style="{'border-right-color': data.lable_bg}"></span>
-                <span class="arrow arrow-right" :style="{'border-left-color': data.lable_bg}"></span>
+              <div class="msg-bp-title">{{data.title}}{{data.odr_show_time}}秒
+                <span class="arrow arrow-left"></span>
+                <span class="arrow arrow-right"></span>
               </div>
             <div class="content">{{data.content}}</div>
           </div>
@@ -84,6 +84,7 @@ export default {
     margin-bottom: @msgpadTop;
     position: relative;
     display: inline-block;
+    background-color: rgba(0, 0, 0, .15);
   }
   .arrow {
     width: 0.2rem;
@@ -98,12 +99,14 @@ export default {
     border-right-width: 0.2rem;
     border-right-style: solid;
     transform: translateX(-100%);
+    border-right-color: rgba(0, 0, 0, .15);
   }
   .arrow-right {
     right: 0;
     border-left-width: 0.2rem;
     border-left-style: solid;
     transform: translateX(100%);
+    border-left-color: rgba(0, 0, 0, .15);
   }
 }
 .content {
