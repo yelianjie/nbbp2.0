@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines } from '@/api/'
+import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo } from '@/api/'
 import { XDialog } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -312,8 +312,9 @@ export default {
     },
     like (data) {
       console.log(data)
-      data.likes++
-      // this.chatlist[index].likes++
+      favoriteDo({mc_id: data.initiator_mc_id, msg_id: data.id}).then((res) => {
+        data.fabulous_count = ~~(data.fabulous_count) + 1
+      })
     },
     bp () {
       this.onlineVisible = false

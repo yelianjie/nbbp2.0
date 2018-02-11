@@ -254,6 +254,14 @@ export const getOnlines = (data) => {
 }
 
 /**
+ * 点赞
+ * @param {*} data
+ */
+export const favoriteDo = (data) => {
+  return request('/weixin/members/addFabulous', 'POST', data)
+}
+
+/**
  * 添加普通消息
  * @param {*} data
  */

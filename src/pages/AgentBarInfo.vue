@@ -5,7 +5,7 @@
       <p class="set-title">分成比例设置</p>
       <div class="flex flex-h percent-box">
         <div class="percent-item percent">
-          <p class="percent-title">用户比例<span class="small-tip">（此项含用户分成的项目才生效）</span></p>
+          <p class="percent-title">用户比例<span class="f12">（此项含用户分成的项目才生效）</span></p>
           <x-number v-model.number="barInfo.users_separate" fillable align="left"></x-number>
         </div>
       </div>
@@ -38,10 +38,15 @@
       <x-button :gradients="['#1D62F0', '#1D62F0']" @click.native="setBarPercent">保存</x-button>
     </div>
 
-    <div id="maskQrcode" v-show="maskVisible" @click="maskVisible = false">
-      <p>请扫描以下二维码绑定</p>
-      <p>管理酒吧</p>
-      <img src="http://nb.siweiquanjing.com/attachment/bar/20171227191747_227.png"/>
+    <div v-show="maskVisible">
+      <div id="maskLayer" @click="maskVisible = false" class="mask-overlay" style="background-color:rgba(0,0,0,.8);"></div>
+      <div id="maskQrcode">
+        <p class="f14">请扫描以下二维码绑定</p>
+        <p class="f14">管理酒吧</p>
+        <div style="padding: 10px;background-color:#fff;margin-top:10px;">
+          <vue-qr v-if="barInfo.logo" :margin="0" :logoSrc="barInfo.logo | prefixImageUrl" :dotScale="1" :text="url" :height="size" :width="size"></vue-qr>
+        </div>
+      </div>
     </div>
     <!-- <bp-dialog :visible="dialogVisible"></bp-dialog> -->
 </div>
@@ -51,6 +56,8 @@
 import { XNumber, XInput, Group, XButton } from 'vux'
 import BusinessAgentTop from '@/components/Center/BusinessAgentTop'
 import { getAgentBar, updateRate } from '@/api/'
+import logo from '../assets/logo.png'
+import VueQr from 'vue-qr'
 // import bpDialog from '@/components/bpDialog.vue'
 export default {
   name: 'AgentBarInfo',
@@ -59,14 +66,18 @@ export default {
     XInput,
     Group,
     XButton,
-    BusinessAgentTop
+    BusinessAgentTop,
+    VueQr
   },
   data () {
     return {
+      logo: logo,
       maskVisible: false,
       dialogVisible: false,
       barInfo: {},
-      mePercent: 25
+      size: 200,
+      mePercent: 25,
+      url: window.location.href.replace('AgentBarInfo', 'BindManage')
     }
   },
   created () {
@@ -80,6 +91,8 @@ export default {
     })
   },
   mounted () {
+    var fSize = parseInt(document.documentElement.style.fontSize)
+    this.size = 4 * fSize
   },
   watch: {
     maskVisible (newVal, oldVal) {
@@ -140,13 +153,6 @@ export default {
 }
 .top {
   padding: 15px 0;
-  img {
-    width: 60px;
-    height: 60px;
-  }
-  p {
-    font-size: 12px;
-  }
 }
 .percent-item {
   padding: 10px 15px;
@@ -164,33 +170,21 @@ export default {
     }
   }
 }
-.small-tip {
-  font-size: 12px;
-}
 .bindif {
   padding: 10px 0;
 }
 #maskQrcode {
   position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  left: 50%;
+  top: 50%;
   z-index: 2;
-  background-color: rgba(0, 0, 0, .75);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  transform: translate3d(-50%, -50%, 0);
   p {
     color: #fff;
-    font-size: 14px;
-  }
-  img {
-    margin-top: 10px;
-    width: 160px;
-    height: 160px;
-    display: block;
   }
 }
 </style>
