@@ -143,13 +143,15 @@ export default {
       var height = img.height
       var canvas = this.canvas
       var ctx = canvas.getContext('2d')
-      if (width > this.limitSize || height > this.limitSize) {
-        if (width >= height) {
-          height = ~~(this.limitSize * height / width)
-          width = this.limitSize
-        } else {
-          width = ~~(this.limitSize * width / height)
-          height = this.limitSize
+      if (this.limitSize !== 0) {
+        if (width > this.limitSize || height > this.limitSize) {
+          if (width >= height) {
+            height = ~~(this.limitSize * height / width)
+            width = this.limitSize
+          } else {
+            width = ~~(this.limitSize * width / height)
+            height = this.limitSize
+          }
         }
       }
       canvas.width = width
@@ -284,6 +286,7 @@ export default {
   left: 0;
   right: 0;
   button {
+    display: block;
     font-size: 14px;
     color: #fff;
     background-color: transparent;

@@ -32,7 +32,7 @@
       <div class="white more f13 flex flex-align-center" @click="onlineVisible = true"><span>更多</span><svg-icon  @click.native="onlineVisible = true" icon-class="arrow-right"/></div>
     </div>
     <div class="flex-1 main-content" ref="scrollWrapper">
-      <infinite-loading @infinite="infiniteHandler" direction="top" :distance="0">
+      <infinite-loading @infinite="infiniteHandler" direction="top" :distance="1" ref="infiniteLoading">
         <div class="typing-indicator" slot="spinner">
           <span></span>
           <span></span>
@@ -63,10 +63,10 @@
         <div class="pr">
           <template v-if="currentUserInfo.levelIcon">
             <span class="level-icon-id"></span>
-            <img :src="currentUserInfo.headImg | prefixImageUrl" class="avatar" style="border: 0;"/>
+            <img :src="currentUserInfo.initiator_headimgurl | prefixImageUrl" class="avatar" style="border: 0;"/>
           </template>
           <template v-else>
-            <img :src="currentUserInfo.headImg | prefixImageUrl" class="avatar"/>
+            <img :src="currentUserInfo.initiator_headimgurl | prefixImageUrl" class="avatar"/>
           </template>
         </div>
         <!--<img src="../assets/logo.png" class="avatar"/>-->
@@ -74,7 +74,7 @@
         <div class="msg-item-top flex flex-pack-center">
           <span class="sex sex-male"><svg-icon icon-class="male" v-if="currentUserInfo.sex == 1"/><svg-icon icon-class="female" v-if="currentUserInfo.sex == 2"/></span>
           <span class="level" style="background-color: #625bc3;">{{currentUserInfo.city}}</span>
-          <span class="level level-1" v-if="currentUserInfo.levelIcon">{{currentUserInfo.levelName}}</span>
+          <span class="level level-1" v-if="currentUserInfo.grade_title != '平民'">{{currentUserInfo.grade_title}}</span>
         </div>
         <p class="sign f14" v-if="currentUserInfo.autograph">签名：{{currentUserInfo.autograph}}</p>
         <p class="sign f14" v-else>签名：暂无</p>
@@ -87,7 +87,7 @@
             <img src="../assets/ba-b-icon.png"/>
             <span>为TA霸屏</span>
           </div>
-          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="like">
+          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="like(currentUserInfo)">
             <img src="../assets/like-b-icon.png"/>
             <span>为TA点赞</span>
           </div>
@@ -131,7 +131,8 @@ import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addB
 import { XDialog } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
-import InfiniteLoading from 'vue-infinite-loading'
+// import InfiniteLoading from 'vue-infinite-loading'
+import InfiniteLoading from '../components/InfiniteLoading'
 import FooterMain from '../components/Main/Footer'
 import Msg from '../components/Main/Msg'
 import MsgImg from '../components/Main/MsgImg'
@@ -144,6 +145,7 @@ import Onlines from '../components/Main/Onlines'
 import { mapGetters, mapActions } from 'vuex'
 import '@/vendor/tween'
 import '@/vendor/animation'
+import ScrollFix from '@/vendor/ScrollFix'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   data () {
@@ -175,13 +177,21 @@ export default {
         ht_id: this.$route.params.id,
         id: 0
       },
-      firstLoading: true
+      firstLoading: true,
+      scrollFix: null
     }
   },
   beforeDestroy () {
     clearTimeout(this.newsTimer)
     clearTimeout(this.noticeTimer)
     clearTimeout(this.onlineTimer)
+    if (this.scrollFix) {
+      this.scrollFix.destory()
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    document.title = decodeURI(to.query.name)
+    next()
   },
   created () {
     if (Object.keys(this.userInfo).length === 0) {
@@ -194,6 +204,9 @@ export default {
       var img = new Image()
       img.onload = () => {
         this.show = true
+        this.$nextTick(() => {
+          this.scrollFix = new ScrollFix(this.$refs.scrollWrapper)
+        })
         setTimeout(() => {
           this.adVisible = false
         }, 1000)
@@ -207,17 +220,10 @@ export default {
     }).catch(() => {
       this.concernVisible = true
     })
-    this.loopGetNewMsg()
     this.loopGetNotice(0)
     this.loopOnlines(0)
   },
   mounted () {
-    /* setTimeout(() => {
-      var content = document.querySelector('.main-content')
-      Math.animation(content.scrollTop, content.scrollHeight - content.offsetHeight, function (value) {
-        content.scrollTop = value
-      }, 'Linear', 400)
-    }, 5000) */
   },
   watch: {
     height: function (newVal, oldVal) {
@@ -267,7 +273,7 @@ export default {
       }, 1000)
     },
     scrollToEnd () {
-      var content = document.querySelector('.main-content')
+      var content = this.$refs.scrollWrapper
       Math.animation(content.scrollTop, content.scrollHeight - content.offsetHeight, function (value) {
         content.scrollTop = value
       }, 'Linear', 400)
@@ -292,6 +298,7 @@ export default {
           var chatLength = this.chatlist.length
           this.requestNewParams.id = chatLength > 0 ? this.chatlist[chatLength - 1].id : 0
           if (this.firstLoading) {
+            this.loopGetNewMsg()
             this.firstLoading = false
             this.scrollToEnd()
           }
@@ -305,13 +312,14 @@ export default {
     },
     showCard (info) {
       if (info) {
-        var data = {uid: info.id, autograph: info.autograph, city: info.city, levelName: info.grade_title, headImg: info.headimgurl, nickname: info.nickname, sex: info.sex}
-        this.$store.commit('main/SET_CURRENT_USER_INFO', data)
+        info.initiator_headimgurl = info.headimgurl
+        this.$store.commit('main/SET_CURRENT_USER_INFO', info)
       }
       this.userDialogVisible = true
     },
     like (data) {
       console.log(data)
+      console.log(this.currentUserInfo)
       favoriteDo({mc_id: data.initiator_mc_id, msg_id: data.id}).then((res) => {
         data.fabulous_count = ~~(data.fabulous_count) + 1
       })

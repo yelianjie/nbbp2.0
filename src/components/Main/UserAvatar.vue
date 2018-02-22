@@ -2,10 +2,10 @@
   <div class="msg-item-user-avatar pr">
     <template v-if="data.grade_title && data.grade_title != '平民'">
       <span class="level-icon-avatar" :style="{'backgournd-image': 'url(' + $options.filters.filterLevel(data.grade_title, 'avatarIcon') + ')'}" @click="avatar()"></span>
-      <img :src="data.initiator_headimgurl | prefixImageUrl"/>
+      <img :src="$options.filters.prefixImageUrl(data.initiator_headimgurl)"/>
     </template>
     <template v-else>
-      <img :src="data.initiator_headimgurl | prefixImageUrl" @click="avatar()"/>
+      <img :src="$options.filters.prefixImageUrl(data.initiator_headimgurl)" @click="avatar()"/>
     </template>
   </div>
 </template>
@@ -15,8 +15,7 @@ export default {
   props: ['data'],
   methods: {
     avatar () {
-      var data = {uid: this.data.initiator_mc_id, autograph: this.data.autograph, city: this.data.city, levelName: this.data.grade_title, headImg: this.data.initiator_headimgurl, nickname: this.data.initiator_nickname, sex: this.data.sex}
-      this.$store.commit('main/SET_CURRENT_USER_INFO', data)
+      this.$store.commit('main/SET_CURRENT_USER_INFO', this.data)
       this.$emit('onAvatar')
     }
   },

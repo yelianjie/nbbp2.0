@@ -1,5 +1,5 @@
 <template>
-  <div class="window-pop">
+  <div class="window-pop" v-fixscroll="'.ds-gift-container'">
     <transition name="fade">
       <div class="mask-overlay" v-show="visible" @click="closeWindow"></div>
     </transition>
@@ -19,7 +19,7 @@
               <swiper-slide v-for="(v, i) in gifts" :key="i">
                 <div class="ds-gift-item borderbox ds-item" :class="{'selected': dsGiftIndex == i}" @click="dsGiftIndex != i ? dsGiftIndex = i : dsGiftIndex = -1">
                   <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-                  <div class="gift-icon ds-img"><img :src="v.icon | prefixImageUrl"></div>
+                  <div class="gift-icon ds-img"><img v-lazy="$options.filters.prefixImageUrl(v.icon)"></div>
                   <div class="gift-name ds-text overflow f13">{{v.title}}</div>
                   <div class="gift-price f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
                 </div>
@@ -28,7 +28,7 @@
             </swiper>
           </div>
           <div class="bp-input-area flex">
-            <input class="bp-input borderbox" maxlength="15" placeholder="请输入送礼上墙语，15字以内"  v-model="content"/>
+            <input class="bp-input borderbox f14" maxlength="15" placeholder="请输入送礼上墙语，15字以内"  v-model="content"/>
           </div>
         </div>
         <div class="window-bottom f13 flex flex-align-center">
@@ -52,6 +52,7 @@ export default {
   },
   data () {
     return {
+      scroll: null,
       dsTimes: 1,
       dsGiftIndex: -1,
       content: '',

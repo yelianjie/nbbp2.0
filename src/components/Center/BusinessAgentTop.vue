@@ -51,7 +51,7 @@ export default {
   vertical-align: middle;
 }
 .middle {
-  margin: 10px auto 30px;
+  margin: 0 auto 30px;
   .benefit-account {
     font-size: 24px;
     font-weight: bold;

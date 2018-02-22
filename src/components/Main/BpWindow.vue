@@ -1,5 +1,5 @@
 <template>
-  <div class="window-pop">
+  <div class="window-pop" v-fixscroll="'.bp-theme-container'">
     <transition name="fade">
       <div class="mask-overlay" v-show="visible" @click="closeWindow"></div>
     </transition>
@@ -24,7 +24,7 @@
               <swiper-slide v-for="(v, i) in screens" :key="i">
                 <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i}" @click="bpThemeIndex != i ? bpThemeIndex = i : bpThemeIndex = -1">
                   <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-                  <div class="theme-icon"><img :src="v.icon | prefixImageUrl"></div>
+                  <div class="theme-icon"><img v-lazy="$options.filters.prefixImageUrl(v.icon)"></div>
                   <div class="theme-name f13 overflow">{{v.title}}</div>
                 </div>
               </swiper-slide>
@@ -33,7 +33,7 @@
           </div>
           <div class="bp-input-area flex">
             <div class="bp-textarea flex-1">
-              <textarea class="bp-input borderbox" maxlength="30" v-model="content" placeholder="请输入霸屏上墙语，30字以内"></textarea>
+              <textarea class="bp-input borderbox f14" maxlength="30" v-model="content" placeholder="请输入霸屏上墙语，30字以内"></textarea>
             </div>
             <div class="bp-upload">
               <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip" :cropRadio="0.5625">
@@ -71,6 +71,7 @@ export default {
   props: ['visible', 'times', 'screens'],
   data () {
     return {
+      scroll: null,
       bpTimes: 1,
       bpTimeIndex: -1,
       bpThemeIndex: -1,

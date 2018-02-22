@@ -6,7 +6,7 @@
     <div class="msg-item-right flex-1">
       <msg-user :data="data"></msg-user>
       <div class="msg-item-middle onlyimg flex">
-        <div class="img"><img :src="data.img | prefixImageUrl"/></div>
+        <div class="img"><img v-lazy="$options.filters.prefixImageUrl(data.img)"/></div>
       </div>
       <div class="msg-item-bottom">
         <msg-bottom :data="data" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds"></msg-bottom>

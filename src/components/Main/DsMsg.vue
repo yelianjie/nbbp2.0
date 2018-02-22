@@ -9,13 +9,13 @@
         <p class="send-for">送{{data.title}}给{{toWho}}</p>
         <div class="ds-box flex">
           <div class="ds-box-gift flex-align-center">
-            <img :src="data.pro_img | prefixImageUrl" class="circle"/>
+            <img v-lazy="$options.filters.prefixImageUrl(data.pro_img)" class="circle"/>
           </div>
           <div class="ds-box-arrow flex flex-align-center flex-pack-center flex-1">
             <svg-icon icon-class="arrow-ds"/>
           </div>
           <div class="ds-box-to flex flex-align-center">
-            <img :src="data.sendee_headimgurl | prefixImageUrl" class="circle" v-if="data.sendee_mc_id != 0"/>
+            <img v-lazy="$options.filters.prefixImageUrl(data.sendee_headimgurl)" class="circle" v-if="data.sendee_mc_id != 0"/>
             <img v-else src="../../assets/all.png" class="circle"/>
           </div>
         </div>

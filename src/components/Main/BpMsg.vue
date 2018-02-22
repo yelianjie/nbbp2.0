@@ -14,7 +14,7 @@
               </div>
             <div class="content">{{data.content}}</div>
           </div>
-          <div class="img"><img :src="data.img ? $options.filters.prefixImageUrl(data.img) : logo"/></div>
+          <div class="img"><img v-lazy="data.img ? $options.filters.prefixImageUrl(data.img) : logo"/></div>
         </div>
         <div class="msg-item-bottom">
           <msg-bottom :data="data" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds" :display="1"></msg-bottom>

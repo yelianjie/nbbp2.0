@@ -11,19 +11,19 @@
       <div class="level-box flex flex-pack-center">
         <img src="/static/level-show/level-show-3.png" class="level-icon"/>
       </div>
-      <div class="level-progressbar flex-1 flex flex-align-center">
-        <svg width="100%" height="0.16rem" xmlns="http://www.w3.org/2000/svg">
+      <div class="level-progressbar flex-1 flex flex-align-center" style="height: 0.16rem;">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <clipPath id="clipPath">
-              <rect x="0" y="0" :width="calRest" height="0.16rem" />
+              <rect x="0" y="0" :width="calRest" height="100%" />
             </clipPath>
             <linearGradient y2="0" x2="1" y1="0" x1="0" id="svg_2">
               <stop stop-color="#19bb82" offset="0"/>
               <stop stop-color="#4793e1" offset="1"/>
             </linearGradient>
           </defs> 
-          <rect height="0.16rem" width="100%" y="0" x="0" fill="#121420" stroke-width="1" stroke="#34364f"/>
-          <rect id="level-progress" height="0.16rem" width="100%" y="0" x="0" stroke-width="1" stroke="rgab(0,0,0,0)" fill="url(#svg_2)" clip-path="url(#clipPath)" />
+          <rect height="100%" width="100%" y="0" x="0" fill="#121420" stroke-width="1" stroke="#34364f"/>
+          <rect id="level-progress" height="100%" width="100%" y="0" x="0" stroke-width="1" stroke="rgab(0,0,0,0)" fill="url(#svg_2)" clip-path="url(#clipPath)" />
         </svg>
       </div>
       <div class="level-box flex flex-pack-center" v-if="userInfo.next_grade_id">
@@ -41,8 +41,8 @@
         <div class="level-item pr" @click="showLevel(v)" v-for="(v, i) in grades" :key="i" v-if="v.experience != 0">
           <img :src="$options.filters.filterLevel(v.grade_title, 'icon')" class="level-item-icon"/>
           <p class="white f15 tc">{{v.grade_title}}</p>
-          <p class="f13 darker1 tc">{{v.experience}}经验值</p>
-          <div class="lock-layer" v-if="userInfo.total_mc_experience < v.experience" @click="showLevel(v)"><svg-icon icon-class="lock"/></div>
+          <p class="f13 darker1 tc">{{v.experience}}</p>
+          <div class="lock-layer" v-if="Number(userInfo.total_mc_experience) < Number(v.experience)" @click="showLevel(v)"><svg-icon icon-class="lock"/></div>
         </div>
       </div>
     </div>

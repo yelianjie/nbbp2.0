@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <loading v-model="isLoading" text="正在加载..."></loading>
     <transition name="fade">
       <router-view class="router-view" ></router-view>
     </transition>
+    <loading v-model="isLoading" text="正在加载..."></loading>
   </div>
 </template>
 
@@ -91,7 +91,7 @@ body, html, #app {
   padding-bottom: 62px;
 }
 .padding-bottom-btn {
-  padding-bottom: 42px;
+  padding-bottom: 50px;
 }
 .weui-toast.vux-toast-bottom {
   bottom: 54px;

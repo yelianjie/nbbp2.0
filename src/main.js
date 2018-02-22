@@ -11,6 +11,7 @@ import './icons'
 import 'vux/src/styles/reset.less'
 import './styles/global.less'
 import * as filters from './filters' // global filters
+import * as directives from './directives' // global directives
 import bpDialog from './plugins/bpDialog'
 import maskPlugin from './plugins/mask'
 import noscrollPlugin from './plugins/noscroll'
@@ -18,6 +19,7 @@ import { ToastPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin } from 'vux'
 import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 import { validateRules } from './utils/validateRules'
+import VueLazyload from 'vue-lazyload'
 const dictionary = {
   ch: {
     messages: {
@@ -59,6 +61,7 @@ Vue.use(ToastPlugin, {
 })
 Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)
+Vue.use(VueLazyload)
 Vue.use(VueRouter)
 window.URL = window.URL || window.webkitURL
 FastClick.attach(document.body)
@@ -111,11 +114,16 @@ router.beforeEach(function (to, from, next) {
 })
 
 router.afterEach(function (to) {
+  document.documentElement.classList.remove('noscroll')
   store.commit('updateLoadingStatus', {isLoading: false})
 })
 
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
+})
+
+Object.keys(directives).forEach(key => {
+  Vue.directive(key, directives[key])
 })
 
 /* eslint-disable no-new */

@@ -6375,6 +6375,10 @@ vue-jsonp@^0.1.7:
   version "0.1.7"
   resolved "http://registry.npm.taobao.org/vue-jsonp/download/vue-jsonp-0.1.7.tgz#e18ad268f5f79f53ac46c36860a7fc0a5dafc75b"
 
+vue-lazyload@^1.2.1:
+  version "1.2.1"
+  resolved "http://r.cnpmjs.org/vue-lazyload/download/vue-lazyload-1.2.1.tgz#baa7356bdc1483777fd16007fbe2dddc16e98298"
+
 vue-loader@^13.3.0:
   version "13.6.2"
   resolved "http://registry.npm.taobao.org/vue-loader/download/vue-loader-13.6.2.tgz#43d9688f2c80400916104d1138941aacd7e389cb"
@@ -6796,3 +6800,7 @@ yargs@~3.10.0:
     cliui "^2.1.0"
     decamelize "^1.0.0"
     window-size "0.1.0"
+
+zepto@^1.2.0:
+  version "1.2.0"
+  resolved "http://r.cnpmjs.org/zepto/download/zepto-1.2.0.tgz#e127bd9e66fd846be5eab48c1394882f7c0e4f98"

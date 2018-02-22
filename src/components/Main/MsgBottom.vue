@@ -2,15 +2,15 @@
   <div class="msg-bottom-btns flex">
     <template v-if="display == 1">
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="ds">
-        <span class="icon-wrap"><img src="../../assets/gift-b-icon.png"/></span>
+        <span class="icon-wrap pr"><img src="../../assets/gift-b-icon.png"/></span>
         <span class="num f12">{{data.reward_count}}</span>
       </div>
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="liked">
-        <span class="icon-wrap"><img src="../../assets/like-b-icon.png"/></span>
+        <span class="icon-wrap pr"><img src="../../assets/like-b-icon.png"/></span>
         <span class="num f12">{{data.fabulous_count}}</span>
       </div>
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="bp">
-        <span class="icon-wrap"><img src="../../assets/ba-b-icon.png"/></span>
+        <span class="icon-wrap pr"><img src="../../assets/ba-b-icon.png"/></span>
         <span class="num f12">{{data.screen_count}}</span>
       </div>
       <div class="msg-btn msg-btn-big msg-share flex flex-1 flex-align-center">
@@ -65,8 +65,7 @@ export default {
       this.$emit('onBp')
     },
     setUserInfo () {
-      var data = {uid: this.data.initiator_mc_id, autograph: this.data.autograph, city: this.data.city, levelName: this.data.grade_title, headImg: this.data.initiator_headimgurl, nickname: this.data.initiator_nickname, sex: this.data.sex}
-      this.$store.commit('main/SET_CURRENT_USER_INFO', data)
+      this.$store.commit('main/SET_CURRENT_USER_INFO', this.data)
     }
   }
 }
@@ -93,11 +92,14 @@ export default {
     margin-right: 0.2rem;
     padding-top: 0.15rem;
     img {
-      margin: 0.08rem auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
     }
   }
   .num {
-    width: 0.3rem;
+    margin-left: 3px;
     text-align: center;
   }
   &.msg-share {

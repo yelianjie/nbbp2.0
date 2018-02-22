@@ -1,7 +1,7 @@
 <template>
   <div class="face-list">
     <div class="face-item" v-for="(v, i) in list" :key="i">
-      <img :src="v.icon" class="face-img" @click="clickFace(v)"/>
+      <img v-lazy="v.icon" class="face-img" @click="clickFace(v)"/>
     </div>
   </div>
 </template>

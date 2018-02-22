@@ -1,7 +1,7 @@
 <template>
   <div class="bar-list" :class="{'home' : enter == 'home'}">
       <ul>
-        <li class="bar-item flex" v-for="(v,i) in list" :key="i" @click="pageToBarInfo(v.id)">
+        <li class="bar-item flex" v-for="(v,i) in list" :key="i" @click="pageToBarInfo(v.id, v.name)">
           <div class="bar-img">
             <img :src="v.logo | prefixImageUrl" alt="" class="circle">
           </div>
@@ -35,9 +35,9 @@ export default {
     }
   },
   methods: {
-    pageToBarInfo (id) {
+    pageToBarInfo (id, name) {
       if (this.enter === 'home') {
-        this.$router.push({path: `/Main/${id}`})
+        this.$router.push({path: `/Main/${id}`, query: {name: encodeURI(name)}})
       } else {
         this.$router.push({path: `/AgentBarInfo/${id}`})
       }
