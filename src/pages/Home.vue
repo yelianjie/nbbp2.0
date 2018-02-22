@@ -32,6 +32,9 @@ export default {
     next()
   },
   created () {
+    this.$vux.loading.show({
+      text: '正在定位'
+    })
     getRegionData().then((res) => {
       for (var i = 0; i < res.result.length; i++) {
         if (res.result[i].parent !== '100000') {
@@ -84,6 +87,7 @@ export default {
         this.userPosition.lng = json.content.point.x
         this.userPosition.lat = json.content.point.y
         this.closeAddress(true)
+        this.$vux.loading.hide()
       })
     },
     wxCoordsToBaidu (data) {

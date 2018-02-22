@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <transition name="fade">
-      <router-view class="router-view" ></router-view>
-    </transition>
+    <router-view class="router-view" ></router-view>
     <loading v-model="isLoading" text="正在加载..."></loading>
   </div>
 </template>
