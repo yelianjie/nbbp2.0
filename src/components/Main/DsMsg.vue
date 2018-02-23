@@ -19,7 +19,7 @@
             <img v-else src="../../assets/all.png" class="circle"/>
           </div>
         </div>
-        <div class="content">{{data.content}}</div>
+        <div class="content" v-html="$options.filters.filterFace(data.content)"></div>
         <div class="msg-item-bottom">
           <msg-bottom :data="data" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds" :display="1"></msg-bottom>
         </div>

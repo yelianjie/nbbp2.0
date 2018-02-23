@@ -14,11 +14,11 @@
     <p class="f16 tc white">{{userInfo.nickname}}<template v-if="userInfo.grade_title != '平民'">&nbsp;·&nbsp;{{userInfo.grade_title}}</template></p>
     <div class="flex flex-align-center flex-pack-center">
       <div class="level-box flex flex-pack-center">
-        <template v-if="userInfo.grade_title != '平民'">
+        <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'">
           <img :src="$options.filters.filterLevel(userInfo.grade_title, 'icon')" class="level-icon"/>
         </template>
         <template v-else>
-          <span class="level level-0">平民</span>
+          <span class="level level-1">{{userInfo.grade_title}}</span>
         </template>
       </div>
       <div class="level-progressbar flex-1 flex flex-align-center" style="height: 0.16rem;">

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas id="c1"></canvas>
+    <canvas id="c2"></canvas>
+    <script type="text/javascript">
+        var c1 = document.getElementById("c1")
+        var c2 = document.getElementById("c2")
+        var cx1 = c1.getContext('2d')
+        var cx2 = c2.getContext('2d')
+        var img1 = new Image()
+        img1.src = '下载.jpg'
+        img1.setAttribute("crossOrigin",'Anonymous')
+        img1.onload = function() {
+            c1.width = img1.width
+            c1.height = img1.height
+            cx1.drawImage(img1, 0, 0)
+            c2.width = img1.width / 2
+            c2.height = img1.height / 2
+            var x = c1.toDataURL('image/jpeg', 1)
+            var img2 = new Image()
+            img2.src = x
+            img2.onload = function() {
+                cx2.drawImage(img2, 0, 0, img2.width, img2.height, 0, 0, c2.width, c2.height)
+            }
+            
+        }
+    </script>
+</body>
+</html>

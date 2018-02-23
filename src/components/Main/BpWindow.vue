@@ -7,7 +7,7 @@
       <div class="window" id="bp-model" v-show="visible">
         <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close" @click.native="closeWindow"/></span>
         <div class="window-top">
-          <p class="window-title f14 flex flex-align-center" v-if="currentUserInfo.hasOwnProperty('uid')">为<img :src="currentUserInfo.headImg | prefixImageUrl"  class="for-who circle"/>{{currentUserInfo.nickname}}霸屏</p>
+          <p class="window-title f14 flex flex-align-center" v-if="currentUserInfo.hasOwnProperty('initiator_mc_id')">为<img :src="currentUserInfo.initiator_headimgurl | prefixImageUrl"  class="for-who circle"/>{{currentUserInfo.initiator_nickname}}霸屏</p>
           <p class="window-title f14 flex flex-align-center" style="line-height:0.64rem;" v-else>为全场观众霸屏</p>
         </div>
         <div class="rpxline" style="margin-bottom: 0.4rem;"></div>
@@ -134,7 +134,7 @@ export default {
         count: this.bpTimes,
         content: this.content,
         img: this.base64Img,
-        reward_uid: this.currentUserInfo.uid ? this.currentUserInfo.uid : ''
+        reward_uid: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : ''
       }
       postParams = {postParams: postParams, price: this.total, confirmText: isCharge ? '充值' : '确定', isCharge: isCharge}
       this.ChangeBuyDialogInfo(postParams)

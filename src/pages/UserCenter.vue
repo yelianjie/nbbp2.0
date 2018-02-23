@@ -26,8 +26,8 @@
         <div class="flex white tag1 flex flex-align-center flex-pack-center">
           <span class="sex sex-male flex flex-align-center"><svg-icon icon-class="male" v-if="userInfo.sex == 1"/><svg-icon icon-class="female" v-if="userInfo.sex == 2"/></span>
           <span class="tag tagcity">{{userInfo.city}}</span>
-          <span class="level level-1" v-if="userInfo.grade_title && userInfo.grade_title != '平民'">{{userInfo.grade_title}}</span>
-          <span class="level level-0" v-else>{{userInfo.grade_title}}</span>
+          <span class="level" :class="'level-' + userInfo.mc_level_id" v-if="userInfo.grade_title && userInfo.grade_title != '平民'">{{userInfo.grade_title}}</span>
+          <span class="level level-1" v-else>{{userInfo.grade_title}}</span>
         </div>
         <p class="sign f14 tc"><span style="white-space: nowrap;">签名：</span><span v-if="userInfo.autograph">{{userInfo.autograph}}</span><span v-else>暂无签名</span></p>
         <div class="count-current flex">

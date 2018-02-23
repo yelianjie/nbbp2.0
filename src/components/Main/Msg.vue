@@ -5,9 +5,7 @@
     </div>
     <div class="msg-item-right flex-1">
       <msg-user :data="data"></msg-user>
-      <div class="msg-item-middle onlymsg" v-html="$options.filters.filterFace(data.content)">
-        
-      </div>
+      <div class="msg-item-middle onlymsg" v-html="$options.filters.filterFace(data.content)"></div>
       <div class="msg-item-bottom">
         <msg-bottom :data="data" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds"></msg-bottom>
       </div>

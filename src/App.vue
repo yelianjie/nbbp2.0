@@ -124,7 +124,7 @@ body, html, #app {
   text-align: center;
   border-radius: 3px;
 }
-.level-0 {
+.level-1 {
   color: #868db3;
   position: relative;
   border: 1px solid #868db3;

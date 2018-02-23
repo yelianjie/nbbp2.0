@@ -70,7 +70,7 @@
           </template>
         </div>
         <!--<img src="../assets/logo.png" class="avatar"/>-->
-        <p class="uname f18 white">{{currentUserInfo.nickname}}</p>
+        <p class="uname f18 white">{{currentUserInfo.initiator_nickname}}</p>
         <div class="msg-item-top flex flex-pack-center">
           <span class="sex sex-male"><svg-icon icon-class="male" v-if="currentUserInfo.sex == 1"/><svg-icon icon-class="female" v-if="currentUserInfo.sex == 2"/></span>
           <span class="level" style="background-color: #625bc3;">{{currentUserInfo.city}}</span>
@@ -334,6 +334,8 @@ export default {
     showCard (info) {
       if (info) {
         info.initiator_headimgurl = info.headimgurl
+        info.initiator_nickname = info.nickname
+        info.initiator_mc_id = info.id
         this.$store.commit('main/SET_CURRENT_USER_INFO', info)
       }
       this.userDialogVisible = true
@@ -356,7 +358,6 @@ export default {
       this.dsWindowVisible = true
     },
     previewImage (pics) {
-      console.log(pics)
       this.$wechat.previewImage(pics)
     },
     confirmBuy () {
@@ -558,6 +559,12 @@ export default {
     border-radius: 50%;
     border: 0.1rem solid rgba(255, 255, 255, 0.2);
     margin: 0.6rem 0 0.4rem;
+  }
+  .level-icon-id + .avatar {
+    width: 1.4rem;
+    height: 1.4rem;
+    border: 0;
+    margin: 0.8rem 0 0.7rem;
   }
   .uname {
     margin-bottom: 0.2rem;

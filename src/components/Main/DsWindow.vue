@@ -7,7 +7,7 @@
       <div class="window" id="ds-model" v-show="visible">
         <span class="close-icon" @click="closeWindow"><svg-icon icon-class="close" @click.native="closeWindow"/></span>
         <div class="window-top">
-          <p class="window-title f14 flex flex-align-center" v-if="currentUserInfo.hasOwnProperty('uid')">为<img :src="currentUserInfo.headImg | prefixImageUrl"  class="for-who circle"/>{{currentUserInfo.nickname}}送礼</p>
+          <p class="window-title f14 flex flex-align-center" v-if="currentUserInfo.hasOwnProperty('initiator_mc_id')">为<img :src="currentUserInfo.initiator_headimgurl | prefixImageUrl"  class="for-who circle"/>{{currentUserInfo.initiator_nickname}}送礼</p>
           <p class="window-title f14 flex flex-align-center" style="line-height:0.64rem;" v-else>为全场观众送礼</p>
         </div>
         <div class="window-middle">
@@ -89,7 +89,7 @@ export default {
         count: this.dsTimes,
         content: this.content,
         gift_id: this.gifts[this.dsGiftIndex].id,
-        reward_uid: this.currentUserInfo.uid ? this.currentUserInfo.uid : 0,
+        reward_uid: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : 0,
         img: ''
       }
       postParams = {postParams: postParams, price: this.total, confirmText: isCharge ? '充值' : '确定', isCharge: isCharge}

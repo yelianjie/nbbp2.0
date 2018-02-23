@@ -20,8 +20,7 @@ import PhotoClip from 'photoclip'
 import { TransferDomDirective as TransferDom } from 'vux'
 import { uploadImage } from '@/api/'
 import { dataURLtoFile } from '@/utils/utils'
-import lrz from 'lrz'
-// var EXIF = require('../utils/exif.js')
+var EXIF = require('../utils/exif.js')
 export default {
   directives: {
     TransferDom
@@ -102,42 +101,43 @@ export default {
       if (!file) {
         return
       }
-      var _this = this
       this.curFile = file
       let msg = this.isCrop ? '正在加载图片' : '正在上传'
       this.$vux.loading.show({
         text: msg
       })
-      lrz(file, {
-        width: this.limitSize,
-        height: this.limitSize,
-        quality: this.isCrop ? 1 : 0.4
-      })
-      .then(function (rst) {
-          // 处理成功会执行
-        if (_this.isCrop) {
-          _this.crop.load(dataURLtoFile(rst.base64))
-          _this.cropVisible = true
-          _this.$vux.loading.hide()
-        } else {
-          uploadImage(rst.base64, _this.curFile.type, (res) => {
+      var _this = this
+      var reader = new FileReader()
+      reader.readAsDataURL(file) // 将文件以Data URL形式进行读入页面
+      reader.onload = function () {
+        var base64 = this.result
+        var img = new Image()
+        img.onload = function () {
+          // _this.$emit('onPreview', img)
+          if (_this.isCrop) {
+            var _base64 = _this.compress(img, '', 1)
+            _this.crop.load(dataURLtoFile(_base64))
+            _this.cropVisible = true
             _this.$vux.loading.hide()
-            _this.$vux.toast.show({
-              text: res.msg
+          } else {
+            EXIF.EXIF.getData(img, function () {
+              var orientation = EXIF.EXIF.getTag(this, 'Orientation')
+              var _base64 = _this.compress(img, orientation)
+              uploadImage(_base64, _this.curFile.type, (res) => {
+                _this.$vux.loading.hide()
+                _this.$vux.toast.show({
+                  text: res.msg
+                })
+                if (!res.error) {
+                  _this.$emit('on-preview', res.res)
+                }
+              })
             })
-            if (!res.error) {
-              _this.$emit('on-preview', res.res)
-            }
-          })
+          }
+          img = null
         }
-      })
-      .catch(function (err) {
-          // 处理失败会执行
-        console.log(err)
-      })
-      .always(function () {
-          // 不管是成功失败，都会执行
-      })
+        img.src = base64
+      }
     },
     compress (img, Orientation, compressSize = 0.6) {
       var initSize = img.src.length

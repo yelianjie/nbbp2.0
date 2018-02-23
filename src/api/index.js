@@ -338,6 +338,14 @@ export const rechargePay = (data) => {
 }
 
 /**
+ * 兑换成牛角
+ * @param {*} data
+ */
+export const exchangeToCoin = (data) => {
+  return request('/weixin/members/exchangeMoney', 'POST', data)
+}
+
+/**
  * 上传图片
  * @param {*} blob
  */

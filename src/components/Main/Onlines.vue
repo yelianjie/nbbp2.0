@@ -2,7 +2,7 @@
   <div class="fullscreen onlines flex flex-v" v-show="visible" v-fixscroll="'#online-scroller'">
     <div class="flex-1 scroll" id="online-scroller" style="padding: 0.4rem 0.4rem 0.95rem;">
       <ul>
-        <li v-for="(v, i) in peoples" :key="i" class="online-item" @click="showCard">
+        <li v-for="(v, i) in peoples" :key="i" class="online-item" @click="showCard(v)">
           <div class="online-img"><img v-lazy="$options.filters.prefixImageUrl(v.headimgurl)" class="circle"></div>
           <div class="online-text overflow flex f12 flex-pack-center">
             <template v-if="v.sex == 1">
@@ -36,8 +36,8 @@ export default {
     close () {
       this.$emit('close', false)
     },
-    showCard () {
-      this.$emit('onShowCard')
+    showCard (data) {
+      this.$emit('onShowCard', data)
     }
   }
 }

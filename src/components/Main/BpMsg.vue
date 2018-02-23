@@ -12,7 +12,7 @@
                 <span class="arrow arrow-left"></span>
                 <span class="arrow arrow-right"></span>
               </div>
-            <div class="content">{{data.content}}</div>
+            <div class="content" v-html="$options.filters.filterFace(data.content)"></div>
           </div>
           <div class="img">
             <template v-if="data.img">
