@@ -125,7 +125,7 @@ export default {
       if (this.barInfo.ht_separate + this.barInfo.manage_separate + this.barInfo.yewu_separate + this.barInfo.company_separate > 100) {
         this.$vux.toast.show({
           text: '商户、代理和酒吧管理比例之和不能超过' + (100 - this.barInfo.company_separate) + '%',
-          width: '12em'
+          width: '20em'
         })
         return true
       } else {

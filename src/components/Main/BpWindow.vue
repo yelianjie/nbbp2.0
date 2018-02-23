@@ -36,7 +36,7 @@
               <textarea class="bp-input borderbox f14" maxlength="30" v-model="content" placeholder="请输入霸屏上墙语，30字以内"></textarea>
             </div>
             <div class="bp-upload">
-              <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip" :cropRadio="0.5625">
+              <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip" :cropRadio="0.8336" :limitSize="1600">
                 <div class="upload-inner borderbox flex flex-v flex-align-center flex-pack-center">
                   <svg-icon icon-class="camera"/>
                   <p class="f13">添加照片</p>
@@ -125,7 +125,7 @@ export default {
         })
         return false
       }
-      let isCharge = Boolean(this.total > this.userInfo.balance)
+      let isCharge = Number(this.total) > Number(this.userInfo.balance)
       let postParams = {
         ht_id: this.$route.params.id,
         type: 2,
@@ -141,8 +141,18 @@ export default {
       this.$emit('onBuy')
     },
     reset () {
-      this.bpThemeIndex = -1
-      this.bpTimeIndex = -1
+      // this.bpThemeIndex = -1
+      // this.bpTimeIndex = -1
+      this.content = ''
+      this.base64Img = ''
+    },
+    initSelected (info) {
+      this.bpTimeIndex = this.times.findIndex((v) => v.id === info.time_id)
+      this.bpThemeIndex = this.screens.findIndex((v) => v.id === info.screen_id)
+      console.log(this.bpTimeIndex, this.bpThemeIndex)
+      this.bpTimes = info.count
+      this.content = info.content
+      this.base64Img = info.img
     }
   },
   components: {

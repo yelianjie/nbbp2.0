@@ -20,6 +20,7 @@ import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 import { validateRules } from './utils/validateRules'
 import VueLazyload from 'vue-lazyload'
+import { getWxConfig } from './api/'
 const dictionary = {
   ch: {
     messages: {
@@ -114,6 +115,33 @@ router.beforeEach(function (to, from, next) {
 })
 
 router.afterEach(function (to) {
+  let shareParams = {}
+  if (to.name === 'Main') {
+    shareParams = {
+      title: decodeURI(to.query.name),
+      link: window.location.href,
+      imgUrl: '' // 分享图标
+    }
+  } else {
+    shareParams = {
+      title: '牛霸霸屏',
+      desc: '牛霸霸屏描述',
+      link: window.location.host + '/weixin/',
+      imgUrl: '' // 分享图标
+    }
+  }
+  Vue.wechat.ready(() => {
+    Vue.wechat.onMenuShareTimeline({
+      ...shareParams,
+      success: function () {},
+      cancel: function () {}
+    })
+    Vue.wechat.onMenuShareAppMessage({
+      ...shareParams,
+      success: function () {},
+      cancel: function () {}
+    })
+  })
   document.documentElement.classList.remove('noscroll')
   store.commit('updateLoadingStatus', {isLoading: false})
 })
@@ -126,9 +154,26 @@ Object.keys(directives).forEach(key => {
   Vue.directive(key, directives[key])
 })
 
-/* eslint-disable no-new */
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app-box')
+// 微信config配置
+getWxConfig({url: window.location.href.split('#')[0]}).then((res) => {
+  Vue.wechat.config({
+    ...res.result,
+    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'previewImage', 'getLocation', 'chooseWXPay'] // 必填，需要使用的JS接口列表
+  })
+}).finally(() => {
+  /* eslint-disable no-new */
+  new Vue({
+    router,
+    store,
+    render: h => h(App)
+  }).$mount('#app-box')
+})
+/* Vue.wechat.config({
+  debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+  appId: '', // 必填，公众号的唯一标识
+  timestamp: , // 必填，生成签名的时间戳
+  nonceStr: '', // 必填，生成签名的随机串
+  signature: '',// 必填，签名
+  jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'previewImage', 'getLocation'] // 必填，需要使用的JS接口列表
+}) */

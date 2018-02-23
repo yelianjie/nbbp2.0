@@ -2,14 +2,24 @@
   <div class="container min-h bg2 about-container borderbox" style="padding: 0.2rem;">
     <div class="img-level">
       <div class="img-wrap flex flex-pack-center pr">
-        <span class="level-icon-id" v-if="userInfo.grade_title && userInfo.grade_title == '平民'" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span>
-        <img :src="userInfo.headimgurl | prefixImageUrl" class="circle"/>
+        <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'" >
+          <span class="level-icon-id" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span>
+          <img :src="userInfo.headimgurl | prefixImageUrl" class="circle"/>
+        </template>
+        <template v-else>
+          <img :src="userInfo.headimgurl | prefixImageUrl" class="circle" style="width: 1.7rem;height:1.7rem;"/>
+        </template>
       </div>
     </div>
     <p class="f16 tc white">{{userInfo.nickname}}<template v-if="userInfo.grade_title != '平民'">&nbsp;·&nbsp;{{userInfo.grade_title}}</template></p>
     <div class="flex flex-align-center flex-pack-center">
       <div class="level-box flex flex-pack-center">
-        <img src="/static/level-show/level-show-3.png" class="level-icon"/>
+        <template v-if="userInfo.grade_title != '平民'">
+          <img :src="$options.filters.filterLevel(userInfo.grade_title, 'icon')" class="level-icon"/>
+        </template>
+        <template v-else>
+          <span class="level level-0">平民</span>
+        </template>
       </div>
       <div class="level-progressbar flex-1 flex flex-align-center" style="height: 0.16rem;">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -18,8 +28,8 @@
               <rect x="0" y="0" :width="calRest" height="100%" />
             </clipPath>
             <linearGradient y2="0" x2="1" y1="0" x1="0" id="svg_2">
-              <stop stop-color="#19bb82" offset="0"/>
-              <stop stop-color="#4793e1" offset="1"/>
+              <stop :stop-color="$options.filters.filterLevel(userInfo.grade_title, 'expColor')" offset="0"/>
+              <stop :stop-color="$options.filters.filterLevel(userInfo.next_grade_title, 'expColor')" offset="1"/>
             </linearGradient>
           </defs> 
           <rect height="100%" width="100%" y="0" x="0" fill="#121420" stroke-width="1" stroke="#34364f"/>

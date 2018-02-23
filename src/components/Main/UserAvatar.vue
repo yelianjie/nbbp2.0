@@ -1,7 +1,7 @@
 <template>
   <div class="msg-item-user-avatar pr">
     <template v-if="data.grade_title && data.grade_title != '平民'">
-      <span class="level-icon-avatar" :style="{'backgournd-image': 'url(' + $options.filters.filterLevel(data.grade_title, 'avatarIcon') + ')'}" @click="avatar()"></span>
+      <span class="level-icon-avatar" :style="{'background-image': 'url(' + $options.filters.filterLevel(data.grade_title, 'avatarIcon') + ')'}" @click="avatar()"></span>
       <img :src="$options.filters.prefixImageUrl(data.initiator_headimgurl)"/>
     </template>
     <template v-else>

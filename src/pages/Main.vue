@@ -16,7 +16,7 @@
       <div class="flex main-header-left flex-align-center">
         <div class="main-header-avatar">
           <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'">
-            <router-link :to="{path: '/UserCenter'}" v-if="userInfo.grade_title && userInfo.grade_title == '平民'"><span class="level-icon-avatar" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span></router-link>
+            <router-link :to="{path: '/UserCenter'}"><span class="level-icon-avatar" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span></router-link>
             <img :src="userInfo.headimgurl | prefixImageUrl" class="circle">
           </template>
           <template v-else>
@@ -42,11 +42,11 @@
         <span slot="no-results" class="f13">还没有人来聊天~</span>
       </infinite-loading>
       <template v-for="(v, i) in chatlist">
-        <msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
-        <msg-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-img>
-        <msg-only-img :key="i" :index="i" :data="v" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-only-img>
-        <bp-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 2" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></bp-msg>
-        <ds-msg :key="i" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
+        <msg :key="v.id" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
+        <msg-img :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-img>
+        <msg-only-img :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-only-img>
+        <bp-msg :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.msg_type == 2" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></bp-msg>
+        <ds-msg :key="v.id" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
       </template>
     </div>
     <footer-main></footer-main>
@@ -55,14 +55,14 @@
     <div class="f-btn" @click="screenForAll"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>
   </div>
-  <bp-window v-model="bpWindowVisible" :times="barDataInfo.time" :screens="barDataInfo.screen" @onBuy="buyDialogVisible = true"></bp-window>
-  <ds-window v-model="dsWindowVisible" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
+  <bp-window v-model="bpWindowVisible" ref="bpWindow" :times="barDataInfo.time" :screens="barDataInfo.screen" @onBuy="buyDialogVisible = true"></bp-window>
+  <ds-window v-model="dsWindowVisible" ref="dsWindow" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
       <div class="user-info">
         <div class="pr">
-          <template v-if="currentUserInfo.levelIcon">
-            <span class="level-icon-id"></span>
+          <template v-if="currentUserInfo.grade_title != '平民'">
+            <span class="level-icon-id" :style="{'background-image': 'url('+$options.filters.filterLevel(currentUserInfo.grade_title, 'avatarIcon')+')'}"></span>
             <img :src="currentUserInfo.initiator_headimgurl | prefixImageUrl" class="avatar" style="border: 0;"/>
           </template>
           <template v-else>
@@ -74,7 +74,7 @@
         <div class="msg-item-top flex flex-pack-center">
           <span class="sex sex-male"><svg-icon icon-class="male" v-if="currentUserInfo.sex == 1"/><svg-icon icon-class="female" v-if="currentUserInfo.sex == 2"/></span>
           <span class="level" style="background-color: #625bc3;">{{currentUserInfo.city}}</span>
-          <span class="level level-1" v-if="currentUserInfo.grade_title != '平民'">{{currentUserInfo.grade_title}}</span>
+          <span class="level" :class="'level-' + currentUserInfo.mc_level_id"  v-if="currentUserInfo.grade_title != '平民'">{{currentUserInfo.grade_title}}</span>
         </div>
         <p class="sign f14" v-if="currentUserInfo.autograph">签名：{{currentUserInfo.autograph}}</p>
         <p class="sign f14" v-else>签名：暂无</p>
@@ -193,6 +193,12 @@ export default {
     document.title = decodeURI(to.query.name)
     next()
   },
+  beforeRouteLeave (to, from, next) {
+    if (to.name !== 'Charge') {
+      this.ChangeBuyDialogInfo({})
+    }
+    next()
+  },
   created () {
     if (Object.keys(this.userInfo).length === 0) {
       this.getUserInfo()
@@ -209,6 +215,18 @@ export default {
         })
         setTimeout(() => {
           this.adVisible = false
+          setTimeout(() => {
+            // 如果是充值跳回来的，显示之前勾选的选项
+            if (this.buyDialogInfo.hasOwnProperty('postParams')) {
+              if (this.buyDialogInfo.postParams.type === 2) {
+                this.bpWindowVisible = true
+                this.$refs.bpWindow.initSelected(this.buyDialogInfo.postParams)
+              } else if (this.buyDialogInfo.postParams.type === 1) {
+                this.dsWindowVisible = true
+                this.$refs.dsWindow.initSelected(this.buyDialogInfo.postParams)
+              }
+            }
+          }, 1000)
         }, 1000)
       }
       img.onerror = () => {
@@ -235,6 +253,9 @@ export default {
     ...mapActions('user', [
       'getUserInfo'
     ]),
+    ...mapActions('app', {
+      ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
+    }),
     loopOnlines (time) {
       this.onlineTimer = setTimeout(() => {
         getOnlines({ht_id: this.$route.params.id}).then((res) => {
@@ -334,6 +355,10 @@ export default {
       this.userDialogVisible = false
       this.dsWindowVisible = true
     },
+    previewImage (pics) {
+      console.log(pics)
+      this.$wechat.previewImage(pics)
+    },
     confirmBuy () {
       if (this.buyDialogInfo.isCharge) {
         // 需要充值跳转充值页
@@ -345,6 +370,11 @@ export default {
           this.buyDialogVisible = false
           this.bpWindowVisible = false
           this.dsWindowVisible = false
+          if (this.buyDialogInfo.postParams.type === 2) {
+            this.$refs.bpWindow.reset()
+          } else if (this.buyDialogInfo.postParams.type === 1) {
+            this.$refs.dsWindow.reset()
+          }
         })
       }
       /* setTimeout(() => {

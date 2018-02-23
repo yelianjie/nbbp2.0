@@ -14,12 +14,12 @@
         <span class="ct darker1">交易明细</span>
       </div>
       <div class="charge-price-list white">
-        <div class="charge-price-item" v-for="i in 6" :key="i" :class="{'selected': bpValueIndex == i}" @click="bpValueIndex = i">
-          <div class="value f14"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{i * 10}}</span><div class="f12 jingyan"><span class="jy-value">+800经验值</span></div><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-          <div class="value-price f14">¥10</div>
+        <div class="charge-price-item" v-for="(v, i) in exps" :key="i" :class="{'selected': bpValueIndex == i}" @click="bpValueIndex == i ? bpValueIndex = -1 : bpValueIndex = i">
+          <div class="value f14"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{v.money}}</span><div class="f12 jingyan"><span class="jy-value">+{{v.experience}}经验值</span></div><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+          <div class="value-price f14">¥{{v.money}}</div>
         </div>
       </div>
-      <x-button :gradients="['#f31374', '#f31374']" style="margin-top: 25px;">确认支付</x-button>
+      <x-button :show-loading="loading" :disabled="loading" :gradients="['#f31374', '#f31374']" style="margin-top: 25px;" @click.native="requestPay">确认支付</x-button>
       <p class="darker1 f12" style="margin-top: 10px;">充值说明：</p>
       <ul class="darker1 f12">
         <li>1、充值即拥有牛霸贵族会员尊贵身份</li>
@@ -34,11 +34,14 @@
 
 <script>
 import { XButton } from 'vux'
-import { mapActions, mapGetters } from 'vuex'
+import { getCharges, rechargePay } from '@/api/'
 export default {
   data () {
     return {
-      bpValueIndex: -1
+      bpValueIndex: -1,
+      userInfo: {},
+      exps: [],
+      loading: false
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -46,7 +49,9 @@ export default {
     next()
   },
   created () {
-    this.getUserInfo().then((res) => {
+    getCharges().then((res) => {
+      this.userInfo = res.result.user
+      this.exps = res.result.exp
     }).finally(() => {
       this.$vux.loading.hide()
     })
@@ -54,15 +59,32 @@ export default {
   components: {
     XButton
   },
-  computed: {
-    ...mapGetters('user', [
-      'userInfo'
-    ])
-  },
   methods: {
-    ...mapActions('user', [
-      'getUserInfo'
-    ])
+    requestPay () {
+      if (this.bpValueIndex === -1) {
+        this.$vux.toast.show({
+          text: '请选择金额支付'
+        })
+        return false
+      }
+      this.loading = true
+      rechargePay({money: this.exps[this.bpValueIndex].money}).then((res) => {
+        window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
+          if (res.err_msg === 'get_brand_wcpay_request:ok') {
+          }
+        })
+        /* this.$wechat.chooseWXPay({
+          ...res.result,
+          success: () => {
+            this.$vux.toast.show({
+              text: '支付成功'
+            })
+          }
+        }) */
+      }).finally(() => {
+        this.loading = false
+      })
+    }
   }
 }
 </script>

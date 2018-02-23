@@ -16,7 +16,7 @@ import { getRegionData, getBarsByCity } from '@/api/'
 export default {
   data () {
     return {
-      adsValue: [],
+      adsValue: ['330000', '330200'],
       addressData: [],
       showAddress: false,
       barsList: [],
@@ -32,24 +32,42 @@ export default {
     next()
   },
   created () {
-    this.$vux.loading.show({
-      text: '正在定位'
-    })
-    getRegionData().then((res) => {
-      for (var i = 0; i < res.result.length; i++) {
-        if (res.result[i].parent !== '100000') {
-          break
-        } else {
-          delete res.result[i].parent
-        }
+    this.$wechat.getLocation({
+      type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+      success: (res) => {
+        this.$vux.loading.show({
+          text: '正在获取酒吧'
+        })
+        this.getAllRegions(res.latitude, res.longitude)
+      },
+      fail: () => {
+        this.$vux.loading.show({
+          text: '正在获取酒吧'
+        })
+        this.getAllRegions(29.88525897, 121.57900597)
       }
-      this.addressData = res.result
-      this.getPosition()
     })
+    /* this.$vux.loading.show({
+      text: '正在获取酒吧'
+    })
+    this.getAllRegions(29.88525897, 121.57900597) */
   },
   mounted () {
   },
   methods: {
+    getAllRegions (latitude, longitude) {
+      getRegionData().then((res) => {
+        for (var i = 0; i < res.result.length; i++) {
+          if (res.result[i].parent !== '100000') {
+            break
+          } else {
+            delete res.result[i].parent
+          }
+        }
+        this.addressData = res.result
+        this.getPosition(latitude, longitude)
+      })
+    },
     closeAddress (flag) {
       if (!flag) {
         return false
@@ -76,16 +94,19 @@ export default {
         this.$vux.loading.hide()
       })
     },
-    getPosition () {
-      this.$jsonp('http://api.map.baidu.com/location/ip', {
-        coor: 'bd09ll',
+    getPosition (latitude, longitude) {
+      this.$jsonp('http://api.map.baidu.com/geocoder/v2/', {
+        location: latitude + ',' + longitude,
+        coordtype: 'wgs84ll',
+        ret_coordtype: 'bd09ll',
+        output: 'json',
         ak: 'gqwAbhpew0rdL9sZei9dL2PQWGqW7beB'
       }).then(json => {
-        var detail = json.content.address_detail
+        var detail = json.result.addressComponent
         var data = filterRegionByName(detail.province, detail.city, this.addressData)
         this.adsValue = [data.province_id, data.city_id]
-        this.userPosition.lng = json.content.point.x
-        this.userPosition.lat = json.content.point.y
+        this.userPosition.lng = json.result.location.lng
+        this.userPosition.lat = json.result.location.lat
         this.closeAddress(true)
         this.$vux.loading.hide()
       })

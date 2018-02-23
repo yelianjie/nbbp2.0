@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view class="router-view" ></router-view>
-    <loading v-model="isLoading" text="正在加载..."></loading>
+    <loading v-model="isLoading" text="正在加载"></loading>
   </div>
 </template>
 
@@ -124,28 +124,34 @@ body, html, #app {
   text-align: center;
   border-radius: 3px;
 }
-.level-1 {
-  background-image: linear-gradient(to right, #ecf1f1, #8891b4);
+.level-0 {
+  color: #868db3;
+  position: relative;
+  border: 1px solid #868db3;
+  padding: 1px 6px;
 }
 .level-2 {
-  background-image: linear-gradient(to right, #f1ddbe, #c16659);
+  background-image: linear-gradient(to right, #ecf1f1, #8891b4);
 }
 .level-3 {
-  background-image: linear-gradient(to right, #95ec88, #1cb884);
+  background-image: linear-gradient(to right, #f1ddbe, #c16659);
 }
 .level-4 {
-  background-image: linear-gradient(to right, #89e7f8, #4790df);
+  background-image: linear-gradient(to right, #95ec88, #1cb884);
 }
 .level-5 {
-  background-image: linear-gradient(to right, #849df6, #644ed4);
+  background-image: linear-gradient(to right, #89e7f8, #4790df);
 }
 .level-6 {
-  background-image: linear-gradient(to right, #d251b5, #f43a4e);
+  background-image: linear-gradient(to right, #849df6, #644ed4);
 }
 .level-7 {
-  background-image: linear-gradient(to right, #fbae58, #f16232);
+  background-image: linear-gradient(to right, #d251b5, #f43a4e);
 }
 .level-8 {
+  background-image: linear-gradient(to right, #fbae58, #f16232);
+}
+.level-9 {
   background-image: linear-gradient(to right, #ee6e44, #e43b31);
 }
 .sex {

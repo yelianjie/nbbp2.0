@@ -97,7 +97,13 @@ export default {
       this.$emit('onBuy')
     },
     reset () {
-      this.dsGiftIndex = -1
+      // this.dsGiftIndex = -1
+      this.content = ''
+    },
+    initSelected (info) {
+      this.dsGiftIndex = this.gifts.findIndex((v) => v.id === info.gift_id)
+      this.dsTimes = info.count
+      this.content = info.content
     }
   },
   components: {

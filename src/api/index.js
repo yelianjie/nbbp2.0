@@ -3,6 +3,13 @@ import request from '@/utils/request'
 const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/prod.env').BASE_API : require('../../config/dev.env').BASE_API
 
 /**
+ * 获取微信配置
+*/
+export const getWxConfig = (data) => {
+  return request('/weixin/index/getJsApiConfig', 'POST', data)
+}
+
+/**
  * 获取会员信息
  */
 export const getMemberInfo = () => {
@@ -313,6 +320,21 @@ export const bindBarManager = (data) => {
  */
 export const isSubscribe = () => {
   return request('/weixin/members/isSubscribe')
+}
+
+/**
+ * 获取充值金额列表
+*/
+export const getCharges = () => {
+  return request('/weixin/recharge/rechargeList')
+}
+
+/**
+ * 提交订单
+ * @param {*} data
+ */
+export const rechargePay = (data) => {
+  return request('/weixin/recharge/jspay', 'POST', data)
 }
 
 /**

@@ -19,6 +19,7 @@ import Crop from '../components/Crop'
 import PhotoClip from 'photoclip'
 import { TransferDomDirective as TransferDom } from 'vux'
 import { uploadImage } from '@/api/'
+import { dataURLtoFile } from '@/utils/utils'
 var EXIF = require('../utils/exif.js')
 export default {
   directives: {
@@ -105,19 +106,20 @@ export default {
       this.$vux.loading.show({
         text: msg
       })
-      if (this.isCrop) {
-        this.crop.load(file)
-        this.cropVisible = true
-        this.$vux.loading.hide()
-      } else {
-        var _this = this
-        var reader = new FileReader()
-        reader.readAsDataURL(file) // 将文件以Data URL形式进行读入页面
-        reader.onload = function () {
-          var base64 = this.result
-          var img = new Image()
-          img.onload = function () {
-            // _this.$emit('onPreview', img)
+      var _this = this
+      var reader = new FileReader()
+      reader.readAsDataURL(file) // 将文件以Data URL形式进行读入页面
+      reader.onload = function () {
+        var base64 = this.result
+        var img = new Image()
+        img.onload = function () {
+          // _this.$emit('onPreview', img)
+          if (_this.isCrop) {
+            var _base64 = _this.compress(img, '', 1)
+            _this.crop.load(dataURLtoFile(_base64))
+            _this.cropVisible = true
+            _this.$vux.loading.hide()
+          } else {
             EXIF.EXIF.getData(img, function () {
               var orientation = EXIF.EXIF.getTag(this, 'Orientation')
               var _base64 = _this.compress(img, orientation)
@@ -131,13 +133,13 @@ export default {
                 }
               })
             })
-            img = null
           }
-          img.src = base64
+          img = null
         }
+        img.src = base64
       }
     },
-    compress (img, Orientation) {
+    compress (img, Orientation, compressSize = 0.6) {
       var initSize = img.src.length
       var width = img.width
       var height = img.height
@@ -206,7 +208,7 @@ export default {
       }
 
       // 进行最小压缩
-      var ndata = canvas.toDataURL('image/jpeg', 0.6)
+      var ndata = canvas.toDataURL('image/jpeg', compressSize)
       console.log('压缩前：' + initSize)
       console.log('压缩后：' + ndata.length)
       console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + '%')

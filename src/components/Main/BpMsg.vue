@@ -14,7 +14,14 @@
               </div>
             <div class="content">{{data.content}}</div>
           </div>
-          <div class="img"><img v-lazy="data.img ? $options.filters.prefixImageUrl(data.img) : logo"/></div>
+          <div class="img">
+            <template v-if="data.img">
+              <img v-lazy="$options.filters.prefixImageUrl(data.img)" @click="previewImg($options.filters.prefixImageUrl(data.img))"/>
+            </template>
+            <template v-else>
+              <img :src="logo"/>
+            </template>
+          </div>
         </div>
         <div class="msg-item-bottom">
           <msg-bottom :data="data" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds" :display="1"></msg-bottom>
@@ -57,6 +64,9 @@ export default {
     },
     ds () {
       this.$emit('onDs')
+    },
+    previewImg (url) {
+      this.$emit('onPreviewImage', {current: url, urls: [url]})
     }
   }
 }
