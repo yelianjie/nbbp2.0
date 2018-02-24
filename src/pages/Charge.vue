@@ -68,7 +68,7 @@ export default {
         return false
       }
       this.loading = true
-      rechargePay({money: this.exps[this.bpValueIndex].money}).then((res) => {
+      rechargePay({eid: this.exps[this.bpValueIndex].id, money: this.exps[this.bpValueIndex].money}).then((res) => {
         window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
           if (res.err_msg === 'get_brand_wcpay_request:ok') {
           }

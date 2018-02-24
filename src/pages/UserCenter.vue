@@ -4,8 +4,8 @@
       <div class="user-box1 flex flex-align-center">
         <div class="flex-1 avatar flex flex-pack-center pr">
           <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'">
-            <span class="level-icon-id" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span>
-            <router-link :to="{path: '/Profile'}"><img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/></router-link>
+            <router-link :to="{path: '/Profile'}"><span class="level-icon-id" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span>
+            <img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/></router-link>
           </template>
           <template v-else>
             <router-link :to="{path: '/Profile'}"><img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/></router-link>
@@ -53,6 +53,9 @@
       </group>
       <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isMM > 0">
         <cell title="商户管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/MyBars'}"></cell>
+      </group>
+      <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isHMM > 0">
+        <cell title="酒吧管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/MyManageBars'}"></cell>
       </group>
       <group class="bg2" style="margin-top: 0.2rem;">
         <cell title="了解贵族特权" color="#f2c06c" :is-link="true" icon-name="royal" :link-path="{path: '/MyLevel'}"></cell>

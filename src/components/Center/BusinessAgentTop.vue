@@ -12,7 +12,7 @@
       <p class="f16">总收益：{{totalMoney}} 元</p>
     </div>
     <group class="actions">
-      <cell title="我要提现" is-link :link="{path: '/Deposit/' + this.$route.params.id}"></cell>
+      <cell title="我要提现" is-link :link="{path: '/Deposit/' + this.$route.params.id, query: {type: this.$route.query.type}}"></cell>
     </group>
   </div>
 </template>

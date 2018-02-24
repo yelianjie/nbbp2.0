@@ -214,6 +214,16 @@ export default new Router({
       meta: {
         roles: ['business']
       }
+    },
+    {
+      path: '/MyManageBars',
+      name: 'MyManageBars',
+      component: (resolve) => {
+        require(['@/pages/MyManageBars'], resolve)
+      },
+      meta: {
+        roles: ['manager']
+      }
     }
   ]
 })

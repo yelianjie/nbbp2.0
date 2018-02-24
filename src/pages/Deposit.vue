@@ -1,29 +1,49 @@
 <template>
-  <div class="container min-h flex flex-v flex-align-center">
+  <div class="container min-h flex flex-v flex-align-center bg3">
     <div class="top-img">
       <img src="../assets/logo.png">
+      <p class="f14 white tc" style="margin-top: 10px;">{{barInfo.name}}</p>
     </div>
     <div class="canDespoit-wrap">
       <p class="money">¥{{barInfo.merchant_balance}}</p>
       <p class="m-tip">当前可提现金额</p>
     </div>
     <div class="despoit-btn">
-      <x-button :gradients="['#1D62F0', '#19D5FD']" link="/">立即提现</x-button>
+      <x-button :gradients="['#fff', '#fff']" @click.native="depositVisible = true" style="color:#2481d2;">立即提现</x-button>
+    </div>
+    <div v-transfer-dom>
+      <bp-dialog :bg-title="true" :bgSrc="depositBg" v-model="depositVisible" @onConfirm="deposit">
+      <div class="">
+        <p style="font-size: 13px;color:#6c6a75;text-align: left;
+        margin-bottom: 10px;">当前收益：{{barInfo.merchant_balance}}元</p>
+        <div><input type="number" autofocus v-model.number="toRMBValue" @keyup="validToRMB" class="borderbox" placeholder="请输入要提现的金额" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
+        <div style="color:#6c6a75;text-align: left;font-size: 12px;margin-top:10px;"><svg-icon icon-class="notice"/><span>目前仅支持整百数提现</span></div>
+      </div>
+    </bp-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import { XButton } from 'vux'
+import { XButton, TransferDomDirective as TransferDom } from 'vux'
 import { getBarMoney } from '@/api/'
+import BpDialog from '../components/bpDialog'
+import depositBg from '../assets/despoit-bg.png'
 export default {
   name: 'Deposit',
+  directives: {
+    TransferDom
+  },
   components: {
-    XButton
+    XButton,
+    BpDialog
   },
   data () {
     return {
-      barInfo: {}
+      barInfo: {},
+      depositVisible: false,
+      toRMBValue: '',
+      depositBg: depositBg
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -34,14 +54,38 @@ export default {
     getBarMoney({ht_id: this.$route.params.id}).then((res) => {
       this.barInfo = res.result
     })
+  },
+  methods: {
+    deposit () {
+      if (!this.toRMBValue || (this.toRMBValue % 100) !== 0) {
+        this.$vux.toast.show({
+          text: '提现金额不为100的倍数',
+          position: 'bottom',
+          width: '12em'
+        })
+        return false
+      }
+      /* depositToCash({type: 1}).then((res) => {
+        this.getUserInfo()
+        this.depositVisible = false
+      }) */
+    },
+    validToRMB (event) {
+      if (!Number.isInteger(this.toRMBValue)) {
+        this.toRMBValue = ''
+        return
+      }
+      if (this.toRMBValue > parseInt(this.barInfo.merchant_balance)) {
+        let n = parseInt(this.barInfo.merchant_balance)
+        let min = parseInt(n / 100) * 100
+        this.toRMBValue = min
+      }
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.container {
-  background-color: #333;
-}
 .money {
   font-size: 20px;
   color: #fff;
@@ -59,11 +103,11 @@ export default {
 }
 .canDespoit-wrap {
   text-align: center;
-  margin-top: 80px;
+  margin-top: 70px;
 }
 .despoit-btn {
   width: 90%;
   max-width: 360px;
-  margin-top: 80px;
+  margin-top: 70px;
 }
 </style>

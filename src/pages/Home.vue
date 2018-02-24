@@ -32,20 +32,22 @@ export default {
     next()
   },
   created () {
-    this.$wechat.getLocation({
-      type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-      success: (res) => {
-        this.$vux.loading.show({
-          text: '正在获取酒吧'
-        })
-        this.getAllRegions(res.latitude, res.longitude)
-      },
-      fail: () => {
-        this.$vux.loading.show({
-          text: '正在获取酒吧'
-        })
-        this.getAllRegions(29.88525897, 121.57900597)
-      }
+    this.$wechat.ready(() => {
+      this.$wechat.getLocation({
+        type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+        success: (res) => {
+          this.$vux.loading.show({
+            text: '正在获取酒吧'
+          })
+          this.getAllRegions(res.latitude, res.longitude)
+        },
+        fail: () => {
+          this.$vux.loading.show({
+            text: '正在获取酒吧'
+          })
+          this.getAllRegions(29.88525897, 121.57900597)
+        }
+      })
     })
     /* this.$vux.loading.show({
       text: '正在获取酒吧'

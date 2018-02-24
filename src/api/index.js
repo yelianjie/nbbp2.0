@@ -346,6 +346,18 @@ export const exchangeToCoin = (data) => {
 }
 
 /**
+ * 微信提现
+ * type = 1   普通用户提现
+ * type = 2 + 酒吧id  商户针对酒吧提现
+ * type = 3 + 酒吧id  代理针对酒吧提现
+ * type = 4 + 酒吧id  酒吧管理针对酒吧提现
+ * @param {*} data
+ */
+export const depositToCash = (data) => {
+  return request('/weixin/recharge/wxTransfer', 'POST', data)
+}
+
+/**
  * 上传图片
  * @param {*} blob
  */

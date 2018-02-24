@@ -7,33 +7,19 @@
     </div>
     <p style="padding: 0.2rem 0.3rem;" class="f18 pr bar-title">我的酒吧</p>
     <div class="bars">
-      <swipeout>
-        <swipeout-item :sensitivity="15" :ref="'swipeoutItem' + i" transition-mode="reveal" :auto-close-on-button-click="false" v-for="(v, i) in barList" :key="i">
-          <div slot="right-menu">
-            <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
-          </div>
-          <div slot="content" class="vux-1px-t flex flex-align-center" style="padding: 0.2rem 0.3rem;" @click="goToBar(v.id, v.name)">
-            <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
-            <div class="flex-1 flex flex-v">
-              <p class="f16">{{v.name}}</p>
-              <p class="f14" style="color: #939393;">注册时间：{{v.add_time}}</p>
-            </div>
-          </div>
-        </swipeout-item>
-      </swipeout>
+      <div class="vux-1px-t flex flex-align-center" v-for="(v, i) in barList" :key="i" style="padding: 0.2rem 0.3rem;" @click="goToDeposit(v.id)">
+        <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
+        <div class="flex-1 flex flex-v">
+          <p class="f16">{{v.name}}</p>
+          <p class="f14" style="color: #939393;">注册时间：{{v.add_time}}</p>
+        </div>
+      </div>
     </div>
-    <bp-dialog :title="'提示'" v-model="confirmVisible" @onConfirm="confirmDelete">
-      <p class="f16">确认删除该酒吧吗？</p>
-      <p class="f14" style="color:#a09e9e;">确认后将无法查看收益及提现</p>
-      <p class="f12" style="color:red;">该操作无法恢复</p>
-  </bp-dialog>
   </div>
 </template>
 
 <script>
-import { Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
 import { getBars, deleteBar } from '@/api/'
-import BpDialog from '../components/bpDialog'
 export default {
   data () {
     return {
@@ -67,21 +53,14 @@ export default {
         id: id
       }
     },
-    goToBar (barId, barName) {
+    goToDeposit (barId) {
       this.$router.push({
-        path: `/BusinessCenter/${barId}`,
+        path: `/Deposit/${barId}`,
         query: {
-          name: encodeURI(barName),
-          type: 2
+          type: 4
         }
       })
     }
-  },
-  components: {
-    Swipeout,
-    SwipeoutItem,
-    SwipeoutButton,
-    BpDialog
   }
 }
 </script>

@@ -13,7 +13,7 @@
       <bp-dialog :bg-title="true" :bgSrc="exchangeBg" v-model="exchangeVisible" @onConfirm="exchange">
         <div class="">
           <p style="font-size: 13px;color:#6c6a75;text-align: left;
-          margin-bottom: 10px;">当前有{{userInfo.balance}}元收益可兑换成牛角</p>
+          margin-bottom: 10px;">当前有{{userInfo.profit_balance}}元收益可兑换成牛角</p>
           <div><input type="number" autofocus v-model.number="toCoinValue" @keyup="validToCoin" class="borderbox" placeholder="请输入要兑换的牛角币" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
           <div style="color:#6c6a75;text-align: left;font-size: 12px;margin-top:10px;"><svg-icon icon-class="notice"/><span style="margin-left:6px;">1牛角=1元</span></div>
         </div>
@@ -40,7 +40,7 @@ import Cell from '../components/User/Cell'
 import { XButton, TransferDomDirective as TransferDom } from 'vux'
 import BpDialog from '../components/bpDialog'
 import { mapActions, mapGetters } from 'vuex'
-import { exchangeToCoin } from '@/api/'
+import { exchangeToCoin, depositToCash } from '@/api/'
 export default {
   directives: {
     TransferDom
@@ -89,15 +89,23 @@ export default {
         return false
       }
       exchangeToCoin({money: this.toCoinValue}).then((res) => {
+        this.getUserInfo()
         this.exchangeVisible = false
       })
     },
     deposit () {
-      if ((this.toRMBValue % 100) !== 0) {
-        this.$vux.toast.text('提现金额不为100的倍数', 'bottom')
+      if (!this.toRMBValue || (this.toRMBValue % 100) !== 0) {
+        this.$vux.toast.show({
+          text: '提现金额不为100的倍数',
+          position: 'bottom',
+          width: '12em'
+        })
         return
       }
-      this.depositVisible = false
+      depositToCash({type: 1}).then((res) => {
+        this.getUserInfo()
+        this.depositVisible = false
+      })
     },
     validToCoin (event) {
       if (!Number.isInteger(this.toCoinValue)) {

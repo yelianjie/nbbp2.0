@@ -25,6 +25,9 @@ const actions = {
       if (response.result.isMM > 0) {
         commit('SET_ROLE', ['user', 'business'])
       }
+      if (response.result.isHMM > 0) {
+        commit('SET_ROLE', ['user', 'manager'])
+      }
       return Promise.resolve(response.result)
     } catch (e) {
 
