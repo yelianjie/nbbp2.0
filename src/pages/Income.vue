@@ -14,7 +14,7 @@
         <div class="">
           <p style="font-size: 13px;color:#6c6a75;text-align: left;
           margin-bottom: 10px;">当前有{{userInfo.profit_balance}}元收益可兑换成牛角</p>
-          <div><input type="number" v-model.number="toCoinValue" @keyup="validToCoin" class="borderbox" placeholder="请输入要兑换的牛角币" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
+          <div><input type="number" pattern="[0-9]*" v-model.number="toCoinValue" @keyup="validToCoin" class="borderbox" placeholder="请输入要兑换的牛角币" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
           <div style="color:#6c6a75;text-align: left;font-size: 12px;margin-top:10px;"><svg-icon icon-class="notice"/><span style="margin-left:6px;">1牛角=1元</span></div>
         </div>
       </bp-dialog>
@@ -24,7 +24,7 @@
       <div class="">
         <p style="font-size: 13px;color:#6c6a75;text-align: left;
         margin-bottom: 10px;">当前收益：{{userInfo.profit_balance}}元</p>
-        <div><input type="number" v-model.number="toRMBValue" @keyup="validToRMB" class="borderbox" placeholder="请输入要提现的金额" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
+        <div><input type="number" pattern="[0-9]*" v-model.number="toRMBValue" @keyup="validToRMB" class="borderbox" placeholder="请输入要提现的金额" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
         <div style="color:#6c6a75;text-align: left;font-size: 12px;margin-top:10px;"><svg-icon icon-class="notice"/><span>目前仅支持整百数提现</span></div>
       </div>
     </bp-dialog>

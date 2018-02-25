@@ -3,7 +3,8 @@
     <div class="inner">
       <div class="top flex flex-v flex-align-center">
         <upload name="upload-logo" @on-preview="logoUploadPreview" :limitSize="400" class="pr">
-          <img :src="showLogo ? $options.filters.prefixImageUrl(showLogo) : defaultLogo" class="circle">
+          <img :src="$options.filters.prefixImageUrl(showLogo)" class="circle" v-if="showLogo">
+          <img v-else src="../assets/blank.gif" />
           <label for="upload-logo" class="n-label"></label>
         </upload>
         

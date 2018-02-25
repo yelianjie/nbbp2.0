@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-h flex-align-center result-item">
     <div class="u-img">
-      <img :src="result.headimgurl | prefixImageUrl" class="circle">
+      <img v-lazy="$options.filters.prefixImageUrl(result.headimgurl)" class="circle">
     </div>
     <div class="u-nickname overflow flex-1">{{result.nickname}}</div>
     <div class="u-op">

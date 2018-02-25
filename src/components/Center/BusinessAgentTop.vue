@@ -2,7 +2,8 @@
   <div class="center-wrap">
     <div class="top">
       <div class="logo-line">
-        <img :src="logo" class="logo-img circle">
+        <img :src="logo" class="logo-img circle" v-if="logo">
+        <img v-else src="../../assets/blank.gif" class="logo-img circle"/>
         <span class="u-name">{{name}}</span>
       </div>
     </div>
