@@ -11,7 +11,7 @@
     <div class="charge-container">
       <div class="charge-tab">
         <span class="ct ncolor">充值购买</span>
-        <span class="ct darker1">交易明细</span>
+        <!-- <span class="ct darker1">交易明细</span> -->
       </div>
       <div class="charge-price-list white">
         <div class="charge-price-item" v-for="(v, i) in exps" :key="i" :class="{'selected': bpValueIndex == i}" @click="bpValueIndex == i ? bpValueIndex = -1 : bpValueIndex = i">
@@ -167,6 +167,11 @@ export default {
 @media screen and (min-width: 320px) and (max-width: 374px) {
   .charge-price-item .jy-value {
     transform: translate3d(-50%, -50%, 0) scale(0.8);
+  }
+}
+@media screen and (min-width: 375px) and (max-width: 413px) {
+  .charge-price-item .jy-value {
+    transform: translate3d(-50%, -50%, 0) scale(0.85);
   }
 }
 .selected-icon {

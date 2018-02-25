@@ -5,7 +5,7 @@
         <div class="footer-icons flex">
           <div class="icon flex flex-align-center flex-pack-center" @click="$router.push('/')"><svg-icon icon-class="home"/></div>
           <div class="icon flex flex-align-center flex-pack-center">
-            <upload name="msg-upload-img" @on-preview="msgImgUploadPreview" :limitSize="1200">
+            <upload name="msg-upload-img" @on-preview="msgImgUploadPreview" :limitSize="960">
               <svg-icon icon-class="img"/>
             </upload>
             <label for="msg-upload-img" class="n-label"></label>

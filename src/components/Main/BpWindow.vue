@@ -26,6 +26,7 @@
                   <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="theme-icon"><img v-lazy="$options.filters.prefixImageUrl(v.icon)"></div>
                   <div class="theme-name f13 overflow">{{v.title}}</div>
+                  <div class="time-price f12 tc" style="margin-bottom: 0.15rem;"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -36,7 +37,7 @@
               <textarea class="bp-input borderbox f14" maxlength="30" v-model="content" placeholder="请输入霸屏上墙语，30字以内"></textarea>
             </div>
             <div class="bp-upload">
-              <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip" :cropRadio="0.8336" :limitSize="1600">
+              <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip" :cropRadio="0.7874" :limitSize="960">
                 <div class="upload-inner borderbox flex flex-v flex-align-center flex-pack-center">
                   <svg-icon icon-class="camera"/>
                   <p class="f13">添加照片</p>
@@ -162,9 +163,13 @@ export default {
   },
   computed: {
     total () {
-      const timePrice = this.bpTimeIndex !== -1 ? Number(this.times[this.bpTimeIndex].price) : 0
-      const themePrice = this.bpThemeIndex !== -1 ? Number(this.screens[this.bpThemeIndex].price) : 0
-      return Number((timePrice + themePrice) * this.bpTimes).toFixed(2)
+      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0) {
+        return 0
+      } else {
+        const timePrice = this.bpTimeIndex !== -1 ? Number(this.times[this.bpTimeIndex].price) : 0
+        const themePrice = this.bpThemeIndex !== -1 ? Number(this.screens[this.bpThemeIndex].price) : 0
+        return Number((timePrice + themePrice) * this.bpTimes).toFixed(2)
+      }
     },
     timesBpText () {
       const texts = ['一', '二', '三']
@@ -174,7 +179,8 @@ export default {
       currentUserInfo: 'currentUserInfo'
     }),
     ...mapGetters('user', {
-      userInfo: 'userInfo'
+      userInfo: 'userInfo',
+      barManagerInfo: 'barManagerInfo'
     })
   }
 }

@@ -5,8 +5,11 @@
       <p data-v-7de79557="" class="benefit-account">{{info.money.merchant_balance}}</p>
       <p data-v-7de79557="" class="f16">累计总收益：{{info.money.merchant_income}} 元</p>
     </div>
-    <p style="padding: 0.2rem 0.3rem;" class="f18 fff">代理酒吧列表</p>
-    <BarsList :barsList="info.hotel" class="fff"></BarsList>
+    <div class="fff">
+      <p style="padding: 0.2rem 0.3rem;" class="f18">代理酒吧列表</p>
+      <inline-loading v-if="loading" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
+      <BarsList :barsList="info.hotel" class="fff"></BarsList>
+    </div>
     <div class="menus-horizontal fff" style="margin-top:10px;padding:0 10px;">
       <template v-for="(v,i) in horizontalMenus" @click="route(i)">
         <menu-item :data="v" @click.native="route(i)" :key="i"></menu-item>
@@ -20,11 +23,13 @@ import BarsList from '@/components/Center/BarsList'
 import logo from '../assets/logo.png'
 import { getAgentIndex } from '@/api/'
 import MenuItem from '@/components/Center/MenuItem'
+import InlineLoading from '../components/InlineLoading'
 export default {
   name: 'AgentCenter',
   data () {
     return {
       logo: logo,
+      loading: true,
       info: {
         money: {},
         user: {
@@ -45,13 +50,15 @@ export default {
   created () {
     getAgentIndex().then((res) => {
       this.info = res.result
+      this.loading = false
     })
   },
   mounted () {
   },
   components: {
     BarsList,
-    MenuItem
+    MenuItem,
+    InlineLoading
   }
 }
 </script>

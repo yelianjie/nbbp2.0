@@ -358,6 +358,21 @@ export const depositToCash = (data) => {
 }
 
 /**
+ * 获取酒吧管理酒吧列表和总收益
+*/
+export const getBarManagerMoney = () => {
+  return request('/weixin/hotel/getHotelManageMoney')
+}
+
+/**
+ * 根据酒吧获取可提现余额
+ * @param {*} data
+ */
+export const getTransferMoneyByBar = (data) => {
+  return request('/weixin/hotel/getHotelTransferMoney', 'POST', data)
+}
+
+/**
  * 上传图片
  * @param {*} blob
  */

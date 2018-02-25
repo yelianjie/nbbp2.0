@@ -4,13 +4,15 @@ const namespaced = true
 const state = {
   userInfo: {},
   token: '',
-  role: ['user']
+  role: ['user'],
+  barManagerInfo: {}
 }
 
 // getters
 const getters = {
   userInfo: () => state.userInfo,
-  role: () => state.role
+  role: () => state.role,
+  barManagerInfo: () => state.barManagerInfo
 }
 
 // actions
@@ -48,6 +50,9 @@ const actions = {
 const mutations = {
   SET_TOKEN (state, data) {
     state.token = data
+  },
+  SET_BAR_MANAGER (state, data) {
+    state.barManagerInfo = data
   },
   SET_USER_INFO (state, data) {
     state.userInfo = data

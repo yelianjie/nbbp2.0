@@ -1,12 +1,13 @@
+let $vm
 export default {
   install (Vue) {
     Vue.prototype.$mask = (options) => {
-      if (document.getElementById('mask')) {
+      if ($vm) {
         return
       }
-      let MaskTpl = Vue.extend({
+      $vm = Vue.extend({
         template: `
-          <div class="fullscreen" id="mask"></div>`,
+          <div class="fullscreen" id="mask" style="z-index:9999999999999;"></div>`,
         data () {
           return {
           }
@@ -14,13 +15,29 @@ export default {
         mounted () {
         },
         methods: {
+          hide () {
+            document.body.removeChild(this.$el)
+            $vm = null
+          }
+        },
+        beforeDestroy () {
+          console.log('de')
         }
       })
-      window.maskBp = new MaskTpl().$mount()
-      document.body.appendChild(window.maskBp.$el)
+      $vm = new $vm()
+      document.body.appendChild($vm.$mount().$el)
       Vue.prototype.$mask.hide = () => {
-        document.body.removeChild(document.getElementById('mask'))
+        $vm.hide()
       }
     }
+    Vue.mixin({
+      beforeRouteLeave: (to, from, next) => {
+        if ($vm) {
+          console.log($vm)
+          $vm.hide()
+        }
+        next()
+      }
+    })
   }
 }

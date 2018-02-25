@@ -1,4 +1,3 @@
-
 export const fixscroll = {
   bind: (el, {value}) => {
     // 如果没有滚动容器选择器，或者已经绑定了滚动时间，忽略

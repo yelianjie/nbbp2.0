@@ -1,11 +1,11 @@
 <template>
   <div class="container min-h flex flex-v flex-align-center bg3">
-    <div class="top-img">
-      <img src="../assets/logo.png">
-      <p class="f14 white tc" style="margin-top: 10px;">{{barInfo.name}}</p>
+    <div class="top-img tc">
+      <img :src="barInfo.logo | prefixImageUrl" class="circle">
+      <p class="f14 white" style="margin-top: 10px;">{{barInfo.name}}</p>
     </div>
     <div class="canDespoit-wrap">
-      <p class="money">¥{{barInfo.merchant_balance}}</p>
+      <p class="money">¥{{barInfo.balance}}</p>
       <p class="m-tip">当前可提现金额</p>
     </div>
     <div class="despoit-btn">
@@ -15,7 +15,7 @@
       <bp-dialog :bg-title="true" :bgSrc="depositBg" v-model="depositVisible" @onConfirm="deposit">
       <div class="">
         <p style="font-size: 13px;color:#6c6a75;text-align: left;
-        margin-bottom: 10px;">当前收益：{{barInfo.merchant_balance}}元</p>
+        margin-bottom: 10px;">当前可提现：{{barInfo.balance}}元</p>
         <div><input type="number" autofocus v-model.number="toRMBValue" @keyup="validToRMB" class="borderbox" placeholder="请输入要提现的金额" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
         <div style="color:#6c6a75;text-align: left;font-size: 12px;margin-top:10px;"><svg-icon icon-class="notice"/><span>目前仅支持整百数提现</span></div>
       </div>
@@ -26,9 +26,9 @@
 
 <script>
 import { XButton, TransferDomDirective as TransferDom } from 'vux'
-import { getBarMoney } from '@/api/'
 import BpDialog from '../components/bpDialog'
 import depositBg from '../assets/despoit-bg.png'
+import { depositToCash } from '@/api/'
 export default {
   name: 'Deposit',
   directives: {
@@ -51,32 +51,30 @@ export default {
     next()
   },
   created () {
-    getBarMoney({ht_id: this.$route.params.id}).then((res) => {
-      this.barInfo = res.result
-    })
+    this.barInfo = JSON.parse(localStorage.getItem('depositInfo'))
   },
   methods: {
     deposit () {
-      if (!this.toRMBValue || (this.toRMBValue % 100) !== 0) {
+      /* if (!this.toRMBValue || (this.toRMBValue % 100) !== 0) {
         this.$vux.toast.show({
           text: '提现金额不为100的倍数',
           position: 'bottom',
           width: '12em'
         })
         return false
-      }
-      /* depositToCash({type: 1}).then((res) => {
+      } */
+      depositToCash({type: this.$route.query.type, ht_id: this.$route.params.id, money: this.toRMBValue}).then((res) => {
         this.getUserInfo()
         this.depositVisible = false
-      }) */
+      })
     },
     validToRMB (event) {
       if (!Number.isInteger(this.toRMBValue)) {
         this.toRMBValue = ''
         return
       }
-      if (this.toRMBValue > parseInt(this.barInfo.merchant_balance)) {
-        let n = parseInt(this.barInfo.merchant_balance)
+      if (this.toRMBValue > parseInt(this.barInfo.balance)) {
+        let n = parseInt(this.barInfo.balance)
         let min = parseInt(n / 100) * 100
         this.toRMBValue = min
       }

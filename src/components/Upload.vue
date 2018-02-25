@@ -19,7 +19,7 @@ import Crop from '../components/Crop'
 import PhotoClip from 'photoclip'
 import { TransferDomDirective as TransferDom } from 'vux'
 import { uploadImage } from '@/api/'
-import { dataURLtoFile } from '@/utils/utils'
+// import { dataURLtoFile } from '@/utils/utils'
 import lrz from 'lrz'
 // var EXIF = require('../utils/exif.js')
 export default {
@@ -64,15 +64,18 @@ export default {
     if (!this.isCrop) {
       return
     }
+    let lrzOption = {quality: 0.5}
+    if (this.limitSize) {
+      lrzOption.width = this.limitSize
+      lrzOption.height = this.limitSize
+    }
     this.crop = new PhotoClip(this.$refs.crop, {
       size: [this.clipWidth, this.clipHeight],
-      lrzOption: {
-        quality: 0.8
-      },
+      lrzOption: lrzOption,
       style: {
         maskBorder: '1px dashed #fff'
       },
-      outputQuality: 1
+      outputQuality: 0.7
     })
   },
   methods: {
@@ -108,18 +111,18 @@ export default {
       this.$vux.loading.show({
         text: msg
       })
-      lrz(file, {
-        width: this.limitSize,
-        height: this.limitSize,
-        quality: this.isCrop ? 1 : 0.4
-      })
-      .then(function (rst) {
+      if (this.crop) {
+        this.crop.load(file)
+        this.cropVisible = true
+        this.$vux.loading.hide()
+      } else {
+        lrz(file, {
+          width: this.limitSize,
+          height: this.limitSize,
+          quality: 0.5
+        })
+        .then(function (rst) {
           // 处理成功会执行
-        if (_this.isCrop) {
-          _this.crop.load(dataURLtoFile(rst.base64))
-          _this.cropVisible = true
-          _this.$vux.loading.hide()
-        } else {
           uploadImage(rst.base64, _this.curFile.type, (res) => {
             _this.$vux.loading.hide()
             _this.$vux.toast.show({
@@ -129,15 +132,15 @@ export default {
               _this.$emit('on-preview', res.res)
             }
           })
-        }
-      })
-      .catch(function (err) {
-          // 处理失败会执行
-        console.log(err)
-      })
-      .always(function () {
-          // 不管是成功失败，都会执行
-      })
+        })
+        .catch(function (err) {
+            // 处理失败会执行
+          console.log(err)
+        })
+        .always(function () {
+            // 不管是成功失败，都会执行
+        })
+      }
     },
     compress (img, Orientation, compressSize = 0.6) {
       var initSize = img.src.length

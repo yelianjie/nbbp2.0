@@ -117,6 +117,7 @@
     <div class="">
       <div class="" style="font-size: 20px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;"/></div>
       <p style="color: #88878f;"><svg-icon icon-class="tip" />当前余额可用：<svg-icon icon-class="coin" />{{userInfo.balance}}</p>
+      <p class="f12" v-if="barManagerInfo.isManager" style="color:#b187e4;margin-top:6px;">今日剩余免费霸屏、打赏{{barManagerInfo.game_count}}次</p>
       <p class="f13" v-if="buyDialogInfo.isCharge" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
     </div>
   </bp-dialog>
@@ -205,6 +206,10 @@ export default {
     }
     getBarAllInfo({ht_id: this.$route.params.id}).then((res) => {
       // prefixImageUrl
+      // 设置是否酒吧的管理员，免费霸屏次数
+      if (res.result.userinfo.isHMM > 0) {
+        this.$store.commit('user/SET_BAR_MANAGER', {isManager: true, game_count: res.result.userinfo.game_count})
+      }
       res.result.advert && (res.result.advert.phone.url = this.$options.filters.prefixImageUrl(res.result.advert.phone.url))
       this.barDataInfo = res.result
       var img = new Image()
@@ -376,6 +381,11 @@ export default {
           } else if (this.buyDialogInfo.postParams.type === 1) {
             this.$refs.dsWindow.reset()
           }
+          // game_count - 1
+          if (this.barManagerInfo.isManager) {
+            var nextCount = Number(this.barManagerInfo.game_count) === 0 ? 0 : Number(this.barManagerInfo.game_count) - 1
+            this.$store.commit('user/SET_BAR_MANAGER', {isManager: true, game_count: nextCount})
+          }
         })
       }
       /* setTimeout(() => {
@@ -396,7 +406,8 @@ export default {
       buyDialogInfo: 'buyDialogInfo'
     }),
     ...mapGetters('user', {
-      userInfo: 'userInfo'
+      userInfo: 'userInfo',
+      barManagerInfo: 'barManagerInfo'
     }),
     ...mapGetters('main', {
       currentUserInfo: 'currentUserInfo'

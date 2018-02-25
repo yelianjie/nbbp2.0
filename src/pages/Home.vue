@@ -2,6 +2,7 @@
   <div class="container flex flex-v" style="background-color:#121420;">
     <div class="home-header"><svg-icon icon-class="hot" className="hot-icon"/><span class="h-title f16">热门推荐</span><span class="city-now" @click="showAddress = true">{{cityName}}<svg-icon icon-class="arrow-down" className="arrow-down-icon"/></span></div>
     <div class="flex-1 scroll">
+      <inline-loading v-if="loading" :color="'#f31374'" :bgColor="'rgba(255, 255, 255, 0.2)'"></inline-loading>
       <BarsList :barsList="barsList" enter="home"></BarsList>
     </div>
     <x-address style="display:none;" hide-district popup-title="选择城市" v-model="adsValue" title="" @on-hide="closeAddress" :list="addressData" placeholder="请选择地址" :show.sync="showAddress"></x-address>
@@ -13,6 +14,7 @@ import BarsList from '@/components/Center/BarsList'
 import { XAddress } from 'vux'
 import { getDistance, filterRegionByName } from '@/utils/utils'
 import { getRegionData, getBarsByCity } from '@/api/'
+import InlineLoading from '../components/InlineLoading'
 export default {
   data () {
     return {
@@ -24,7 +26,8 @@ export default {
       userPosition: {
         lat: '',
         lng: ''
-      }
+      },
+      loading: false
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -36,23 +39,17 @@ export default {
       this.$wechat.getLocation({
         type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
         success: (res) => {
-          this.$vux.loading.show({
-            text: '正在获取酒吧'
-          })
+          this.loading = true
           this.getAllRegions(res.latitude, res.longitude)
         },
         fail: () => {
-          this.$vux.loading.show({
-            text: '正在获取酒吧'
-          })
+          this.loading = true
           this.getAllRegions(29.88525897, 121.57900597)
         }
       })
     })
-    /* this.$vux.loading.show({
-      text: '正在获取酒吧'
-    })
-    this.getAllRegions(29.88525897, 121.57900597) */
+    this.loading = true
+    this.getAllRegions(29.88525897, 121.57900597)
   },
   mounted () {
   },
@@ -75,9 +72,7 @@ export default {
         return false
       }
       let find = this.addressData.find((v, i) => v.value === this.adsValue[1])
-      this.$vux.loading.show({
-        text: '正在加载'
-      })
+      this.loading = true
       getBarsByCity({region_code: find.value}).then((res) => {
         if (Array.isArray(res.result)) {
           if (this.userAllow) {
@@ -93,7 +88,7 @@ export default {
           this.barsList = res.result
         }
       }).finally(() => {
-        this.$vux.loading.hide()
+        this.loading = false
       })
     },
     getPosition (latitude, longitude) {
@@ -110,7 +105,6 @@ export default {
         this.userPosition.lng = json.result.location.lng
         this.userPosition.lat = json.result.location.lat
         this.closeAddress(true)
-        this.$vux.loading.hide()
       })
     },
     wxCoordsToBaidu (data) {
@@ -155,7 +149,8 @@ export default {
   },
   components: {
     BarsList,
-    XAddress
+    XAddress,
+    InlineLoading
   }
 }
 </script>

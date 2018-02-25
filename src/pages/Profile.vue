@@ -3,9 +3,10 @@
     <div class="flex-1 scroll">
       <div style="height:1.5rem;"></div>
       <div id="avatar-select">
-        <upload name="avatar-input" @on-clip="afterClip" :is-crop="true">
+        <upload name="avatar-input" @on-clip="afterClip" :is-crop="true" :limitSize="240">
           <div class="avatar flex flex-v flex-align-center">
-            <img :src="form.headimgurl | prefixImageUrl"/>
+            <img v-if="form.headimgurl" :src="form.headimgurl | prefixImageUrl"/>
+            <img v-else src="../assets/blank.gif"/>
             <p class="f13">点击更换头像</p>
             <label class="n-label" for="avatar-input"></label>
           </div>

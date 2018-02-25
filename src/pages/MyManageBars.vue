@@ -2,16 +2,17 @@
   <div class="container min-h fff">
     <div class="middle tc white bg3" style="padding: 0.36rem 0;">
       <p class="f14">当前累计未提现收益</p>
-      <p class="benefit-account">{{moneyInfo.merchant_balance}}</p>
-      <p class="f16">累计总收益：{{moneyInfo.merchant_income}} 元</p>
+      <p class="benefit-account">{{info.total_balance}}</p>
+      <p class="f16">累计总收益：{{info.total_income}} 元</p>
     </div>
-    <p style="padding: 0.2rem 0.3rem;" class="f18 pr bar-title">我的酒吧</p>
+    <p style="padding: 0.2rem 0.3rem;" class="f18 pr bar-title">我管理的酒吧</p>
+    <inline-loading v-if="loading" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
     <div class="bars">
-      <div class="vux-1px-t flex flex-align-center" v-for="(v, i) in barList" :key="i" style="padding: 0.2rem 0.3rem;" @click="goToDeposit(v.id)">
+      <div class="vux-1px-t flex flex-align-center" v-for="(v, i) in info.list" :key="i" style="padding: 0.2rem 0.3rem;" @click="goToDeposit(v.id, i)">
         <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
         <div class="flex-1 flex flex-v">
           <p class="f16">{{v.name}}</p>
-          <p class="f14" style="color: #939393;">注册时间：{{v.add_time}}</p>
+          <p class="f14" style="color: #939393;">{{v.address}}</p>
         </div>
       </div>
     </div>
@@ -19,14 +20,17 @@
 </template>
 
 <script>
-import { getBars, deleteBar } from '@/api/'
+import { getBarManagerMoney } from '@/api/'
+import InlineLoading from '../components/InlineLoading'
 export default {
   data () {
     return {
       confirmVisible: false,
-      moneyInfo: {},
-      barList: [],
-      deleteInfo: null
+      info: {
+        list: []
+      },
+      deleteInfo: null,
+      loading: true
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -34,26 +38,15 @@ export default {
     next()
   },
   created () {
-    getBars().then((res) => {
-      this.moneyInfo = res.result.money
-      this.barList = res.result.hotelList
+    getBarManagerMoney().then((res) => {
+      this.info = res.result
+      this.loading = false
     })
   },
   methods: {
-    confirmDelete () {
-      deleteBar({ht_id: this.deleteInfo.id}).then((res) => {
-        this.barList.splice(this.deleteInfo.index, 1)
-        this.confirmVisible = false
-      })
-    },
-    onDeleteBar (index, id) {
-      this.confirmVisible = true
-      this.deleteInfo = {
-        index: index,
-        id: id
-      }
-    },
-    goToDeposit (barId) {
+    goToDeposit (barId, index) {
+      const info = this.info.list[index]
+      localStorage.setItem('depositInfo', JSON.stringify({name: info.name, logo: info.logo, balance: info.supervise_balance}))
       this.$router.push({
         path: `/Deposit/${barId}`,
         query: {
@@ -61,6 +54,9 @@ export default {
         }
       })
     }
+  },
+  components: {
+    InlineLoading
   }
 }
 </script>

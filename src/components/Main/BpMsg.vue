@@ -97,26 +97,22 @@ export default {
     background-color: rgba(0, 0, 0, .15);
   }
   .arrow {
-    width: 0.2rem;
-    border-top: 0.2rem solid transparent;
-    border-bottom: 0.2rem solid transparent;
-    
+    border: 0.2rem solid transparent;
     position: absolute;
+    width: 0;
+    height: 0;
     top: 0;
   }
   .arrow-left {
     left: 0;
-    border-right-width: 0.2rem;
-    border-right-style: solid;
+    border-right: 0.2rem solid rgba(0, 0, 0, 0.15);
     transform: translateX(-100%);
     border-right-color: rgba(0, 0, 0, .15);
   }
   .arrow-right {
     right: 0;
-    border-left-width: 0.2rem;
-    border-left-style: solid;
+    border-left: 0.2rem solid rgba(0, 0, 0, 0.15);
     transform: translateX(100%);
-    border-left-color: rgba(0, 0, 0, .15);
   }
 }
 .content {

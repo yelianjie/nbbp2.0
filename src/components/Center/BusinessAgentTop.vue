@@ -12,7 +12,7 @@
       <p class="f16">总收益：{{totalMoney}} 元</p>
     </div>
     <group class="actions">
-      <cell title="我要提现" is-link :link="{path: '/Deposit/' + this.$route.params.id, query: {type: this.$route.query.type}}"></cell>
+      <cell title="我要提现" is-link @click.native="setLocalStorage"></cell>
     </group>
   </div>
 </template>
@@ -24,6 +24,12 @@ export default {
   data () {
     return {
 
+    }
+  },
+  methods: {
+    setLocalStorage () {
+      localStorage.setItem('depositInfo', JSON.stringify({name: this.name, logo: this.logo, balance: this.currentMoney}))
+      this.$router.push({path: '/Deposit/' + this.$route.params.id, query: {type: this.$route.query.type}})
     }
   },
   components: {

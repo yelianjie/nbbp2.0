@@ -112,8 +112,12 @@ export default {
   },
   computed: {
     total () {
-      const giftPrice = this.dsGiftIndex !== -1 ? Number(this.gifts[this.dsGiftIndex].price) : 0
-      return Number(giftPrice * this.dsTimes).toFixed(2)
+      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0) {
+        return 0
+      } else {
+        const giftPrice = this.dsGiftIndex !== -1 ? Number(this.gifts[this.dsGiftIndex].price) : 0
+        return Number(giftPrice * this.dsTimes).toFixed(2)
+      }
     },
     timesDsText () {
       const texts = ['一', '二', '三']
@@ -123,7 +127,8 @@ export default {
       currentUserInfo: 'currentUserInfo'
     }),
     ...mapGetters('user', {
-      userInfo: 'userInfo'
+      userInfo: 'userInfo',
+      barManagerInfo: 'barManagerInfo'
     })
   }
 

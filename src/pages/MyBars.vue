@@ -7,7 +7,8 @@
     </div>
     <p style="padding: 0.2rem 0.3rem;" class="f18 pr bar-title">我的酒吧</p>
     <div class="bars">
-      <swipeout>
+      <inline-loading v-if="loading" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
+      <swipeout v-else>
         <swipeout-item :sensitivity="15" :ref="'swipeoutItem' + i" transition-mode="reveal" :auto-close-on-button-click="false" v-for="(v, i) in barList" :key="i">
           <div slot="right-menu">
             <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
@@ -21,6 +22,7 @@
           </div>
         </swipeout-item>
       </swipeout>
+      
     </div>
     <bp-dialog :title="'提示'" v-model="confirmVisible" @onConfirm="confirmDelete">
       <p class="f16">确认删除该酒吧吗？</p>
@@ -34,13 +36,15 @@
 import { Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
 import { getBars, deleteBar } from '@/api/'
 import BpDialog from '../components/bpDialog'
+import InlineLoading from '../components/InlineLoading'
 export default {
   data () {
     return {
       confirmVisible: false,
       moneyInfo: {},
       barList: [],
-      deleteInfo: null
+      deleteInfo: null,
+      loading: true
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -51,6 +55,7 @@ export default {
     getBars().then((res) => {
       this.moneyInfo = res.result.money
       this.barList = res.result.hotelList
+      this.loading = false
     })
   },
   methods: {
@@ -81,7 +86,8 @@ export default {
     Swipeout,
     SwipeoutItem,
     SwipeoutButton,
-    BpDialog
+    BpDialog,
+    InlineLoading
   }
 }
 </script>
