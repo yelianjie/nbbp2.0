@@ -5,7 +5,7 @@
         <div class="ad-img">
           <div class="placeholder-add-btn pr">
             <img class="bg" v-if="adScreenBg" :src="adScreenBg | prefixImageUrl"/>
-            <upload name="upload-ad-screen" @on-preview="adScreenUpload"></upload>
+            <upload name="upload-ad-screen" @on-preview="adScreenUpload" :encoderValue="0.8" :limitSize="1920"></upload>
             <label for="upload-ad-screen" class="n-label"></label>
           </div>
         </div>
@@ -18,7 +18,7 @@
         <div class="ad-img">
           <div class="placeholder-add-btn pr">
             <img class="bg" v-if="adMobileBg" :src="adMobileBg | prefixImageUrl" />
-            <upload name="upload-ad-mobile" @on-preview="adMobileUpload"></upload>
+            <upload name="upload-ad-mobile" @on-preview="adMobileUpload" :encoderValue="0.8" :limitSize="828"></upload>
             <label for="upload-ad-mobile" class="n-label"></label>
           </div>
         </div>

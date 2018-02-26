@@ -191,7 +191,6 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    document.title = decodeURI(to.query.name)
     next()
   },
   beforeRouteLeave (to, from, next) {
@@ -205,6 +204,7 @@ export default {
       this.getUserInfo()
     }
     getBarAllInfo({ht_id: this.$route.params.id}).then((res) => {
+      document.title = res.result.ht_msg.name
       // prefixImageUrl
       // 设置是否酒吧的管理员，免费霸屏次数
       if (res.result.userinfo.isHMM > 0) {

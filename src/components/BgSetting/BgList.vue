@@ -1,12 +1,12 @@
 <template>
   <div class="scroller-bg">
-    <checker v-model="select" type="radio" default-item-class="bg-item" selected-item-class="bg-item-selected">
+    <checker v-model="select" radio-required default-item-class="bg-item" selected-item-class="bg-item-selected">
       <template v-for="(v, i) in list">
         <checker-item :value="i" :key="i" @on-item-click="onClick">
           <div class="flex flex-align-center">
             <div class="bg-icon flex flex-1">
-              <img :src="v.url | prefixImageUrl" v-if="type == 1"/>
-              <video :src="v.url | prefixImageUrl" controls v-if="type == 2" x-webkit-airplay="true" webkit-playsinline="" playsinline="" airplay="allow" x5-video-player-type="h5"></video>
+              <img v-lazy="$options.filters.prefixImageUrl(v.url)" v-if="type == 1"/>
+              <video :src="v.url | prefixImageUrl" controls="true" v-if="type == 2" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-video-player-type="h5" x5-video-player-fullscreen="true"></video>
             </div>
             <div class="bg-check">
               <check-icon :value="select == i" type="plain"></check-icon>
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+// http://video.699pic.com/videos/32/50/93/47HK2MpfKwqx1510325093.mp4
 import { Checker, CheckerItem, CheckIcon } from 'vux'
 export default {
   props: ['selected', 'list', 'type'],
@@ -37,6 +38,7 @@ export default {
       if (this.select === itemValue) {
         return
       }
+      this.select = itemValue
       this.$emit('on-select', itemValue)
     }
   },

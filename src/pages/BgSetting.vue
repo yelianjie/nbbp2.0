@@ -61,6 +61,15 @@ export default {
         console.log(res)
       })
     }
+  },
+  watch: {
+    activeType (newVal, oldVal) {
+      if (newVal === 1) {
+        this.$nextTick(() => {
+          this.$Lazyload.lazyLoadHandler()
+        })
+      }
+    }
   }
 }
 </script>

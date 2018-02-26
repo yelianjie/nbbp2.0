@@ -42,6 +42,10 @@ export default {
     limitSize: {
       type: Number,
       default: 0
+    },
+    encoderValue: {
+      type: Number,
+      default: 0.5
     }
   },
   data () {
@@ -119,7 +123,7 @@ export default {
         lrz(file, {
           width: this.limitSize,
           height: this.limitSize,
-          quality: 0.5
+          quality: this.encoderValue
         })
         .then(function (rst) {
           // 处理成功会执行
