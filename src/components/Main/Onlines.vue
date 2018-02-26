@@ -4,7 +4,7 @@
       <ul>
         <li v-for="(v, i) in peoples" :key="i" class="online-item" @click="showCard(v)">
           <div class="online-img"><img v-lazy="$options.filters.prefixImageUrl(v.headimgurl)" class="circle"></div>
-          <div class="online-text overflow flex f12 flex-pack-center">
+          <div class="online-text overflow flex f12 flex-pack-center flex-align-center">
             <template v-if="v.sex == 1">
               <span class="sex sex-male" >
                 <svg-icon icon-class="male" />
@@ -74,6 +74,7 @@ export default {
   .online-text {
     text-align: center;
     margin: 0 0.05rem 0.15rem;
+    line-height: 1;
     .sex {
       margin-right: 2px;
     }

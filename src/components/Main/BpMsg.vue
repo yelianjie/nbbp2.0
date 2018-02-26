@@ -57,7 +57,7 @@ export default {
       this.$emit('onAvatar')
     },
     share () {
-      this.$emit('onShare')
+      this.$emit('onShare', this.data)
     },
     bp () {
       this.$emit('onBp')

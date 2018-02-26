@@ -16,7 +16,7 @@
       <div class="">
         <p style="font-size: 13px;color:#6c6a75;text-align: left;
         margin-bottom: 10px;">当前可提现：{{barInfo.balance}}元</p>
-        <div><input type="number" autofocus v-model.number="toRMBValue" @keyup="validToRMB" class="borderbox" placeholder="请输入要提现的金额" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
+        <div><input type="number" pattern="[0-9]*" autofocus v-model.number="toRMBValue" @keyup="validToRMB" class="borderbox f14" placeholder="请输入要提现的金额" style="outline: none;border: 1px solid #ccc;border-radius: 5px;text-align:center;color: #161a25;width:100%;line-height:24px;padding: 4px 8px;"/></div>
         <div style="color:#6c6a75;text-align: left;font-size: 12px;margin-top:10px;"><svg-icon icon-class="notice"/><span>目前仅支持整百数提现</span></div>
       </div>
     </bp-dialog>

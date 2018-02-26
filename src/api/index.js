@@ -383,8 +383,8 @@ export function uploadImage (base64, type, cb) {
   formdata.append('file', blob, 'image.png')
   xhr.open('post', baseURL + '/weixin/file_upload/uploadImg')
   xhr.onreadystatechange = function () {
-    console.log('readyState' + xhr.readyState)
-    console.log('status' + xhr.status)
+    /* console.log('readyState' + xhr.readyState)
+    console.log('status' + xhr.status) */
     if (xhr.readyState === 4 && xhr.status === 200) {
       var response = JSON.parse(xhr.responseText)
       const res1 = {error: false, msg: '上传成功', res: response.result}

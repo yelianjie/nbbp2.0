@@ -15,27 +15,6 @@
             }else{
                 docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
             }
-
-            // style control
-            /* if (document.getElementById("style")) {
-              document.documentElement.remove(document.getElementById("style"))
-            }
-            var style=document.createElement("style");
-            style.id = 'control'
-            style.setAttribute("type", "text/css");  
-            var cssString = '.min-h {min-height: '+ window.innerHeight +'px;} .fheight {height: '+ window.innerHeight +'px;}'
-            if(style.styleSheet){// IE  
-              style.styleSheet.cssText = cssString;  
-            } else {// w3c  
-              var cssText = document.createTextNode(cssString);  
-              style.appendChild(cssText);  
-            }  
-        
-            var heads = document.getElementsByTagName("head");  
-            if(heads.length)  
-              heads[0].appendChild(style);  
-            else  
-              document.documentElement.appendChild(style) */
           };
 
       if (!doc.addEventListener) return;

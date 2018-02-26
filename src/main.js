@@ -116,19 +116,11 @@ router.beforeEach(function (to, from, next) {
 
 router.afterEach(function (to) {
   let shareParams = {}
-  if (to.name === 'Main') {
-    shareParams = {
-      title: decodeURI(to.query.name),
-      link: window.location.href,
-      imgUrl: '' // 分享图标
-    }
-  } else {
-    shareParams = {
-      title: '牛霸霸屏',
-      desc: '牛霸霸屏描述',
-      link: window.location.host + '/weixin/',
-      imgUrl: '' // 分享图标
-    }
+  shareParams = {
+    title: '这么有趣的霸屏交友互动，邀请你一起来玩~',
+    desc: '新朋友、霸屏、游戏、送礼互动，线上结合线下，给您的生活增添更多趣味和可能。',
+    link: window.location.origin + '/weixin/',
+    imgUrl: 'http://xnb.siweiquanjing.com/screen/images/logo1.png' // 分享图标
   }
   Vue.wechat.ready(() => {
     Vue.wechat.onMenuShareTimeline({
@@ -154,11 +146,25 @@ Object.keys(directives).forEach(key => {
   Vue.directive(key, directives[key])
 })
 
+function recal () {
+  var docEl = document.documentElement
+  var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize'
+  var recalc = function () {
+    var clientWidth = docEl.clientWidth
+    if (!clientWidth) return
+    var fontSize = clientWidth >= 750 ? 50 : 100 * (clientWidth / 750)
+    store.commit('app/SET_FONTSIZE', fontSize)
+  }
+  if (!document.addEventListener) return
+  window.addEventListener(resizeEvt, recalc, false)
+  recalc()
+}
+recal()
 // 微信config配置
 getWxConfig({url: window.location.href.split('#')[0]}).then((res) => {
   Vue.wechat.config({
     ...res.result,
-    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
     jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'previewImage', 'getLocation', 'chooseWXPay'] // 必填，需要使用的JS接口列表
   })
 }).finally(() => {

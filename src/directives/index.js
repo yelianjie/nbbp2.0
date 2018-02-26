@@ -85,3 +85,30 @@ export const fixscroll = {
     this.container.off()
   }
 }
+
+export const autoSize = {
+  bind: (el, {value}, vnode) => {
+    if (value) {
+      var p = value.split(',')
+      var size = p[0].split('x')
+      var width = parseInt(p[1] * p[2])
+      var height = parseInt(p[1] * p[2] * size[1] / size[0])
+      height = height > 400 ? 400 : height
+      el.setAttribute('width', width)
+      el.setAttribute('height', height)
+    }
+  },
+  update: (el, {value, oldValue}) => {
+    if (value !== oldValue) {
+      if (value) {
+        var p = value.split(',')
+        var size = p[0].split('x')
+        var width = parseInt(p[1] * p[2])
+        var height = parseInt(p[1] * p[2] * size[1] / size[0])
+        height = height > 400 ? 400 : height
+        el.setAttribute('width', width)
+        el.setAttribute('height', height)
+      }
+    }
+  }
+}

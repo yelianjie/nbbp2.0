@@ -37,6 +37,10 @@ export default {
       this.info.barname = res.result.name
     })
   },
+  beforeRouteEnter (to, from, next) {
+    document.title = '酒吧管理绑定'
+    next()
+  },
   methods: {
     bindAction () {
       this.$validator.validateAll().then(result => {

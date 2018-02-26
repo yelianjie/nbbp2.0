@@ -39,14 +39,13 @@
           <span></span>
         </div>
         <span slot="no-more" class="f13">再往上拉就没有了~</span>
-        <span slot="no-results" class="f13">还没有人来聊天~</span>
       </infinite-loading>
       <template v-for="(v, i) in chatlist">
-        <msg :key="v.id" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg>
-        <msg-img :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-img>
-        <msg-only-img :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></msg-only-img>
-        <bp-msg :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.msg_type == 2" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></bp-msg>
-        <ds-msg :key="v.id" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="shareMaskVisible = true" @onBp="bp" @onDs="ds"></ds-msg>
+        <msg :key="v.id" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg>
+        <msg-img :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-img>
+        <msg-only-img :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-only-img>
+        <bp-msg :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.msg_type == 2" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></bp-msg>
+        <ds-msg :key="v.id" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></ds-msg>
       </template>
     </div>
     <footer-main></footer-main>
@@ -179,7 +178,8 @@ export default {
         id: 0
       },
       firstLoading: true,
-      scrollFix: null
+      scrollFix: null,
+      lockHeight: false
     }
   },
   beforeDestroy () {
@@ -287,7 +287,15 @@ export default {
           if (Array.isArray(res.result) && res.result.length > 0) {
             this.chatlist = this.chatlist.concat(res.result)
             this.$nextTick(() => {
-              this.scrollToEnd()
+              // 如果消息里有当前用户发的，滚动到底部
+              var flag = false
+              for (var i in res.result) {
+                if (this.userInfo && (Number(res.result[i].initiator_mc_id) === Number(this.userInfo.id))) {
+                  flag = true
+                  break
+                }
+              }
+              flag && this.scrollToEnd()
             })
             res.result.sort((a, b) => b.id - a.id)
             this.requestNewParams.id = res.result[0].id
@@ -305,6 +313,8 @@ export default {
       }, 'Linear', 400)
     },
     infiniteHandler ($state) {
+      /* this.lockHeight = true
+      this.height = this.$refs.scrollWrapper ? this.$refs.scrollWrapper.scrollHeight : 0 */
       let params = Object.assign({}, this.requestParams)
       getNewestMsg(params).then((res) => {
         if (!Array.isArray(res.result)) {
@@ -350,6 +360,32 @@ export default {
       console.log(this.currentUserInfo)
       favoriteDo({mc_id: data.initiator_mc_id, msg_id: data.id}).then((res) => {
         data.fabulous_count = ~~(data.fabulous_count) + 1
+      })
+    },
+    share (data) {
+      this.shareMaskVisible = true
+      var title = ''
+      var who = data.sendee_nickname ? data.sendee_nickname : '全场观众'
+      if (data.msg_type === '2') {
+        title = data.initiator_nickname + '重金' + data.title + data.odr_show_time + '秒，一起来围观互动！'
+      } else if (data.msg_type === '1') {
+        title = data.initiator_nickname + '送' + data.title + '给' + who + '，一起来玩！'
+      }
+      let shareParams = {
+        title: title,
+        desc: data.content,
+        link: window.location.href,
+        imgUrl: this.$options.filters.prefixImageUrl(data.initiator_headimgurl) // 分享图标
+      }
+      this.$wechat.onMenuShareTimeline({
+        ...shareParams,
+        success: function () {},
+        cancel: function () {}
+      })
+      this.$wechat.onMenuShareAppMessage({
+        ...shareParams,
+        success: function () {},
+        cancel: function () {}
       })
     },
     bp () {

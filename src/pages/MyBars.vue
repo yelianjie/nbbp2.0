@@ -1,15 +1,16 @@
 <template>
-  <div class="container min-h fff">
+  <div class="container min-h fff flex flex-v">
     <div class="middle tc white bg3" style="padding: 0.36rem 0;">
       <p class="f14">当前累计未提现收益</p>
       <p class="benefit-account">{{moneyInfo.merchant_balance}}</p>
       <p class="f16">累计总收益：{{moneyInfo.merchant_income}} 元</p>
     </div>
     <p style="padding: 0.2rem 0.3rem;" class="f18 pr bar-title">我的酒吧</p>
-    <div class="bars">
+    <div class="bars flex-1">
+      <div>
       <inline-loading v-if="loading" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
       <swipeout v-else>
-        <swipeout-item :sensitivity="15" :ref="'swipeoutItem' + i" transition-mode="reveal" :auto-close-on-button-click="false" v-for="(v, i) in barList" :key="i">
+        <swipeout-item :sensitivity="15" :ref="'swipeoutItem' + i" transition-mode="follow" :auto-close-on-button-click="false" v-for="(v, i) in barList" :key="i">
           <div slot="right-menu">
             <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
           </div>
@@ -22,7 +23,7 @@
           </div>
         </swipeout-item>
       </swipeout>
-      
+      </div>
     </div>
     <bp-dialog :title="'提示'" v-model="confirmVisible" @onConfirm="confirmDelete">
       <p class="f16">确认删除该酒吧吗？</p>
@@ -44,7 +45,8 @@ export default {
       moneyInfo: {},
       barList: [],
       deleteInfo: null,
-      loading: true
+      loading: true,
+      myScroll: null
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -57,6 +59,8 @@ export default {
       this.barList = res.result.hotelList
       this.loading = false
     })
+  },
+  mounted () {
   },
   methods: {
     confirmDelete () {
@@ -93,6 +97,9 @@ export default {
 </script>
 
 <style scoped>
+.bars {
+  overflow: hidden;
+}
 .bars /deep/ .vux-1px-t::before {
   border: 0;
 }

@@ -6,7 +6,10 @@
     <div class="msg-item-right flex-1">
       <msg-user :data="data"></msg-user>
       <div class="msg-item-middle msgimg flex">
-        <div class="img"><img v-lazy="$options.filters.prefixImageUrl(data.img)" @click="previewImg($options.filters.prefixImageUrl(data.img))"/></div>
+        <div class="img">
+          <img v-if="data.img.lastIndexOf('?') != -1" :size="fSize" v-autoSize="data.img.substring(data.img.lastIndexOf('?') + 1) + ',2.04,' + fSize" v-lazy="$options.filters.prefixImageUrl(data.img)" @click="previewImg($options.filters.prefixImageUrl(data.img))"/>
+          <img v-else v-lazy="$options.filters.prefixImageUrl(data.img)" @click="previewImg($options.filters.prefixImageUrl(data.img))"/>
+        </div>
         <div class="content" v-html="$options.filters.filterFace(data.content)"></div>
       </div>
       <div class="msg-item-bottom">
@@ -47,6 +50,11 @@ export default {
     previewImg (url) {
       this.$emit('onPreviewImage', {current: url, urls: [url]})
     }
+  },
+  computed: {
+    fSize () {
+      return this.$store.getters['app/fontSize']
+    }
   }
 }
 </script>
@@ -61,7 +69,6 @@ export default {
     width: 50%;
     img {
       width: 100%;
-      max-height: 300px;
       display: block;
     }
   }

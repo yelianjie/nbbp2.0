@@ -3,13 +3,15 @@ const namespaced = true
 
 const state = {
   buyDialogInfo: {},
-  direction: 'forward'
+  direction: 'forward',
+  fontSize: 50
 }
 
 // getters
 const getters = {
   buyDialogInfo: () => state.buyDialogInfo,
-  direction: () => state.direction
+  direction: () => state.direction,
+  fontSize: () => state.fontSize
 }
 
 // actions
@@ -26,6 +28,9 @@ const mutations = {
   },
   UPDATE_DIRECTION (state, direction) {
     state.direction = direction
+  },
+  SET_FONTSIZE (state, data) {
+    state.fontSize = data
   }
 }
 
