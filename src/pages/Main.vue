@@ -120,6 +120,12 @@
       <p class="f13" v-if="buyDialogInfo.isCharge" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
     </div>
   </bp-dialog>
+  <bp-dialog :title="'提示'" v-model="deleteDialogVisible" @onConfirm="confirmDelete">
+    <div class="">
+      <div class="" style="font-size: 20px;margin-bottom: 8px;">
+      <p class="f16" style="color:#7b7b7b;margin-top:6px;">确定删除该消息吗</p></div>
+    </div>
+  </bp-dialog>
   <transition name="fade-out">
     <div class="adbg fullscreen" v-if="adVisible && barDataInfo.advert" :style="{'background-image': 'url('+barDataInfo.advert.phone.url+')'}"></div>
   </transition>
@@ -162,6 +168,8 @@ export default {
       buyDialogVisible: false,
       concernVisible: false,
       onlineVisible: false,
+      deleteDialogVisible: false,
+      deleteInfo: {},
       height: 0,
       noMore: false,
       barDataInfo: {},
@@ -308,6 +316,8 @@ export default {
                 }
               }
               flag && this.scrollToEnd()
+              this.lockHeight = true
+              this.height = this.$refs.scrollWrapper.scrollHeight
             })
             res.result.sort((a, b) => b.id - a.id)
             this.requestNewParams.id = res.result[0].id
@@ -368,14 +378,19 @@ export default {
       this.userDialogVisible = true
     },
     deleteMsg (data) {
-      deleteMsg({msg_id: data.id}).then((res) => {
-        var find = this.chatlist.findIndex((v) => v.id === data.id)
+      this.deleteDialogVisible = true
+      this.deleteInfo = data
+    },
+    confirmDelete () {
+      deleteMsg({msg_id: this.deleteInfo.id}).then((res) => {
+        var find = this.chatlist.findIndex((v) => v.id === this.deleteInfo.id)
         if (find !== -1) {
           this.lockHeight = true
           this.chatlist.splice(find, 1)
           this.$nextTick(() => {
             this.height = this.$refs.scrollWrapper.scrollHeight
           })
+          this.deleteDialogVisible = false
         }
       })
     },
