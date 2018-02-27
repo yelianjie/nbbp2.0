@@ -373,14 +373,23 @@ export const getTransferMoneyByBar = (data) => {
 }
 
 /**
+ * 删除消息
+ * @param {*} data
+ */
+export const deleteMsg = (data) => {
+  return request('/weixin/hotel/delMsg', 'POST', data)
+}
+
+/**
  * 上传图片
  * @param {*} blob
  */
-export function uploadImage (base64, type, cb) {
+export function uploadImage (base64, type, cb, flag = 0) {
   const blob = dataURLtoBlob(base64, type)
   var xhr = new XMLHttpRequest()
   var formdata = new FormData()
   formdata.append('file', blob, 'image.png')
+  formdata.append('flag', flag)
   xhr.open('post', baseURL + '/weixin/file_upload/uploadImg')
   xhr.onreadystatechange = function () {
     /* console.log('readyState' + xhr.readyState)

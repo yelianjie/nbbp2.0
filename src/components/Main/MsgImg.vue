@@ -1,7 +1,7 @@
 <template>
   <div class="msg-item flex">
     <div class="msg-item-left">
-      <user-avatar :data="data" @onAvatar="avatar"></user-avatar>
+      <user-avatar :data="data" @onAvatar="avatar" @onDelete="deleteMsg"></user-avatar>
     </div>
     <div class="msg-item-right flex-1">
       <msg-user :data="data"></msg-user>
@@ -49,6 +49,9 @@ export default {
     },
     previewImg (url) {
       this.$emit('onPreviewImage', {current: url, urls: [url]})
+    },
+    deleteMsg () {
+      this.$emit('onDelete', this.data)
     }
   },
   computed: {

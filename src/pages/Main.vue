@@ -41,11 +41,11 @@
         <span slot="no-more" class="f13">再往上拉就没有了~</span>
       </infinite-loading>
       <template v-for="(v, i) in chatlist">
-        <msg :key="v.id" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg>
-        <msg-img :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-img>
-        <msg-only-img :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-only-img>
-        <bp-msg :key="v.id" :index="i" :data="v" @onPreviewImage="previewImage" @onLike="like" v-if="v.msg_type == 2" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></bp-msg>
-        <ds-msg :key="v.id" :index="i" :data="v" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></ds-msg>
+        <msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg>
+        <msg-img :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-img>
+        <msg-only-img :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-only-img>
+        <bp-msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.msg_type == 2" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></bp-msg>
+        <ds-msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></ds-msg>
       </template>
     </div>
     <footer-main></footer-main>
@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo } from '@/api/'
+import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg } from '@/api/'
 import { XDialog } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -206,10 +206,18 @@ export default {
     getBarAllInfo({ht_id: this.$route.params.id}).then((res) => {
       document.title = res.result.ht_msg.name
       // prefixImageUrl
-      // 设置是否酒吧的管理员，免费霸屏次数
+      // 设置是否酒吧的管理员，免费霸屏次数 和是否是酒吧的吧主
+      let post = {isManager: false, game_count: 0}
       if (res.result.userinfo.isHMM > 0) {
-        this.$store.commit('user/SET_BAR_MANAGER', {isManager: true, game_count: res.result.userinfo.game_count})
+        post = {
+          isManager: true,
+          game_count: res.result.userinfo.game_count
+        }
       }
+      if (res.result.userinfo.isMer > 0) {
+        post.isHost = true
+      }
+      this.$store.commit('user/SET_BAR_MANAGER', post)
       res.result.advert && (res.result.advert.phone.url = this.$options.filters.prefixImageUrl(res.result.advert.phone.url))
       this.barDataInfo = res.result
       var img = new Image()
@@ -250,6 +258,10 @@ export default {
   },
   watch: {
     height: function (newVal, oldVal) {
+      if (this.lockHeight) {
+        this.lockHeight = false
+        return false
+      }
       var diff = newVal - oldVal
       this.$refs.scrollWrapper.scrollTop = diff
     }
@@ -354,6 +366,18 @@ export default {
         this.$store.commit('main/SET_CURRENT_USER_INFO', info)
       }
       this.userDialogVisible = true
+    },
+    deleteMsg (data) {
+      deleteMsg({msg_id: data.id}).then((res) => {
+        var find = this.chatlist.findIndex((v) => v.id === data.id)
+        if (find !== -1) {
+          this.lockHeight = true
+          this.chatlist.splice(find, 1)
+          this.$nextTick(() => {
+            this.height = this.$refs.scrollWrapper.scrollHeight
+          })
+        }
+      })
     },
     like (data) {
       console.log(data)

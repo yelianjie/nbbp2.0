@@ -176,3 +176,9 @@ export const throttle = (fn, threshhold) => {
     }
   }
 }
+
+export const isiOS = () => {
+  var u = navigator.userAgent
+  var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+  return isiOS
+}

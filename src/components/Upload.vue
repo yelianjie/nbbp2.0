@@ -46,6 +46,10 @@ export default {
     encoderValue: {
       type: Number,
       default: 0.5
+    },
+    isFlag: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -100,7 +104,7 @@ export default {
         if (!res.error) {
           this.$emit('on-clip', res.res)
         }
-      })
+      }, this.isFlag)
       this.cancel()
       this.$vux.loading.hide()
     },
