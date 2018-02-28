@@ -142,7 +142,7 @@ export default {
       if (newVal) {
         setTimeout(() => {
           this.$el.classList.add('blur')
-        }, 200)
+        }, 300)
       } else {
         this.$el.classList.remove('blur')
       }
