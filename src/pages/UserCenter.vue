@@ -26,8 +26,8 @@
         <div class="flex white tag1 flex flex-align-center flex-pack-center">
           <span class="sex sex-male flex flex-align-center"><svg-icon icon-class="male" v-if="userInfo.sex == 1"/><svg-icon icon-class="female" v-if="userInfo.sex == 2"/></span>
           <span class="tag tagcity">{{userInfo.city}}</span>
-          <span class="level" :class="'level-' + userInfo.mc_level_id" v-if="userInfo.grade_title && userInfo.grade_title != '平民'">{{userInfo.grade_title}}</span>
-          <span class="level level-1" v-else>{{userInfo.grade_title}}</span>
+          <span class="level" :class="'level-' + userInfo.mc_level_id" v-if="userInfo.grade_title && userInfo.grade_title != '平民'" @click="$router.push({path: '/MyLevel'})">{{userInfo.grade_title}}</span>
+          <span class="level level-1" v-else @click="$router.push({path: '/MyLevel'})">{{userInfo.grade_title}}</span>
         </div>
         <p class="sign f14 tc"><span style="white-space: nowrap;">签名：</span><span v-if="userInfo.autograph">{{userInfo.autograph}}</span><span v-else>暂无签名</span></p>
         <div class="count-current flex">
@@ -41,7 +41,7 @@
       <div class="user-wallet flex bg2">
         <div class="w1 flex-1 tc" @click="$router.push({path: '/Charge'})">
           <h3 class="white"><countup v-if="userInfo.balance" :start-val="0.00" :end-val="Number(userInfo.balance)" :duration="2" class="demo1" :decimals="2"></countup></h3>
-          <h5>我的余额/牛角</h5>
+          <h5><span style="padding: 1px 3px;background-color:#f51173;border-radius:3px;margin-right:2px;" class="white f12">充</span>我的余额/牛角</h5>
         </div>
         <div class="w2 flex-1 tc" @click="$router.push({path: '/Income'})">
           <h3><countup v-if="userInfo.profit_balance" :start-val="0.00" :end-val="Number(userInfo.profit_balance)" :duration="2" class="demo2" :decimals="2"></countup></h3>
@@ -218,6 +218,7 @@ export default {
   }
   h3 {
     font-size: 24px;
+    font-weight: normal;
     margin-bottom: 2px;
   }
   .w2 h3 {

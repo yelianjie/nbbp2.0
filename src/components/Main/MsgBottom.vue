@@ -5,13 +5,13 @@
         <span class="icon-wrap pr"><img src="../../assets/gift-b-icon.png"/></span>
         <span class="num f12">{{data.reward_count}}</span>
       </div>
-      <div class="msg-btn msg-btn-big flex flex-align-center" @click="liked">
-        <span class="icon-wrap pr"><img src="../../assets/like-b-icon.png"/></span>
-        <span class="num f12">{{data.fabulous_count}}</span>
-      </div>
       <div class="msg-btn msg-btn-big flex flex-align-center" @click="bp">
         <span class="icon-wrap pr"><img src="../../assets/ba-b-icon.png"/></span>
         <span class="num f12">{{data.screen_count}}</span>
+      </div>
+      <div class="msg-btn msg-btn-big flex flex-align-center" @click="liked">
+        <span class="icon-wrap pr"><img src="../../assets/like-b-icon.png"/></span>
+        <span class="num f12">{{data.fabulous_count}}</span>
       </div>
       <div class="msg-btn msg-btn-big msg-share flex flex-1 flex-align-center">
         <span class="msg-share-wrap" style="padding-left:10px;"  @click="share" ><svg-icon icon-class="share"/></span>
@@ -78,12 +78,12 @@ export default {
     display: block;
   }
   img, svg {
-    width: 0.32rem;
-    height: 0.32rem;
+    width: 0.26rem;
+    height: 0.26rem;
   }
   .icon-wrap {
-    width: 0.48rem;
-    height: 0.48rem;
+    width: 0.42rem;
+    height: 0.42rem;
     background-color: #fff;
     border-radius: 50%;
   }

@@ -141,7 +141,7 @@ export default {
 @import '../../styles/main.less';
 @import (reference) '../../styles/global.less';
 .footer {
-  background-color: rgba(58, 10, 59, 0.9);
+  background-color: rgba(23, 1, 29, 1);
   position: absolute;
   left: 0;
   bottom: 0;
@@ -150,7 +150,7 @@ export default {
   transition: all .3s ease-out;
   padding: 0;
   &::before {
-    .setTopLine(rgba(255, 255, 255, 0.4));
+    .setTopLine(rgba(255, 255, 255, 0.12));
     content: "";
   }
   .svg-icon {

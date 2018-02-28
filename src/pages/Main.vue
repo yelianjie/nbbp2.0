@@ -114,8 +114,8 @@
   </x-dialog>
   <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy" :confirmText="buyDialogInfo.confirmText">
     <div class="">
-      <div class="" style="font-size: 20px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;"/></div>
-      <p style="color: #88878f;"><svg-icon icon-class="tip" />当前余额可用：<svg-icon icon-class="coin" />{{userInfo.balance}}</p>
+      <div style="font-size: 26px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;vertical-align: bottom;"/></div>
+      <p style="color: #88878f;"><svg-icon icon-class="tip" style="margin-top:-2px;margin-right:2px;" />当前余额可用：<svg-icon icon-class="coin"  style="margin-top:-2px;margin-right:2px;"/>{{userInfo.balance}}</p>
       <p class="f12" v-if="barManagerInfo.isManager" style="color:#b187e4;margin-top:6px;">今日剩余免费霸屏、打赏{{barManagerInfo.game_count}}次</p>
       <p class="f13" v-if="buyDialogInfo.isCharge" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
     </div>
@@ -555,6 +555,7 @@ export default {
     font-size: 0;
     white-space: nowrap;
     padding: 2px 0;
+    text-align: right;
     &::-webkit-scrollbar-track {
       -webkit-box-shadow: inset 0 0 0px rgba(0, 0, 0, 0);
       box-shadow: inset 0 0 0px rgba(0, 0, 0, 0);
@@ -669,8 +670,8 @@ export default {
   border-radius: 0 0 15px 15px;
   padding: 0.25rem 0;
   img {
-    width: 0.48rem;
-    height: 0.48rem;
+    width: 0.42rem;
+    height: 0.42rem;
   }
   .u-d {
     * {

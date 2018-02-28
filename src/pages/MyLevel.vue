@@ -21,7 +21,7 @@
           <span class="level level-1">{{userInfo.grade_title}}</span>
         </template>
       </div>
-      <div class="level-progressbar flex-1 flex flex-align-center" style="height: 0.16rem;">
+      <div class="level-progressbar flex-1 flex flex-align-center" style="height: 0.12rem;">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <clipPath id="clipPath">
@@ -51,7 +51,7 @@
         <div class="level-item pr" @click="showLevel(v)" v-for="(v, i) in grades" :key="i" v-if="v.experience != 0">
           <img :src="$options.filters.filterLevel(v.grade_title, 'icon')" class="level-item-icon"/>
           <p class="white f15 tc">{{v.grade_title}}</p>
-          <p class="f13 darker1 tc">{{v.experience}}</p>
+          <p class="f13 darker1 tc">{{v.experience}}经验值</p>
           <div class="lock-layer" v-if="Number(userInfo.total_mc_experience) < Number(v.experience)" @click="showLevel(v)"><svg-icon icon-class="lock"/></div>
         </div>
       </div>
@@ -71,7 +71,7 @@
     <x-dialog v-model="levelVisible" :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
       <div class="level-container flex flex-v flex-pack-center" style="height: 100%;">
         <div class="flex flex-v flex-pack-center flex-align-center">
-          <img :src="curLevel.icon" style="width:5rem;height:5.18rem;margin-top:-1.2rem;" class="level-big-icon"/>
+          <img :src="curLevel.icon" style="width:5.5rem;height:5.7rem;margin-top:-2.4rem;" class="level-big-icon"/>
           <p class="white f20" style="margin-top:-1.2rem;">{{curLevel.value}}</p>
           <div class="powers f13 white">
             <ul>
@@ -171,10 +171,10 @@ export default {
   &::before {
     content: "";
     position: absolute;
-    height: 8px;
-    width: 8px;
+    height: 6px;
+    width: 6px;
     top: 50%;
-    margin-top: -4px;
+    margin-top: -3px;
     background-color: rgba(84, 86, 98, 1);
     border-radius: 50%;
   }
@@ -202,7 +202,7 @@ export default {
     width: 2rem;
     height: 1.77rem;
     margin-left: -1rem;
-    background-color: rgba(18, 20, 32, 0.6);
+    background-color: rgba(18, 20, 32, 0.8);
     border-radius: 50%;
     z-index: 1;
     color: #fff;
@@ -234,7 +234,7 @@ export default {
 .powers {
   margin-top: 10px;
   padding: 10px;
-  border: 1px solid #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 5px;
   li {
     text-align: left;
@@ -244,7 +244,7 @@ export default {
       position: absolute;
       width: 4px;
       height: 4px;
-      background-color: #fff;
+      background-color: rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       content: "";
       left: 0;

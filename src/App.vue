@@ -29,6 +29,12 @@ export default {
 </script>
 
 <style lang="less">
+.weui-btn {
+  border-radius: 0!important;
+}
+.weui-mask {
+  background-color: rgba(0,0,0,.8)!important;
+}
 .weui-loading_toast {
   z-index: 9999999999;
 }

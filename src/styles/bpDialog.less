@@ -33,7 +33,7 @@
     right: 0;
     left: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, .6);
+    background: rgba(0, 0, 0, .8);
 }
 
 .bp-mask_transparent{
@@ -54,14 +54,14 @@
     transform: translate(-50%, -50%);
     background-color :#fff;
     text-align: center;
-    border-radius: 15px;
+    border-radius: 12px;
     overflow: hidden;
 }
 .bp-dialog.bp-dialog-top {
     top: 30%;
 }
 .bp-dialog__hd {
-    padding: 20px;
+    padding: 0.35rem 20px 0;
     &.with-no-content {
       padding: 1.7em 1.6em;
     }
@@ -91,10 +91,6 @@
         padding:2.7em 20px 1.7em;
         color:#353535;
     }
-    &.line:after {
-        content: " ";
-        .setTopLine();
-    }
 }
 .bp-dialog__ft {
     position: relative;
@@ -102,6 +98,10 @@
     font-size: 18px;
     display: flex;
     background-color: #fff;
+    &:after {
+        content: " ";
+        .setTopLine();
+    }
 }
 .bp-dialog__btn {
     display: block;

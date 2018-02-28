@@ -190,7 +190,7 @@ export default {
 <style lang="less" scoped>
 @import '../../styles/window.less';
 @mainColor: #f31374;
-@borderColor: rgba(255, 255, 255, 0.3);
+@borderColor: rgba(255, 255, 255, 0.15);
 /*vendor swiper*/
 .window /deep/ {
   /deep/ .swiper-pagination-bullet {
@@ -198,6 +198,8 @@ export default {
   }
   /deep/ .swiper-pagination-bullet-active {
     background: rgba(255, 255, 255, 0.5);
+    width: 4px;
+    height: 4px;
   }
 }
 

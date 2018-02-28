@@ -22,6 +22,10 @@ li {
   .left-icon {
     width: 0.3rem;
     height: 0.3rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate3d(-50%, -50%, 0);
   }
   &::before {
     content: "";
@@ -36,6 +40,7 @@ li {
     background-color: #2e313a;
     border-radius: 50%; 
     margin-right: 10px;
+    position: relative;
   }
   .arrow-right {
     width: 0.4rem;
