@@ -68,6 +68,7 @@
         <button class="bp-button bp-submit" @click="$router.push('/Charge')">快速升级</button>
       </div>
     </div>
+    <div v-transfer-dom>
     <x-dialog v-model="levelVisible" :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
       <div class="level-container flex flex-v flex-pack-center" style="height: 100%;">
         <div class="flex flex-v flex-pack-center flex-align-center">
@@ -88,13 +89,17 @@
         <svg-icon icon-class="close" @click.native="levelVisible = false"/>
       </div>
     </x-dialog>
+    </div>
   </div>
 </template>
 
 <script>
-import { XDialog } from 'vux'
+import { XDialog, TransferDomDirective as TransferDom } from 'vux'
 import { getLevelInfo } from '@/api/'
 export default {
+  directives: {
+    TransferDom
+  },
   data () {
     return {
       powsers: ['贵族身份头衔；', '昵称加贵族称呼；', '更多特权暂未开发，敬请期待！'],
@@ -131,12 +136,26 @@ export default {
   },
   components: {
     XDialog
+  },
+  watch: {
+    levelVisible (newVal, oldVal) {
+      if (newVal) {
+        setTimeout(() => {
+          this.$el.classList.add('blur')
+        }, 200)
+      } else {
+        this.$el.classList.remove('blur')
+      }
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
 @import (reference) '../styles/global.less';
+.container.blur {
+  filter: blur(3px);
+}
 .img-level {
   .img-wrap {
     margin: 0.72rem 0;

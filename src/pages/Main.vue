@@ -23,6 +23,12 @@
             <router-link :to="{path: '/UserCenter'}"><img :src="userInfo.headimgurl | prefixImageUrl" class="circle"></router-link>
           </template>
         </div>
+        <div class="main-header-me tc " style="margin-left: 0.3rem;">
+          <router-link :to="{path: '/UserCenter'}">
+          <p class="white f16" style="line-height:1;margin-bottom:2px;">我的</p>
+          <p class="flex" style="height:16px;"><span class="level" :class="'level-' + userInfo.mc_level_id"  v-if="userInfo.grade_title">{{userInfo.grade_title}}</span></p>
+          </router-link>
+        </div>
       </div>
       <div class="flex-1 main-header-right">
         <div class="online-persons" v-for="(v, i) in onlinePeople" :key="i" @click="showCard(v)">
@@ -105,7 +111,7 @@
   <x-dialog v-model="concernVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="qrcode-box">
       <div class="qrcode-info flex flex-v flex-align-center">
-        <img src="../assets/jj.jpg" class="qrcode"/>
+        <!-- <img src="../assets/jj.jpg" class="qrcode"/> -->
         <p class="f14">请长按二维码</p>
         <p class="f14">关注牛霸霸屏官方公众号</p>
         <p class="f14">即可加入CMK酒吧聊天室</p>
@@ -517,10 +523,14 @@ export default {
 .level-icon-avatar {
   display: block;
   position: absolute;
-  left: -0.4rem;
+  /* left: -0.4rem;
   top: -0.3rem;
   width: 1.6rem;
-  height: 1.42rem;
+  height: 1.42rem; */
+  left: -0.6rem;
+  top: -0.46rem;
+  width: 2.1rem;
+  height: 1.86rem;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -538,12 +548,15 @@ export default {
   padding: 0.1rem 0;
   .main-header-left {
     margin-left: 0.32rem;
+    padding-right: 0.3rem;
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255, 0.2);
     position: relative;
   }
   .main-header-avatar {
     img {
-      width: 0.8rem;
-      height: 0.8rem;
+      width: 0.9rem;
+      height: 0.9rem;
       display: block;
     }
   }
@@ -575,13 +588,13 @@ export default {
   }
   .person-avatar {
     display: block;
-    width: 0.64rem;
-    height: 0.64rem;
+    width: 0.72rem;
+    height: 0.72rem;
   }
   .online-persons {
     margin-right: 0.2rem;
-    width: 0.64rem;
-    height: 0.64rem;
+    width: 0.72rem;
+    height: 0.72rem;
     display: inline-block;
     &:last-child {
       margin-right: 0;
@@ -793,6 +806,9 @@ export default {
   /* .nickname {
     font-size: 13px;
   } */
+  .main-header-me .f16 {
+    font-size: 14px;
+  }
 }
 .fade-out-leave-to {
   opacity: 0;
