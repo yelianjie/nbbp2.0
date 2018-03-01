@@ -20,7 +20,7 @@ import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 import { validateRules } from './utils/validateRules'
 import VueLazyload from 'vue-lazyload'
-import { getWxConfig } from './api/'
+import { getWxConfig, getHasToken } from './api/'
 const dictionary = {
   ch: {
     messages: {
@@ -73,8 +73,17 @@ const history = window.sessionStorage
 history.clear()
 let historyCount = history.getItem('count') * 1 || 0
 history.setItem('/', 0)
-
+console.log(getHasToken)
 router.beforeEach(function (to, from, next) {
+  /* if (!localStorage.getItem('tId')) {
+    getHasToken().then((res) => {
+      // 有token了 存tokne下次不进来
+      localStorage.setItem('tId', res.result)
+    }).catch((error) => {
+      console.log('error === ' + error)
+      window.location.href = window.location.origin + '/weixin/'
+    })
+  } */
   const toIndex = history.getItem(to.path)
   const fromIndex = history.getItem(from.path)
   if (toIndex) {

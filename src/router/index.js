@@ -46,6 +46,16 @@ export default new Router({
       }
     },
     {
+      path: '/BusinessJoin',
+      name: 'BusinessJoin',
+      component: (resolve) => {
+        require(['@/pages/BusinessJoin'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
+      }
+    },
+    {
       path: '/AgentCenter',
       name: 'AgentCenter',
       component: (resolve) => {

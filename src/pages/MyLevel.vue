@@ -3,7 +3,7 @@
     <div class="img-level">
       <div class="img-wrap flex flex-pack-center pr">
         <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'" >
-          <span class="level-icon-id" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span>
+          <span class="level-icon-id" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon', true)+')'}"></span>
           <img :src="userInfo.headimgurl | prefixImageUrl" class="circle"/>
         </template>
         <template v-else>
@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     showLevel (data) {
-      this.curLevel.icon = this.$options.filters.filterLevel(data.grade_title, 'bigIcon')
+      this.curLevel.icon = this.$options.filters.filterLevel(data.grade_title, 'bigIcon', true)
       this.curLevel.value = data.grade_title
       this.levelVisible = true
     }

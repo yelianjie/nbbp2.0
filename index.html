@@ -21,6 +21,25 @@
       win.addEventListener(resizeEvt, recalc, false);
       doc.addEventListener('DOMContentLoaded', recalc, false);
     })(document, window);
+    var isAndroid = window.navigator.appVersion.match(/android/gi);
+    var isIPhone = window.navigator.appVersion.match(/iphone/gi);
+    var dpr = 1
+    var devicePixelRatio = window.devicePixelRatio;
+    if (isIPhone) {
+      if (devicePixelRatio >= 3 && (!dpr || dpr >= 3)) {
+        dpr = 3;
+      } else if (devicePixelRatio >= 2 && (!dpr || dpr >= 2)){
+        dpr = 2;
+      } else {
+        dpr = 1;
+      }
+    } else {
+      dpr = 1;
+    }
+    if (isIPhone) {
+      document.documentElement.className = 'ios'
+      document.documentElement.setAttribute('data-dpr', dpr)
+    }
     </script>
     <title>牛霸霸屏</title>
   </head>

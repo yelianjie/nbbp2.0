@@ -23,7 +23,11 @@ export const filterFace = (msg) => {
   return msg
 }
 
-export const filterLevel = (levelName, field) => {
+export const filterLevel = (levelName, field, isUseDpr = false) => {
+  var dpr = document.documentElement.classList.contains('ios') ? document.documentElement.getAttribute('data-dpr') : 1
+  if (isUseDpr && parseInt(dpr) === 1) {
+    field = field + '3x'
+  }
   var o = Levels[levelName]
   if (o && o.hasOwnProperty(field)) {
     return o[field]

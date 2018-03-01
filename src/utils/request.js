@@ -13,9 +13,9 @@ Vue.http.interceptors.request.use(function (config) {
     }
   } */
   // Do something before request is sent
-  /* if (localStorage.getItem('token_guoguo')) {
-    config.headers['Authorization'] = localStorage.getItem('token_guoguo')
-  } */
+  /*if (localStorage.getItem('token')) {
+    config.headers['tId'] = localStorage.getItem('tId')
+  }*/
   return config
 }, function (error) {
   // Do something with request error

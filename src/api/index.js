@@ -3,6 +3,13 @@ import request from '@/utils/request'
 const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/prod.env').BASE_API : require('../../config/dev.env').BASE_API
 
 /**
+ * 获取是否已经有token
+*/
+export const getHasToken = (data) => {
+  return request('/weixin/index/getJsApiConfig', 'POST', data)
+}
+
+/**
  * 获取微信配置
 */
 export const getWxConfig = (data) => {

@@ -26,7 +26,7 @@
         <div class="main-header-me tc " style="margin-left: 0.3rem;">
           <router-link :to="{path: '/UserCenter'}">
           <p class="white f16" style="line-height:1;margin-bottom:2px;">我的</p>
-          <p class="flex" style="height:16px;"><span class="level" :class="'level-' + userInfo.mc_level_id"  v-if="userInfo.grade_title">{{userInfo.grade_title}}</span></p>
+          <!-- <p class="flex" style="height:16px;"><span class="level" :class="'level-' + userInfo.mc_level_id"  v-if="userInfo.grade_title">{{userInfo.grade_title}}</span></p> -->
           </router-link>
         </div>
       </div>
@@ -108,10 +108,10 @@
       <img src="../assets/share.png" style="max-width: 100%;float:right;width: 4.2rem;margin: 0.2rem 0.2rem 0 0;"/>
     </div>
   </x-dialog>
-  <x-dialog v-model="concernVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
+  <x-dialog v-model="concernVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="qrcode-box">
       <div class="qrcode-info flex flex-v flex-align-center">
-        <!-- <img src="../assets/jj.jpg" class="qrcode"/> -->
+        <img src="../assets/nb-qrcode.png" class="qrcode"/>
         <p class="f14">请长按二维码</p>
         <p class="f14">关注牛霸霸屏官方公众号</p>
         <p class="f14">即可加入CMK酒吧聊天室</p>
@@ -534,6 +534,8 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  z-index: 1;
+  transform: scale(0.85);
 }
 .container {
   color: #fff;
@@ -564,7 +566,7 @@ export default {
     overflow-y: hidden;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    margin-left: 0.4rem;
+    margin-left: 0.8rem;
     font-size: 0;
     white-space: nowrap;
     padding: 2px 0;
@@ -777,7 +779,7 @@ export default {
   background-position: center;
   background-repeat: no-repeat;
   display: block;
-  &.level1 {
+  /* &.level1 {
     background-image: url(../assets/level/level-1.png);
   }
   &.level2 {
@@ -800,7 +802,7 @@ export default {
   }
   &.level8 {
     background-image: url(../assets/level/level-8.png);
-  }
+  } */
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   /* .nickname {

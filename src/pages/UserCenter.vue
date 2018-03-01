@@ -4,7 +4,7 @@
       <div class="user-box1 flex flex-align-center">
         <div class="flex-1 avatar flex flex-pack-center pr">
           <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'">
-            <router-link :to="{path: '/Profile'}"><span class="level-icon-id" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon')+')'}"></span>
+            <router-link :to="{path: '/Profile'}"><span class="level-icon-id" :style="{'background-image': 'url('+$options.filters.filterLevel(userInfo.grade_title, 'avatarIcon', true)+')'}"></span>
             <img :src="userInfo.headimgurl | prefixImageUrl" :class="{'hasLevel': userInfo.grade_title != '平民'}"/></router-link>
           </template>
           <template v-else>
@@ -60,7 +60,7 @@
       <group class="bg2" style="margin-top: 0.2rem;">
         <cell title="了解贵族特权" color="#f2c06c" :is-link="true" icon-name="royal" :link-path="{path: '/MyLevel'}"></cell>
         <cell title="推荐给好友" color="#e8401b" :is-link="true" icon-name="heart" @click.native.prevent="shareMaskVisible = true"></cell>
-        <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/'}"></cell>
+        <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/BusinessJoin'}"></cell>
         <cell title="代理加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/'}"></cell>
         <cell title="关于我们" color="#5bf475" :is-link="true" icon-name="about" :link-path="{path: '/About'}"></cell>
       </group>
