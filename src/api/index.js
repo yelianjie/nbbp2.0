@@ -6,7 +6,7 @@ const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/pr
  * 获取是否已经有token
 */
 export const getHasToken = (data) => {
-  return request('/weixin/index/getJsApiConfig', 'POST', data)
+  return request('/weixin/login/getTokenId', 'POST', data)
 }
 
 /**

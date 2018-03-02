@@ -47,6 +47,10 @@ export default {
       }]
     }
   },
+  beforeRouteEnter (to, from, next) {
+    document.title = '代理管理'
+    next()
+  },
   created () {
     getAgentIndex().then((res) => {
       this.info = res.result

@@ -13,9 +13,9 @@ Vue.http.interceptors.request.use(function (config) {
     }
   } */
   // Do something before request is sent
-  /*if (localStorage.getItem('token')) {
+  if (localStorage.getItem('tId')) {
     config.headers['tId'] = localStorage.getItem('tId')
-  }*/
+  }
   return config
 }, function (error) {
   // Do something with request error
@@ -25,7 +25,7 @@ Vue.http.interceptors.request.use(function (config) {
 const request = (url, method = 'POST', data = {}) => {
   if (method === 'POST') {
     return Vue.http.post(url, data).then((response) => {
-      if (response.data.code !== '306000') {
+      if (response.data.code !== '306000' && response.data.code !== '301001') {
         Vue.$vux.toast.show({
           text: response.data.result,
           position: 'bottom',
@@ -33,6 +33,8 @@ const request = (url, method = 'POST', data = {}) => {
           time: 1500,
           width: '10em'
         })
+        return Promise.reject(response.data.result)
+      } else if (response.data.code === '301001') {
         return Promise.reject(response.data.result)
       } else {
         return Promise.resolve(response.data)
@@ -47,12 +49,6 @@ const request = (url, method = 'POST', data = {}) => {
       } else {
         errors = error.message.indexOf('timeout') !== -1 ? '请求超时' : error.message
       }
-      Vue.$vux.toast.show({
-        text: errors,
-        position: 'bottom',
-        type: 'text',
-        time: 1500
-      })
       return Promise.reject(errors)
     })
   } else {

@@ -109,6 +109,10 @@ export default {
       grades: []
     }
   },
+  beforeRouteEnter (to, from, next) {
+    document.title = '贵族特权'
+    next()
+  },
   created () {
     getLevelInfo().then((res) => {
       this.userInfo = res.result.user

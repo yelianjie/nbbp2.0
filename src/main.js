@@ -21,169 +21,178 @@ import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 import { validateRules } from './utils/validateRules'
 import VueLazyload from 'vue-lazyload'
 import { getWxConfig, getHasToken } from './api/'
-const dictionary = {
-  ch: {
-    messages: {
-      email: () => '请输入正确的邮箱格式',
-      required: (field) => field + '不能为空'
+// 判断
+var tId = localStorage.getItem('tId')
+if (!tId) {
+  getHasToken().then((res) => {
+    // 有token了 存token下次不进来 继续路由
+    localStorage.setItem('tId', res.result)
+    init()
+  }).catch((error) => {
+    // 第一次登录
+    if (error === '未登录') {
+      var url = window.location.hash.substring(1)
+      window.location.href = window.location.origin + '/weixin/login/index?callback_url=' + url
+    }
+  })
+} else {
+  init()
+}
+function init () {
+  const dictionary = {
+    ch: {
+      messages: {
+        email: () => '请输入正确的邮箱格式',
+        required: (field) => field + '不能为空'
+      }
     }
   }
-}
-// custom validator
-Object.keys(validateRules).forEach((key) => {
-  Validator.extend(key, validateRules[key].validate)
-  // merge the validator messages
-  Object.keys(validateRules[key].messages).forEach(locale => {
-    Validator.localize({
-      [locale]: {
-        messages: {
-          [key]: validateRules[key].messages[locale]
+  // custom validator
+  Object.keys(validateRules).forEach((key) => {
+    Validator.extend(key, validateRules[key].validate)
+    // merge the validator messages
+    Object.keys(validateRules[key].messages).forEach(locale => {
+      Validator.localize({
+        [locale]: {
+          messages: {
+            [key]: validateRules[key].messages[locale]
+          }
         }
-      }
+      })
     })
   })
-})
 
-Validator.localize('ch', ZH_CN)
-Vue.use(VeeValidate, {
-  errorBagName: 'vErrors',
-  dictionary: dictionary
-})
-Vue.use(WechatPlugin)
-Vue.use(VueJsonp)
-Vue.use(bpDialog)
-Vue.use(maskPlugin)
-Vue.use(noscrollPlugin)
-Vue.use(ToastPlugin, {
-  position: 'bottom',
-  time: 1500,
-  type: 'text',
-  isShowMask: true
-})
-Vue.use(ConfirmPlugin)
-Vue.use(LoadingPlugin)
-Vue.use(VueLazyload)
-Vue.use(VueRouter)
-window.URL = window.URL || window.webkitURL
-FastClick.attach(document.body)
+  Validator.localize('ch', ZH_CN)
+  Vue.use(VeeValidate, {
+    errorBagName: 'vErrors',
+    dictionary: dictionary
+  })
+  Vue.use(WechatPlugin)
+  Vue.use(VueJsonp)
+  Vue.use(bpDialog)
+  Vue.use(maskPlugin)
+  Vue.use(noscrollPlugin)
+  Vue.use(ToastPlugin, {
+    position: 'bottom',
+    time: 1500,
+    type: 'text',
+    isShowMask: true
+  })
+  Vue.use(ConfirmPlugin)
+  Vue.use(LoadingPlugin)
+  Vue.use(VueLazyload)
+  Vue.use(VueRouter)
+  window.URL = window.URL || window.webkitURL
+  FastClick.attach(document.body)
 
-Vue.config.productionTip = false
+  Vue.config.productionTip = false
 
-const history = window.sessionStorage
-history.clear()
-let historyCount = history.getItem('count') * 1 || 0
-history.setItem('/', 0)
-console.log(getHasToken)
-router.beforeEach(function (to, from, next) {
-  /* if (!localStorage.getItem('tId')) {
-    getHasToken().then((res) => {
-      // 有token了 存tokne下次不进来
-      localStorage.setItem('tId', res.result)
-    }).catch((error) => {
-      console.log('error === ' + error)
-      window.location.href = window.location.origin + '/weixin/'
-    })
-  } */
-  const toIndex = history.getItem(to.path)
-  const fromIndex = history.getItem(from.path)
-  if (toIndex) {
-    if (!fromIndex || parseInt(toIndex, 10) > parseInt(fromIndex, 10) || (toIndex === '0' && fromIndex === '0')) {
-      store.commit('app/UPDATE_DIRECTION', 'forward')
+  const history = window.sessionStorage
+  history.clear()
+  let historyCount = history.getItem('count') * 1 || 0
+  history.setItem('/', 0)
+  router.beforeEach(function (to, from, next) {
+    const toIndex = history.getItem(to.path)
+    const fromIndex = history.getItem(from.path)
+    if (toIndex) {
+      if (!fromIndex || parseInt(toIndex, 10) > parseInt(fromIndex, 10) || (toIndex === '0' && fromIndex === '0')) {
+        store.commit('app/UPDATE_DIRECTION', 'forward')
+      } else {
+        store.commit('app/UPDATE_DIRECTION', 'reverse')
+      }
     } else {
-      store.commit('app/UPDATE_DIRECTION', 'reverse')
+      ++historyCount
+      history.setItem('count', historyCount)
+      to.path !== '/' && history.setItem(to.path, historyCount)
+      store.commit('app/UPDATE_DIRECTION', 'forward')
     }
-  } else {
-    ++historyCount
-    history.setItem('count', historyCount)
-    to.path !== '/' && history.setItem(to.path, historyCount)
-    store.commit('app/UPDATE_DIRECTION', 'forward')
-  }
-  // 判断当前角色有没有权限进入这个路由
-  // if (store.getters['user/role'])
-  /* let role = store.getters['user/role']
-  let userInfo = store.getters['user/userInfo']
-  if (Object.keys(userInfo).length === 0) {
-    store.dispatch('user/getUserInfo').then(() => {
+    store.commit('updateLoadingStatus', {isLoading: true})
+    next()
+    // 判断当前角色有没有权限进入这个路由
+    // if (store.getters['user/role'])
+    /* let role = store.getters['user/role']
+    let userInfo = store.getters['user/userInfo']
+    if (Object.keys(userInfo).length === 0) {
+      store.dispatch('user/getUserInfo').then(() => {
+        if (role.some((v) => to.meta.roles.includes(v))) {
+          store.commit('updateLoadingStatus', {isLoading: true})
+          next()
+        } else {
+          next({path: '/'})
+        }
+      })
+    } else {
       if (role.some((v) => to.meta.roles.includes(v))) {
         store.commit('updateLoadingStatus', {isLoading: true})
         next()
       } else {
         next({path: '/'})
       }
-    })
-  } else {
-    if (role.some((v) => to.meta.roles.includes(v))) {
-      store.commit('updateLoadingStatus', {isLoading: true})
-      next()
-    } else {
-      next({path: '/'})
+    } */
+  })
+
+  router.afterEach(function (to) {
+    let shareParams = {}
+    shareParams = {
+      title: '这么有趣的霸屏交友互动，邀请你一起来玩~',
+      desc: '新朋友、霸屏、游戏、送礼互动，线上结合线下，给您的生活增添更多趣味和可能。',
+      link: window.location.origin + '/weixin/',
+      imgUrl: 'http://xnb.siweiquanjing.com/screen/images/logo1.png' // 分享图标
     }
-  } */
-  store.commit('updateLoadingStatus', {isLoading: true})
-  next()
-})
-
-router.afterEach(function (to) {
-  let shareParams = {}
-  shareParams = {
-    title: '这么有趣的霸屏交友互动，邀请你一起来玩~',
-    desc: '新朋友、霸屏、游戏、送礼互动，线上结合线下，给您的生活增添更多趣味和可能。',
-    link: window.location.origin + '/weixin/',
-    imgUrl: 'http://xnb.siweiquanjing.com/screen/images/logo1.png' // 分享图标
-  }
-  Vue.wechat.ready(() => {
-    Vue.wechat.onMenuShareTimeline({
-      ...shareParams,
-      success: function () {},
-      cancel: function () {}
+    Vue.wechat.ready(() => {
+      Vue.wechat.onMenuShareTimeline({
+        ...shareParams,
+        success: function () {},
+        cancel: function () {}
+      })
+      Vue.wechat.onMenuShareAppMessage({
+        ...shareParams,
+        success: function () {},
+        cancel: function () {}
+      })
     })
-    Vue.wechat.onMenuShareAppMessage({
-      ...shareParams,
-      success: function () {},
-      cancel: function () {}
-    })
+    document.documentElement.classList.remove('noscroll')
+    store.commit('updateLoadingStatus', {isLoading: false})
   })
-  document.documentElement.classList.remove('noscroll')
-  store.commit('updateLoadingStatus', {isLoading: false})
-})
 
-Object.keys(filters).forEach(key => {
-  Vue.filter(key, filters[key])
-})
+  Object.keys(filters).forEach(key => {
+    Vue.filter(key, filters[key])
+  })
 
-Object.keys(directives).forEach(key => {
-  Vue.directive(key, directives[key])
-})
+  Object.keys(directives).forEach(key => {
+    Vue.directive(key, directives[key])
+  })
 
-function recal () {
-  var docEl = document.documentElement
-  var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize'
-  var recalc = function () {
-    var clientWidth = docEl.clientWidth
-    if (!clientWidth) return
-    var fontSize = clientWidth >= 750 ? 50 : 100 * (clientWidth / 750)
-    store.commit('app/SET_FONTSIZE', fontSize)
+  function recal () {
+    var docEl = document.documentElement
+    var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize'
+    var recalc = function () {
+      var clientWidth = docEl.clientWidth
+      if (!clientWidth) return
+      var fontSize = clientWidth >= 750 ? 50 : 100 * (clientWidth / 750)
+      store.commit('app/SET_FONTSIZE', fontSize)
+    }
+    if (!document.addEventListener) return
+    window.addEventListener(resizeEvt, recalc, false)
+    recalc()
   }
-  if (!document.addEventListener) return
-  window.addEventListener(resizeEvt, recalc, false)
-  recalc()
+  recal()
+  // 微信config配置
+  getWxConfig({url: window.location.href.split('#')[0]}).then((res) => {
+    Vue.wechat.config({
+      ...res.result,
+      debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+      jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'previewImage', 'getLocation', 'chooseWXPay'] // 必填，需要使用的JS接口列表
+    })
+  }).finally(() => {
+    /* eslint-disable no-new */
+    new Vue({
+      router,
+      store,
+      render: h => h(App)
+    }).$mount('#app-box')
+  })
 }
-recal()
-// 微信config配置
-getWxConfig({url: window.location.href.split('#')[0]}).then((res) => {
-  Vue.wechat.config({
-    ...res.result,
-    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'previewImage', 'getLocation', 'chooseWXPay'] // 必填，需要使用的JS接口列表
-  })
-}).finally(() => {
-  /* eslint-disable no-new */
-  new Vue({
-    router,
-    store,
-    render: h => h(App)
-  }).$mount('#app-box')
-})
 /* Vue.wechat.config({
   debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
   appId: '', // 必填，公众号的唯一标识

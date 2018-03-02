@@ -102,8 +102,8 @@ export default {
       this.getRegions(() => {
         this.getUserInfo().then((res) => {
           res.sex = [res.sex.toString()]
-          res.weight = [res.weight.toString()]
-          res.stature = [res.stature.toString()]
+          res.weight = res.weight !== '0' ? [res.weight.toString()] : ['']
+          res.stature = res.stature !== '0' ? [res.stature.toString()] : ['']
           let region = filterRegionByName(res.province, res.city, this.addressData)
           this.adsValue = [region.province_id, region.city_id]
           this.form = Object.assign({}, res)

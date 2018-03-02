@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     setBgCheck (index) {
-      let bgId = this.activeType === 1 ? this.images[index].id : this.videos[index].id
+      let bgId = this.activeType === 1 ? this.images[index].id : this.videos[index].fid
       setBg({ht_id: this.$route.params.id, type: this.activeType, background_id: bgId}).then((res) => {
         console.log(res)
       })

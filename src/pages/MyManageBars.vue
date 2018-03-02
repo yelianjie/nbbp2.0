@@ -34,7 +34,7 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    document.title = '我的酒吧'
+    document.title = '酒吧管理'
     next()
   },
   created () {

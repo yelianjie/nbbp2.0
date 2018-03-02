@@ -80,6 +80,10 @@ export default {
       url: window.location.href.replace('AgentBarInfo', 'BindManage')
     }
   },
+  beforeRouteEnter (to, from, next) {
+    document.title = '代理管理'
+    next()
+  },
   created () {
     getAgentBar({ht_id: this.$route.params.id}).then((res) => {
       res.result.users_separate = Number(res.result.users_separate)
