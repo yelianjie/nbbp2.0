@@ -29,9 +29,6 @@ export default {
 </script>
 
 <style lang="less">
-.weui-btn {
-  border-radius: 0!important;
-}
 .weui-mask {
   background-color: rgba(0,0,0,.8)!important;
 }
@@ -100,7 +97,11 @@ body, html, #app {
 .weui-toast.vux-toast-bottom {
   bottom: 54px;
 }
-
+.overscroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
 .inner {
   background-color: #fff;
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="container bg1 about-container borderbox flex flex-v" style="height: 100%;">
-    <div class="flex-1" style="overflow: auto;">
+    <div class="flex-1 overscroll" ref="scrollWrapper">
       <img class="join-img" v-lazy="'./static/join/join1.jpg'">
       <img class="join-img" v-lazy="'./static/join/join2.jpg'">
       <img class="join-img" v-lazy="'./static/join/join3.jpg'">
@@ -23,13 +23,27 @@
 </template>
 
 <script>
+import ScrollFix from '@/vendor/ScrollFix'
 export default {
+  data () {
+    return {
+      scrollFix: null
+    }
+  },
+  beforeDestroy () {
+    if (this.scrollFix) {
+      this.scrollFix.destory()
+    }
+  },
   beforeRouteEnter (to, from, next) {
     document.title = '商户加盟'
     next()
   },
   mounted () {
     this.$Lazyload.lazyLoadHandler()
+    this.$nextTick(() => {
+      this.scrollFix = new ScrollFix(this.$refs.scrollWrapper)
+    })
   }
 }
 </script>

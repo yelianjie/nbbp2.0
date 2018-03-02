@@ -65,7 +65,12 @@ export default {
   methods: {
     confirmDelete () {
       deleteBar({ht_id: this.deleteInfo.id}).then((res) => {
-        this.barList.splice(this.deleteInfo.index, 1)
+        let origin = Object.assign([], this.barList)
+        origin.splice(this.deleteInfo.index, 1)
+        this.barList = []
+        this.$nextTick(() => {
+          this.barList = origin
+        })
         this.confirmVisible = false
       })
     },
