@@ -2,7 +2,7 @@
   <div class="container min-h">
     <div style="height:0;"></div>
     <search
-    @on-change="getResult"
+    @on-submit="getResult"
     v-model="value"
     position="absolute"
     auto-scroll-to-top 
@@ -11,6 +11,7 @@
     @on-cancel="onCancel"
     ref="search">
     <div id="results" :style="{'min-height': resultHeight + 'px'}">
+      <inline-loading v-if="loading1" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
       <Manager v-for="(v, i) in searchResults" from="searchResults" :key="i" :index="i" :result="v" @on-add="onAdd" @on-delete="onDelete"></Manager>
     </div>
     </search>
@@ -20,8 +21,9 @@
       <p>1、每天可免费在该酒吧购买10次霸屏，不可累加。</p>
       <p>2、可在手机端删除已经上墙的消息。</p>
     </div>
-    <div id="current-managers" class="fff">
-       <Manager v-for="(v, i) in results" :show-add="false" :key="i" :index="i" :result="v"  @on-delete="onDeleteResult"></Manager>
+    <inline-loading v-if="loading2" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
+    <div id="current-managers" class="fff">  
+      <Manager v-for="(v, i) in results" :show-add="false" :key="i" :index="i" :result="v"  @on-delete="onDeleteResult"></Manager>
     </div>
   </div>
 </template>
@@ -30,10 +32,12 @@
 import { Search } from 'vux'
 import Manager from '../components/Manager/Manager'
 import { getBarManagers, getMembersByName, addManager, deleteManager } from '@/api/'
+import InlineLoading from '../components/InlineLoading'
 export default {
   components: {
     Search,
-    Manager
+    Manager,
+    InlineLoading
   },
   data () {
     return {
@@ -42,7 +46,8 @@ export default {
       focus: false,
       results: [],
       searchResults: [],
-      timer: null
+      loading1: false,
+      loading2: true
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -51,6 +56,7 @@ export default {
   },
   created () {
     getBarManagers({ht_id: this.$route.params.id}).then((res) => {
+      this.loading2 = false
       Array.isArray(res.result) && (this.results = res.result)
     })
   },
@@ -110,15 +116,15 @@ export default {
       this.searchResults = []
     },
     getResult (val) {
-      clearTimeout(this.timer)
       if (val === '') {
         return false
       }
-      this.timer = setTimeout(() => {
-        getMembersByName({ht_id: this.$route.params.id, nickname: val}).then((res) => {
-          Array.isArray(res.result) && (this.searchResults = res.result)
-        })
-      }, 500)
+      this.searchResults = []
+      this.loading1 = true
+      getMembersByName({ht_id: this.$route.params.id, nickname: val}).then((res) => {
+        this.loading1 = false
+        Array.isArray(res.result) && (this.searchResults = res.result)
+      })
     }
   }
 }

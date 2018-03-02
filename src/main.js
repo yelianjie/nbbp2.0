@@ -23,6 +23,10 @@ import VueLazyload from 'vue-lazyload'
 import { getWxConfig, getHasToken } from './api/'
 // 判断
 var tId = localStorage.getItem('tId')
+if (process.env.NODE_ENV !== 'production') {
+  localStorage.setItem('tId', 'ad5f4d1290b91a4d16af4160618dda787c23d094')
+  tId = localStorage.getItem('tId')
+}
 if (!tId) {
   getHasToken().then((res) => {
     // 有token了 存token下次不进来 继续路由

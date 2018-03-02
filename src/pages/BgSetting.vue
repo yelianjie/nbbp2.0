@@ -34,7 +34,7 @@ export default {
     var find = -1
     getBg({ht_id: this.$route.params.id, type: 2}).then((res) => {
       if (res.result.ht_selected) {
-        find = res.result.default.findIndex(v => v.id === res.result.ht_selected.video_id)
+        find = res.result.default.findIndex(v => v.id === res.result.ht_selected.id)
         if (find > -1) {
           this.videoSelected = find
         }
