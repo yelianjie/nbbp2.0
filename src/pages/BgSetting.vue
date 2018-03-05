@@ -106,7 +106,6 @@ export default {
 .container {
   overflow: hidden;
   /deep/ .bg-item {
-    display: block;
     padding: 10px 15px;
     background-color: #fff;
     position: relative;
@@ -118,12 +117,12 @@ export default {
       width: 100%;
       border-bottom: 1px solid #f2f2f2;
     }
-    .bg-icon {
-      img, video {
-        display: block;
-        width: 180px;
-        height: 108px;
-      }
+  }
+  /deep/ .bg-icon {
+    img, video {
+      display: block;
+      width: 180px;
+      height: 108px;
     }
   }
 }
@@ -136,5 +135,6 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  background-color: #fff;
 }
 </style>

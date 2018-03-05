@@ -89,7 +89,8 @@ export default {
         freeMode: true,
         pagination: {
           el: '.swiper-pagination'
-        }
+        },
+        observer: true
       },
       swiperThemeOption: {
         slidesPerColumn: 2,
@@ -98,7 +99,8 @@ export default {
         freeMode: true,
         pagination: {
           el: '.swiper-pagination'
-        }
+        },
+        observer: true
       },
       base64Img: ''
     }
