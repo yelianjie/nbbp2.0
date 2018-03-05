@@ -27,13 +27,10 @@ export default {
       barInfo: {}
     }
   },
-  beforeRouteEnter (to, from, next) {
-    document.title = decodeURI(to.query.name) + '管理'
-    next()
-  },
   created () {
     getBarMoney({ht_id: this.$route.params.id}).then((res) => {
       this.barInfo = res.result
+      document.title = res.result.name + '管理'
     })
   },
   components: {

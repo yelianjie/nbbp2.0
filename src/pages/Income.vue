@@ -91,9 +91,17 @@ export default {
         })
         return false
       }
+      this.$mask()
+      this.$vux.loading.show({
+        text: '正在兑换'
+      })
       exchangeToCoin({money: this.toCoinValue}).then((res) => {
         this.getUserInfo()
         this.exchangeVisible = false
+        this.$vux.toast.show({
+          text: '兑换成功'
+        })
+        this.$vux.loading.hide()
       })
     },
     deposit () {

@@ -24,8 +24,9 @@
         </div> -->
         
         <div class="flex white tag1 flex flex-align-center flex-pack-center">
-          <span class="sex sex-male flex flex-align-center"><svg-icon icon-class="male" v-if="userInfo.sex == 1"/><svg-icon icon-class="female" v-if="userInfo.sex == 2"/></span>
-          <span class="tag tagcity">{{userInfo.city}}</span>
+          <span class="sex sex-male flex flex-align-center" v-if="userInfo.sex == 1"><svg-icon icon-class="male"/></span>
+          <span class="sex sex-female flex flex-align-center" v-if="userInfo.sex == 2"><svg-icon icon-class="female"/></span>
+          <span class="tag tagcity" v-if="isCityPingYin">{{userInfo.city}}</span>
           <span class="level" :class="'level-' + userInfo.mc_level_id" v-if="userInfo.grade_title && userInfo.grade_title != '平民'" @click="$router.push({path: '/MyLevel'})">{{userInfo.grade_title}}</span>
           <span class="level level-1" v-else @click="$router.push({path: '/MyLevel'})">{{userInfo.grade_title}}</span>
         </div>
@@ -60,8 +61,8 @@
       <group class="bg2" style="margin-top: 0.2rem;">
         <cell title="了解贵族特权" color="#f2c06c" :is-link="true" icon-name="royal" :link-path="{path: '/MyLevel'}"></cell>
         <cell title="推荐给好友" color="#e8401b" :is-link="true" icon-name="heart" @click.native.prevent="shareMaskVisible = true"></cell>
-        <cell title="商户加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/BusinessJoin'}"></cell>
-        <cell title="代理加盟" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/'}"></cell>
+        <cell title="商户加盟" color="#317fe3" v-if="userInfo.isMM == 0" :is-link="true" icon-name="cooperate" :link-path="{path: '/BusinessJoin', query: {type: 1}}"></cell>
+        <cell title="代理加盟" v-if="userInfo.isAgent == 0" color="#317fe3" :is-link="true" icon-name="cooperate" :link-path="{path: '/BusinessJoin', query: {type: 2}}"></cell>
         <cell title="关于我们" color="#5bf475" :is-link="true" icon-name="about" :link-path="{path: '/About'}"></cell>
       </group>
       <!-- v-if="userInfo.isAgent > 0" v-if="userInfo.isMM > 0"  -->
@@ -118,7 +119,18 @@ export default {
   computed: {
     ...mapGetters('user', [
       'userInfo'
-    ])
+    ]),
+    isCityPingYin () {
+      if (this.userInfo && this.userInfo.city) {
+        if (/^[\u4E00-\u9FA5]+$/.test(this.userInfo.city)) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     ...mapActions('user', [

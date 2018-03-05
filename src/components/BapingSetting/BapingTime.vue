@@ -52,7 +52,8 @@ export default {
       this.times[itemValue].selected = Number(this.times[itemValue].selected) === 1 ? 0 : 1
       let data = {
         id: this.times[itemValue].id,
-        selected: this.times[itemValue].selected
+        selected: this.times[itemValue].selected,
+        ht_id: this.$route.params.id
       }
       updateBpSelect(data)
     },
@@ -77,7 +78,8 @@ export default {
         onConfirm (msg) {
           let data = {
             price: msg,
-            id: _this.times[_this.editIndex].id
+            id: _this.times[_this.editIndex].id,
+            ht_id: _this.$route.params.id
             // selected: _this.times[_this.editIndex].selected
           }
           updateBpPrice(data).then((res) => {

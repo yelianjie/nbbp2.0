@@ -14,7 +14,7 @@
       </div>
       <group label-width="4.5em" label-align="center">
         <x-input title="昵称" v-model="form.nickname" value-text-align="left" data-vv-as="昵称" v-validate.initial="'required'"></x-input>
-        <popup-picker title="性别" :data="sexs" v-model="form.sex" value-text-align="left" show-name></popup-picker>
+        <popup-picker title="性别" :data="sexs" @on-hide="onHide" v-model="form.sex" value-text-align="left" show-name></popup-picker>
         <datetime title="生日" :min-year="1940" v-model="form.birthday" value-text-align="left" placeholder="选择出生日期"></datetime>
         <popup-picker title="身高" :data="heights" v-model="form.stature" value-text-align="left" placeholder="选择身高"></popup-picker>
         <popup-picker title="体重" :data="weights" v-model="form.weight" value-text-align="left" placeholder="选择体重"></popup-picker>
@@ -105,7 +105,9 @@ export default {
           res.weight = res.weight !== '0' ? [res.weight.toString()] : ['']
           res.stature = res.stature !== '0' ? [res.stature.toString()] : ['']
           let region = filterRegionByName(res.province, res.city, this.addressData)
-          this.adsValue = [region.province_id, region.city_id]
+          if (region.city_id && region.province_id) {
+            this.adsValue = [region.province_id, region.city_id]
+          }
           this.form = Object.assign({}, res)
           this.$vux.loading.hide()
         })
@@ -113,10 +115,12 @@ export default {
     } else {
       this.getRegions(() => {
         userInfo.sex = [userInfo.sex.toString()]
-        userInfo.weight = [userInfo.weight.toString()]
-        userInfo.stature = [userInfo.stature.toString()]
+        userInfo.weight = userInfo.weight !== '0' ? [userInfo.weight.toString()] : ['']
+        userInfo.stature = userInfo.stature !== '0' ? [userInfo.stature.toString()] : ['']
         let region = filterRegionByName(userInfo.province, userInfo.city, this.addressData)
-        this.adsValue = [region.province_id, region.city_id]
+        if (region.city_id && region.province_id) {
+          this.adsValue = [region.province_id, region.city_id]
+        }
         this.form = Object.assign({}, userInfo)
         this.$vux.loading.hide()
       })
@@ -127,6 +131,11 @@ export default {
       'getUserInfo',
       'saveUserInfo'
     ]),
+    onHide (confirm) {
+      if (confirm && this.form.sex[0] === '0') {
+        this.form.sex = ['1']
+      }
+    },
     getRegions (cb) {
       getRegionData().then((res) => {
         for (var i = 0; i < res.result.length; i++) {

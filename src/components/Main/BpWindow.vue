@@ -13,15 +13,20 @@
         <div class="rpxline" style="margin-bottom: 0.4rem;"></div>
         <div class="window-middle">
           <div class="bp-time-container">
-            <div class="bp-time-item" v-for="(v, i) in times" :key="i" :class="{'selected': bpTimeIndex == i}" @click="bpTimeIndex != i ? bpTimeIndex = i : bpTimeIndex = -1">
-              <div class="time f13">{{v.time}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-              <div class="time-price f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
-            </div>
+            <swiper :options="swiperTimeOption">
+              <swiper-slide v-for="(v, i) in times" :key="i">
+                <div class="bp-time-item" :class="{'selected': bpTimeIndex == i}" @click="bpTimeIndex != i ? bpTimeIndex = i : bpTimeIndex = -1">
+                <div class="time f13">{{v.time}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+                <div class="time-price f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
+              </div>
+              </swiper-slide>
+              <div class="swiper-pagination" slot="pagination"></div>
+            </swiper>
           </div>
           <div class="rpxline" style="margin-bottom: 0.2rem;"></div>
           <div class="bp-theme-container">
             <swiper :options="swiperThemeOption">
-              <swiper-slide v-for="(v, i) in screens" :key="i">
+              <swiper-slide v-for="(v, i) in bpfilterList(screens)" :key="i">
                 <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i}" @click="bpThemeIndex != i ? bpThemeIndex = i : bpThemeIndex = -1">
                   <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="theme-icon"><img v-lazy="$options.filters.prefixImageUrl(v.icon)"></div>
@@ -77,6 +82,15 @@ export default {
       bpTimeIndex: -1,
       bpThemeIndex: -1,
       content: '',
+      swiperTimeOption: {
+        slidesPerColumn: 1,
+        slidesPerView: 4,
+        slidesPerColumnFill: 'row',
+        freeMode: true,
+        pagination: {
+          el: '.swiper-pagination'
+        }
+      },
       swiperThemeOption: {
         slidesPerColumn: 2,
         slidesPerView: 4,
@@ -93,6 +107,11 @@ export default {
     ...mapActions('app', {
       ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
     }),
+    bpfilterList (screens) {
+      return screens.filter((v) => {
+        return v.title !== '重金霸屏'
+      })
+    },
     closeWindow () {
       this.$emit('closeWindow', false)
     },
@@ -114,17 +133,21 @@ export default {
         })
         return false
       }
-      if (this.bpThemeIndex === -1) {
+      /* if (this.bpThemeIndex === -1) {
         this.$vux.toast.show({
           text: '请选择霸屏主题'
         })
         return false
-      }
+      } */
       if (this.content === '') {
         this.$vux.toast.show({
           text: '请输入文字'
         })
         return false
+      }
+      if (this.bpThemeIndex === -1) {
+        var isHasTextTheme = this.screens.findIndex((v) => v.title === '重金霸屏')
+        this.bpThemeIndex = isHasTextTheme
       }
       let isCharge = Number(this.total) > Number(this.userInfo.balance)
       let postParams = {
@@ -215,14 +238,19 @@ export default {
   background: radial-gradient(circle closest-corner at 50% 30%, #621653, #170127);
 }
 
+.bp-time-container {
+  .swiper-slide {
+    text-align: center;
+  }
+  .swiper-container {
+    padding: 0.15rem 0;
+  }
+}
+
 .bp-time-item {
   display: inline-block;
   width: 1.15rem;
-  margin-right: 0.7rem;
-  margin-bottom: 0.3rem;
-  &:nth-child(4n+4) {
-    margin-right: 0;
-  }
+  margin-bottom: 0.4rem;
   .time {
     height: 0.5rem;
     line-height: 0.5rem;
@@ -327,11 +355,11 @@ export default {
   right: -1px;
   border-radius: 6px;
 }
-@media screen and (min-width: 768px){
+/* @media screen and (min-width: 768px){
   .bp-time-item:nth-child(4n+4) {
     margin-right: 0.7rem;
   }
-}
+} */
 /* .base64-img {
   z-index: 2;
   background-size: cover;

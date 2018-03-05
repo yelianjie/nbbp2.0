@@ -77,7 +77,8 @@
         <!--<img src="../assets/logo.png" class="avatar"/>-->
         <p class="uname f18 white">{{currentUserInfo.initiator_nickname}}</p>
         <div class="msg-item-top flex flex-pack-center">
-          <span class="sex sex-male"><svg-icon icon-class="male" v-if="currentUserInfo.sex == 1"/><svg-icon icon-class="female" v-if="currentUserInfo.sex == 2"/></span>
+          <span class="sex sex-male" v-if="currentUserInfo.sex == 1"><svg-icon icon-class="male"/></span>
+          <span class="sex sex-female" v-if="currentUserInfo.sex == 2"><svg-icon icon-class="female"/></span>
           <span class="level" style="background-color: #625bc3;">{{currentUserInfo.city}}</span>
           <span class="level" :class="'level-' + currentUserInfo.mc_level_id"  v-if="currentUserInfo.grade_title != '平民'">{{currentUserInfo.grade_title}}</span>
         </div>
@@ -132,9 +133,11 @@
       <p class="f16" style="color:#7b7b7b;margin-top:6px;">确定删除该消息吗</p></div>
     </div>
   </bp-dialog>
-  <transition name="fade-out">
-    <div class="adbg fullscreen" v-if="adVisible && barDataInfo.advert" :style="{'background-image': 'url('+barDataInfo.advert.phone.url+')'}"></div>
-  </transition>
+  <template v-if="adVisible">
+    <transition name="fade-out">
+      <div class="adbg fullscreen" v-if="barDataInfo.advert" :style="{'background-image': 'url('+barDataInfo.advert.phone.url+')'}"></div>
+    </transition>
+  </template>
   </div>
 </template>
 
@@ -179,7 +182,7 @@ export default {
       height: 0,
       noMore: false,
       barDataInfo: {},
-      adVisible: true,
+      adVisible: false,
       newsTimer: null,
       noticeTimer: null,
       onlineTimer: null,
@@ -233,33 +236,42 @@ export default {
       }
       this.$store.commit('user/SET_BAR_MANAGER', post)
       res.result.advert && (res.result.advert.phone.url = this.$options.filters.prefixImageUrl(res.result.advert.phone.url))
+      // 排序时间
+      res.result.time.sort((a, b) => a.time - b.time)
       this.barDataInfo = res.result
-      var img = new Image()
-      img.onload = () => {
-        this.show = true
-        this.$nextTick(() => {
-          this.scrollFix = new ScrollFix(this.$refs.scrollWrapper)
-        })
-        setTimeout(() => {
-          this.adVisible = false
+      if (!sessionStorage.getItem('adFlag')) {
+        sessionStorage.setItem('adFlag', 1)
+        this.adVisible = true
+        var img = new Image()
+        img.onload = () => {
+          this.show = true
+          this.$nextTick(() => {
+            this.scrollFix = new ScrollFix(this.$refs.scrollWrapper)
+          })
           setTimeout(() => {
-            // 如果是充值跳回来的，显示之前勾选的选项
-            if (this.buyDialogInfo.hasOwnProperty('postParams')) {
-              if (this.buyDialogInfo.postParams.type === 2) {
-                this.bpWindowVisible = true
-                this.$refs.bpWindow.initSelected(this.buyDialogInfo.postParams)
-              } else if (this.buyDialogInfo.postParams.type === 1) {
-                this.dsWindowVisible = true
-                this.$refs.dsWindow.initSelected(this.buyDialogInfo.postParams)
-              }
-            }
+            this.adVisible = false
+            setTimeout(() => {
+              // 如果是充值跳回来的，显示之前勾选的选项
+              this.initIsSelected()
+            }, 1000)
           }, 1000)
-        }, 1000)
+        }
+        img.onerror = () => {
+          this.show = true
+        }
+        img.src = res.result.advert.phone.url
+      } else {
+        this.$nextTick(() => {
+          this.show = true
+          this.$nextTick(() => {
+            this.scrollFix = new ScrollFix(this.$refs.scrollWrapper)
+            setTimeout(() => {
+              // 如果是充值跳回来的，显示之前勾选的选项
+              this.initIsSelected()
+            }, 1000)
+          })
+        })
       }
-      img.onerror = () => {
-        this.show = true
-      }
-      img.src = res.result.advert.phone.url
     })
     isSubscribe().then(() => {
     }).catch(() => {
@@ -287,6 +299,17 @@ export default {
     ...mapActions('app', {
       ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
     }),
+    initIsSelected () {
+      if (this.buyDialogInfo.hasOwnProperty('postParams')) {
+        if (this.buyDialogInfo.postParams.type === 2) {
+          this.bpWindowVisible = true
+          this.$refs.bpWindow.initSelected(this.buyDialogInfo.postParams)
+        } else if (this.buyDialogInfo.postParams.type === 1) {
+          this.dsWindowVisible = true
+          this.$refs.dsWindow.initSelected(this.buyDialogInfo.postParams)
+        }
+      }
+    },
     loopOnlines (time) {
       this.onlineTimer = setTimeout(() => {
         getOnlines({ht_id: this.$route.params.id}).then((res) => {

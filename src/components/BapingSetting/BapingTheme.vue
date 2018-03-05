@@ -52,11 +52,17 @@ export default {
 
   },
   methods: {
+    bpfilterList (screens) {
+      return screens.filter((v) => {
+        return v.title !== '重金霸屏'
+      })
+    },
     onClick (itemValue, itemDisabled) {
       this.themes[itemValue].selected = Number(this.themes[itemValue].selected) === 1 ? 0 : 1
       let data = {
         id: this.themes[itemValue].id,
-        selected: this.themes[itemValue].selected
+        selected: this.themes[itemValue].selected,
+        ht_id: this.$route.params.id
       }
       updateBpSelect(data)
       console.log(data)
@@ -79,7 +85,8 @@ export default {
         onConfirm (msg) {
           let data = {
             price: msg,
-            id: _this.themes[_this.editIndex].id
+            id: _this.themes[_this.editIndex].id,
+            ht_id: _this.$route.params.id
             // selected: _this.themes[_this.editIndex].selected
           }
           updateBpPrice(data).then((res) => {

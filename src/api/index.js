@@ -398,6 +398,7 @@ export function uploadImage (base64, type, cb, flag = 0) {
   formdata.append('file', blob, 'image.png')
   formdata.append('flag', flag)
   xhr.open('post', baseURL + '/weixin/file_upload/uploadImg')
+  xhr.setRequestHeader('tId', localStorage.getItem('tId'))
   xhr.onreadystatechange = function () {
     /* console.log('readyState' + xhr.readyState)
     console.log('status' + xhr.status) */

@@ -52,7 +52,8 @@ export default {
       this.gifts[itemValue].selected = Number(this.gifts[itemValue].selected) === 1 ? 0 : 1
       let data = {
         id: this.gifts[itemValue].id,
-        selected: this.gifts[itemValue].selected
+        selected: this.gifts[itemValue].selected,
+        ht_id: this.$route.params.id
       }
       updateBpSelect(data)
       console.log(data)
@@ -78,7 +79,8 @@ export default {
         onConfirm (msg) {
           let data = {
             price: msg,
-            id: _this.gifts[_this.editIndex].id
+            id: _this.gifts[_this.editIndex].id,
+            ht_id: _this.$route.params.id
             // selected: _this.gifts[_this.editIndex].selected
           }
           updateBpPrice(data).then((res) => {
