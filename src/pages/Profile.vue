@@ -34,7 +34,8 @@
 import { Group, XInput, PopupPicker, Datetime, XAddress, XButton } from 'vux'
 import Upload from '@/components/Upload'
 import { mapActions } from 'vuex'
-import { getRegionData } from '@/api/'
+// import { getRegionData } from '@/api/'
+import address from '@/vendor/city-data'
 import { filterRegionByName, filterRegionById } from '@/utils/utils'
 let heights = []
 let weights = []
@@ -137,7 +138,7 @@ export default {
       }
     },
     getRegions (cb) {
-      getRegionData().then((res) => {
+      /* getRegionData().then((res) => {
         for (var i = 0; i < res.result.length; i++) {
           if (res.result[i].parent !== '100000') {
             break
@@ -147,7 +148,16 @@ export default {
         }
         this.addressData = res.result
         cb && cb()
-      })
+      }) */
+      for (var i = 0; i < address.length; i++) {
+        if (address[i].parent !== '100000') {
+          break
+        } else {
+          delete address[i].parent
+        }
+      }
+      this.addressData = address
+      cb && cb()
     },
     afterClip (base64) {
       this.form.headimgurl = base64

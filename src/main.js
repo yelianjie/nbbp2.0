@@ -77,7 +77,7 @@ function init () {
   Vue.use(maskPlugin)
   Vue.use(noscrollPlugin)
   Vue.use(ToastPlugin, {
-    position: 'bottom',
+    position: 'middle',
     time: 1500,
     type: 'text',
     isShowMask: true

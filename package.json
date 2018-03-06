@@ -14,6 +14,7 @@
     "croppie": "^2.5.1",
     "es6-promise": "^4.2.2",
     "fastclick": "^1.0.6",
+    "moment": "^2.21.0",
     "photoclip": "^3.3.6",
     "promise.prototype.finally": "^3.1.0",
     "vee-validate": "^2.0.0",

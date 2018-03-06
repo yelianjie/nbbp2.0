@@ -1,7 +1,7 @@
 <template>
   <div class="scroller-bp">
     <checker v-model="themeSelected" type="checkbox" default-item-class="baping-item" selected-item-class="baping-item-selected">
-      <template v-for="(v, i) in themes">
+      <template v-for="(v, i) in bpfilterList(themes)">
         <checker-item :value="i" :key="i" @on-item-click="onClick">
           <div class="flex flex-align-center">
             <div class="baping-icon flex flex-pack-center">

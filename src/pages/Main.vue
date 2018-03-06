@@ -38,7 +38,7 @@
       <div class="white more f13 flex flex-align-center" @click="onlineVisible = true"><span>更多</span><svg-icon  @click.native="onlineVisible = true" icon-class="arrow-right"/></div>
     </div>
     <div class="flex-1 main-content" ref="scrollWrapper">
-      <infinite-loading @infinite="infiniteHandler" direction="top" :distance="1" ref="infiniteLoading">
+      <infinite-loading @infinite="infiniteHandler" direction="top" :distance="1" ref="infiniteLoading"  style="margin-bottom: 25px;">
         <div class="typing-indicator" slot="spinner">
           <span></span>
           <span></span>
@@ -47,6 +47,7 @@
         <span slot="no-more" class="f13">再往上拉就没有了~</span>
       </infinite-loading>
       <template v-for="(v, i) in chatlist">
+        <div v-if="v.showTime" :key="v.ht_id + v.id" class="tc" style="margin: -20px auto 20px;"><div class="white time-show f13">{{v.showTime}}</div></div>
         <msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg>
         <msg-img :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-img>
         <msg-only-img :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-only-img>
@@ -112,7 +113,7 @@
   <x-dialog v-model="concernVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="qrcode-box">
       <div class="qrcode-info flex flex-v flex-align-center">
-        <img src="../assets/nb-qrcode.png" class="qrcode"/>
+        <img src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQHc8DwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyRFVCUWdpRWRmdDExQlNWRGhxMUQAAgT2Pp5aAwSAOgkA" class="qrcode"/>
         <p class="f14">请长按二维码</p>
         <p class="f14">关注牛霸霸屏官方公众号</p>
         <p class="f14">即可加入CMK酒吧聊天室</p>
@@ -161,6 +162,7 @@ import { mapGetters, mapActions } from 'vuex'
 import '@/vendor/tween'
 import '@/vendor/animation'
 import ScrollFix from '@/vendor/ScrollFix'
+import moment from 'moment'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   data () {
@@ -217,6 +219,21 @@ export default {
     next()
   },
   created () {
+    moment.locale('zh-cn', {
+      meridiem: function (hour, minute, isLowercase) {
+        if (hour < 9) {
+          return '早上'
+        } else if (hour < 11 && minute < 30) {
+          return '上午'
+        } else if (hour < 13 && minute < 30) {
+          return '中午'
+        } else if (hour < 18) {
+          return '下午'
+        } else {
+          return '晚上'
+        }
+      }
+    })
     if (Object.keys(this.userInfo).length === 0) {
       this.getUserInfo()
     }
@@ -273,7 +290,8 @@ export default {
         })
       }
     })
-    isSubscribe().then(() => {
+    isSubscribe({ht_id: this.$route.params.id}).then((res) => {
+      console.log(res)
     }).catch(() => {
       this.concernVisible = true
     })
@@ -334,6 +352,21 @@ export default {
       this.newsTimer = setTimeout(() => {
         getMaxMsg(this.requestNewParams).then((res) => {
           if (Array.isArray(res.result) && res.result.length > 0) {
+            res.result.forEach((v, i) => {
+              var nowD = moment(v.create_time).format('X')
+              var next = res.result[i + 1]
+              var nextD = next ? moment(res.result[i + 1].create_time).format('X') : 0
+              if (nextD - nowD > 60 * 5 && next) {
+                next.showTime = this.calTime(v.create_time)
+              }
+              var chatLength = this.chatlist.length
+              if (i === 0 && chatLength > 0) {
+                var lastChatTime = moment(this.chatlist[chatLength - 1].create_time).format('X')
+                if (nowD - lastChatTime > 5 * 60) {
+                  v.showTime = this.calTime(v.create_time)
+                }
+              }
+            })
             this.chatlist = this.chatlist.concat(res.result)
             this.$nextTick(() => {
               // 如果消息里有当前用户发的，滚动到底部
@@ -375,6 +408,17 @@ export default {
         if (resLength > 0) {
           this.requestParams.min_id = res.result[resLength - 1].id
         }
+        res.result.forEach((v, i) => {
+          var nowD = moment(v.create_time).format('X')
+          var next = res.result[i + 1]
+          var nextD = next ? moment(res.result[i + 1].create_time).format('X') : 0
+          if (nowD - nextD > 60 * 5 && next) {
+            v.showTime = this.calTime(v.create_time)
+          }
+          if (!next) {
+            v.showTime = this.calTime(v.create_time)
+          }
+        })
         res.result.sort((a, b) => a.id - b.id)
         /* res.result.map((v) => {
           v.levelIcon = this.Levels[v.grade_title] ? this.Levels[v.grade_title] : null
@@ -503,6 +547,20 @@ export default {
     rewardForAll () {
       this.$store.commit('main/SET_CURRENT_USER_INFO', {})
       this.dsWindowVisible = true
+    },
+    calTime (time) {
+      var a = moment(time)
+      var b = moment()
+      var t = time
+      var betweenDay = Number(b.diff(a, 'days'))
+      if (betweenDay === 1) {
+        t = '昨天' + time.substring(11, 16)
+      } else if (betweenDay === 0) {
+        t = time.substring(11, 16)
+      } else {
+        t = moment(t).format('YYYY年M月DD日 Ah时mm分')
+      }
+      return t
     }
   },
   computed: {
@@ -703,6 +761,13 @@ export default {
     margin-bottom: 0.2rem;
   }
 }
+.time-show {
+  display: inline-block;
+  line-height: 1;
+  padding: 6px 10px;
+  background-color: rgba(0,0,0,.25);
+  border-radius: 50px;
+}
 .user-dialog-bottom {
   background-color: #60557d;
   border-radius: 0 0 15px 15px;
@@ -755,6 +820,7 @@ export default {
   display: table;
   margin: 5px auto;
   position: relative;
+  margin-bottom: 30px;
 }
 
 .typing-indicator span {

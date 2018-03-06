@@ -3,6 +3,13 @@ import request from '@/utils/request'
 const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/prod.env').BASE_API : require('../../config/dev.env').BASE_API
 
 /**
+ * 客户端登录
+*/
+export const validWinLogin = (data) => {
+  return request('/weixin/index/validWinLogin', 'POST', data)
+}
+
+/**
  * 获取是否已经有token
 */
 export const getHasToken = (data) => {
@@ -325,8 +332,8 @@ export const bindBarManager = (data) => {
 /**
  * 当前用户是否已关注
  */
-export const isSubscribe = () => {
-  return request('/weixin/members/isSubscribe')
+export const isSubscribe = (data) => {
+  return request('/weixin/members/isSubscribe', 'POST', data)
 }
 
 /**

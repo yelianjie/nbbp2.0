@@ -16,6 +16,16 @@ export default new Router({
       }
     },
     {
+      path: '/QrcodeLogin',
+      name: 'QrcodeLogin',
+      component: (resolve) => {
+        require(['@/pages/QrcodeLogin'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business']
+      }
+    },
+    {
       path: '/Register',
       name: 'Register',
       component: (resolve) => {
