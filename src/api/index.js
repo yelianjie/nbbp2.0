@@ -3,6 +3,13 @@ import request from '@/utils/request'
 const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/prod.env').BASE_API : require('../../config/dev.env').BASE_API
 
 /**
+ * 添加url记录 关注后直接点击链接
+*/
+export const addWxMsg = (data) => {
+  return request('/weixin/index/addWxMsg', 'POST', data)
+}
+
+/**
  * 客户端登录
 */
 export const validWinLogin = (data) => {
