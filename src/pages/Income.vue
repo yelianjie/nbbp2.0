@@ -102,6 +102,8 @@ export default {
           text: '兑换成功'
         })
         this.$vux.loading.hide()
+      }).finally(() => {
+        this.$mask.hide()
       })
     },
     deposit () {
@@ -120,11 +122,12 @@ export default {
       depositToCash({type: 1, money: this.toRMBValue}).then((res) => {
         this.getUserInfo()
         this.depositVisible = false
-        this.$mask.hide()
         this.$vux.toast.show({
           text: '提现成功'
         })
         this.$vux.loading.hide()
+      }).finally(() => {
+        this.$mask.hide()
       })
     },
     validToCoin (event) {

@@ -54,10 +54,15 @@ export default {
     }
   },
   mounted () {
+    window.addEventListener('resize', function () {
+      alert('2131')
+    })
   },
   methods: {
     inputFocus () {
       this.showFace = false
+      /* document.body.style.position = 'absolute'
+      document.body.style.overflow = 'hidden' */
       let str = navigator.userAgent.toLowerCase()
       let ver = str.match(/cpu iphone os (.*?) like mac os/)[1].replace(/_/g, '.')
       let oc = ver.split('.')[0]

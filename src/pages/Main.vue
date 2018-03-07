@@ -119,7 +119,7 @@
         <img v-if="ticket" :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + ticket" class="qrcode"/>
         <p class="f14">请长按二维码</p>
         <p class="f14">关注牛霸霸屏官方公众号</p>
-        <p class="f14">即可加入CMK酒吧聊天室</p>
+        <p class="f14">即可加入{{barDataInfo.ht_msg.name}}dadadadada聊天室</p>
       </div>
     </div>
   </x-dialog>
@@ -303,15 +303,6 @@ export default {
       }
     }).catch(() => {
     })
-    /* isSubscribe({ht_id: 0, type: 2, url: '/MyBars'}).then((res) => {
-      if (res.result === '已关注') {
-        this.concernVisible = false
-      } else {
-        this.ticket = res.result
-        this.concernVisible = true
-      }
-    }).catch(() => {
-    }) */
     this.loopGetNotice(0)
     this.loopOnlines(0)
   },
@@ -703,7 +694,6 @@ export default {
       position: absolute;
       left: 0;
       bottom: 0;
-      line-height: 0.32rem;
       right: 0;
       img {
         display: block;
@@ -837,6 +827,8 @@ export default {
   p {
     line-height: 0.4rem;
     color: #3d404f;
+    padding: 0 10px;
+    word-break: break-all;
   }
 }
 .typing-indicator {

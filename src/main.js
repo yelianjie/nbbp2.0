@@ -20,8 +20,8 @@ import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 import { validateRules } from './utils/validateRules'
 import VueLazyload from 'vue-lazyload'
-import { getWxConfig, getHasToken, addWxMsg } from './api/'
-let isAddWxMsg = false
+import { getWxConfig, getHasToken } from './api/'
+// let isAddWxMsg = false
 // 判断
 var tId = localStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
@@ -97,9 +97,9 @@ function init () {
   let historyCount = history.getItem('count') * 1 || 0
   history.setItem('/', 0) */
   router.beforeEach(function (to, from, next) {
-    if (to.name === 'Main' && !isAddWxMsg) {
+    /* if (to.name === 'Main' && !isAddWxMsg) {
       addWxMsg({url: to.path})
-    }
+    } */
     /* const toIndex = history.getItem(to.path)
     const fromIndex = history.getItem(from.path)
     if (toIndex) {
