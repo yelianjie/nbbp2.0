@@ -44,7 +44,10 @@
         <img class="join-img" data-src="./static/join/daili19.jpg">
       </template>
       <div class="fixed-btn">
-        <router-link :to="{path: `/Register?type=${$route.query.type}`}"><button class="turn-btn white">立即注册</button></router-link>
+        <router-link :to="{path: `/Register?type=${$route.query.type}`}" v-if="!userInfo.isMM && $route.query.type == 1"><button class="turn-btn white">立即注册</button></router-link>
+        <router-link :to="{path: `/Register?type=${$route.query.type}`}" v-if="!userInfo.isAgent && $route.query.type == 2"><button class="turn-btn white">立即注册</button></router-link>
+        <router-link :to="{path: `/MyBars`}" v-if="userInfo.isMM > 0 && $route.query.type == 1 "><button class="turn-btn white">商户管理</button></router-link>
+        <router-link :to="{path: `/AgentCenter`}" v-if="userInfo.isAgent > 0 && $route.query.type == 2 "><button class="turn-btn white">代理管理</button></router-link>
       </div>
     </div>
     
@@ -52,6 +55,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import ScrollFix from '@/vendor/ScrollFix'
 export default {
   data () {
@@ -65,13 +69,50 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    document.title = '商户加盟'
+    if (Number(to.query.type) === 1) {
+      document.title = '商户加盟'
+    } else if (Number(to.query.type) === 2) {
+      document.title = '代理加盟'
+    }
     next()
+  },
+  created () {
+    var shareParams = {}
+    if (Number(this.$route.query.type) === 1) {
+      shareParams = {
+        title: '商户加盟：0成本增加收益，微信注册即可免费使用',
+        desc: '该系统适用于酒吧、庆典、餐厅、婚礼等各种场合，帮您活跃气氛的同时提升30%以上收益',
+        link: window.location.href,
+        imgUrl: 'http://xnb.siweiquanjing.com/screen/images/logo1.png' // 分享图标
+      }
+    } else if (Number(this.$route.query.type) === 2) {
+      shareParams = {
+        title: '代理加盟：推荐商户免费使用牛霸系统获永久收益分成',
+        desc: '该系统适用于酒吧、庆典、餐厅、婚礼等各种场合',
+        link: window.location.href,
+        imgUrl: 'http://xnb.siweiquanjing.com/screen/images/logo1.png' // 分享图标
+      }
+    }
+    this.$wechat.onMenuShareTimeline({
+      ...shareParams,
+      success: function () {},
+      cancel: function () {}
+    })
+    this.$wechat.onMenuShareAppMessage({
+      ...shareParams,
+      success: function () {},
+      cancel: function () {}
+    })
   },
   mounted () {
     this.$Lazyload.lazyLoadHandler()
     this.$nextTick(() => {
       this.scrollFix = new ScrollFix(this.$refs.scrollWrapper)
+    })
+  },
+  computed: {
+    ...mapGetters('user', {
+      userInfo: 'userInfo'
     })
   }
 }

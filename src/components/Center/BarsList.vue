@@ -37,7 +37,7 @@ export default {
   methods: {
     pageToBarInfo (id, name) {
       if (this.enter === 'home') {
-        this.$router.push({path: `/Main/${id}`, query: {name: encodeURI(name)}})
+        this.$router.push({path: `/Main/${id}`})
       } else {
         this.$router.push({path: `/AgentBarInfo/${id}`, query: {type: 3}})
       }

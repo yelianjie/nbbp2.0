@@ -83,6 +83,7 @@ export default {
               v.distance = '未知'
             })
           }
+          res.result.sort((a, b) => a.distance - b.distance)
           this.barsList = res.result
         }
       }).finally(() => {

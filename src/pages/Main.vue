@@ -2,10 +2,10 @@
   <div class="container" v-if="show">
     <onlines :peoples="onlinePeople" @onShowCard="showCard" v-model="onlineVisible"></onlines>
     <div class="main flex flex-v">
-      <div class="flex boardcast flex-align-center">
+      <div class="flex boardcast flex-align-center" v-if="notice">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
         <div class="boardcast-scroller flex-1 flex flex-align-center">
-          <MarqueeTips v-if="notice" class="f15" :content="notice" :speed="15"></MarqueeTips>
+          <MarqueeTips class="f15" :content="notice" :speed="15"></MarqueeTips>
           <!--<div class="scroller-wrap f14">
             我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强刷本领强粉刷本领强刷本领强粉刷本领强
             <marquee direction="left" befavior="scroll" scrollamount="4">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>
@@ -31,8 +31,11 @@
         </div>
       </div>
       <div class="flex-1 main-header-right">
-        <div class="online-persons" v-for="(v, i) in onlinePeople" :key="i" @click="showCard(v)">
+        <div class="online-persons pr" v-for="(v, i) in onlinePeople" :key="i" @click="showCard(v)">
           <img :src="v.headimgurl | prefixImageUrl" class="circle person-avatar"/>
+          <div class="send-gift-tip" v-if="i < 3">
+            <img src="../assets/send-icon.png"/>
+          </div>
         </div>
       </div>
       <div class="white more f13 flex flex-align-center" @click="onlineVisible = true"><span>更多</span><svg-icon  @click.native="onlineVisible = true" icon-class="arrow-right"/></div>
@@ -113,7 +116,7 @@
   <x-dialog v-model="concernVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="qrcode-box">
       <div class="qrcode-info flex flex-v flex-align-center">
-        <img src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQHc8DwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyRFVCUWdpRWRmdDExQlNWRGhxMUQAAgT2Pp5aAwSAOgkA" class="qrcode"/>
+        <img v-if="ticket" :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + ticket" class="qrcode"/>
         <p class="f14">请长按二维码</p>
         <p class="f14">关注牛霸霸屏官方公众号</p>
         <p class="f14">即可加入CMK酒吧聊天室</p>
@@ -188,6 +191,7 @@ export default {
       newsTimer: null,
       noticeTimer: null,
       onlineTimer: null,
+      ticket: '',
       requestParams: {
         ht_id: this.$route.params.id,
         min_id: 0
@@ -290,11 +294,24 @@ export default {
         })
       }
     })
-    isSubscribe({ht_id: this.$route.params.id}).then((res) => {
-      console.log(res)
+    isSubscribe({ht_id: this.$route.params.id, type: 1, url: window.location.hash.substring(1)}).then((res) => {
+      if (res.result === '已关注') {
+        this.concernVisible = false
+      } else {
+        this.ticket = res.result
+        this.concernVisible = true
+      }
     }).catch(() => {
-      this.concernVisible = true
     })
+    /* isSubscribe({ht_id: 0, type: 2, url: '/MyBars'}).then((res) => {
+      if (res.result === '已关注') {
+        this.concernVisible = false
+      } else {
+        this.ticket = res.result
+        this.concernVisible = true
+      }
+    }).catch(() => {
+    }) */
     this.loopGetNotice(0)
     this.loopOnlines(0)
   },
@@ -681,6 +698,17 @@ export default {
     display: inline-block;
     &:last-child {
       margin-right: 0;
+    }
+    .send-gift-tip {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      line-height: 0.32rem;
+      right: 0;
+      img {
+        display: block;
+        width: 100%;
+      }
     }
   }
   .more {

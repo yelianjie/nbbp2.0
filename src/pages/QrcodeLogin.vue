@@ -19,8 +19,6 @@ export default {
   },
   methods: {
     login () {
-      alert('1')
-      alert(this.$route.query.id)
       validWinLogin({id: this.$route.query.id}).then((res) => {
         this.$router.replace({path: '/MyBars'})
       }).catch((error) => {

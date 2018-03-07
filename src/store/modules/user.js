@@ -5,6 +5,8 @@ const state = {
   userInfo: {},
   token: '',
   role: ['user'],
+  isSub: false,
+  subTicket: '',
   barManagerInfo: {}
 }
 
@@ -12,7 +14,9 @@ const state = {
 const getters = {
   userInfo: () => state.userInfo,
   role: () => state.role,
-  barManagerInfo: () => state.barManagerInfo
+  barManagerInfo: () => state.barManagerInfo,
+  isSub: () => state.isSub,
+  subTicket: () => state.subTicket
 }
 
 // actions
@@ -21,15 +25,17 @@ const actions = {
     try {
       let response = await getMemberInfo()
       commit('SET_USER_INFO', response.result)
+      var role = ['user']
       if (response.result.isAgent > 0) {
-        commit('SET_ROLE', ['user', 'agent'])
+        role.push('agent')
       }
       if (response.result.isMM > 0) {
-        commit('SET_ROLE', ['user', 'business'])
+        role.push('business')
       }
       if (response.result.isHMM > 0) {
-        commit('SET_ROLE', ['user', 'manager'])
+        role.push('manager')
       }
+      commit('SET_ROLE', role)
       return Promise.resolve(response.result)
     } catch (e) {
 
@@ -44,6 +50,21 @@ const actions = {
 
     }
   }
+  /* async isSubscribe ({commit, state}, data) {
+    try {
+      let response = await isSubscribe()
+      var isSub
+      if (response.result === '已关注') {
+        isSub = false
+      } else {
+        isSub = true
+        commit('SET_SUBTICKET', response.result)
+      }
+      commit('SET_SUBSCRIBE', isSub)
+    } catch (e) {
+      // commit('SET_SUBSCRIBE', true)
+    }
+  } */
 }
 
 // mutations
@@ -62,6 +83,12 @@ const mutations = {
   },
   SET_USER_INFO_BALANCE (state, data) {
     state.userInfo.balance = data
+  },
+  SET_SUBSCRIBE (state, data) {
+    state.isSub = data
+  },
+  SET_SUBTICKET (state, data) {
+    state.subTicket = data
   }
 }
 

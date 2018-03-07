@@ -71,10 +71,12 @@ export default {
           if (Number(this.type) === 1) {
             // 商户注册
             registerBar(this.r_business).then((res) => {
-              this.$vux.toast.show({
-                text: '注册成功'
+              this.getUserInfo().then((res) => {
+                this.$vux.toast.show({
+                  text: '注册成功'
+                })
+                this.$router.push('/MyBars')
               })
-              this.$router.push('/MyBars')
             })
           } else {
             // 代理注册

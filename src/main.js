@@ -92,16 +92,15 @@ function init () {
 
   Vue.config.productionTip = false
 
-  const history = window.sessionStorage
+/*   const history = window.sessionStorage
   history.clear()
   let historyCount = history.getItem('count') * 1 || 0
-  history.setItem('/', 0)
+  history.setItem('/', 0) */
   router.beforeEach(function (to, from, next) {
-    if (!isAddWxMsg) {
+    if (to.name === 'Main' && !isAddWxMsg) {
       addWxMsg({url: to.path})
     }
-    console.log(to)
-    const toIndex = history.getItem(to.path)
+    /* const toIndex = history.getItem(to.path)
     const fromIndex = history.getItem(from.path)
     if (toIndex) {
       if (!fromIndex || parseInt(toIndex, 10) > parseInt(fromIndex, 10) || (toIndex === '0' && fromIndex === '0')) {
@@ -116,28 +115,30 @@ function init () {
       store.commit('app/UPDATE_DIRECTION', 'forward')
     }
     store.commit('updateLoadingStatus', {isLoading: true})
-    next()
+    next() */
     // 判断当前角色有没有权限进入这个路由
-    // if (store.getters['user/role'])
-    /* let role = store.getters['user/role']
-    let userInfo = store.getters['user/userInfo']
-    if (Object.keys(userInfo).length === 0) {
-      store.dispatch('user/getUserInfo').then(() => {
-        if (role.some((v) => to.meta.roles.includes(v))) {
+    if (store.getters['user/role']) {
+      let userInfo = store.getters['user/userInfo']
+      if (Object.keys(userInfo).length === 0) {
+        store.dispatch('user/getUserInfo').then(() => {
+          let role = store.getters['user/role']
+          if (role.some((v) => to.meta.roles.indexOf(v) > -1)) {
+            store.commit('updateLoadingStatus', {isLoading: true})
+            next()
+          } else {
+            next({path: '/'})
+          }
+        })
+      } else {
+        let role = store.getters['user/role']
+        if (role.some((v) => to.meta.roles.indexOf(v) > -1)) {
           store.commit('updateLoadingStatus', {isLoading: true})
           next()
         } else {
           next({path: '/'})
         }
-      })
-    } else {
-      if (role.some((v) => to.meta.roles.includes(v))) {
-        store.commit('updateLoadingStatus', {isLoading: true})
-        next()
-      } else {
-        next({path: '/'})
       }
-    } */
+    }
   })
 
   router.afterEach(function (to) {
@@ -145,7 +146,7 @@ function init () {
     shareParams = {
       title: '这么有趣的霸屏交友互动，邀请你一起来玩~',
       desc: '新朋友、霸屏、游戏、送礼互动，线上结合线下，给您的生活增添更多趣味和可能。',
-      link: window.location.origin + '/weixin/',
+      link: window.location.origin + window.location.pathname,
       imgUrl: 'http://xnb.siweiquanjing.com/screen/images/logo1.png' // 分享图标
     }
     Vue.wechat.ready(() => {
@@ -194,6 +195,8 @@ function init () {
       jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'previewImage', 'getLocation', 'chooseWXPay'] // 必填，需要使用的JS接口列表
     })
   }).finally(() => {
+    // 是否关注
+    // store.dispatch('user/isSubscribe')
     /* eslint-disable no-new */
     new Vue({
       router,

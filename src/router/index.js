@@ -12,7 +12,7 @@ export default new Router({
         require(['@/pages/Home'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -22,7 +22,7 @@ export default new Router({
         require(['@/pages/QrcodeLogin'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -32,7 +32,7 @@ export default new Router({
         require(['@/pages/Register'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -42,7 +42,7 @@ export default new Router({
         require(['@/pages/UserCenter'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -52,7 +52,7 @@ export default new Router({
         require(['@/pages/Profile'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -62,7 +62,7 @@ export default new Router({
         require(['@/pages/BusinessJoin'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -92,7 +92,7 @@ export default new Router({
         require(['@/pages/Deposit'], resolve)
       },
       meta: {
-        roles: ['agent', 'business']
+        roles: ['agent', 'business', 'manager']
       }
     },
     {
@@ -172,7 +172,7 @@ export default new Router({
         require(['@/pages/BindManage'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -182,7 +182,7 @@ export default new Router({
         require(['@/pages/Main'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -192,7 +192,7 @@ export default new Router({
         require(['@/pages/Charge'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -202,7 +202,7 @@ export default new Router({
         require(['@/pages/Income'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -212,7 +212,7 @@ export default new Router({
         require(['@/pages/About'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
@@ -222,7 +222,7 @@ export default new Router({
         require(['@/pages/MyLevel'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business']
+        roles: ['user', 'agent', 'business', 'manager']
       }
     },
     {
