@@ -3,7 +3,7 @@
     <div class="charge-header bg1 flex flex-align-center">
       <div class="u-avatar"><img :src="userInfo.headimgurl | prefixImageUrl" class="circle"/></div>
       <div class="flex flex-v flex-pack-center flex-1 u-middle">
-        <p class="f16 uanme overflow white">{{userInfo.nickname}}</p>
+        <p class="f16 uanme overflow fff-bp">{{userInfo.nickname}}</p>
         <p class="f12 coin-tip darker1"><span class="ver-mid">已拥有的牛角币</span><svg-icon icon-class="coin" className="f14 ml4"/></p>
       </div>
       <div class="coin-color" style="font-size: 24px;">{{userInfo.balance}}</div>
@@ -13,7 +13,7 @@
         <span class="ct ncolor">充值购买</span>
         <!-- <span class="ct darker1">交易明细</span> -->
       </div>
-      <div class="charge-price-list white">
+      <div class="charge-price-list fff-bp">
         <div class="charge-price-item" v-for="(v, i) in exps" :key="i" :class="{'selected': bpValueIndex == i}" @click="bpValueIndex == i ? bpValueIndex = -1 : bpValueIndex = i">
           <div class="value f14"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{v.money}}</span><div class="f12 jingyan"><span class="jy-value">+{{v.experience}}经验值</span></div><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
           <div class="value-price f14">¥{{v.money}}</div>

@@ -2,11 +2,11 @@
   <div class="container min-h bg1 about-container borderbox">
     <div class="tc">
       <img src="../assets/logo.png" style="width: 1.6rem;height: 1.6rem;"/>
-      <p class="white" style="margin: 20px 0;">牛霸</p>
+      <p class="fff-bp" style="margin: 20px 0;">牛霸</p>
     </div>
     <div class="flex flex-h" style="margin-bottom: 20px;">
       <div class="radient-line line-left flex-1"></div>
-      <p class="white tc f14" style="width: 3.2rem;">互动娱乐领导品牌</p>
+      <p class="fff-bp tc f14" style="width: 3.2rem;">互动娱乐领导品牌</p>
       <div class="radient-line line-right flex-1"></div>
     </div>
     <article style="padding: 0.45rem 0.4rem;border-radius: 5px;line-height: 1.5;" class="bg2 darker1 f14">

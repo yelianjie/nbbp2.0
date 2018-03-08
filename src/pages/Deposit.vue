@@ -2,7 +2,7 @@
   <div class="container min-h flex flex-v flex-align-center bg3">
     <div class="top-img tc">
       <img :src="barInfo.logo | prefixImageUrl" class="circle">
-      <p class="f14 white" style="margin-top: 10px;">{{barInfo.name}}</p>
+      <p class="f14 fff-bp" style="margin-top: 10px;">{{barInfo.name}}</p>
     </div>
     <div class="canDespoit-wrap">
       <p class="money">¥{{barInfo.balance}}</p>

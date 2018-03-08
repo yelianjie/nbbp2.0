@@ -1,6 +1,6 @@
 <template>
   <div class="container min-h fff">
-    <div class="middle tc white bg3" style="padding: 0.36rem 0;">
+    <div class="middle tc fff-bp bg3" style="padding: 0.36rem 0;">
       <p class="f14">当前累计未提现收益</p>
       <p class="benefit-account">{{info.total_balance}}</p>
       <p class="f16">累计总收益：{{info.total_income}} 元</p>

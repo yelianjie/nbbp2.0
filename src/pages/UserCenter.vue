@@ -17,13 +17,13 @@
         </div> -->
       </div>
       <div class="user-box2">
-        <p class="white tc" style="margin: 0.2rem auto;">{{userInfo.nickname}}</p>
+        <p class="fff-bp tc" style="margin: 0.2rem auto;">{{userInfo.nickname}}</p>
         <!-- <div class="flex u2 flex-align-center">
           <span class="level level-1">{{userInfo.grade_title}}</span>
           <span class="f12 point">{{userInfo.mc_integral}}积分</span>
         </div> -->
         
-        <div class="flex white tag1 flex flex-align-center flex-pack-center">
+        <div class="flex fff-bp tag1 flex flex-align-center flex-pack-center">
           <span class="sex sex-male flex flex-align-center" v-if="userInfo.sex == 1"><svg-icon icon-class="male"/></span>
           <span class="sex sex-female flex flex-align-center" v-if="userInfo.sex == 2"><svg-icon icon-class="female"/></span>
           <span class="tag tagcity" v-if="isCityPingYin">{{userInfo.city}}</span>
@@ -40,9 +40,9 @@
     </div>
     <div class="user-middle">
       <div class="user-wallet flex bg2">
-        <div class="w1 flex-1 tc" @click="$router.push({path: '/Charge'})">
-          <h3 class="white"><countup v-if="userInfo.balance" :start-val="0.00" :end-val="Number(userInfo.balance)" :duration="2" class="demo1" :decimals="2"></countup></h3>
-          <h5><span style="padding: 1px 3px;background-color:#f51173;border-radius:3px;margin-right:2px;" class="white f12">充</span>我的余额/牛角</h5>
+        <div class="w1 flex-1 tc" @click="payTo">
+          <h3 class="fff-bp"><countup v-if="userInfo.balance" :start-val="0.00" :end-val="Number(userInfo.balance)" :duration="2" class="demo1" :decimals="2"></countup></h3>
+          <h5><span style="padding: 1px 3px;background-color:#f51173;border-radius:3px;margin-right:2px;" class="fff-bp f12">充</span>我的余额/牛角</h5>
         </div>
         <div class="w2 flex-1 tc" @click="$router.push({path: '/Income'})">
           <h3><countup v-if="userInfo.profit_balance" :start-val="0.00" :end-val="Number(userInfo.profit_balance)" :duration="2" class="demo2" :decimals="2"></countup></h3>
@@ -135,7 +135,10 @@ export default {
   methods: {
     ...mapActions('user', [
       'getUserInfo'
-    ])
+    ]),
+    payTo () {
+      window.location.href = window.location.origin + window.location.pathname + '#/Charge'
+    }
   }
 }
 </script>

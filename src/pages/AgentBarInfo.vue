@@ -45,8 +45,9 @@
       <div id="maskQrcode">
         <p class="f14">请扫描以下二维码绑定</p>
         <p class="f14">管理酒吧</p>
-        <div style="padding: 10px;background-color:#fff;margin-top:10px;">
-          <vue-qr v-if="barInfo.logo" :margin="0" :logoSrc="barInfo.logo | prefixImageUrl" :dotScale="1" :text="url" :height="size" :width="size"></vue-qr>
+        <div style="margin-top:10px;">
+          <canvas id="qr"></canvas>
+          <!-- <vue-qr v-if="barInfo.logo" :margin="0" :logoSrc="barInfo.logo | prefixImageUrl" :dotScale="1" :text="url" :height="size" :width="size"></vue-qr> -->
         </div>
       </div>
     </div>
@@ -59,7 +60,8 @@ import { XNumber, XInput, Group, XButton } from 'vux'
 import BusinessAgentTop from '@/components/Center/BusinessAgentTop'
 import { getAgentBar, updateRate } from '@/api/'
 import logo from '../assets/logo.png'
-import VueQr from 'vue-qr'
+// import VueQr from 'vue-qr'
+import QRious from 'qrious'
 // import bpDialog from '@/components/bpDialog.vue'
 export default {
   name: 'AgentBarInfo',
@@ -68,8 +70,8 @@ export default {
     XInput,
     Group,
     XButton,
-    BusinessAgentTop,
-    VueQr
+    BusinessAgentTop
+    // VueQr
   },
   data () {
     return {
@@ -80,7 +82,8 @@ export default {
       defaultRate: {},
       size: 200,
       mePercent: 25,
-      url: window.location.href.replace('AgentBarInfo', 'BindManage')
+      url: window.location.href.replace('AgentBarInfo', 'BindManage'),
+      qr: null
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -96,11 +99,23 @@ export default {
       res.result.company_separate = Number(res.result.company_separate)
       this.barInfo = res.result.agent
       this.defaultRate = res.result.default_rate
+      var fSize = parseInt(document.documentElement.style.fontSize)
+      this.size = 4 * fSize
+      this.$nextTick(() => {
+        this.qr = new QRious({
+          element: document.getElementById('qr'),
+          value: window.location.href.replace('AgentBarInfo', 'BindManage'),
+          size: this.size
+        })
+        var img = new Image()
+        img.onload = () => {
+          this.drawLogo(img)
+        }
+        img.src = this.$options.filters.prefixImageUrl(this.barInfo.logo)
+      })
     })
   },
   mounted () {
-    var fSize = parseInt(document.documentElement.style.fontSize)
-    this.size = 4 * fSize
   },
   watch: {
     maskVisible (newVal, oldVal) {
@@ -112,6 +127,20 @@ export default {
     }
   },
   methods: {
+    drawLogo (logo) {
+      var ctx = document.getElementById('qr').getContext('2d')
+      var logoWidth = logo.width
+      var logoHeight = logo.height
+      var width = this.qr.size / 4
+      var height = logoHeight / logoWidth * width
+      var x = (this.qr.size / 2) - (width / 2)
+      var y = (this.qr.size / 2) - (height / 2)
+      // var maskPadding = this.qr.size / 30
+      // ctx.globalCompositeOperation = 'destination-out'
+      // ctx.drawImage(logo, 0, 0, logoWidth, logoHeight, x - maskPadding, y - maskPadding, width + (maskPadding * 2), height + (maskPadding * 2))
+      ctx.globalCompositeOperation = 'source-over'
+      ctx.drawImage(logo, 0, 0, logoWidth, logoHeight, x, y, width, height)
+    },
     setBarPercent () {
       if (!this.barInfo.id || this.calPercent()) {
         return false

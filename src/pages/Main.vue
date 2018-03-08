@@ -25,7 +25,7 @@
         </div>
         <div class="main-header-me tc " style="margin-left: 0.3rem;">
           <router-link :to="{path: '/UserCenter'}">
-          <p class="white f16" style="line-height:1;margin-bottom:2px;">我的</p>
+          <p class="fff-bp f16" style="line-height:1;margin-bottom:2px;">我的</p>
           <!-- <p class="flex" style="height:16px;"><span class="level" :class="'level-' + userInfo.mc_level_id"  v-if="userInfo.grade_title">{{userInfo.grade_title}}</span></p> -->
           </router-link>
         </div>
@@ -38,7 +38,7 @@
           </div>
         </div>
       </div>
-      <div class="white more f13 flex flex-align-center" @click="onlineVisible = true"><span>更多</span><svg-icon  @click.native="onlineVisible = true" icon-class="arrow-right"/></div>
+      <div class="fff-bp more f13 flex flex-align-center" @click="onlineVisible = true"><span>更多</span><svg-icon  @click.native="onlineVisible = true" icon-class="arrow-right"/></div>
     </div>
     <div class="flex-1 main-content" ref="scrollWrapper">
       <infinite-loading @infinite="infiniteHandler" direction="top" :distance="1" ref="infiniteLoading"  style="margin-bottom: 25px;">
@@ -50,7 +50,7 @@
         <span slot="no-more" class="f13">再往上拉就没有了~</span>
       </infinite-loading>
       <template v-for="(v, i) in chatlist">
-        <div v-if="v.showTime" :key="v.ht_id + v.id" class="tc" style="margin: -20px auto 20px;"><div class="white time-show f13">{{v.showTime}}</div></div>
+        <div v-if="v.showTime" :key="v.ht_id + v.id" class="tc" style="margin: -20px auto 20px;"><div class="fff-bp time-show f13">{{v.showTime}}</div></div>
         <msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg>
         <msg-img :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-img>
         <msg-only-img :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-only-img>
@@ -79,7 +79,7 @@
           </template>
         </div>
         <!--<img src="../assets/logo.png" class="avatar"/>-->
-        <p class="uname f18 white">{{currentUserInfo.initiator_nickname}}</p>
+        <p class="uname f18 fff-bp">{{currentUserInfo.initiator_nickname}}</p>
         <div class="msg-item-top flex flex-pack-center">
           <span class="sex sex-male" v-if="currentUserInfo.sex == 1"><svg-icon icon-class="male"/></span>
           <span class="sex sex-female" v-if="currentUserInfo.sex == 2"><svg-icon icon-class="female"/></span>
@@ -522,7 +522,8 @@ export default {
     confirmBuy () {
       if (this.buyDialogInfo.isCharge) {
         // 需要充值跳转充值页
-        this.$router.push('/Charge')
+        // this.$router.push('/Charge')
+        window.location.href = window.location.origin + window.location.pathname + '#/Charge'
       } else {
         // 直接购买
         addBpDsMsg(this.buyDialogInfo.postParams).then((res) => {

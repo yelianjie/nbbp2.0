@@ -4,10 +4,10 @@
       <div class="logo-line">
         <!-- <img :src="logo" class="logo-img circle"> -->
         <img v-if="info.agent" :src="info.agent.headimgurl | prefixImageUrl" class="logo-img circle"/>
-        <span class="u-name white f13">{{info.agent.name}}（推荐码：{{info.agent.invitation_code}}）</span>
+        <span class="u-name fff-bp f13">{{info.agent.name}}（推荐码：{{info.agent.invitation_code}}）</span>
       </div>
     </div>
-    <div data-v-7de79557="" class="middle tc white bg3" style="padding: 0.36rem 0;margin-bottom:10px;">
+    <div data-v-7de79557="" class="middle tc fff-bp bg3" style="padding: 0.36rem 0;margin-bottom:10px;">
       <p data-v-7de79557="" class="f14">当前累计未提现收益</p>
       <p data-v-7de79557="" class="benefit-account" v-if="info.money.agent_balance">{{info.money.agent_balance}}</p>
       <p data-v-7de79557="" class="benefit-account" v-else>0</p>

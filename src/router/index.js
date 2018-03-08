@@ -244,6 +244,16 @@ export default new Router({
       meta: {
         roles: ['manager']
       }
+    },
+    {
+      path: '/HelpAgent',
+      name: 'HelpAgent',
+      component: (resolve) => {
+        require(['@/pages/HelpAgent'], resolve)
+      },
+      meta: {
+        roles: ['agent']
+      }
     }
   ]
 })

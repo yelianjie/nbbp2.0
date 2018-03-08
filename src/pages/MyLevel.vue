@@ -11,7 +11,7 @@
         </template>
       </div>
     </div>
-    <p class="f16 tc white">{{userInfo.nickname}}<template v-if="userInfo.grade_title != '平民'">&nbsp;·&nbsp;{{userInfo.grade_title}}</template></p>
+    <p class="f16 tc fff-bp">{{userInfo.nickname}}<template v-if="userInfo.grade_title != '平民'">&nbsp;·&nbsp;{{userInfo.grade_title}}</template></p>
     <div class="flex flex-align-center flex-pack-center">
       <div class="level-box flex flex-pack-center">
         <template v-if="userInfo.grade_title && userInfo.grade_title != '平民'">
@@ -40,17 +40,17 @@
         <img :src="$options.filters.filterLevel(userInfo.next_grade_title, 'icon')" class="level-icon"/>
       </div>
     </div>
-    <p class="tc white f14">距离成为“{{userInfo.next_grade_title}}”还差{{userInfo.experience_less}}经验值</p>
+    <p class="tc fff-bp f14">距离成为“{{userInfo.next_grade_title}}”还差{{userInfo.experience_less}}经验值</p>
     <div class="level-list bg1" style="padding: 0.3rem 0;margin-top: 0.36rem;border-radius: 5px;">
       <div class="flex flex-h">
         <div class="radient-line line-left flex-1"></div>
-        <p class="white tc f16" style="width: 2rem;">牛霸贵族</p>
+        <p class="fff-bp tc f16" style="width: 2rem;">牛霸贵族</p>
         <div class="radient-line line-right flex-1"></div>
       </div>
       <div class="level-all" style="font-size: 0;">
         <div class="level-item pr" @click="showLevel(v)" v-for="(v, i) in grades" :key="i" v-if="v.experience != 0">
           <img :src="$options.filters.filterLevel(v.grade_title, 'icon')" class="level-item-icon"/>
-          <p class="white f15 tc">{{v.grade_title}}</p>
+          <p class="fff-bp f15 tc">{{v.grade_title}}</p>
           <p class="f13 darker1 tc">{{v.experience}}经验值</p>
           <div class="lock-layer" v-if="Number(userInfo.total_mc_experience) < Number(v.experience)" @click="showLevel(v)"><svg-icon icon-class="lock"/></div>
         </div>
@@ -73,8 +73,8 @@
       <div class="level-container flex flex-v flex-pack-center" style="height: 100%;">
         <div class="flex flex-v flex-pack-center flex-align-center">
           <img :src="curLevel.icon" style="width:5.5rem;height:5.7rem;margin-top:-2.4rem;" class="level-big-icon"/>
-          <p class="white f20" style="margin-top:-1.2rem;">{{curLevel.value}}</p>
-          <div class="powers f13 white">
+          <p class="fff-bp f20" style="margin-top:-1.2rem;">{{curLevel.value}}</p>
+          <div class="powers f13 fff-bp">
             <ul>
               <li
       v-for="(item, index) in powsers"

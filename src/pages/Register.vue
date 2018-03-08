@@ -22,7 +22,7 @@
     </div>
     <x-dialog v-model="concernVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="qrcode-box">
-      <div class="qrcode-info flex flex-v flex-align-center white">
+      <div class="qrcode-info flex flex-v flex-align-center fff-bp">
         <img v-if="ticket" :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + ticket" class="qrcode"/>
         <p class="f14" style="margin-top:10px;">请长按二维码</p>
         <p class="f14">关注牛霸霸屏官方公众号</p>
