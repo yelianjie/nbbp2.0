@@ -119,7 +119,7 @@
         <img v-if="ticket" :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + ticket" class="qrcode"/>
         <p class="f14">请长按二维码</p>
         <p class="f14">关注牛霸霸屏官方公众号</p>
-        <p class="f14">即可加入{{barDataInfo.ht_msg.name}}dadadadada聊天室</p>
+        <p class="f14">即可加入{{barDataInfo.ht_msg.name}}聊天室</p>
       </div>
     </div>
   </x-dialog>
@@ -205,18 +205,16 @@ export default {
       lockHeight: false
     }
   },
-  beforeDestroy () {
+  beforeRouteEnter (to, from, next) {
+    next()
+  },
+  beforeRouteLeave (to, from, next) {
     clearTimeout(this.newsTimer)
     clearTimeout(this.noticeTimer)
     clearTimeout(this.onlineTimer)
     if (this.scrollFix) {
       this.scrollFix.destory()
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    next()
-  },
-  beforeRouteLeave (to, from, next) {
     if (to.name !== 'Charge') {
       this.ChangeBuyDialogInfo({})
     }

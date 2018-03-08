@@ -9,9 +9,9 @@
     </div>
     <div data-v-7de79557="" class="middle tc white bg3" style="padding: 0.36rem 0;margin-bottom:10px;">
       <p data-v-7de79557="" class="f14">当前累计未提现收益</p>
-      <p data-v-7de79557="" class="benefit-account" v-if="info.money.merchant_balance">{{info.money.merchant_balance}}</p>
+      <p data-v-7de79557="" class="benefit-account" v-if="info.money.agent_balance">{{info.money.agent_balance}}</p>
       <p data-v-7de79557="" class="benefit-account" v-else>0</p>
-      <p data-v-7de79557="" class="f16" v-if="info.money.merchant_income">累计总收益：{{info.money.merchant_income}} 元</p>
+      <p data-v-7de79557="" class="f16" v-if="info.money.agent_income">累计总收益：{{info.money.agent_income}} 元</p>
       <p data-v-7de79557="" class="f16" v-else>累计总收益：0 元</p>
     </div>
     <div class="fff">
@@ -25,6 +25,11 @@
         <menu-item :data="v" @click.native="route(i)" :key="i"></menu-item>
       </template>
     </div>
+    <footer class="footer flex">
+      <div class="flex-1 flex-v tc flex-pack-center flex-align-center">
+        <router-link :to="{path: '/BusinessJoin', query: {type: 1}}" class="enter-bar">立即推荐商户注册</router-link>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -104,5 +109,20 @@ export default {
 .u-name {
   display: inline-block;
   vertical-align: middle;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  background-color: #f7f7f7;
+  .enter-bar {
+    display: block;
+    height: 44px;
+    line-height: 44px;
+    color: #fff;
+    background-color: #2481d2;
+  }
 }
 </style>

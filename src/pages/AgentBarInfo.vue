@@ -6,25 +6,27 @@
       <div class="flex flex-h percent-box">
         <div class="percent-item percent">
           <p class="percent-title">用户比例<span class="f12">（此项含用户分成的项目才生效）</span></p>
-          <x-number v-model.number="barInfo.users_separate" fillable align="left"></x-number>
+          <x-number v-model.number="barInfo.users_separate" fillable align="left" :min="0" :max="Number(defaultRate.user)"></x-number>
+          <p class="default-percent f12">不高于<span style="color:red;">{{defaultRate.user}}%</span></p>
         </div>
       </div>
       <div class="flex flex-h percent-box">
         <div class="percent-item flex-1 percent">
           <p class="percent-title">商户比例</p>
-          <x-number v-model.number="barInfo.ht_separate" fillable align="left"></x-number>
+          <x-number v-model.number="barInfo.ht_separate" fillable align="left" :min="0"></x-number>
         </div>
       </div>
       <div class="flex flex-h percent-box">
         <div class="percent-item  flex-1 percent">
           <p class="percent-title">代理比例</p>
-          <x-number v-model.number="barInfo.yewu_separate" fillable align="left"></x-number>
+          <x-number v-model.number="barInfo.yewu_separate" fillable align="left" :min="0" :max="Number(defaultRate.agent)"></x-number>
+          <p class="default-percent f12">不高于<span style="color:red;">{{defaultRate.agent}}%</span></p>
         </div>
       </div>
       <div class="flex flex-h percent-box">
         <div class="percent-item percent">
           <p class="percent-title">酒吧管理</p>
-          <x-number v-model.number="barInfo.manage_separate" fillable align="left"></x-number>
+          <x-number v-model.number="barInfo.manage_separate" fillable align="left" :min="0"></x-number>
         </div>
         <div class="percent-item">
           <p class="percent-title">绑定二维码</p>
@@ -75,6 +77,7 @@ export default {
       maskVisible: false,
       dialogVisible: false,
       barInfo: {},
+      defaultRate: {},
       size: 200,
       mePercent: 25,
       url: window.location.href.replace('AgentBarInfo', 'BindManage')
@@ -91,7 +94,8 @@ export default {
       res.result.yewu_separate = Number(res.result.yewu_separate)
       res.result.manage_separate = Number(res.result.manage_separate)
       res.result.company_separate = Number(res.result.company_separate)
-      this.barInfo = res.result
+      this.barInfo = res.result.agent
+      this.defaultRate = res.result.default_rate
     })
   },
   mounted () {
@@ -126,7 +130,7 @@ export default {
       })
     },
     calPercent () {
-      if (this.barInfo.ht_separate + this.barInfo.manage_separate + this.barInfo.yewu_separate + this.barInfo.company_separate > 100) {
+      if (Number(this.barInfo.ht_separate) + Number(this.barInfo.manage_separate) + Number(this.barInfo.yewu_separate) + Number(this.barInfo.company_separate) > 100) {
         this.$vux.toast.show({
           text: '商户、代理和酒吧管理比例之和不能超过' + (100 - this.barInfo.company_separate) + '%',
           width: '20em'
@@ -190,5 +194,10 @@ export default {
   p {
     color: #fff;
   }
+}
+.default-percent {
+  position: absolute;
+  left: 188px;
+  top: 54px;
 }
 </style>

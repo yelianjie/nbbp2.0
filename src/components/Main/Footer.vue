@@ -54,9 +54,6 @@ export default {
     }
   },
   mounted () {
-    window.addEventListener('resize', function () {
-      alert('2131')
-    })
   },
   methods: {
     inputFocus () {

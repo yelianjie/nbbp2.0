@@ -1,6 +1,6 @@
 <template>
   <div class="container padding-bar f7f7f7 borderbox">
-    <BusinessAgentTop :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.merchant_balance" :totalMoney="barInfo.ht_income"></BusinessAgentTop>
+    <BusinessAgentTop :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.merchant_balance" :totalMoney="barInfo.merchant_income"></BusinessAgentTop>
     <BusinessMenus></BusinessMenus>
     <footer class="footer flex">
       <div class="flex-1 flex-v tc flex-pack-center flex-align-center">

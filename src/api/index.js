@@ -402,6 +402,14 @@ export const deleteMsg = (data) => {
 }
 
 /**
+ * 查询有没有开大屏幕
+ * @param {*} data
+ */
+export const isOpenClient = (data) => {
+  return request('/weixin/hotel/isOpenClient', 'POST', data)
+}
+
+/**
  * 上传图片
  * @param {*} blob
  */

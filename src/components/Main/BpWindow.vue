@@ -56,7 +56,7 @@
         <div class="window-bottom f13 flex flex-align-center">
           <div class="account flex-1">总计：<svg-icon icon-class="coin" className="coin" />{{total}}</div>
           <div class="repeat"><svg-icon icon-class="substract" @click.native="bpTimes == 1 ? '' : bpTimes--"/><span>{{timesBpText}}</span><svg-icon icon-class="plus" @click.native="bpTimes == 3 ? bpTimes = 1 : bpTimes++"/></div>
-          <div class="submit"><button class="bp-button bp-submit" @click="buy">购买</button></div>
+          <div class="submit"><button class="bp-button bp-submit" @click="goingBuy">购买</button></div>
         </div>
       </div>
     </transition>  
@@ -68,6 +68,7 @@ import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters, mapActions } from 'vuex'
 import { prefixImageUrl } from '@/utils/utils'
+import { isOpenClient } from '@/api/'
 import Upload from '../Upload'
 export default {
   model: {
@@ -125,6 +126,19 @@ export default {
         }, 100)
       }
       img.src = src
+    },
+    goingBuy () {
+      isOpenClient({ht_id: this.$route.params.id}).then((res) => {
+        if (res.result === 'ok') {
+          this.buy()
+        } else {
+          this.$vux.toast.show({
+            text: '酒吧大屏未开启，不能霸屏',
+            width: '15em'
+          })
+          return false
+        }
+      })
     },
     buy () {
       if (this.bpTimeIndex === -1) {
