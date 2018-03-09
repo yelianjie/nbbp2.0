@@ -93,11 +93,11 @@ export default {
   },
   created () {
     getAgentBar({ht_id: this.$route.params.id}).then((res) => {
-      res.result.users_separate = Number(res.result.users_separate)
-      res.result.ht_separate = Number(res.result.ht_separate)
-      res.result.yewu_separate = Number(res.result.yewu_separate)
-      res.result.manage_separate = Number(res.result.manage_separate)
-      res.result.company_separate = Number(res.result.company_separate)
+      res.result.agent.users_separate = Number(res.result.agent.users_separate)
+      res.result.agent.ht_separate = Number(res.result.agent.ht_separate)
+      res.result.agent.yewu_separate = Number(res.result.agent.yewu_separate)
+      res.result.agent.manage_separate = Number(res.result.agent.manage_separate)
+      res.result.agent.company_separate = Number(res.result.agent.company_separate)
       this.barInfo = res.result.agent
       this.defaultRate = res.result.default_rate
       var fSize = parseInt(document.documentElement.style.fontSize)

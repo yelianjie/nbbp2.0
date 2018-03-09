@@ -1,5 +1,5 @@
 <template>
-  <div class="container" style="backgournd-color:#f7f7f7;">
+  <div class="container padding-bar" style="backgournd-color:#f7f7f7;">
     <div class="top bg3">
       <div class="logo-line">
         <!-- <img :src="logo" class="logo-img circle"> -->

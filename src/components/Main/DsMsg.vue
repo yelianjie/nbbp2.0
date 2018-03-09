@@ -6,7 +6,7 @@
     <div class="msg-item-right flex-1">
       <msg-user :data="data"></msg-user>
       <div class="msg-item-middle dsmsg">
-        <p class="send-for">送{{data.title}}给{{toWho}}</p>
+        <p class="send-for" style="word-break: break-all;">送{{data.title}}给{{toWho}}</p>
         <div class="ds-box flex">
           <div class="ds-box-gift flex-align-center">
             <img v-lazy="$options.filters.prefixImageUrl(data.pro_img)" class="circle"/>

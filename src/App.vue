@@ -89,7 +89,7 @@ body, html, #app {
   min-height: 100%;
 }
 .padding-bar {
-  padding-bottom: 62px;
+  padding-bottom: 54px;
 }
 .padding-bottom-btn {
   padding-bottom: 50px;
