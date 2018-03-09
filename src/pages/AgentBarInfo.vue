@@ -6,14 +6,14 @@
       <div class="flex flex-h percent-box">
         <div class="percent-item percent">
           <p class="percent-title">用户比例<span class="f12">（此项含用户分成的项目才生效）</span></p>
-          <x-number v-model.number="barInfo.users_separate" fillable align="left" :min="0" :max="Number(defaultRate.user)"></x-number>
+          <x-number v-model.number="barInfo.users_separate" fillable align="left" :min="0" @click.native="onUserClick" @on-change="userChange" :max="calUser"></x-number>
           <p class="default-percent f12">不高于<span style="color:red;">{{defaultRate.user}}%</span></p>
         </div>
       </div>
       <div class="flex flex-h percent-box">
         <div class="percent-item flex-1 percent">
           <p class="percent-title">商户比例</p>
-          <x-number v-model.number="barInfo.ht_separate" fillable align="left" :min="0"></x-number>
+          <x-number v-model.number="barInfo.ht_separate" fillable align="left" :min="0" :max="100"></x-number>
         </div>
       </div>
       <div class="flex flex-h percent-box">
@@ -26,7 +26,7 @@
       <div class="flex flex-h percent-box">
         <div class="percent-item percent">
           <p class="percent-title">酒吧管理</p>
-          <x-number v-model.number="barInfo.manage_separate" fillable align="left" :min="0"></x-number>
+          <x-number v-model.number="barInfo.manage_separate" fillable align="left" :min="0" :max="100"></x-number>
         </div>
         <div class="percent-item">
           <p class="percent-title">绑定二维码</p>
@@ -83,7 +83,8 @@ export default {
       size: 200,
       mePercent: 25,
       url: window.location.href.replace('AgentBarInfo', 'BindManage'),
-      qr: null
+      qr: null,
+      edit: false
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -107,11 +108,11 @@ export default {
           value: window.location.href.replace('AgentBarInfo', 'BindManage'),
           size: this.size
         })
-        var img = new Image()
+        /* var img = new Image()
         img.onload = () => {
           this.drawLogo(img)
         }
-        img.src = this.$options.filters.prefixImageUrl(this.barInfo.logo)
+        img.src = this.$options.filters.prefixImageUrl(this.barInfo.logo) */
       })
     })
   },
@@ -167,6 +168,25 @@ export default {
         return true
       } else {
         return false
+      }
+    },
+    userChange (val) {
+      if (this.defaultRate.user) {
+        if (val > this.defaultRate.user) {
+          this.barInfo.users_separate = val
+        }
+      }
+    },
+    onUserClick () {
+      this.edit = true
+    }
+  },
+  computed: {
+    calUser () {
+      if (this.edit) {
+        return Number(this.defaultRate.user)
+      } else {
+        return 100
       }
     }
   }

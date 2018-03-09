@@ -7,7 +7,7 @@
     </div>
     <div class="menus-horizontal fff" style="margin-top:10px;padding:0 10px;">
       <template v-for="(v,i) in horizontalMenus" @click="route(i)">
-        <menu-item :data="v" @click.native="route(i)" :key="i"></menu-item>
+        <menu-item :data="v" @click.native="routeSecond(i)" :key="i"></menu-item>
       </template>
     </div>
   </div>
@@ -66,7 +66,7 @@ export default {
         icon: 'business-help-icon',
         tip: '设置帮助',
         route: {
-          path: '/Help'
+          path: '/HelpBusiness'
         }
       }]
     }
@@ -77,6 +77,9 @@ export default {
   methods: {
     route (index) {
       this.$router.push(this.menus[index].route)
+    },
+    routeSecond (index) {
+      this.$router.push(this.horizontalMenus[index].route)
     }
   }
 }

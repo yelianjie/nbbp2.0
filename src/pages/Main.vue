@@ -522,8 +522,8 @@ export default {
     confirmBuy () {
       if (this.buyDialogInfo.isCharge) {
         // 需要充值跳转充值页
-        // this.$router.push('/Charge')
-        window.location.href = window.location.origin + window.location.pathname + '#/Charge'
+        this.$router.push('/Charge')
+        // window.location.href = window.location.origin + window.location.pathname + '#/Charge'
       } else {
         // 直接购买
         addBpDsMsg(this.buyDialogInfo.postParams).then((res) => {
@@ -563,7 +563,11 @@ export default {
       if (betweenDay === 1) {
         t = '昨天' + time.substring(11, 16)
       } else if (betweenDay === 0) {
-        t = time.substring(11, 16)
+        if (b.get('date') - a.get('date') === 1) {
+          t = '昨天' + time.substring(11, 16)
+        } else {
+          t = time.substring(11, 16)
+        }
       } else {
         t = moment(t).format('YYYY年M月DD日 Ah时mm分')
       }

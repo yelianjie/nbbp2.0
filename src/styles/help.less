@@ -1,0 +1,61 @@
+.container {
+  margin: 15px;
+  width: auto;
+}
+.title {
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+.help-title {
+  position: relative;
+  .svg-icon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    width: 18px;
+    height: 18px;
+    transition: transform .3s ease;
+    &.move {
+      transform: translateY(-50%) rotate(-90deg);
+    }
+    &.right {
+      transform: translateY(-50%);
+    }
+  }
+}
+.help-title,
+.help-main {
+  padding: 10px 20px 10px 0;
+  margin: 0 10px;
+}
+.help-main {
+  border-top: 1px dashed #ddd;
+  font-size: 14px;
+  color: #696969;
+  img {
+    width: 80%;
+    max-width: 100%;
+  }
+  p {
+    margin-bottom: 6px;
+  }
+}
+.help-content {
+  margin-bottom: 10px;
+}
+p.suojin {
+  margin-left: 22px;
+}
+.red {
+  color: red;
+}
+.link {
+  color: #13abee;
+}
+.line {
+  height: 1px;
+  background-color: #ddd;
+  width: 100%;
+  margin: 10px 0;
+}

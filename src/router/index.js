@@ -254,6 +254,26 @@ export default new Router({
       meta: {
         roles: ['agent']
       }
+    },
+    {
+      path: '/HelpBusiness',
+      name: 'HelpBusiness',
+      component: (resolve) => {
+        require(['@/pages/HelpBusiness'], resolve)
+      },
+      meta: {
+        roles: ['business']
+      }
+    },
+    {
+      path: '/HelpBusinessSet',
+      name: 'HelpBusinessSet',
+      component: (resolve) => {
+        require(['@/pages/HelpBusinessSet'], resolve)
+      },
+      meta: {
+        roles: ['user', 'business']
+      }
     }
   ]
 })

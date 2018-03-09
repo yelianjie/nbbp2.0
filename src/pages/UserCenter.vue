@@ -40,7 +40,7 @@
     </div>
     <div class="user-middle">
       <div class="user-wallet flex bg2">
-        <div class="w1 flex-1 tc" @click="payTo">
+        <div class="w1 flex-1 tc" @click="$router.push({path: '/Charge'})">
           <h3 class="fff-bp"><countup v-if="userInfo.balance" :start-val="0.00" :end-val="Number(userInfo.balance)" :duration="2" class="demo1" :decimals="2"></countup></h3>
           <h5><span style="padding: 1px 3px;background-color:#f51173;border-radius:3px;margin-right:2px;" class="fff-bp f12">充</span>我的余额/牛角</h5>
         </div>
@@ -135,10 +135,7 @@ export default {
   methods: {
     ...mapActions('user', [
       'getUserInfo'
-    ]),
-    payTo () {
-      window.location.href = window.location.origin + window.location.pathname + '#/Charge'
-    }
+    ])
   }
 }
 </script>

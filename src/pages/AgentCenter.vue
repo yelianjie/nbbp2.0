@@ -30,13 +30,26 @@
         <router-link :to="{path: '/BusinessJoin', query: {type: 1}}" class="enter-bar">立即推荐商户注册</router-link>
       </div>
     </footer>
+    <x-dialog v-model="concernVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
+    <div class="qrcode-box">
+      <div class="qrcode-info flex flex-v flex-align-center">
+        <p class="f15" style="color:#fff;font-weight: bold;">注册成功</p>
+        <p class="f15" style="color:#fff;margin-bottom: 0.3rem;font-weight: bold;">欢迎成为牛霸代理</p>
+        <img v-if="ticket" :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + ticket" class="qrcode"/>
+        <p class="f14">请<span style="color:red;">长按</span>二维码</p>
+        <p class="f14">关注牛霸霸屏官方公众号</p>
+        <p class="f14">进入<span style="color:red;">代理管理后台</span></p>
+      </div>
+    </div>
+  </x-dialog>
   </div>
 </template>
 
 <script>
 import BarsList from '@/components/Center/BarsList'
+import { XDialog } from 'vux'
 import logo from '../assets/logo.png'
-import { getAgentIndex } from '@/api/'
+import { getAgentIndex, isSubscribe } from '@/api/'
 import MenuItem from '@/components/Center/MenuItem'
 import InlineLoading from '../components/InlineLoading'
 export default {
@@ -56,9 +69,11 @@ export default {
         icon: 'business-help-icon',
         tip: '设置帮助',
         route: {
-          path: '/Help'
+          path: '/HelpAgent'
         }
-      }]
+      }],
+      concernVisible: false,
+      ticket: ''
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -66,6 +81,14 @@ export default {
     next()
   },
   created () {
+    isSubscribe({ht_id: 0, type: 3, url: window.location.hash.substring(1)}).then((res) => {
+      if (res.result === '已关注') {
+        this.concernVisible = false
+      } else {
+        this.ticket = res.result
+        this.concernVisible = true
+      }
+    })
     getAgentIndex().then((res) => {
       this.info = res.result
       this.loading = false
@@ -79,7 +102,13 @@ export default {
   components: {
     BarsList,
     MenuItem,
-    InlineLoading
+    InlineLoading,
+    XDialog
+  },
+  methods: {
+    route (index) {
+      this.$router.push(this.horizontalMenus[index].route)
+    }
   }
 }
 </script>
@@ -123,6 +152,25 @@ footer {
     line-height: 44px;
     color: #fff;
     background-color: #2481d2;
+  }
+}
+.qrcode-info {
+  width: 4.75rem;
+  padding: 0.3rem 0 0.6rem;
+  background: #fff url('../assets/qrcode-bg.png') no-repeat top;
+  background-size: contain;
+  border-radius: 15px;
+  margin: 0 auto;
+  .qrcode {
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-bottom: 0.4rem;
+  }
+  p {
+    line-height: 0.4rem;
+    color: #3d404f;
+    padding: 0 10px;
+    word-break: break-all;
   }
 }
 </style>

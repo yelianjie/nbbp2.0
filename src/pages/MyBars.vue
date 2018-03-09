@@ -30,12 +30,24 @@
       <p class="f14" style="color:#a09e9e;">确认后将无法查看收益及提现</p>
       <p class="f12" style="color:red;">该操作无法恢复</p>
   </bp-dialog>
+  <x-dialog v-model="concernVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
+    <div class="qrcode-box">
+      <div class="qrcode-info flex flex-v flex-align-center">
+        <p class="f15" style="color:#fff;font-weight: bold;">注册成功</p>
+        <p class="f15" style="color:#fff;margin-bottom: 0.3rem;font-weight: bold;">欢迎成为牛霸商户</p>
+        <img v-if="ticket" :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + ticket" class="qrcode"/>
+        <p class="f14">请<span style="color:red;">长按</span>二维码</p>
+        <p class="f14">关注牛霸霸屏官方公众号</p>
+        <p class="f14">进入<span style="color:red;">商户管理后台</span></p>
+      </div>
+    </div>
+  </x-dialog>
   </div>
 </template>
 
 <script>
-import { Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
-import { getBars, deleteBar } from '@/api/'
+import { Swipeout, SwipeoutItem, SwipeoutButton, XDialog } from 'vux'
+import { getBars, deleteBar, isSubscribe } from '@/api/'
 import BpDialog from '../components/bpDialog'
 import InlineLoading from '../components/InlineLoading'
 export default {
@@ -46,7 +58,9 @@ export default {
       barList: [],
       deleteInfo: null,
       loading: true,
-      myScroll: null
+      myScroll: null,
+      concernVisible: false,
+      ticket: ''
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -54,6 +68,14 @@ export default {
     next()
   },
   created () {
+    isSubscribe({ht_id: 0, type: 2, url: window.location.hash.substring(1)}).then((res) => {
+      if (res.result === '已关注') {
+        this.concernVisible = false
+      } else {
+        this.ticket = res.result
+        this.concernVisible = true
+      }
+    })
     getBars().then((res) => {
       this.moneyInfo = res.result.money
       this.barList = res.result.hotelList
@@ -95,12 +117,13 @@ export default {
     SwipeoutItem,
     SwipeoutButton,
     BpDialog,
-    InlineLoading
+    InlineLoading,
+    XDialog
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .bars {
   overflow: hidden;
 }
@@ -116,5 +139,25 @@ export default {
   background-color: #f2f2f2;
   content: "";
   transform: scaleY(0.5);
+}
+
+.qrcode-info {
+  width: 4.75rem;
+  padding: 0.3rem 0 0.6rem;
+  background: #fff url('../assets/qrcode-bg.png') no-repeat top;
+  background-size: contain;
+  border-radius: 15px;
+  margin: 0 auto;
+  .qrcode {
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-bottom: 0.4rem;
+  }
+  p {
+    line-height: 0.4rem;
+    color: #3d404f;
+    padding: 0 10px;
+    word-break: break-all;
+  }
 }
 </style>

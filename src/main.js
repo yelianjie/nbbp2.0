@@ -44,6 +44,33 @@ if (!tId) {
   init()
 }
 function init () {
+  // object.assign for wx
+  if (typeof Object.assign !== 'function') {
+    // Must be writable: true, enumerable: false, configurable: true
+    Object.defineProperty(Object, 'assign', {
+      value: function assign (target, varArgs) { // .length of function is 2
+        'use strict'
+        if (target == null) { // TypeError if undefined or null
+          throw new TypeError('Cannot convert undefined or null to object')
+        }
+        var to = Object(target)
+        for (var index = 1; index < arguments.length; index++) {
+          var nextSource = arguments[index]
+          if (nextSource != null) { // Skip over if undefined or null
+            for (var nextKey in nextSource) {
+              // Avoid bugs when hasOwnProperty is shadowed
+              if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                to[nextKey] = nextSource[nextKey]
+              }
+            }
+          }
+        }
+        return to
+      },
+      writable: true,
+      configurable: true
+    })
+  }
   const dictionary = {
     ch: {
       messages: {
@@ -92,10 +119,10 @@ function init () {
 
   Vue.config.productionTip = false
 
-/*   const history = window.sessionStorage
+  const history = window.sessionStorage
   history.clear()
   let historyCount = history.getItem('count') * 1 || 0
-  history.setItem('/', 0) */
+  // history.setItem('/', 0)
   router.beforeEach(function (to, from, next) {
     /* if (to.name === 'Main' && !isAddWxMsg) {
       addWxMsg({url: to.path})
@@ -116,6 +143,8 @@ function init () {
     }
     store.commit('updateLoadingStatus', {isLoading: true})
     next() */
+    ++historyCount
+    history.setItem('count', historyCount)
     // 判断当前角色有没有权限进入这个路由
     if (store.getters['user/role']) {
       let userInfo = store.getters['user/userInfo']

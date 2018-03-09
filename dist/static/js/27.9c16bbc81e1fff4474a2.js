@@ -1,0 +1,2 @@
+webpackJsonp([27],{x6OU:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r={beforeRouteEnter:function(e,t,n){document.title="使用帮助",n()}},s=function(){var e=this,t=e.$createElement,n=e._self._c||t;return n("div",{staticClass:"container"},[n("img",{staticStyle:{width:"100%"},attrs:{src:"./static/help/b-end.jpg"}})])},c=[],i={render:s,staticRenderFns:c},l=i,a=n("VU/8"),u=a(r,l,!1,null,null,null);t.default=u.exports}});
+//# sourceMappingURL=27.9c16bbc81e1fff4474a2.js.map

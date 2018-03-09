@@ -49,12 +49,17 @@ export default {
     next()
   },
   created () {
-    getCharges().then((res) => {
-      this.userInfo = res.result.user
-      this.exps = res.result.exp
-    }).finally(() => {
-      this.$vux.loading.hide()
-    })
+    let historyCount = window.sessionStorage.getItem('count') * 1 || 0
+    if (historyCount !== 1) {
+      window.location.reload()
+    } else {
+      getCharges().then((res) => {
+        this.userInfo = res.result.user
+        this.exps = res.result.exp
+      }).finally(() => {
+        this.$vux.loading.hide()
+      })
+    }
   },
   components: {
     XButton
