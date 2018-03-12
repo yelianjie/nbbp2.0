@@ -23,16 +23,15 @@ import VueLazyload from 'vue-lazyload'
 import { getWxConfig, getHasToken } from './api/'
 // let isAddWxMsg = false
 // 判断
-var tId = localStorage.getItem('tIddddddddd')
+var tId = localStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  localStorage.setItem('tIddddddddd', 'ad5f4d1290b91a4d16af4160618dda787c23d094')
-  tId = localStorage.getItem('tIddddddddd')
+  localStorage.setItem('tId', 'ad5f4d1290b91a4d16af4160618dda787c23d094')
+  tId = localStorage.getItem('tId')
 }
-alert(tId)
 if (!tId) {
   getHasToken().then((res) => {
     // 有token了 存token下次不进来 继续路由
-    localStorage.setItem('tIddddddddd', res.result)
+    localStorage.setItem('tId', res.result)
     init()
   }).catch((error) => {
     // 第一次登录
