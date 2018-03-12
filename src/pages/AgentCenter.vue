@@ -4,7 +4,7 @@
       <div class="logo-line">
         <!-- <img :src="logo" class="logo-img circle"> -->
         <img v-if="info.agent" :src="info.agent.headimgurl | prefixImageUrl" class="logo-img circle"/>
-        <span class="u-name fff-bp f13">{{info.agent.name}}（推荐码：{{info.agent.invitation_code}}）</span>
+        <span class="u-name fff-bp f13">{{info.agent.name}}</span>
       </div>
     </div>
     <div data-v-7de79557="" class="middle tc fff-bp bg3" style="padding: 0.36rem 0;margin-bottom:10px;">
@@ -13,6 +13,10 @@
       <p data-v-7de79557="" class="benefit-account" v-else>0</p>
       <p data-v-7de79557="" class="f16" v-if="info.money.agent_income">累计总收益：{{info.money.agent_income}} 元</p>
       <p data-v-7de79557="" class="f16" v-else>累计总收益：0 元</p>
+    </div>
+    <div class="fff flex flex-h flex-align-center" style="margin: 10px 0;height: 44px;padding: 0 15px;">
+      <div class="f15">您的代理推荐码</div>
+      <div class="flex-1 f15" style="text-align:right;">{{info.agent.invitation_code}}</div>
     </div>
     <div class="fff">
       <p style="padding: 0.2rem 0.3rem;" class="f18">代理酒吧列表</p>
@@ -91,6 +95,7 @@ export default {
     })
     getAgentIndex().then((res) => {
       this.info = res.result
+      localStorage.setItem('agentNeed', JSON.stringify({code: res.result.agent.invitation_code}))
       this.loading = false
       if (res.result.hotel.length === 0) {
         this.noMore = true

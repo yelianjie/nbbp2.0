@@ -30,6 +30,7 @@ export default {
   created () {
     getBarMoney({ht_id: this.$route.params.id}).then((res) => {
       this.barInfo = res.result
+      localStorage.setItem('businessNeed', JSON.stringify({id: this.$route.params.id, name: res.result.name, qrcode: this.$options.filters.prefixImageUrl(res.result.phone_er_url)}))
       document.title = res.result.name + '管理'
     })
   },

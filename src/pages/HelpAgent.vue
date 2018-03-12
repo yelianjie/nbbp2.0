@@ -11,7 +11,7 @@
           <p class="suojin">餐厅、庆典、婚礼、年会、寺庙等需要大屏互动的场合。</p>
           <div class="line"></div>
           <p>2、推荐商户免费注册使用牛霸系统。</p>
-          <p>重要：商户注册时，推荐人填写您的推荐码-- <span class="red">EurJfk</span></p>
+          <p>重要：商户注册时，推荐人填写您的推荐码-- <span class="red">{{code}}</span></p>
           <p><img :src="'./static/help/a1.png'"/></p>
           <p>餐厅、庆典、婚礼、年会、寺庙等需要大屏互动的场合。</p>
           <p>点击查看<router-link class="link" :to="{path: '/BusinessJoin?type=1'}">牛霸系统介绍及注册页</router-link></p>
@@ -60,12 +60,16 @@ export default {
   },
   data () {
     return {
-      isActive: [0, 0, 0, 0, 0, 0]
+      isActive: [0, 0, 0, 0, 0, 0],
+      code: ''
     }
   },
   beforeRouteEnter (to, from, next) {
     document.title = '帮助设置'
-    next()
+    var agentNeed = JSON.parse(localStorage.getItem('agentNeed'))
+    next(vm => {
+      vm.code = agentNeed.code
+    })
   },
   methods: {
     click (index) {

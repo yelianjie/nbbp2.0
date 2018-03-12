@@ -38,6 +38,8 @@
 import Upload from '../Upload'
 import ChatFace from '../ChatFace'
 import { addNormalMsg } from '@/api/'
+import twemoji from '@/vendor/twemoji.npm'
+import { BASE_API } from '../../../config/prod.env'
 export default {
   data () {
     return {
@@ -45,7 +47,8 @@ export default {
       base64: '',
       showFace: false,
       msg: '',
-      inputObj: null
+      inputObj: null,
+      emoji: null
     }
   },
   watch: {
@@ -102,7 +105,13 @@ export default {
         })
         return false
       }
-      addNormalMsg({ht_id: this.$route.params.id, content: this.msg, img: this.base64}).then((res) => {
+      var msg = twemoji.parse(
+        this.msg,
+        function (icon, options, variant) {
+          return BASE_API + '/dist/emoji-apple-svg/' + icon + '.svg'
+        }
+      )
+      addNormalMsg({ht_id: this.$route.params.id, content: msg, img: this.base64}).then((res) => {
         this.deleteMsgImg()
         this.msg = ''
         this.showFace = false

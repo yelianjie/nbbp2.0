@@ -23,20 +23,22 @@ import VueLazyload from 'vue-lazyload'
 import { getWxConfig, getHasToken } from './api/'
 // let isAddWxMsg = false
 // 判断
-var tId = localStorage.getItem('tId')
+var tId = localStorage.getItem('tIddddddddd')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  localStorage.setItem('tId', 'ad5f4d1290b91a4d16af4160618dda787c23d094')
-  tId = localStorage.getItem('tId')
+  localStorage.setItem('tIddddddddd', 'ad5f4d1290b91a4d16af4160618dda787c23d094')
+  tId = localStorage.getItem('tIddddddddd')
 }
+alert(tId)
 if (!tId) {
   getHasToken().then((res) => {
     // 有token了 存token下次不进来 继续路由
-    localStorage.setItem('tId', res.result)
+    localStorage.setItem('tIddddddddd', res.result)
     init()
   }).catch((error) => {
     // 第一次登录
     if (error === '未登录') {
       var url = window.location.hash.substring(1)
+      alert(window.location.origin + '/weixin/login/index?callback_url=' + url)
       window.location.href = window.location.origin + '/weixin/login/index?callback_url=' + url
     }
   })

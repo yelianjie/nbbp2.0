@@ -21,7 +21,7 @@
                   <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="gift-icon ds-img"><img v-lazy="$options.filters.prefixImageUrl(v.icon)"></div>
                   <div class="gift-name ds-text overflow f13">{{v.title}}</div>
-                  <div class="gift-price f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
+                  <div class="gift-price overflow f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -45,6 +45,8 @@
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters, mapActions } from 'vuex'
+import twemoji from '@/vendor/twemoji.npm'
+import { BASE_API } from '../../../config/prod.env'
 export default {
   model: {
     prop: 'visible',
@@ -83,11 +85,17 @@ export default {
         return false
       }
       let isCharge = Number(this.total) > Number(this.userInfo.balance)
+      var content = twemoji.parse(
+        this.content,
+        function (icon, options, variant) {
+          return BASE_API + '/dist/emoji-apple-svg/' + icon + '.svg'
+        }
+      )
       let postParams = {
         ht_id: this.$route.params.id,
         type: 1,
         count: this.dsTimes,
-        content: this.content,
+        content: content,
         gift_id: this.gifts[this.dsGiftIndex].id,
         reward_uid: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : 0,
         img: ''
@@ -223,5 +231,6 @@ export default {
   text-align: center;
   line-height: 0.24rem;
   margin-bottom: 0.15rem;
+  white-space: nowrap;
 }
 </style>

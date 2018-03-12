@@ -30,9 +30,18 @@
         </div>
         <div class="percent-item">
           <p class="percent-title">绑定二维码</p>
-          <div class="bindif">
-            <x-button :gradients="['#1D62F0', '#1D62F0']" mini @click.native="maskVisible = true">去绑定</x-button>
-          </div>
+          <template v-if="supervise_info">
+            <p class="f13" style="margin-top: 10px;">{{supervise_info.name}}</p>
+            <p class="f13"><a :href="'tel:' + supervise_info.phone">{{supervise_info.phone}}</a></p>
+            <div class="bindif">
+              <x-button :gradients="['#ff0e0e', '#ff0e0e']" mini @click.native="cancelConfirm">取消绑定</x-button>
+            </div>
+          </template>
+          <template v-else>
+            <div class="bindif">
+              <x-button :gradients="['#1D62F0', '#1D62F0']" mini @click.native="maskVisible = true">去绑定</x-button>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -58,7 +67,7 @@
 <script>
 import { XNumber, XInput, Group, XButton } from 'vux'
 import BusinessAgentTop from '@/components/Center/BusinessAgentTop'
-import { getAgentBar, updateRate } from '@/api/'
+import { getAgentBar, updateRate, releaseSupervise } from '@/api/'
 import logo from '../assets/logo.png'
 // import VueQr from 'vue-qr'
 import QRious from 'qrious'
@@ -79,6 +88,7 @@ export default {
       maskVisible: false,
       dialogVisible: false,
       barInfo: {},
+      supervise_info: null,
       defaultRate: {},
       size: 200,
       mePercent: 25,
@@ -99,6 +109,8 @@ export default {
       res.result.agent.manage_separate = Number(res.result.agent.manage_separate)
       res.result.agent.company_separate = Number(res.result.agent.company_separate)
       this.barInfo = res.result.agent
+      this.supervise_info = res.result.supervise_info
+      this.supervise_info.money = res.result.supervise_money
       this.defaultRate = res.result.default_rate
       var fSize = parseInt(document.documentElement.style.fontSize)
       this.size = 4 * fSize
@@ -128,19 +140,36 @@ export default {
     }
   },
   methods: {
-    drawLogo (logo) {
-      var ctx = document.getElementById('qr').getContext('2d')
-      var logoWidth = logo.width
-      var logoHeight = logo.height
-      var width = this.qr.size / 4
-      var height = logoHeight / logoWidth * width
-      var x = (this.qr.size / 2) - (width / 2)
-      var y = (this.qr.size / 2) - (height / 2)
-      // var maskPadding = this.qr.size / 30
-      // ctx.globalCompositeOperation = 'destination-out'
-      // ctx.drawImage(logo, 0, 0, logoWidth, logoHeight, x - maskPadding, y - maskPadding, width + (maskPadding * 2), height + (maskPadding * 2))
-      ctx.globalCompositeOperation = 'source-over'
-      ctx.drawImage(logo, 0, 0, logoWidth, logoHeight, x, y, width, height)
+    cancelConfirm () {
+      const _this = this
+      this.$vux.confirm.show({
+        closeOnConfirm: false,
+        content: `<div class="tc f14">
+          <p>当前酒吧管理：${this.supervise_info.name}</p>
+          <p>未提现余额：${this.supervise_info.money}元</p>
+          <div style="height:1px;background-color:#ddd;margin: 10px 0;"></div>
+          <p style="color:red;" class="f13">取消绑定后，当前酒吧管理：${this.supervise_info.name}将无法查看收益信息和提现。</p>
+          <p style="margin-top: 10px;">该操作不可恢复，确认取消绑定吗？</p>
+        </div>`,
+        // 组件除show外的属性
+        onCancel () {
+        },
+        onConfirm () {
+          _this.$vux.loading.show({
+            text: '正在取消绑定'
+          })
+          releaseSupervise({ht_id: _this.$route.params.id}).then((res) => {
+            _this.$vux.toast.show({
+              text: '取消绑定成功',
+              width: '10em'
+            })
+            _this.$vux.confirm.hide()
+            _this.supervise_info = null
+          }).finally(() => {
+            _this.$vux.loading.hide()
+          })
+        }
+      })
     },
     setBarPercent () {
       if (!this.barInfo.id || this.calPercent()) {

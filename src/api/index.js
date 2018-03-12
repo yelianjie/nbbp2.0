@@ -410,6 +410,14 @@ export const isOpenClient = (data) => {
 }
 
 /**
+ * 解除绑定
+ * @param {*} data
+ */
+export const releaseSupervise = (data) => {
+  return request('/weixin/hotel/releaseSupervise', 'POST', data)
+}
+
+/**
  * 上传图片
  * @param {*} blob
  */

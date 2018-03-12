@@ -17,7 +17,7 @@
               <swiper-slide v-for="(v, i) in times" :key="i">
                 <div class="bp-time-item" :class="{'selected': bpTimeIndex == i}" @click="bpTimeIndex != i ? bpTimeIndex = i : bpTimeIndex = -1">
                 <div class="time f13">{{v.time}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-                <div class="time-price f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
+                <div class="time-price overflow f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
               </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -31,7 +31,7 @@
                   <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                   <div class="theme-icon"><img v-lazy="$options.filters.prefixImageUrl(v.icon)"></div>
                   <div class="theme-name f13 overflow">{{v.title}}</div>
-                  <div class="time-price f12 tc" style="margin-bottom: 0.15rem;"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
+                  <div class="time-price overflow f12 tc" style="margin-bottom: 0.15rem;"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -47,7 +47,6 @@
                   <svg-icon icon-class="camera"/>
                   <p class="f13">添加照片</p>
                   <label for="bp-upload-img" class="n-label" id="base64Img" :style="{'background-image':'url('+$options.filters.prefixImageUrl(base64Img)+')'}"></label>
-                  <!--<div class="n-label base64-img" v-show="base64Img" :style="{'background-image':'url('+base64Img+')'}"></div>-->
                 </div>
               </upload>
             </div>
@@ -70,6 +69,8 @@ import { mapGetters, mapActions } from 'vuex'
 import { prefixImageUrl } from '@/utils/utils'
 import { isOpenClient } from '@/api/'
 import Upload from '../Upload'
+import twemoji from '@/vendor/twemoji.npm'
+import { BASE_API } from '../../../config/prod.env'
 export default {
   model: {
     prop: 'visible',
@@ -164,13 +165,19 @@ export default {
         this.bpThemeIndex = isHasTextTheme
       }
       let isCharge = Number(this.total) > Number(this.userInfo.balance)
+      var content = twemoji.parse(
+        this.content,
+        function (icon, options, variant) {
+          return BASE_API + '/dist/emoji-apple-svg/' + icon + '.svg'
+        }
+      )
       let postParams = {
         ht_id: this.$route.params.id,
         type: 2,
         screen_id: this.bpThemeIndex === -1 ? 0 : this.screens[this.bpThemeIndex].id,
         time_id: this.times[this.bpTimeIndex].id,
         count: this.bpTimes,
-        content: this.content,
+        content: content,
         img: this.base64Img,
         reward_uid: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : ''
       }
@@ -285,6 +292,7 @@ export default {
     vertical-align: middle;
     text-align: center;
     margin-top: 4px;
+    white-space: nowrap;
   }
 }
 .bp-theme-item {

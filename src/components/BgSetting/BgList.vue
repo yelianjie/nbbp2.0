@@ -5,7 +5,8 @@
           <div class="flex flex-align-center bg-item" :key="i">
             <div class="bg-icon flex flex-1 pr">
               <img v-lazy="$options.filters.prefixImageUrl(v.url)" v-if="type == 1" @click="previewImage($options.filters.prefixImageUrl(v.url))"/>
-              <video :src="v.url | prefixImageUrl" controls="true" :ref="'video' + i" v-if="type == 2" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-video-player-type="h5" x5-video-player-fullscreen="true"></video>
+              <!-- <video :src="v.url | prefixImageUrl" controls="true" :ref="'video' + i" v-if="type == 2" webkit-playsinline="true" x-webkit-airplay="true" playsinline="true" x5-video-player-type="h5" x5-video-player-fullscreen="true"></video> -->
+              <video :src="v.url | prefixImageUrl" controls="true" :ref="'video' + i" v-if="type == 2"></video>
               <div class="place-play-video" @click.prevent="showVideo(i)" v-if="type == 2" v-show="last != i"><svg-icon icon-class="play"/></div>
             </div>
             <checker-item :value="i" @on-item-click="onClick">
