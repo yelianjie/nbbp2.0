@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <group label-width="4.5em" label-margin-right="2em" label-align="right">
-      <x-input title="姓&emsp;&emsp;名" data-vv-as="姓名" v-model="info.name" v-validate.initial="'required'"></x-input>
+      <x-input title="姓&emsp;&emsp;名" data-vv-as="姓名" v-model="info.name" v-validate.initial="'required'" :disabled="isHasBind"></x-input>
       <x-input title="联系电话" data-vv-as="联系电话" v-model.number="info.phone" type="number" :max="11"  v-validate.initial="'required|numeric|mobile'"></x-input>
       <x-input title="绑定酒吧" v-model="info.barname" :disabled="true"></x-input>
       <div class="submit-btn">
@@ -15,7 +15,7 @@
 
 <script>
 import { Group, XInput, XButton } from 'vux'
-import { getBarInfo, bindBarManager } from '@/api/'
+import { getBarInfo, bindBarManager, isSupervise } from '@/api/'
 export default {
   data () {
     return {
@@ -24,7 +24,8 @@ export default {
         phone: '',
         barname: 'CMK酒吧'
       },
-      loading: false
+      loading: false,
+      isHasBind: false
     }
   },
   components: {
@@ -33,6 +34,14 @@ export default {
     XButton
   },
   created () {
+    isSupervise().then((res) => {
+      var o = {}
+      if (res.result) {
+        this.isHasBind = true
+        o = res.result
+      }
+      this.info = Object.assign({}, this.info, o)
+    })
     getBarInfo({ht_id: this.$route.params.id}).then((res) => {
       this.info.barname = res.result.name
     })
@@ -57,6 +66,9 @@ export default {
               text: '绑定成功',
               type: 'success'
             })
+            setTimeout(() => {
+              this.$router.replace({path: '/UserCenter'})
+            }, 500)
           }).finally(() => {
             this.loading = false
           })

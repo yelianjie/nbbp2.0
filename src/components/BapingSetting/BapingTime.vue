@@ -41,6 +41,8 @@ export default {
         }
       })
       this.timeSelected = selecteds
+      // 排序时间
+      res.result.sort((a, b) => a.time - b.time)
       this.times = res.result
     })
   },

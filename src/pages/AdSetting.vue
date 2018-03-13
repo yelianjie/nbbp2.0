@@ -4,6 +4,7 @@
       <div class="flex flex-h ad-item-set">
         <div class="ad-img">
           <div class="placeholder-add-btn pr">
+            <div class="add-fuhao"></div>
             <img class="bg" v-if="adScreenBg" :src="adScreenBg | prefixImageUrl"/>
             <upload name="upload-ad-screen" @on-preview="adScreenUpload" :encoderValue="0.8" :limitSize="1920"></upload>
             <label for="upload-ad-screen" class="n-label"></label>
@@ -11,12 +12,13 @@
         </div>
         <div class="flex-1 ad-desc">
           <p class="title">大屏幕端</p>
-          <p class="desc">支持jpg、png等格式，建议尺寸：大小不超过2M</p>
+          <p class="desc">支持jpg、png等格式，建议尺寸：1920 * 1080</p>
         </div>
       </div>
       <div class="flex flex-h ad-item-set">
         <div class="ad-img">
           <div class="placeholder-add-btn pr">
+            <div class="add-fuhao"></div>
             <img class="bg" v-if="adMobileBg" :src="adMobileBg | prefixImageUrl" />
             <upload name="upload-ad-mobile" @on-preview="adMobileUpload" :encoderValue="0.8" :limitSize="828"></upload>
             <label for="upload-ad-mobile" class="n-label"></label>
@@ -24,7 +26,7 @@
         </div>
         <div class="flex-1 ad-desc">
           <p class="title">手机端</p>
-          <p class="desc">支持jpg、png等格式，建议尺寸：大小不超过1M</p>
+          <p class="desc">支持jpg、png等格式，建议尺寸：750 * 1206</p>
         </div>
       </div>
     </div>
@@ -96,22 +98,29 @@ export default {
   margin-right: 0.4rem;
   border: 1px solid #ddd;
   position: relative;
-  &:after,
-  &:before {
+  .add-fuhao {
     position: absolute;
-    transform: translate3d(-50%, -50%, 0);
-    content: "";
-    left: 50%;
-    top: 50%;
-    background-color: #ddd;
-  }
-  &:after {
-    width: 2px;
-    height: 50%;
-  }
-  &:before {
-    width: 50%;
-    height: 2px;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    &:after,
+    &:before {
+      position: absolute;
+      transform: translate3d(-50%, -50%, 0);
+      content: "";
+      left: 50%;
+      top: 50%;
+      background-color: #ddd;
+    }
+    &:after {
+      width: 2px;
+      height: 50%;
+    }
+    &:before {
+      width: 50%;
+      height: 2px;
+    }
   }
 }
 .desc {

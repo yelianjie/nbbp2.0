@@ -182,3 +182,28 @@ export const isiOS = () => {
   var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
   return isiOS
 }
+
+/**
+ * 检查iOS版本
+*/
+export const iOSversion = () => {
+  if (isiOS()) {
+    let str = navigator.userAgent.toLowerCase()
+    let ver = str.match(/cpu iphone os (.*?) like mac os/)[1].replace(/_/g, '.')
+    return ver.split('.')[0]
+  } else {
+    return 0
+  }
+}
+
+/**
+ * 去除左右空格
+*/
+export const trimForm = (data) => {
+  for (var i in data) {
+    if (typeof data[i] === 'string') {
+      data[i] = data[i].trim()
+    }
+  }
+  return data
+}

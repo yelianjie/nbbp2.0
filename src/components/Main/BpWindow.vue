@@ -39,7 +39,7 @@
           </div>
           <div class="bp-input-area flex">
             <div class="bp-textarea flex-1">
-              <textarea class="bp-input borderbox f14" maxlength="30" v-model="content" placeholder="请输入霸屏上墙语，30字以内"></textarea>
+              <textarea class="bp-input borderbox f14" maxlength="30" @focus="inputFocus" @blur="inputBlur" v-model="content" placeholder="请输入霸屏上墙语，30字以内"></textarea>
             </div>
             <div class="bp-upload">
               <upload name="bp-upload-img" :is-crop="true" @on-clip="afterClip" :cropRadio="0.7874" :limitSize="960">
@@ -66,11 +66,11 @@
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters, mapActions } from 'vuex'
-import { prefixImageUrl } from '@/utils/utils'
+import { prefixImageUrl, iOSversion } from '@/utils/utils'
 import { isOpenClient } from '@/api/'
 import Upload from '../Upload'
 import twemoji from '@/vendor/twemoji.npm'
-import { BASE_API } from '../../../config/prod.env'
+// import { BASE_API } from '../../../config/prod.env'
 export default {
   model: {
     prop: 'visible',
@@ -79,6 +79,7 @@ export default {
   props: ['visible', 'times', 'screens'],
   data () {
     return {
+      inputTimer: null,
       scroll: null,
       bpTimes: 1,
       bpTimeIndex: -1,
@@ -113,6 +114,20 @@ export default {
       return screens.filter((v) => {
         return v.title !== '重金霸屏'
       })
+    },
+    inputBlur () {
+      if (this.inputTimer) {
+        clearInterval(this.inputTimer)
+        this.inputTimer = null
+      }
+    },
+    inputFocus () {
+      let oc = iOSversion()
+      if (oc <= 10) {
+        this.inputTimer = setInterval(() => {
+          document.body.scrollTop = document.body.scrollHeight
+        }, 500)
+      }
     },
     closeWindow () {
       this.$emit('closeWindow', false)
@@ -168,7 +183,8 @@ export default {
       var content = twemoji.parse(
         this.content,
         function (icon, options, variant) {
-          return BASE_API + '/dist/emoji-apple-svg/' + icon + '.svg'
+          // return BASE_API + '/dist/emoji-apple-svg/' + icon + '.svg'
+          return 'http://weiqing.wurongchao.com/web/apple-svg/' + icon + '.svg'
         }
       )
       let postParams = {

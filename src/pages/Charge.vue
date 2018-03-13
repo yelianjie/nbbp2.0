@@ -35,6 +35,7 @@
 <script>
 import { XButton } from 'vux'
 import { getCharges, rechargePay } from '@/api/'
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -53,19 +54,26 @@ export default {
     if (historyCount !== 1) {
       window.location.reload()
     } else {
-      getCharges().then((res) => {
-        this.userInfo = res.result.user
-        this.exps = res.result.exp
-      }).finally(() => {
-        this.$vux.loading.hide()
-      })
+      this.getData()
     }
   },
   components: {
     XButton
   },
   methods: {
+    ...mapActions('user', [
+      'getUserInfo'
+    ]),
+    getData () {
+      getCharges().then((res) => {
+        this.userInfo = res.result.user
+        this.exps = res.result.exp
+      }).finally(() => {
+        this.$vux.loading.hide()
+      })
+    },
     requestPay () {
+      var _self = this
       if (this.bpValueIndex === -1) {
         this.$vux.toast.show({
           text: '请选择金额支付'
@@ -75,7 +83,35 @@ export default {
       this.loading = true
       rechargePay({eid: this.exps[this.bpValueIndex].id, money: this.exps[this.bpValueIndex].money}).then((res) => {
         window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
-          if (res.err_msg === 'get_brand_wcpay_request:ok') {
+          switch (res.err_msg) {
+            case 'get_brand_wcpay_request:cancel':
+              // alert('用户取消支付！')
+              break
+            case 'get_brand_wcpay_request:fail':
+              _self.$vux.toast.show({
+                text: '支付失败！（' + res.err_desc + '）',
+                width: '10em'
+              })
+              break
+            case 'get_brand_wcpay_request:ok':
+              _self.$vux.toast.show({
+                text: '支付成功'
+              })
+              setTimeout(() => {
+                if (localStorage.getItem('payBack') === '1') {
+                  // 支付返回
+                  localStorage.removeItem('payBack')
+                  _self.getUserInfo().then((res) => {
+                    window.history.go(-1)
+                  })
+                } else {
+                  _self.getData()
+                }
+              }, 500)
+              break
+            default:
+              alert(JSON.stringify(res))
+              break
           }
         })
         /* this.$wechat.chooseWXPay({

@@ -22,10 +22,15 @@ import { validateRules } from './utils/validateRules'
 import VueLazyload from 'vue-lazyload'
 import { getWxConfig, getHasToken } from './api/'
 // let isAddWxMsg = false
-// 判断
+// 判断 切换公众号时以前的号有localStorage 用这个变量判断删除
+var changeFlag = localStorage.getItem('changeFlag') ? 1 : 0
+if (process.env.NODE_ENV === 'production' && !changeFlag) {
+  localStorage.removeItem('tId')
+  localStorage.setItem('changeFlag', '1')
+}
 var tId = localStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  localStorage.setItem('tId', 'ad5f4d1290b91a4d16af4160618dda787c23d094')
+  localStorage.setItem('tId', '8887a09a18eb2e2755e1363c20fd17aca3b23c2d')
   tId = localStorage.getItem('tId')
 }
 if (!tId) {
@@ -37,7 +42,6 @@ if (!tId) {
     // 第一次登录
     if (error === '未登录') {
       var url = window.location.hash.substring(1)
-      alert(window.location.origin + '/weixin/login/index?callback_url=' + url)
       window.location.href = window.location.origin + '/weixin/login/index?callback_url=' + url
     }
   })

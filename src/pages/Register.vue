@@ -65,7 +65,8 @@ export default {
         let getErrors = this.vErrors.all()
         if (getErrors.length > 0) {
           this.$vux.toast.show({
-            text: getErrors[0]
+            text: getErrors[0],
+            width: '10em'
           })
         } else {
           this.loading = true

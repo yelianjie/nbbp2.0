@@ -107,10 +107,12 @@ export default {
       res.result.agent.ht_separate = Number(res.result.agent.ht_separate)
       res.result.agent.yewu_separate = Number(res.result.agent.yewu_separate)
       res.result.agent.manage_separate = Number(res.result.agent.manage_separate)
-      res.result.agent.company_separate = Number(res.result.agent.company_separate)
+      // res.result.agent.company_separate = Number(res.result.agent.company_separate)
       this.barInfo = res.result.agent
       this.supervise_info = res.result.supervise_info
-      this.supervise_info.money = res.result.supervise_money
+      if (this.supervise_info) {
+        this.supervise_info.money = res.result.supervise_money
+      }
       this.defaultRate = res.result.default_rate
       var fSize = parseInt(document.documentElement.style.fontSize)
       this.size = 4 * fSize
@@ -189,9 +191,9 @@ export default {
       })
     },
     calPercent () {
-      if (Number(this.barInfo.ht_separate) + Number(this.barInfo.manage_separate) + Number(this.barInfo.yewu_separate) + Number(this.barInfo.company_separate) > 100) {
+      if (Number(this.barInfo.ht_separate) + Number(this.barInfo.manage_separate) + Number(this.barInfo.yewu_separate) + Number(this.defaultRate.company) > 100) {
         this.$vux.toast.show({
-          text: '商户、代理和酒吧管理比例之和不能超过' + (100 - this.barInfo.company_separate) + '%',
+          text: '商户、代理和酒吧管理比例之和不能超过' + (100 - this.defaultRate.company) + '%',
           width: '20em'
         })
         return true

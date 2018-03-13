@@ -191,7 +191,8 @@ body, html, #app {
   height: 0.6rem;
 }
 img.emoji {
-  width: 0.6rem;
-  max-height: 0.6rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  vertical-align: middle;
 }
 </style>

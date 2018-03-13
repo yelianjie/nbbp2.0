@@ -418,6 +418,13 @@ export const releaseSupervise = (data) => {
 }
 
 /**
+ * 获取当前用户是否已经是酒吧管理
+ */
+export const isSupervise = () => {
+  return request('/weixin/hotel/isSupervise', 'POST')
+}
+
+/**
  * 上传图片
  * @param {*} blob
  */

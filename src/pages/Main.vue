@@ -58,7 +58,7 @@
         <ds-msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></ds-msg>
       </template>
     </div>
-    <footer-main></footer-main>
+    <footer-main :scorllEnd="scrollToEnd"></footer-main>
   </div>
   <div id="fixed-bgds-btns">
     <div class="f-btn" @click="screenForAll"><img src="../assets/bp-btn.png"/></div>
@@ -277,6 +277,7 @@ export default {
         }
         img.onerror = () => {
           this.show = true
+          this.adVisible = false
         }
         img.src = res.result.advert.phone.url
       } else {
@@ -324,6 +325,17 @@ export default {
       ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
     }),
     initIsSelected () {
+      var buyInfo = localStorage.getItem('buyDialogInfo')
+      var currentUserInfo = localStorage.getItem('currentUserInfo')
+      if (!buyInfo) {
+        return false
+      }
+      if (currentUserInfo) {
+        this.$store.commit('main/SET_CURRENT_USER_INFO', JSON.parse(currentUserInfo))
+        localStorage.removeItem('currentUserInfo')
+      }
+      this.ChangeBuyDialogInfo(JSON.parse(buyInfo))
+      localStorage.removeItem('buyDialogInfo')
       if (this.buyDialogInfo.hasOwnProperty('postParams')) {
         if (this.buyDialogInfo.postParams.type === 2) {
           this.bpWindowVisible = true
@@ -396,11 +408,15 @@ export default {
         })
       }, 1000)
     },
-    scrollToEnd () {
+    scrollToEnd (isAnimate) {
       var content = this.$refs.scrollWrapper
-      Math.animation(content.scrollTop, content.scrollHeight - content.offsetHeight, function (value) {
-        content.scrollTop = value
-      }, 'Linear', 400)
+      if (isAnimate) {
+        Math.animation(content.scrollTop, content.scrollHeight - content.offsetHeight, function (value) {
+          content.scrollTop = value
+        }, 'Linear', 400)
+      } else {
+        content.scrollTop = content.scrollHeight - content.offsetHeight
+      }
     },
     infiniteHandler ($state) {
       /* this.lockHeight = true
@@ -522,6 +538,9 @@ export default {
     confirmBuy () {
       if (this.buyDialogInfo.isCharge) {
         // 需要充值跳转充值页
+        localStorage.setItem('buyDialogInfo', JSON.stringify(this.buyDialogInfo))
+        localStorage.setItem('currentUserInfo', JSON.stringify(this.currentUserInfo))
+        localStorage.setItem('payBack', '1')
         this.$router.push('/Charge')
         // window.location.href = window.location.origin + window.location.pathname + '#/Charge'
       } else {

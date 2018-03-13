@@ -98,11 +98,12 @@ export default {
       exchangeToCoin({money: this.toCoinValue}).then((res) => {
         this.getUserInfo()
         this.exchangeVisible = false
+        this.$vux.loading.hide()
         this.$vux.toast.show({
           text: '兑换成功'
         })
-        this.$vux.loading.hide()
       }).finally(() => {
+        this.$vux.loading.hide()
         this.$mask.hide()
       })
     },
@@ -122,33 +123,32 @@ export default {
       depositToCash({type: 1, money: this.toRMBValue}).then((res) => {
         this.getUserInfo()
         this.depositVisible = false
+        this.$vux.loading.hide()
         this.$vux.toast.show({
           text: '提现成功'
         })
-        this.$vux.loading.hide()
       }).finally(() => {
+        this.$vux.loading.hide()
         this.$mask.hide()
       })
     },
     validToCoin (event) {
       if (!Number.isInteger(this.toCoinValue)) {
         this.toCoinValue = ''
-        return
       }
-      if (this.toCoinValue > parseInt(this.userInfo.profit_balance)) {
+      /* if (this.toCoinValue > parseInt(this.userInfo.profit_balance)) {
         this.toCoinValue = parseInt(this.userInfo.profit_balance)
-      }
+      } */
     },
     validToRMB (event) {
       if (!Number.isInteger(this.toRMBValue)) {
         this.toRMBValue = ''
-        return
       }
-      if (this.toRMBValue > parseInt(this.userInfo.profit_balance)) {
+      /* if (this.toRMBValue > parseInt(this.userInfo.profit_balance)) {
         let n = parseInt(this.userInfo.profit_balance)
         let min = parseInt(n / 100) * 100
         this.toRMBValue = min
-      }
+      } */
     }
   }
 }

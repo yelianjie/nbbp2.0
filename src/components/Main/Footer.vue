@@ -21,7 +21,7 @@
         <div class="chat-input flex-1 flex" :class="{'move': textImgVisible}">
           <div class="textarea-wrapper flex-1">
             <div class="content-editable f14" contenteditable="true">{{msg}}</div>
-            <textarea v-model="msg" class="field-textarea f14" @focus="inputFocus" placeholder="说点什么吧！" ref="msg"></textarea>
+            <textarea v-model="msg" class="field-textarea f14" @focus="inputFocus" @blur="inputBlur" placeholder="说点什么吧！" ref="msg"></textarea>
           </div>
          <!--  <textarea @input="textareaInput" id="input" class="borderbox f13 flex-1" placeholder="说点什么吧！" @click="showFace = false" v-model="msg" ref="msg"></textarea> -->
         </div>
@@ -39,8 +39,10 @@ import Upload from '../Upload'
 import ChatFace from '../ChatFace'
 import { addNormalMsg } from '@/api/'
 import twemoji from '@/vendor/twemoji.npm'
-import { BASE_API } from '../../../config/prod.env'
+// import { BASE_API } from '../../../config/prod.env'
+import { iOSversion, isiOS } from '@/utils/utils'
 export default {
+  props: ['scorllEnd'],
   data () {
     return {
       textImgVisible: false,
@@ -48,7 +50,8 @@ export default {
       showFace: false,
       msg: '',
       inputObj: null,
-      emoji: null
+      emoji: null,
+      inputTimer: null
     }
   },
   watch: {
@@ -59,15 +62,23 @@ export default {
   mounted () {
   },
   methods: {
+    inputBlur () {
+      if (this.inputTimer) {
+        clearInterval(this.inputTimer)
+        this.inputTimer = null
+      }
+    },
     inputFocus () {
       this.showFace = false
-      /* document.body.style.position = 'absolute'
-      document.body.style.overflow = 'hidden' */
-      let str = navigator.userAgent.toLowerCase()
-      let ver = str.match(/cpu iphone os (.*?) like mac os/)[1].replace(/_/g, '.')
-      let oc = ver.split('.')[0]
+      var _isiOS = isiOS()
+      var isAnimate = true
+      if (!_isiOS) {
+        isAnimate = false
+      }
+      this.scorllEnd(isAnimate)
+      let oc = iOSversion()
       if (oc <= 10) {
-        setTimeout(() => {
+        this.inputTimer = setInterval(() => {
           document.body.scrollTop = document.body.scrollHeight
         }, 500)
       }
@@ -108,7 +119,8 @@ export default {
       var msg = twemoji.parse(
         this.msg,
         function (icon, options, variant) {
-          return BASE_API + '/dist/emoji-apple-svg/' + icon + '.svg'
+          // return BASE_API + '/dist/emoji-apple-svg/' + icon + '.svg'
+          return 'http://weiqing.wurongchao.com/web/apple-svg/' + icon + '.svg'
         }
       )
       addNormalMsg({ht_id: this.$route.params.id, content: msg, img: this.base64}).then((res) => {
