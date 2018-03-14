@@ -193,6 +193,7 @@ body, html, #app {
 img.emoji {
   width: 0.4rem;
   height: 0.4rem;
-  vertical-align: middle;
+  margin: 0 .05em 0 .1em;
+  vertical-align: -0.1em;
 }
 </style>

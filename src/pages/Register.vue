@@ -18,7 +18,7 @@
       </group>
     </template>
     <div class="footer-btn">
-      <x-button :gradients="['#1D62F0', '#19D5FD']" @click.native="SubmitRegister" :disabled="loading" :show-loading="loading">立即注册</x-button>
+      <x-button :gradients="['#1D62F0', '#67b8f5']" @click.native="SubmitRegister" :disabled="loading" :show-loading="loading">立即注册</x-button>
     </div>
   </div>
 </template>
@@ -77,7 +77,10 @@ export default {
                 this.$vux.toast.show({
                   text: '注册成功'
                 })
-                this.$router.push('/MyBars')
+                setTimeout(() => {
+                  this.$vux.toast.hide()
+                  this.$router.push('/MyBars')
+                }, 800)
               })
             }).catch(() => {
               this.loading = false
@@ -89,7 +92,10 @@ export default {
                 this.$vux.toast.show({
                   text: '注册成功'
                 })
-                this.$router.push('/AgentCenter')
+                setTimeout(() => {
+                  this.$vux.toast.hide()
+                  this.$router.push('/AgentCenter')
+                }, 800)
               })
             }).catch(() => {
               this.loading = false
@@ -124,10 +130,11 @@ export default {
   }
 }
 .footer-btn {
-  position: absolute;
+  margin: 30px 10px 0;
+  /* position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 100%; */
 }
 
 </style>

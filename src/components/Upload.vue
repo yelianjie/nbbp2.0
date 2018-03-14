@@ -50,6 +50,10 @@ export default {
     isFlag: {
       type: Number,
       default: 0
+    },
+    isLogo: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -104,7 +108,7 @@ export default {
         if (!res.error) {
           this.$emit('on-clip', res.res)
         }
-      }, this.isFlag)
+      }, this.isFlag, this.isLogo)
       this.cancel()
       this.$vux.loading.hide()
     },

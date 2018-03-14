@@ -19,7 +19,7 @@
               <swiper-slide v-for="(v, i) in gifts" :key="i">
                 <div class="ds-gift-item borderbox ds-item" :class="{'selected': dsGiftIndex == i}" @click="dsGiftIndex != i ? dsGiftIndex = i : dsGiftIndex = -1">
                   <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-                  <div class="gift-icon ds-img"><img v-lazy="$options.filters.prefixImageUrl(v.icon)"></div>
+                  <div class="gift-icon ds-img"><img class="lazy-bp-img" src="../../assets/blank.gif" :data-src="$options.filters.prefixImageUrl(v.icon)"></div>
                   <div class="gift-name ds-text overflow f13">{{v.title}}</div>
                   <div class="gift-price overflow f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
                 </div>
@@ -45,9 +45,9 @@
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters, mapActions } from 'vuex'
-import twemoji from '@/vendor/twemoji.npm'
+// import twemoji from '@/vendor/twemoji.npm'
 // import { BASE_API } from '../../../config/prod.env'
-import { iOSversion } from '@/utils/utils'
+import { iOSversion, emojiReg } from '@/utils/utils'
 export default {
   model: {
     prop: 'visible',
@@ -100,14 +100,25 @@ export default {
         })
         return false
       }
+      if (this.content.length > 15) {
+        this.$vux.toast.show({
+          text: '文字不能超过15个',
+          width: '12em'
+        })
+        return false
+      }
       let isCharge = Number(this.total) > Number(this.userInfo.balance)
-      var content = twemoji.parse(
+      var content = this.content
+      if (emojiReg.test(content)) {
+        content = content.replace(emojiReg, '')
+      }
+      /* var content = twemoji.parse(
         this.content,
         function (icon, options, variant) {
           // return BASE_API + '/dist/emoji-apple-svg/' + icon + '.svg'
-          return 'http://weiqing.wurongchao.com/web/apple-svg/' + icon + '.svg'
+          return ''
         }
-      )
+      ) */
       let postParams = {
         ht_id: this.$route.params.id,
         type: 1,
@@ -126,7 +137,7 @@ export default {
       this.content = ''
     },
     initSelected (info) {
-      this.dsGiftIndex = this.gifts.findIndex((v) => v.id === info.gift_id)
+      this.dsGiftIndex = this.gifts.findIndex((v) => ~~(v.id) === ~~(info.gift_id))
       this.dsTimes = info.count
       this.content = info.content
     }
@@ -198,6 +209,7 @@ export default {
   .ds-img {
     img {
       width: 0.92rem;
+      height: 0.92rem;
       display: block;
       margin: 0.15rem auto;
     }

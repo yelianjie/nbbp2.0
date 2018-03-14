@@ -29,7 +29,7 @@
               <swiper-slide v-for="(v, i) in bpfilterList(screens)" :key="i">
                 <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i}" @click="bpThemeIndex != i ? bpThemeIndex = i : bpThemeIndex = -1">
                   <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-                  <div class="theme-icon"><img v-lazy="$options.filters.prefixImageUrl(v.icon)"></div>
+                  <div class="theme-icon"><img class="lazy-bp-img" src="../../assets/blank.gif" :data-src="$options.filters.prefixImageUrl(v.icon)"></div>
                   <div class="theme-name f13 overflow">{{v.title}}</div>
                   <div class="time-price overflow f12 tc" style="margin-bottom: 0.15rem;"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
                 </div>
@@ -66,10 +66,9 @@
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters, mapActions } from 'vuex'
-import { prefixImageUrl, iOSversion } from '@/utils/utils'
+import { prefixImageUrl, iOSversion, emojiReg } from '@/utils/utils'
 import { isOpenClient } from '@/api/'
 import Upload from '../Upload'
-import twemoji from '@/vendor/twemoji.npm'
 // import { BASE_API } from '../../../config/prod.env'
 export default {
   model: {
@@ -175,18 +174,29 @@ export default {
         })
         return false
       }
+      if (this.content.length > 30) {
+        this.$vux.toast.show({
+          text: '文字不能超过30个',
+          width: '12em'
+        })
+        return false
+      }
       if (this.bpThemeIndex === -1) {
         var isHasTextTheme = this.screens.findIndex((v) => v.title === '重金霸屏')
         this.bpThemeIndex = isHasTextTheme
       }
       let isCharge = Number(this.total) > Number(this.userInfo.balance)
-      var content = twemoji.parse(
+      var content = this.content
+      if (emojiReg.test(content)) {
+        content = content.replace(emojiReg, '')
+      }
+      /* var content = twemoji.parse(
         this.content,
         function (icon, options, variant) {
           // return BASE_API + '/dist/emoji-apple-svg/' + icon + '.svg'
-          return 'http://weiqing.wurongchao.com/web/apple-svg/' + icon + '.svg'
+          return '1'
         }
-      )
+      ) */
       let postParams = {
         ht_id: this.$route.params.id,
         type: 2,
@@ -208,8 +218,8 @@ export default {
       this.base64Img = ''
     },
     initSelected (info) {
-      this.bpTimeIndex = this.times.findIndex((v) => v.id === info.time_id)
-      this.bpThemeIndex = this.screens.findIndex((v) => v.id === info.screen_id)
+      this.bpTimeIndex = this.times.findIndex((v) => ~~(v.id) === ~~(info.time_id))
+      this.bpThemeIndex = this.screens.findIndex((v) => ~~(v.id) === ~~(info.screen_id))
       console.log(this.bpTimeIndex, this.bpThemeIndex)
       this.bpTimes = info.count
       this.content = info.content
@@ -322,6 +332,7 @@ export default {
   .theme-icon {
     img {
       width: 0.92rem;
+      height: 0.92rem;
       display: block;
       margin: 0.15rem auto;
     }

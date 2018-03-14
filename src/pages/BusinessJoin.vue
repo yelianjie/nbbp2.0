@@ -1,47 +1,47 @@
 <template>
   <div class="container bg1 about-container borderbox flex flex-v" style="height: 100%;">
-    <div class="flex-1 overscroll" ref="scrollWrapper" v-lazy-container="{ selector: 'img' }">
+    <div class="flex-1 overscroll" ref="scrollWrapper">
       <template v-if="$route.query.type == 1">
-        <img class="join-img" data-src="./static/join/shanghu01.jpg">
-        <img class="join-img" data-src="./static/join/shanghu02.jpg">
-        <img class="join-img" data-src="./static/join/shanghu03.jpg">
-        <img class="join-img" data-src="./static/join/shanghu04.jpg">
-        <img class="join-img" data-src="./static/join/shanghu05.jpg">
-        <img class="join-img" data-src="./static/join/shanghu06.jpg">
-        <img class="join-img" data-src="./static/join/shanghu07.jpg">
-        <img class="join-img" data-src="./static/join/shanghu08.jpg">
-        <img class="join-img" data-src="./static/join/shanghu09.jpg">
-        <img class="join-img" data-src="./static/join/shanghu10.jpg">
-        <img class="join-img" data-src="./static/join/shanghu11.jpg">
-        <img class="join-img" data-src="./static/join/shanghu12.jpg">
-        <img class="join-img" data-src="./static/join/shanghu13.jpg">
-        <img class="join-img" data-src="./static/join/shanghu14.jpg">
-        <img class="join-img" data-src="./static/join/shanghu15.jpg">
-        <img class="join-img" data-src="./static/join/shanghu16.jpg">
-        <img class="join-img" data-src="./static/join/shanghu17.jpg">
-        <img class="join-img" data-src="./static/join/shanghu18.jpg">
-        <img class="join-img" data-src="./static/join/shanghu19.jpg">
+        <img class="join-img" data-src="./static/join/shanghu01.jpg" style="height: 3.43rem;">
+        <img class="join-img" data-src="./static/join/shanghu02.jpg" style="height: 4.54rem;">
+        <img class="join-img" data-src="./static/join/shanghu03.jpg" style="height: 4.38rem;">
+        <img class="join-img" data-src="./static/join/shanghu04.jpg" style="height: 4.71rem;">
+        <img class="join-img" data-src="./static/join/shanghu05.jpg" style="height: 3.89rem;">
+        <img class="join-img" data-src="./static/join/shanghu06.jpg" style="height: 3.85rem;">
+        <img class="join-img" data-src="./static/join/shanghu07.jpg" style="height: 3.97rem;">
+        <img class="join-img" data-src="./static/join/shanghu08.jpg" style="height: 4rem;">
+        <img class="join-img" data-src="./static/join/shanghu09.jpg" style="height: 4.27rem;">
+        <img class="join-img" data-src="./static/join/shanghu10.jpg" style="height: 3.2rem;">
+        <img class="join-img" data-src="./static/join/shanghu11.jpg" style="height: 4.61rem;">
+        <img class="join-img" data-src="./static/join/shanghu12.jpg" style="height: 4.33rem;">
+        <img class="join-img" data-src="./static/join/shanghu13.jpg" style="height: 5.04rem;">
+        <img class="join-img" data-src="./static/join/shanghu14.jpg" style="height: 3.64rem;">
+        <img class="join-img" data-src="./static/join/shanghu15.jpg" style="height: 3.73rem;">
+        <img class="join-img" data-src="./static/join/shanghu16.jpg" style="height: 3.17rem;">
+        <img class="join-img" data-src="./static/join/shanghu17.jpg" style="height: 4.75rem;">
+        <img class="join-img" data-src="./static/join/shanghu18.jpg" style="height: 2.74rem;">
+        <img class="join-img" data-src="./static/join/shanghu19.jpg" style="height: 2.92rem;">
       </template>
       <template v-if="$route.query.type == 2">
-        <img class="join-img" data-src="./static/join/daili01.jpg">
-        <img class="join-img" data-src="./static/join/daili02.jpg">
-        <img class="join-img" data-src="./static/join/daili03.jpg">
-        <img class="join-img" data-src="./static/join/daili04.jpg">
-        <img class="join-img" data-src="./static/join/daili05.jpg">
-        <img class="join-img" data-src="./static/join/daili06.jpg">
-        <img class="join-img" data-src="./static/join/daili07.jpg">
-        <img class="join-img" data-src="./static/join/daili08.jpg">
-        <img class="join-img" data-src="./static/join/daili09.jpg">
-        <img class="join-img" data-src="./static/join/daili10.jpg">
-        <img class="join-img" data-src="./static/join/daili11.jpg">
-        <img class="join-img" data-src="./static/join/daili12.jpg">
-        <img class="join-img" data-src="./static/join/daili13.jpg">
-        <img class="join-img" data-src="./static/join/daili14.jpg">
-        <img class="join-img" data-src="./static/join/daili15.jpg">
-        <img class="join-img" data-src="./static/join/daili16.jpg">
-        <img class="join-img" data-src="./static/join/daili17.jpg">
-        <img class="join-img" data-src="./static/join/daili18.jpg">
-        <img class="join-img" data-src="./static/join/daili19.jpg">
+        <img class="join-img" data-src="./static/join/daili01.jpg" style="height: 3.68rem;">
+        <img class="join-img" data-src="./static/join/daili02.jpg" style="height: 3.62rem;">
+        <img class="join-img" data-src="./static/join/daili03.jpg" style="height: 1.75rem;">
+        <img class="join-img" data-src="./static/join/daili04.jpg" style="height: 3.82rem;">
+        <img class="join-img" data-src="./static/join/daili05.jpg" style="height: 3.3rem;">
+        <img class="join-img" data-src="./static/join/daili06.jpg" style="height: 3.27rem;">
+        <img class="join-img" data-src="./static/join/daili07.jpg" style="height: 4.63rem;">
+        <img class="join-img" data-src="./static/join/daili08.jpg" style="height: 3.24rem;">
+        <img class="join-img" data-src="./static/join/daili09.jpg" style="height: 4.18rem;">
+        <img class="join-img" data-src="./static/join/daili10.jpg" style="height: 4.91rem;">
+        <img class="join-img" data-src="./static/join/daili11.jpg" style="height: 4.04rem;">
+        <img class="join-img" data-src="./static/join/daili12.jpg" style="height: 4.04rem;">
+        <img class="join-img" data-src="./static/join/daili13.jpg" style="height: 3.76rem;">
+        <img class="join-img" data-src="./static/join/daili14.jpg" style="height: 4.39rem;">
+        <img class="join-img" data-src="./static/join/daili15.jpg" style="height: 3.79rem;">
+        <img class="join-img" data-src="./static/join/daili16.jpg" style="height: 4.45rem;">
+        <img class="join-img" data-src="./static/join/daili17.jpg" style="height: 5.19rem;">
+        <img class="join-img" data-src="./static/join/daili18.jpg" style="height: 4.78rem;">
+        <img class="join-img" data-src="./static/join/daili19.jpg" style="height: 2.82rem;">
       </template>
       <div class="fixed-btn">
         <router-link :to="{path: `/Register?type=${$route.query.type}`}" v-if="!userInfo.isMM && $route.query.type == 1"><button class="turn-btn fff-bp">立即注册</button></router-link>
@@ -57,6 +57,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import ScrollFix from '@/vendor/ScrollFix'
+import LazyLoad from 'vanilla-lazyload'
 export default {
   data () {
     return {
@@ -67,6 +68,7 @@ export default {
     if (this.scrollFix) {
       this.scrollFix.destory()
     }
+    this.lazyload && this.lazyload.destroy()
   },
   beforeRouteEnter (to, from, next) {
     if (Number(to.query.type) === 1) {
@@ -105,8 +107,10 @@ export default {
     })
   },
   mounted () {
-    this.$Lazyload.lazyLoadHandler()
     this.$nextTick(() => {
+      this.lazyload = new LazyLoad({
+        container: this.$refs.scrollWrapper
+      })
       this.scrollFix = new ScrollFix(this.$refs.scrollWrapper)
     })
   },

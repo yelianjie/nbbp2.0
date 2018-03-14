@@ -26,7 +26,8 @@
       <div class="flex flex-h percent-box">
         <div class="percent-item percent">
           <p class="percent-title">酒吧管理</p>
-          <x-number v-model.number="barInfo.manage_separate" fillable align="left" :min="0" :max="100"></x-number>
+          <x-number v-model.number="barInfo.manage_separate" fillable align="left" :min="0" :max="100" v-if="supervise_info"></x-number>
+          <x-number v-model.number="barInfo.manage_separate" align="left" :min="0" :max="0" v-else></x-number>
         </div>
         <div class="percent-item">
           <p class="percent-title">绑定二维码</p>
@@ -165,6 +166,10 @@ export default {
               text: '取消绑定成功',
               width: '10em'
             })
+            // 重置平台获益百分比
+            _this.defaultRate.company = ~~(_this.defaultRate.company) + ~~(_this.barInfo.manage_separate)
+            _this.barInfo.manage_separate = 0
+
             _this.$vux.confirm.hide()
             _this.supervise_info = null
           }).finally(() => {

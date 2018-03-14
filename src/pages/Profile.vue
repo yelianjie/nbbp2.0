@@ -133,7 +133,7 @@ export default {
       'saveUserInfo'
     ]),
     onHide (confirm) {
-      if (confirm && this.form.sex[0] === '0') {
+      if (confirm && ~~(this.form.sex[0]) === 0) {
         this.form.sex = ['1']
       }
     },

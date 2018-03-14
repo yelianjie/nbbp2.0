@@ -69,7 +69,7 @@ export default {
       if (!flag) {
         return false
       }
-      let find = this.addressData.find((v, i) => v.value === this.adsValue[1])
+      let find = this.addressData.find((v, i) => ~~(v.value) === ~~(this.adsValue[1]))
       this.loading = true
       getBarsByCity({region_code: find.value}).then((res) => {
         if (Array.isArray(res.result)) {

@@ -129,6 +129,11 @@ function init () {
   let historyCount = history.getItem('count') * 1 || 0
   // history.setItem('/', 0)
   router.beforeEach(function (to, from, next) {
+    if (to.meta.bg) {
+      document.body.style.backgroundColor = to.meta.bg
+    } else {
+      document.body.style.backgroundColor = '#f5f5f5'
+    }
     /* if (to.name === 'Main' && !isAddWxMsg) {
       addWxMsg({url: to.path})
     } */

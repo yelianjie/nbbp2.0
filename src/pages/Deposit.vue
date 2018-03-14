@@ -29,6 +29,8 @@ import { XButton, TransferDomDirective as TransferDom } from 'vux'
 import BpDialog from '../components/bpDialog'
 import depositBg from '../assets/despoit-bg.png'
 import { depositToCash } from '@/api/'
+import { mapActions } from 'vuex'
+// import { Subtr } from '@/utils/utils'
 export default {
   name: 'Deposit',
   directives: {
@@ -43,7 +45,8 @@ export default {
       barInfo: {},
       depositVisible: false,
       toRMBValue: '',
-      depositBg: depositBg
+      depositBg: depositBg,
+      loading: false
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -54,21 +57,39 @@ export default {
     this.barInfo = JSON.parse(localStorage.getItem('depositInfo'))
   },
   methods: {
+    ...mapActions('user', [
+      'getUserInfo'
+    ]),
     deposit () {
-      if (!this.toRMBValue || (this.toRMBValue % 100) !== 0) {
+      if (this.loading) {
+        return false
+      }
+      /* if (!this.toRMBValue || (this.toRMBValue % 100) !== 0) {
         this.$vux.toast.show({
           text: '提现金额不为100的倍数',
           position: 'bottom',
           width: '12em'
         })
         return false
-      }
+      } */
+      this.$vux.loading.show({
+        text: '正在提现'
+      })
+      this.loading = true
       depositToCash({type: this.$route.query.type, ht_id: this.$route.params.id, money: this.toRMBValue}).then((res) => {
         this.getUserInfo()
         this.depositVisible = false
+        var restBalance = Number(this.barInfo.balance) - Number(this.toRMBValue)
+        restBalance = restBalance < 0 ? 0 : restBalance
+        // alert(this.barInfo.balance + ',' + this.toRMBValue + ',' + restBalance)
+        this.barInfo.balance = restBalance
+        localStorage.setItem('depositInfo', JSON.stringify(this.barInfo))
         this.$vux.toast.show({
           text: '提现成功'
         })
+      }).finally(() => {
+        this.loading = false
+        this.$vux.loading.hide()
       })
     },
     validToRMB (event) {

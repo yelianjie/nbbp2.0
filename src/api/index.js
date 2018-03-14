@@ -426,14 +426,17 @@ export const isSupervise = () => {
 
 /**
  * 上传图片
- * @param {*} blob
+
  */
-export function uploadImage (base64, type, cb, flag = 0) {
+export function uploadImage (base64, type, cb, flag = 0, isLogo = false) {
   const blob = dataURLtoBlob(base64, type)
   var xhr = new XMLHttpRequest()
   var formdata = new FormData()
   formdata.append('file', blob, 'image.png')
   formdata.append('flag', flag)
+  if (isLogo) {
+    formdata.append('type', 'logo')
+  }
   xhr.open('post', baseURL + '/weixin/file_upload/uploadImg')
   xhr.setRequestHeader('tId', localStorage.getItem('tId'))
   xhr.onreadystatechange = function () {

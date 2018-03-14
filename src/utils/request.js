@@ -28,7 +28,7 @@ const request = (url, method = 'POST', data = {}) => {
       if (response.data.code !== '306000' && response.data.code !== '301001') {
         Vue.$vux.toast.show({
           text: response.data.result,
-          position: 'bottom',
+          position: 'middle',
           type: 'text',
           time: 1500,
           width: '10em'

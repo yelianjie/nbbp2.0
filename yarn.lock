@@ -6196,6 +6196,10 @@ ultron@~1.1.0:
   version "1.1.1"
   resolved "http://registry.npm.taobao.org/ultron/download/ultron-1.1.1.tgz#9fe1536a10a664a65266a1e3ccf85fd36302bc9c"
 
+umoji@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/umoji/download/umoji-1.0.0.tgz#bb6a9ba25e09054d56b1139124d6e50668469cec"
+
 underscore@^1.8.3:
   version "1.8.3"
   resolved "http://registry.npm.taobao.org/underscore/download/underscore-1.8.3.tgz#4f3fb53b106e6097fcf9cb4109f2a5e9bdfa5022"
@@ -6350,6 +6354,10 @@ validate-npm-package-license@^3.0.1:
 validator@^6.2.1:
   version "6.3.0"
   resolved "http://registry.npm.taobao.org/validator/download/validator-6.3.0.tgz#47ce23ed8d4eaddfa9d4b8ef0071b6cf1078d7c8"
+
+vanilla-lazyload@8.6.0:
+  version "8.6.0"
+  resolved "http://registry.npm.taobao.org/vanilla-lazyload/download/vanilla-lazyload-8.6.0.tgz#4eb44b08120a7fd2f089f194d38dfd027eab3b49"
 
 vanilla-masker@^1.2.0:
   version "1.2.0"

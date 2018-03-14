@@ -129,7 +129,7 @@ export default {
   computed: {
     calRest () {
       if (this.userInfo.hasOwnProperty('mc_level_id')) {
-        var find = this.grades.find(v => v.id === this.userInfo.next_grade_id)
+        var find = this.grades.find(v => ~~(v.id) === ~~(this.userInfo.next_grade_id))
         if (find) {
           return ~~((find.experience - this.userInfo.experience_less) / find.experience * 100)
         } else {

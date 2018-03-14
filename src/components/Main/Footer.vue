@@ -21,7 +21,7 @@
         <div class="chat-input flex-1 flex" :class="{'move': textImgVisible}">
           <div class="textarea-wrapper flex-1">
             <div class="content-editable f14" contenteditable="true">{{msg}}</div>
-            <textarea v-model="msg" class="field-textarea f14" @focus="inputFocus" @blur="inputBlur" placeholder="说点什么吧！" ref="msg"></textarea>
+            <textarea v-model="msg" class="field-textarea f14" maxlength="30" @focus="inputFocus" @blur="inputBlur" placeholder="说点什么吧！" ref="msg"></textarea>
           </div>
          <!--  <textarea @input="textareaInput" id="input" class="borderbox f13 flex-1" placeholder="说点什么吧！" @click="showFace = false" v-model="msg" ref="msg"></textarea> -->
         </div>
@@ -112,6 +112,13 @@ export default {
       if (!this.msg && !this.base64) {
         this.$vux.toast.show({
           text: '请上传图片或输入文字',
+          width: '12em'
+        })
+        return false
+      }
+      if (this.msg.length > 30) {
+        this.$vux.toast.show({
+          text: '文字不能超过30个',
           width: '12em'
         })
         return false

@@ -50,7 +50,7 @@
         <span slot="no-more" class="f13">再往上拉就没有了~</span>
       </infinite-loading>
       <template v-for="(v, i) in chatlist">
-        <div v-if="v.showTime" :key="v.ht_id + v.id" class="tc" style="margin: -20px auto 20px;"><div class="fff-bp time-show f13">{{v.showTime}}</div></div>
+        <div v-if="v.showTime" :key="v.create_time" class="tc" style="margin: -20px auto 20px;"><div class="fff-bp time-show f13">{{v.showTime}}</div></div>
         <msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onLike="like" v-if="v.msg_type == 0 && v.img == ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg>
         <msg-img :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.content != '' && v.msg_type == 0 && v.img != ''" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-img>
         <msg-only-img :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-only-img>
@@ -166,6 +166,7 @@ import '@/vendor/tween'
 import '@/vendor/animation'
 import ScrollFix from '@/vendor/ScrollFix'
 import moment from 'moment'
+import LazyLoad from 'vanilla-lazyload'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   data () {
@@ -202,7 +203,8 @@ export default {
       },
       firstLoading: true,
       scrollFix: null,
-      lockHeight: false
+      lockHeight: false,
+      lazyload: null
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -218,7 +220,14 @@ export default {
     if (to.name !== 'Charge') {
       this.ChangeBuyDialogInfo({})
     }
+    this.lazyload && this.lazyload.destroy()
     next()
+  },
+  beforeDestroy () {
+    clearTimeout(this.newsTimer)
+    clearTimeout(this.noticeTimer)
+    clearTimeout(this.onlineTimer)
+    this.lazyload && this.lazyload.destroy()
   },
   created () {
     moment.locale('zh-cn', {
@@ -258,8 +267,14 @@ export default {
       // 排序时间
       res.result.time.sort((a, b) => a.time - b.time)
       this.barDataInfo = res.result
-      if (!sessionStorage.getItem('adFlag')) {
-        sessionStorage.setItem('adFlag', 1)
+      var adFlag = JSON.parse(sessionStorage.getItem('adFlag'))
+      if (!adFlag || !adFlag[this.$route.params.id]) {
+        var adFlagCopy = {}
+        if (adFlag) {
+          adFlagCopy = adFlag
+        }
+        adFlagCopy[this.$route.params.id] = 1
+        sessionStorage.setItem('adFlag', JSON.stringify(adFlagCopy))
         this.adVisible = true
         var img = new Image()
         img.onload = () => {
@@ -306,6 +321,11 @@ export default {
     this.loopOnlines(0)
   },
   mounted () {
+    this.$nextTick(() => {
+      this.lazyload = new LazyLoad({
+        elements_selector: '.lazy-bp-img'
+      })
+    })
   },
   watch: {
     height: function (newVal, oldVal) {
@@ -315,6 +335,20 @@ export default {
       }
       var diff = newVal - oldVal
       this.$refs.scrollWrapper.scrollTop = diff
+    },
+    bpWindowVisible: function (newVal, oldVal) {
+      if (newVal && this.lazyload) {
+        setTimeout(() => {
+          this.lazyload.update()
+        }, 150)
+      }
+    },
+    dsWindowVisible: function (newVal, oldVal) {
+      if (newVal && this.lazyload) {
+        setTimeout(() => {
+          this.lazyload.update()
+        }, 150)
+      }
     }
   },
   methods: {
@@ -500,9 +534,9 @@ export default {
       this.shareMaskVisible = true
       var title = ''
       var who = data.sendee_nickname ? data.sendee_nickname : '全场观众'
-      if (data.msg_type === '2') {
+      if (~~(data.msg_type) === 2) {
         title = data.initiator_nickname + '重金' + data.title + data.odr_show_time + '秒，一起来围观互动！'
-      } else if (data.msg_type === '1') {
+      } else if (~~(data.msg_type) === 1) {
         title = data.initiator_nickname + '送' + data.title + '给' + who + '，一起来玩！'
       }
       let shareParams = {

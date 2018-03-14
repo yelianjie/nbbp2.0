@@ -2,7 +2,7 @@
   <div class="container min-h">
     <div class="inner">
       <div class="top flex flex-v flex-align-center">
-        <upload name="upload-logo" @on-clip="afterClip" :limitSize="400" class="pr" :is-crop="true" :isFlag="1" >
+        <upload name="upload-logo" @on-clip="afterClip" :limitSize="400" class="pr" :is-crop="true" :isFlag="1" :isLogo="true" >
           <img :src="$options.filters.prefixImageUrl(showLogo)" class="circle" v-if="showLogo">
           <img v-else :src="defaultLogo" />
           <label for="upload-logo" class="n-label"></label>
