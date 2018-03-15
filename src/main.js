@@ -23,20 +23,21 @@ import VueLazyload from 'vue-lazyload'
 import { getWxConfig, getHasToken } from './api/'
 // let isAddWxMsg = false
 // 判断 切换公众号时以前的号有localStorage 用这个变量判断删除
-var changeFlag = localStorage.getItem('changeFlag') ? 1 : 0
-if (process.env.NODE_ENV === 'production' && !changeFlag) {
-  localStorage.removeItem('tId')
-  localStorage.setItem('changeFlag', '1')
-}
-var tId = localStorage.getItem('tId')
+// var changeFlag = localStorage.getItem('changeFlag') ? 1 : 0
+/* if (process.env.NODE_ENV === 'production') {
+  sessionStorage.removeItem('tId')
+  sessionStorage.setItem('changeFlag', '1')
+} */
+window.sessionStorage.clear()
+var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  localStorage.setItem('tId', '8887a09a18eb2e2755e1363c20fd17aca3b23c2d')
-  tId = localStorage.getItem('tId')
+  window.sessionStorage.setItem('tId', '25e9ce82d974bfe878b7569edac5f899a00217fd')
+  tId = window.sessionStorage.getItem('tId')
 }
-if (!tId) {
+if (!tId && process.env.NODE_ENV === 'production') {
   getHasToken().then((res) => {
     // 有token了 存token下次不进来 继续路由
-    localStorage.setItem('tId', res.result)
+    window.sessionStorage.setItem('tId', res.result)
     init()
   }).catch((error) => {
     // 第一次登录
@@ -125,7 +126,7 @@ function init () {
   Vue.config.productionTip = false
 
   const history = window.sessionStorage
-  history.clear()
+  // history.removeItem('count')
   let historyCount = history.getItem('count') * 1 || 0
   // history.setItem('/', 0)
   router.beforeEach(function (to, from, next) {

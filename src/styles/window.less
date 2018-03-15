@@ -1,6 +1,20 @@
 .window {
   padding: 0.2rem 0.4rem;
 }
+.window /deep/ {
+  /deep/ .swiper-pagination-bullet {
+    background: rgba(255, 255, 255, 0.8);
+  }
+  /deep/ .swiper-pagination-bullet-active {
+    background: rgba(255, 255, 255, 0.5);
+    width: 4px;
+    height: 4px;
+  }
+  /deep/ .swiper-pagination-bullet {
+    width: 4px;
+    height: 4px;
+  }
+}
 .window-title {
   text-align: center;
   line-height: 1;

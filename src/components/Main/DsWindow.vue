@@ -100,17 +100,17 @@ export default {
         })
         return false
       }
-      if (this.content.length > 15) {
+      let isCharge = Number(this.total) > Number(this.userInfo.balance)
+      var content = this.content
+      if (emojiReg.test(content)) {
+        content = content.replace(emojiReg, '')
+      }
+      if (content.length > 15) {
         this.$vux.toast.show({
           text: '文字不能超过15个',
           width: '12em'
         })
         return false
-      }
-      let isCharge = Number(this.total) > Number(this.userInfo.balance)
-      var content = this.content
-      if (emojiReg.test(content)) {
-        content = content.replace(emojiReg, '')
       }
       /* var content = twemoji.parse(
         this.content,
@@ -177,17 +177,6 @@ export default {
 @mainColor: #f31374;
 @borderColor: rgba(255, 255, 255, 0.15);
 /*vendor swiper*/
-.window /deep/ {
-  /deep/ .swiper-pagination-bullet {
-    background: rgba(255, 255, 255, 0.8);
-  }
-  /deep/ .swiper-pagination-bullet-active {
-    background: rgba(255, 255, 255, 0.5);
-    width: 4px;
-    height: 4px;
-  }
-}
-
 
 #ds-model {
   position: absolute;

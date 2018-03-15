@@ -9,6 +9,7 @@
     @on-focus="onFocus"
     @on-blur="onBlur"
     @on-cancel="onCancel"
+    placeholder="请输入微信昵称查找添加"
     ref="search">
     <div id="results" :style="{'min-height': resultHeight + 'px'}">
       <inline-loading v-if="loading1" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>

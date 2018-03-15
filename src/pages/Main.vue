@@ -214,19 +214,18 @@ export default {
     clearTimeout(this.newsTimer)
     clearTimeout(this.noticeTimer)
     clearTimeout(this.onlineTimer)
+    this.newsTimer = null
+    this.noticeTimer = null
+    this.onlineTimer = null
     if (this.scrollFix) {
       this.scrollFix.destory()
     }
     if (to.name !== 'Charge') {
       this.ChangeBuyDialogInfo({})
     }
-    this.lazyload && this.lazyload.destroy()
     next()
   },
   beforeDestroy () {
-    clearTimeout(this.newsTimer)
-    clearTimeout(this.noticeTimer)
-    clearTimeout(this.onlineTimer)
     this.lazyload && this.lazyload.destroy()
   },
   created () {
@@ -385,6 +384,9 @@ export default {
         getOnlines({ht_id: this.$route.params.id}).then((res) => {
           Array.isArray(res.result) && (this.onlinePeople = res.result)
         }).finally(() => {
+          if (!this.onlineTimer) {
+            return false
+          }
           clearTimeout(this.onlineTimer)
           this.loopOnlines(1000 * 10)
         })
@@ -395,6 +397,9 @@ export default {
         getBarNotice({ht_id: this.$route.params.id}).then((res) => {
           this.notice = res.result ? res.result.content : ''
         }).finally(() => {
+          if (!this.noticeTimer) {
+            return false
+          }
           clearTimeout(this.noticeTimer)
           this.loopGetNotice(1000 * 60 * 5)
         })
@@ -404,18 +409,32 @@ export default {
       this.newsTimer = setTimeout(() => {
         getMaxMsg(this.requestNewParams).then((res) => {
           if (Array.isArray(res.result) && res.result.length > 0) {
+            var chatLength = this.chatlist.length
+            var lastChatTime
+            var nowD
+            var tmpChatList = Object.assign([], this.chatlist)
+            var lastResultIndex = 0
+            tmpChatList.sort((a, b) => b.id - a.id)
             res.result.forEach((v, i) => {
-              var nowD = moment(v.create_time).format('X')
-              var next = res.result[i + 1]
-              var nextD = next ? moment(res.result[i + 1].create_time).format('X') : 0
-              if (nextD - nowD > 60 * 5 && next) {
-                next.showTime = this.calTime(v.create_time)
-              }
-              var chatLength = this.chatlist.length
-              if (i === 0 && chatLength > 0) {
-                var lastChatTime = moment(this.chatlist[chatLength - 1].create_time).format('X')
+              if (chatLength > 0) {
+                var lastIndex = tmpChatList.findIndex(v => v.showTime)
+                if (lastIndex !== undefined && lastIndex > -1) {
+                  nowD = moment(v.create_time).format('X')
+                  lastChatTime = moment(tmpChatList[lastIndex].create_time).format('X')
+                  if (nowD - lastChatTime > 5 * 60) {
+                    v.showTime = this.calTime(v.create_time)
+                  }
+                }
+              } else if (i === 0) {
+                // 之前没有数据 并且第一个数据
+                v.showTime = this.calTime(v.create_time)
+              } else {
+                // 除了第一个数据
+                nowD = moment(v.create_time).format('X')
+                lastChatTime = moment(res.result[lastResultIndex].create_time).format('X')
                 if (nowD - lastChatTime > 5 * 60) {
                   v.showTime = this.calTime(v.create_time)
+                  lastResultIndex = i
                 }
               }
             })
@@ -437,6 +456,9 @@ export default {
             this.requestNewParams.id = res.result[0].id
           }
         }).finally(() => {
+          if (!this.noticeTimer) {
+            return false
+          }
           clearTimeout(this.noticeTimer)
           this.loopGetNewMsg()
         })
@@ -464,18 +486,21 @@ export default {
         if (resLength > 0) {
           this.requestParams.min_id = res.result[resLength - 1].id
         }
+        res.result.sort((a, b) => a.id - b.id)
+        var lastShowTimeIndex = 0
         res.result.forEach((v, i) => {
-          var nowD = moment(v.create_time).format('X')
-          var next = res.result[i + 1]
-          var nextD = next ? moment(res.result[i + 1].create_time).format('X') : 0
-          if (nowD - nextD > 60 * 5 && next) {
+          if (i === 0) {
             v.showTime = this.calTime(v.create_time)
-          }
-          if (!next) {
-            v.showTime = this.calTime(v.create_time)
+            lastShowTimeIndex = i
+          } else {
+            var nowD = moment(v.create_time).format('X')
+            var lastTimeShowD = moment(res.result[lastShowTimeIndex].create_time).format('X')
+            if (nowD - lastTimeShowD > 60 * 5) {
+              v.showTime = this.calTime(v.create_time)
+              lastShowTimeIndex = i
+            }
           }
         })
-        res.result.sort((a, b) => a.id - b.id)
         /* res.result.map((v) => {
           v.levelIcon = this.Levels[v.grade_title] ? this.Levels[v.grade_title] : null
         }) */

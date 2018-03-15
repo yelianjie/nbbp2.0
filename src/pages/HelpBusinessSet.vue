@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { BASE_API } from '../../config/prod.env'
 export default {
   data () {
     return {
@@ -29,7 +30,7 @@ export default {
   },
   filters: {
     screenUrl: (val) => {
-      return 'http://xnb.siweiquanjing.com/screen/?ht_id=' + val
+      return BASE_API + '/screen/?ht_id=' + val
     }
   }
 }

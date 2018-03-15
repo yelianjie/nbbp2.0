@@ -174,13 +174,6 @@ export default {
         })
         return false
       }
-      if (this.content.length > 30) {
-        this.$vux.toast.show({
-          text: '文字不能超过30个',
-          width: '12em'
-        })
-        return false
-      }
       if (this.bpThemeIndex === -1) {
         var isHasTextTheme = this.screens.findIndex((v) => v.title === '重金霸屏')
         this.bpThemeIndex = isHasTextTheme
@@ -189,6 +182,13 @@ export default {
       var content = this.content
       if (emojiReg.test(content)) {
         content = content.replace(emojiReg, '')
+      }
+      if (content.length > 30) {
+        this.$vux.toast.show({
+          text: '文字不能超过30个',
+          width: '12em'
+        })
+        return false
       }
       /* var content = twemoji.parse(
         this.content,
@@ -262,16 +262,6 @@ export default {
 @mainColor: #f31374;
 @borderColor: rgba(255, 255, 255, 0.15);
 /*vendor swiper*/
-.window /deep/ {
-  /deep/ .swiper-pagination-bullet {
-    background: rgba(255, 255, 255, 0.8);
-  }
-  /deep/ .swiper-pagination-bullet-active {
-    background: rgba(255, 255, 255, 0.5);
-    width: 4px;
-    height: 4px;
-  }
-}
 
 #bp-model {
   position: absolute;

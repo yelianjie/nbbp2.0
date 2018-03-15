@@ -4,7 +4,7 @@
     <BusinessMenus></BusinessMenus>
     <footer class="footer flex">
       <div class="flex-1 flex-v tc flex-pack-center flex-align-center">
-        <router-link :to="{path: '/Main/' + $route.params.id}" class="enter-bar">进入我的酒吧</router-link>
+        <a @click.prevent="judgeRouter" class="enter-bar">进入我的酒吧</a>
       </div>
     </footer>
   </div>
@@ -33,6 +33,15 @@ export default {
       localStorage.setItem('businessNeed', JSON.stringify({id: this.$route.params.id, name: res.result.name, qrcode: this.$options.filters.prefixImageUrl(res.result.phone_er_url)}))
       document.title = res.result.name + '管理'
     })
+  },
+  methods: {
+    judgeRouter () {
+      if (this.barInfo.province_id) {
+        this.$router.push(`/Main/${this.$route.params.id}`)
+      } else {
+        this.$router.push(`/BasicBusiness/${this.$route.params.id}?toMain=1`)
+      }
+    }
   },
   components: {
     BusinessAgentTop,

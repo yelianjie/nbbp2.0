@@ -197,6 +197,22 @@ ul,li {
   background-color: #ddd;
   content: "";
 }
+#tip-warning {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+  z-index: 3;
+  width: 210px;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  background-color: rgba(0,0,0,.7);
+  display: none;
+}
   </style>
 </head>
 <body>
@@ -228,6 +244,7 @@ ul,li {
 
         </ul>
     </div>
+    <div id="tip-warning">请在列表选择一个地址</div>
 </body>
 </html>
 
@@ -400,9 +417,20 @@ ul,li {
     mp.centerAndZoom(point, 15);
   })
   
+  var isTipShow = false
   $('#saveAddress').on('click', function() {
-    if (!seletInfo)
+    if (isTipShow) {
       return false
+    }
+    if (!seletInfo){
+      isTipShow = true
+      $('#tip-warning').show()
+      setTimeout(function () {
+        isTipShow = false
+        $('#tip-warning').hide()
+      }, 1500)
+      return false
+    }
     var g = new BMap.Geocoder()
     g.getLocation(seletInfo.point, function(res){
       var data = {

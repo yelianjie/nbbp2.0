@@ -14,6 +14,7 @@
         <x-input title="昵&emsp;&emsp;称" v-model="form.name"></x-input>
         <cell title="酒吧地址" :value="form.address" is-link value-align="left" @click.native="showMap"></cell>
       </group>
+      
       <div class="bottom_abs">
         <x-button :gradients="['#1D62F0', '#1D62F0']" @click.native="updateInfo" :show-loading="loading">保存</x-button>
       </div>
@@ -21,6 +22,7 @@
         <iframe src="" id="iframe" frameborder="0" v-show="mapVisible" allowTransparency="true" style="background-color:#fff;"></iframe>
       </transition>
     </div>
+    <div class="tip f13" v-if="showTip">提示: 如果您的当前酒吧未填写地址将不会出现在牛霸酒吧列表页，请尽快填写。</div>
   </div>
 </template>
 
@@ -44,6 +46,7 @@ export default {
   },
   data () {
     return {
+      showTip: false,
       mapVisible: false,
       mapLoad: false,
       defaultLogo: defaultLogo,
@@ -66,6 +69,9 @@ export default {
     getBarInfo({ht_id: this.$route.params.id}).then((res) => {
       this.form = res.result
       this.showLogo = res.result.logo
+      if (!res.result.province_id) {
+        this.showTip = true
+      }
     })
   },
   mounted () {
@@ -89,6 +95,9 @@ export default {
         this.$vux.toast.show({
           text: '修改成功'
         })
+        if (this.$route.query.toMain) {
+          this.$router.replace(`/Main/${this.$route.params.id}`)
+        }
       }).finally(() => {
         this.loading = false
       })
@@ -147,5 +156,12 @@ export default {
   bottom: 0;
   left: 0;
   z-index: 1;
+}
+.tip {
+  margin: 15px 10px;
+  padding: 5px;
+  background-color: #d2d2d2;
+  color: #939393;
+  border-radius: 3px;
 }
 </style>

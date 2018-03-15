@@ -13,8 +13,8 @@ Vue.http.interceptors.request.use(function (config) {
     }
   } */
   // Do something before request is sent
-  if (localStorage.getItem('tId')) {
-    config.headers['tId'] = localStorage.getItem('tId')
+  if (window.sessionStorage.getItem('tId')) {
+    config.headers['tId'] = window.sessionStorage.getItem('tId')
   }
   return config
 }, function (error) {

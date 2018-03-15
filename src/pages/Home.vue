@@ -71,24 +71,28 @@ export default {
       }
       let find = this.addressData.find((v, i) => ~~(v.value) === ~~(this.adsValue[1]))
       this.loading = true
-      getBarsByCity({region_code: find.value}).then((res) => {
-        if (Array.isArray(res.result)) {
-          if (this.userAllow) {
-            // this.wxCoordsToBaidu(res.result)
-            res.result.map((v, i) => {
-              v.distance = getDistance(v.locationLat, v.locationLng, this.userPosition.lat, this.userPosition.lng)
-            })
-          } else {
-            res.result.map((v, i) => {
-              v.distance = '未知'
-            })
+      if (find) {
+        getBarsByCity({region_code: find.value}).then((res) => {
+          if (Array.isArray(res.result)) {
+            if (this.userAllow) {
+              // this.wxCoordsToBaidu(res.result)
+              res.result.map((v, i) => {
+                v.distance = getDistance(v.locationLat, v.locationLng, this.userPosition.lat, this.userPosition.lng)
+              })
+            } else {
+              res.result.map((v, i) => {
+                v.distance = '未知'
+              })
+            }
+            res.result.sort((a, b) => a.distance - b.distance)
+            this.barsList = res.result
           }
-          res.result.sort((a, b) => a.distance - b.distance)
-          this.barsList = res.result
-        }
-      }).finally(() => {
+        }).finally(() => {
+          this.loading = false
+        })
+      } else {
         this.loading = false
-      })
+      }
     },
     getPosition (latitude, longitude) {
       this.$jsonp('http://api.map.baidu.com/geocoder/v2/', {

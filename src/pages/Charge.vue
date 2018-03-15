@@ -52,7 +52,9 @@ export default {
   created () {
     let historyCount = window.sessionStorage.getItem('count') * 1 || 0
     if (historyCount !== 1) {
-      window.location.reload()
+      setTimeout(() => {
+        window.location.reload()
+      }, 150)
     } else {
       this.getData()
     }

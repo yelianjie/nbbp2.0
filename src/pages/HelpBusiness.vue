@@ -12,8 +12,8 @@
           v-show="isActive[0]">
           <p>在电脑的控制面板里尝试调整电脑的分辨率。</p>
           <p>若仍然无法解决，请下载客户端代替浏览器，在客户端里自定义调整屏幕显示尺寸。</p>
-          <p>客户端百度网盘下载地址：</p>
-          <p style="font-weight: bold;word-break: break-all;">https://pan.baidu.com/s/1gCstczZ09ZDXd1UeTs8MAg</p>
+          <p>客户端下载地址：</p>
+          <p style="font-weight: bold;word-break: break-all;">http://oss-niuba.oss-cn-hangzhou.aliyuncs.com/NBBP.exe</p>
           <slot></slot>
         </div> 
       </collapse>
