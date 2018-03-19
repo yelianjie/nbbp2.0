@@ -207,7 +207,19 @@ export default {
         img: this.base64Img,
         reward_uid: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : ''
       }
-      postParams = {postParams: postParams, price: this.total, confirmText: isCharge ? '充值' : '确定', isCharge: isCharge}
+      postParams = {postParams: postParams, extraInfo: {title: this.screens[this.bpThemeIndex].title}, price: this.total, confirmText: isCharge ? '充值购买' : '确定', isCharge: isCharge}
+      if (isCharge) {
+        // 充过值显示取消 没冲过显示立即支付
+        var extraParams = {
+          cancelText: '立即支付',
+          cancelColor: '#28ab28',
+          onCancel: (cb) => {
+            this.$emit('onWxPay', cb)
+          },
+          cancelAutoClose: false
+        }
+        postParams = Object.assign({}, postParams, extraParams)
+      }
       this.ChangeBuyDialogInfo(postParams)
       this.$emit('onBuy')
     },

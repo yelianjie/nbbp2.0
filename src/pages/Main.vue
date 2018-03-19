@@ -64,8 +64,8 @@
     <div class="f-btn" @click="screenForAll"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>
   </div>
-  <bp-window v-model="bpWindowVisible" ref="bpWindow" :times="barDataInfo.time" :screens="barDataInfo.screen" @onBuy="buyDialogVisible = true"></bp-window>
-  <ds-window v-model="dsWindowVisible" ref="dsWindow" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
+  <bp-window v-model="bpWindowVisible" ref="bpWindow" @onWxPay="wxPay" :times="barDataInfo.time" :screens="barDataInfo.screen" @onBuy="buyDialogVisible = true"></bp-window>
+  <ds-window v-model="dsWindowVisible" ref="dsWindow" @onWxPay="wxPay" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
       <div class="user-info">
@@ -123,12 +123,27 @@
       </div>
     </div>
   </x-dialog>
-  <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy" :confirmText="buyDialogInfo.confirmText">
+  <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy" :cancelAutoClose="buyDialogInfo.cancelAutoClose" :onCancel="buyDialogInfo.onCancel" :cancelText="buyDialogInfo.cancelText" :cancelColor="buyDialogInfo.cancelColor" :confirmText="buyDialogInfo.confirmText">
     <div class="">
       <div style="font-size: 26px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;vertical-align: bottom;"/></div>
+      <template v-if="true">
       <p style="color: #88878f;"><svg-icon icon-class="tip" style="margin-top:-2px;margin-right:2px;" />当前余额可用：<svg-icon icon-class="coin"  style="margin-top:-2px;margin-right:2px;"/>{{userInfo.balance}}</p>
       <p class="f12" v-if="barManagerInfo.isManager" style="color:#b187e4;margin-top:6px;">今日剩余免费霸屏、打赏{{barManagerInfo.game_count}}次</p>
       <p class="f13" v-if="buyDialogInfo.isCharge" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
+      </template>
+      <template v-else>
+        <p class="f13">选择购买充值即可成为牛霸会员贵族</p>
+        <p class="f13">全平台永久享受贵族特权</p>
+      </template>
+    </div>
+  </bp-dialog>
+  <bp-dialog :title="'充值购买成功'" v-model="buySuccessDialogVisible" @onConfirm="buySuccessDialogVisible = false" :confirmText="'好的'" :one="true">
+    <div class="">
+      <div class="" style="font-size: 20px;margin-bottom: 8px;">
+      <p class="f14" style="color:#7b7b7b;margin-top:6px;">充值成功+{{chargeData.chargeMoney}}牛角</p>
+      <p class="f14" style="color:#7b7b7b;margin-top:6px;" v-if="buyDialogInfo.extraInfo">{{buyDialogInfo.extraInfo.title}}购买成功-{{buyDialogInfo.price}}牛角</p>
+      <p class="f14" style="color: #88878f;"><svg-icon icon-class="tip" style="margin-top:-2px;margin-right:2px;" />当前余额可用：<svg-icon icon-class="coin"  style="margin-top:-2px;margin-right:2px;"/>{{userInfo.balance}}</p>
+      </div>
     </div>
   </bp-dialog>
   <bp-dialog :title="'提示'" v-model="deleteDialogVisible" @onConfirm="confirmDelete">
@@ -142,12 +157,23 @@
       <div class="adbg fullscreen" v-if="barDataInfo.advert" :style="{'background-image': 'url('+barDataInfo.advert.phone.url+')'}"></div>
     </transition>
   </template>
+  <div v-transfer-dom>
+    <popup v-model="chargeVisible" @on-show="chargeShow">
+      <div class="charge-container">
+        <svg-icon icon-class="close" @click.native="chargeVisible = false"/>
+        <p class="tc fff-bp f18">充值购买</p>
+        <p class="f12 fff-bp" style="margin-top:0.2rem;">当前余额：{{userInfo.balance}}</p>
+        <p class="f12 fff-bp" style="margin-top:0.1rem;margin-bottom:0.4rem;">1元=1牛角，经验值可用来升级贵族身份和获取特权</p>
+        <charge :exps="exps" @onSelect="wxPayCharge" :selectItem="false"></charge>
+      </div>
+    </popup>
+  </div>
   </div>
 </template>
 
 <script>
-import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg } from '@/api/'
-import { XDialog } from 'vux'
+import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay } from '@/api/'
+import { XDialog, TransferDom, Popup } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
 // import InfiniteLoading from 'vue-infinite-loading'
@@ -161,14 +187,19 @@ import DsMsg from '../components/Main/DsMsg'
 import BpWindow from '../components/Main/BpWindow'
 import DsWindow from '../components/Main/DsWindow'
 import Onlines from '../components/Main/Onlines'
+import Charge from '../components/Charge'
 import { mapGetters, mapActions } from 'vuex'
 import '@/vendor/tween'
 import '@/vendor/animation'
 import ScrollFix from '@/vendor/ScrollFix'
 import moment from 'moment'
 import LazyLoad from 'vanilla-lazyload'
+import { accAdd } from '@/utils/utils'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
+  directives: {
+    TransferDom
+  },
   data () {
     return {
       notice: '',
@@ -184,6 +215,7 @@ export default {
       concernVisible: false,
       onlineVisible: false,
       deleteDialogVisible: false,
+      buySuccessDialogVisible: false,
       deleteInfo: {},
       height: 0,
       noMore: false,
@@ -204,7 +236,10 @@ export default {
       firstLoading: true,
       scrollFix: null,
       lockHeight: false,
-      lazyload: null
+      lazyload: null,
+      chargeVisible: false,
+      exps: [],
+      chargeData: {}
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -594,13 +629,67 @@ export default {
     previewImage (pics) {
       this.$wechat.previewImage(pics)
     },
+    chargeShow () {
+      if (this.exps.length > 0) {
+        return false
+      }
+      getCharges().then((res) => {
+        this.exps = res.result.exp
+      })
+    },
+    wxPay (cb) {
+      // cb && cb() 关闭弹框
+      console.log('直接微信支付')
+    },
+    wxPayCharge (index) {
+      var _self = this
+      this.chargeData.chargeMoney = this.exps[index].money
+      rechargePay({eid: this.exps[index].id, money: this.exps[index].money}).then((res) => {
+        window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
+          switch (res.err_msg) {
+            case 'get_brand_wcpay_request:cancel':
+              // alert('用户取消支付！')
+              break
+            case 'get_brand_wcpay_request:fail':
+              _self.$vux.toast.show({
+                text: '支付失败！（' + res.err_desc + '）',
+                width: '10em'
+              })
+              break
+            case 'get_brand_wcpay_request:ok':
+              // 成功要设置该用户是否充过值为true
+
+              var afterChargeBalance = accAdd(_self.userInfo.balanc, _self.exps[index].money)
+              // 比较购买的余额是否大于要支付的订单的价格
+              if (afterChargeBalance >= ~~(_self.buyDialogInfo.price)) {
+                // 修改isCharge
+                _self.$store.commit('app/SET_IS_CHARGE', false)
+                _self.confirmBuy()
+              } else {
+                // 显示toast提示不够
+                _self.$vux.toast.show({
+                  text: '充值后的余额仍然不够，请继续充值'
+                })
+              }
+              break
+            default:
+              alert(JSON.stringify(res))
+              break
+          }
+        })
+      })
+    },
     confirmBuy () {
       if (this.buyDialogInfo.isCharge) {
         // 需要充值跳转充值页
-        localStorage.setItem('buyDialogInfo', JSON.stringify(this.buyDialogInfo))
+        // 在当前页购买
+        /* localStorage.setItem('buyDialogInfo', JSON.stringify(this.buyDialogInfo))
         localStorage.setItem('currentUserInfo', JSON.stringify(this.currentUserInfo))
         localStorage.setItem('payBack', '1')
-        this.$router.push('/Charge')
+        this.$router.push('/Charge') */
+        this.buyDialogVisible = false
+        this.chargeVisible = true
+        this.chargeFlag = true // 标记充值下面弹起 充完去判断去修改buyDialogInfo.isCharge 还是不够就显示toast 够了直接执行confirmBuy
         // window.location.href = window.location.origin + window.location.pathname + '#/Charge'
       } else {
         // 直接购买
@@ -677,7 +766,9 @@ export default {
     DsWindow,
     Onlines,
     XDialog,
-    InfiniteLoading
+    InfiniteLoading,
+    Popup,
+    Charge
   }
 }
 </script>
@@ -892,6 +983,19 @@ export default {
   box-sizing: content-box;
   display: block;
   margin: 0.5rem auto;
+}
+.charge-container {
+  background-color: #181b2a;
+  padding: 0.3rem 0.6rem;
+  .svg-icon {
+    fill: #fff;
+    width: 0.54rem;
+    height: 0.54rem;
+    position: absolute;
+    right: 0.4rem;
+    top: 0.25rem;
+    z-index: 1;
+  }
 }
 .qrcode-info {
   width: 4.75rem;

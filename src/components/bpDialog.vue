@@ -1,7 +1,7 @@
 <template>
   <div class="bp-dialog-wrap">
     <transition name="bp-mask">
-        <div class="bp-mask" v-show="visible"></div>
+        <div class="bp-mask" v-show="visible" @click="$emit('closeDialog', false)"></div>
     </transition>
     <transition name="bp-dialog">
         <div class="bp-dialog" :class="{'bp-dialog-top': position == 'top'}" :style="{'background': bgTitle ? 'transparent' : '#fff'}" v-show="visible">
@@ -15,8 +15,14 @@
             <slot></slot>
             </div>
             <div class="bp-dialog__ft">
-            <a href="javascript:;" class="bp-dialog__btn bp-dialog__btn_default" @click.prevent="cancle">{{cancelText}}</a>
-            <a href="javascript:;" class="bp-dialog__btn bp-dialog__btn_primary" @click.prevent="confirm">{{confirmText}}</a>
+              <template v-if="one">
+                <a href="javascript:;" class="bp-dialog__btn bp-dialog__btn_primary" @click.prevent="confirm">{{confirmText}}</a>
+              </template>
+              <template v-else>
+                <a href="javascript:;" class="bp-dialog__btn bp-dialog__btn_default" :style="{'color': cancelColor}" @click.prevent="cancle">{{cancelText}}</a>
+                <a href="javascript:;" class="bp-dialog__btn bp-dialog__btn_primary" @click.prevent="confirm">{{confirmText}}</a>
+              </template>
+            
             </div>
         </div>
     </transition>
@@ -42,9 +48,17 @@ export default {
       type: String,
       default: ''
     },
+    cancelColor: {
+      type: String,
+      default: '#6c6a75'
+    },
     cancelText: {
       type: String,
       default: '取消'
+    },
+    onCancel: {
+      type: Function,
+      default: () => {}
     },
     confirmText: {
       type: String,
@@ -56,6 +70,13 @@ export default {
     },
     bgSrc: {
       default: ''
+    },
+    one: {
+      default: false
+    },
+    cancelAutoClose: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -69,7 +90,14 @@ export default {
   },
   methods: {
     cancle () {
-      this.$emit('closeDialog', false)
+      if (this.cancelAutoClose) {
+        this.$emit('closeDialog', false)
+        this.onCancel()
+      } else {
+        this.onCancel(() => {
+          this.$emit('closeDialog', false)
+        })
+      }
     },
     confirm () {
       this.$emit('onConfirm')

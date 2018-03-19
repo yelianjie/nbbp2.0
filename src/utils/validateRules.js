@@ -4,7 +4,7 @@ export const validateRules = {
       ch: (field) => field + '格式不正确'
     },
     validate (value) {
-      return value.toString().length === 11 && /^((13|14|15|16|17|18|19)[0-9]{1}\d{8})$/.test(value)
+      return /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(value)
     }
   }
 }

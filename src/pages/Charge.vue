@@ -13,12 +13,7 @@
         <span class="ct ncolor">充值购买</span>
         <!-- <span class="ct darker1">交易明细</span> -->
       </div>
-      <div class="charge-price-list fff-bp">
-        <div class="charge-price-item" v-for="(v, i) in exps" :key="i" :class="{'selected': bpValueIndex == i}" @click="bpValueIndex == i ? bpValueIndex = -1 : bpValueIndex = i">
-          <div class="value f14"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{v.money}}</span><div class="f12 jingyan"><span class="jy-value">+{{v.experience}}经验值</span></div><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-          <div class="value-price f14">¥{{v.money}}</div>
-        </div>
-      </div>
+      <charge :exps="exps" @onSelect="setSelect" :loading="loading"></charge>
       <x-button :show-loading="loading" :disabled="loading" :gradients="['#f31374', '#f31374']" style="margin-top: 25px;" @click.native="requestPay">确认支付</x-button>
       <p class="darker1 f12" style="margin-top: 10px;">充值说明：</p>
       <ul class="darker1 f12">
@@ -36,13 +31,15 @@
 import { XButton } from 'vux'
 import { getCharges, rechargePay } from '@/api/'
 import { mapActions } from 'vuex'
+import Charge from '@/components/Charge'
 export default {
   data () {
     return {
       bpValueIndex: -1,
       userInfo: {},
       exps: [],
-      loading: false
+      loading: false,
+      loadingPrice: false
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -60,18 +57,24 @@ export default {
     }
   },
   components: {
-    XButton
+    XButton,
+    Charge
   },
   methods: {
     ...mapActions('user', [
       'getUserInfo'
     ]),
+    setSelect (index) {
+      this.bpValueIndex = index
+    },
     getData () {
+      this.loadingPrice = true
       getCharges().then((res) => {
         this.userInfo = res.result.user
         this.exps = res.result.exp
       }).finally(() => {
         this.$vux.loading.hide()
+        this.loadingPrice = false
       })
     },
     requestPay () {
@@ -157,99 +160,5 @@ export default {
     }
   }
 }
-.charge-price-item {
-  display: inline-block;
-  width: 1.5rem;
-  margin-right: 0.9rem;
-  margin-bottom: 0.4rem;
-  &:nth-child(3n+3) {
-    margin-right: 0;
-  }
-  .value {
-    line-height: 0.72rem;
-    text-align: center;
-    border: 1px solid @borderColor;
-    border-radius: 10px;
-    position: relative;
-  }
-  .jingyan {
-    height: 0.36rem;
-    background-color: #3f414e;
-    position: relative;
-    border-radius: 0 0 10px 10px;
-  }
-  .jy-value {
-    transform: translate3d(-50%, -50%, 0) scale(1);
-    color: #82858e;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    line-height: 1;
-    white-space: nowrap;
-  }
-  &.selected {
-    .value {
-      border: 1px solid @mainColor;
-    }
-    .selected-icon {
-      display: block;
-    }
-    .jingyan {
-      background-color: @mainColor;
-    }
-    .jy-value {
-      color: #fff;
-    }
-  }
-  .value-price {
-    vertical-align: middle;
-    text-align: center;
-    margin-top: 4px;
-  }
-}
-@media screen and (min-width: 320px) and (max-width: 374px) {
-  .charge-price-item .jy-value {
-    transform: translate3d(-50%, -50%, 0) scale(0.8);
-  }
-}
-@media screen and (min-width: 375px) and (max-width: 413px) {
-  .charge-price-item .jy-value {
-    transform: translate3d(-50%, -50%, 0) scale(0.85);
-  }
-}
-.selected-icon {
-    color: @mainColor;
-    position: absolute;
-    right: 0;
-    top: 0;
-    transform: translate3d(50%, -50%, 0);
-    display: none;
-    width: 0.3rem;
-    height: 0.3rem;
-    .svg-icon {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 0.3rem;
-      height: 0.3rem;
-      z-index: 2;
-      display: block;
-    }
-    &:after {
-      content: "";
-      position: absolute;
-      left: 15%;
-      top: 15%;
-      width: 70%;
-      height: 70%;
-      border-radius: 50%;
-      z-index: 1;
-      background-color: #fff;
-    }
-  }
-@media screen and (min-width: 768px){
-  .charge-price-item:nth-child(3n+3) {
-    margin-right: 0.9rem;
-  }
-}
+
 </style>

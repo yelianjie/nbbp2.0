@@ -31,6 +31,9 @@ const mutations = {
   },
   SET_FONTSIZE (state, data) {
     state.fontSize = data
+  },
+  SET_IS_CHARGE (state, data) {
+    state.buyDialogInfo.isCharge = data
   }
 }
 
