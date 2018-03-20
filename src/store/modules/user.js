@@ -89,6 +89,9 @@ const mutations = {
   },
   SET_SUBTICKET (state, data) {
     state.subTicket = data
+  },
+  SET_IS_RECHARGE (state, data) {
+    state.userInfo.is_recharge = data
   }
 }
 

@@ -129,7 +129,7 @@ export default {
         img: ''
       }
       postParams = {postParams: postParams, extraInfo: {title: this.gifts[this.dsGiftIndex].title}, price: this.total, confirmText: isCharge ? '充值购买' : '确定', isCharge: isCharge}
-      /* if (isCharge) {
+      if (!this.userInfo.is_recharge) {
         // 充过值显示取消 没冲过显示立即支付
         var extraParams = {
           cancelText: '立即支付',
@@ -140,7 +140,7 @@ export default {
           cancelAutoClose: false
         }
         postParams = Object.assign({}, postParams, extraParams)
-      } */
+      }
       this.ChangeBuyDialogInfo(postParams)
       this.$emit('onBuy')
     },

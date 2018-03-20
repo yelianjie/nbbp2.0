@@ -359,6 +359,14 @@ export const rechargePay = (data) => {
 }
 
 /**
+ * 直接支付
+ * @param {*} data
+ */
+export const wxPay = (data) => {
+  return request('/weixin/recharge/gwPay', 'POST', data)
+}
+
+/**
  * 兑换成牛角
  * @param {*} data
  */

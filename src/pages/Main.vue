@@ -172,7 +172,7 @@
 </template>
 
 <script>
-import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay } from '@/api/'
+import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay } from '@/api/'
 import { XDialog, TransferDom, Popup } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -638,8 +638,36 @@ export default {
       })
     },
     wxPay (cb) {
+      var _self = this
       // cb && cb() 关闭弹框
       console.log('直接微信支付')
+      wxPay(this.buyDialogInfo.postParams).then((res) => {
+        console.log('成功', res)
+        window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
+          switch (res.err_msg) {
+            case 'get_brand_wcpay_request:cancel':
+              // alert('用户取消支付！')
+              break
+            case 'get_brand_wcpay_request:fail':
+              _self.$vux.toast.show({
+                text: '支付失败！（' + res.err_desc + '）',
+                width: '10em'
+              })
+              break
+            case 'get_brand_wcpay_request:ok':
+              console.log('zhifu成功')
+              _self.buyDialogVisible = false
+              _self.bpWindowVisible = false
+              _self.dsWindowVisible = false
+              break
+            default:
+              alert(JSON.stringify(res))
+              break
+          }
+        })
+      }).catch(error => {
+        console.log(error)
+      })
     },
     wxPayCharge (index) {
       var _self = this
@@ -658,7 +686,7 @@ export default {
               break
             case 'get_brand_wcpay_request:ok':
               // 成功要设置该用户是否充过值为true
-
+              _self.$store.commit('user/SET_IS_RECHARGE', true)
               var afterChargeBalance = accAdd(_self.userInfo.balanc, _self.exps[index].money)
               // 比较购买的余额是否大于要支付的订单的价格
               if (afterChargeBalance >= ~~(_self.buyDialogInfo.price)) {

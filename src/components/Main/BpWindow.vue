@@ -208,7 +208,7 @@ export default {
         reward_uid: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : ''
       }
       postParams = {postParams: postParams, extraInfo: {title: this.screens[this.bpThemeIndex].title}, price: this.total, confirmText: isCharge ? '充值购买' : '确定', isCharge: isCharge}
-      if (isCharge) {
+      if (!this.userInfo.is_recharge) {
         // 充过值显示取消 没冲过显示立即支付
         var extraParams = {
           cancelText: '立即支付',
