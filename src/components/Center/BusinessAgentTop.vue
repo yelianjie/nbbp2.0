@@ -30,7 +30,7 @@ export default {
   methods: {
     setLocalStorage () {
       localStorage.setItem('depositInfo', JSON.stringify({name: this.name, logo: this.logo, balance: this.currentMoney}))
-      this.$router.push({path: '/Deposit/' + this.$route.params.id, query: {type: this.$route.query.type}})
+      this.$router.push({path: '/Deposit', query: {id: this.$route.query.id, type: this.$route.query.type}})
     }
   },
   components: {

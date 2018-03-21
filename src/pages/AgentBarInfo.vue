@@ -103,7 +103,7 @@ export default {
     next()
   },
   created () {
-    getAgentBar({ht_id: this.$route.params.id}).then((res) => {
+    getAgentBar({ht_id: this.$route.query.id}).then((res) => {
       res.result.agent.users_separate = Number(res.result.agent.users_separate)
       res.result.agent.ht_separate = Number(res.result.agent.ht_separate)
       res.result.agent.yewu_separate = Number(res.result.agent.yewu_separate)
@@ -161,7 +161,7 @@ export default {
           _this.$vux.loading.show({
             text: '正在取消绑定'
           })
-          releaseSupervise({ht_id: _this.$route.params.id}).then((res) => {
+          releaseSupervise({ht_id: _this.$route.query.id}).then((res) => {
             _this.$vux.toast.show({
               text: '取消绑定成功',
               width: '10em'

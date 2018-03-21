@@ -56,7 +56,7 @@ export default {
     next()
   },
   created () {
-    getBarManagers({ht_id: this.$route.params.id}).then((res) => {
+    getBarManagers({ht_id: this.$route.query.id}).then((res) => {
       this.loading2 = false
       Array.isArray(res.result) && (this.results = res.result)
     })
@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     onAdd (data) {
-      addManager({ht_id: this.$route.params.id, mc_id: data.id}).then((res) => {
+      addManager({ht_id: this.$route.query.id, mc_id: data.id}).then((res) => {
         this.$vux.toast.show({
           text: '添加成功',
           isShowMask: false
@@ -81,7 +81,7 @@ export default {
       })
     },
     onDelete (data) {
-      deleteManager({ht_id: this.$route.params.id, mc_id: data.id}).then((res) => {
+      deleteManager({ht_id: this.$route.query.id, mc_id: data.id}).then((res) => {
         this.$vux.toast.show({
           text: '删除成功',
           isShowMask: false
@@ -95,7 +95,7 @@ export default {
       })
     },
     onDeleteResult (data) {
-      deleteManager({ht_id: this.$route.params.id, mc_id: data.id}).then((res) => {
+      deleteManager({ht_id: this.$route.query.id, mc_id: data.id}).then((res) => {
         this.$vux.toast.show({
           text: '删除成功',
           isShowMask: false
@@ -122,7 +122,7 @@ export default {
       }
       this.searchResults = []
       this.loading1 = true
-      getMembersByName({ht_id: this.$route.params.id, nickname: val}).then((res) => {
+      getMembersByName({ht_id: this.$route.query.id, nickname: val}).then((res) => {
         this.loading1 = false
         Array.isArray(res.result) && (this.searchResults = res.result)
       })

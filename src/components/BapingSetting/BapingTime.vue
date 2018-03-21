@@ -33,7 +33,7 @@ export default {
     }
   },
   created () {
-    getBpDatas({ht_id: this.$route.params.id, type: 3}).then((res) => {
+    getBpDatas({ht_id: this.$route.query.id, type: 3}).then((res) => {
       let selecteds = []
       res.result.forEach((v, i) => {
         if (Number(v.selected) === 1) {
@@ -55,7 +55,7 @@ export default {
       let data = {
         id: this.times[itemValue].id,
         selected: this.times[itemValue].selected,
-        ht_id: this.$route.params.id
+        ht_id: this.$route.query.id
       }
       updateBpSelect(data)
     },
@@ -81,7 +81,7 @@ export default {
           let data = {
             price: msg,
             id: _this.times[_this.editIndex].id,
-            ht_id: _this.$route.params.id
+            ht_id: _this.$route.query.id
             // selected: _this.times[_this.editIndex].selected
           }
           updateBpPrice(data).then((res) => {

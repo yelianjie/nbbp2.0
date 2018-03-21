@@ -13,7 +13,7 @@
         <span class="ct ncolor">充值购买</span>
         <!-- <span class="ct darker1">交易明细</span> -->
       </div>
-      <charge :exps="exps" @onSelect="setSelect" :loading="loading"></charge>
+      <charge :exps="exps" @onSelect="setSelect" :loading="loadingPrice"></charge>
       <x-button :show-loading="loading" :disabled="loading" :gradients="['#f31374', '#f31374']" style="margin-top: 25px;" @click.native="requestPay">确认支付</x-button>
       <p class="darker1 f12" style="margin-top: 10px;">充值说明：</p>
       <ul class="darker1 f12">
@@ -47,14 +47,15 @@ export default {
     next()
   },
   created () {
-    let historyCount = window.sessionStorage.getItem('count') * 1 || 0
+    /* let historyCount = window.sessionStorage.getItem('count') * 1 || 0
     if (historyCount !== 1) {
       setTimeout(() => {
         window.location.reload()
       }, 150)
     } else {
       this.getData()
-    }
+    } */
+    this.getData()
   },
   components: {
     XButton,

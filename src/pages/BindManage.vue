@@ -42,7 +42,7 @@ export default {
       }
       this.info = Object.assign({}, this.info, o)
     })
-    getBarInfo({ht_id: this.$route.params.id}).then((res) => {
+    getBarInfo({ht_id: this.$route.query.id}).then((res) => {
       this.info.barname = res.result.name
     })
   },
@@ -61,7 +61,7 @@ export default {
           })
         } else {
           this.loading = true
-          bindBarManager({ht_id: this.$route.params.id, name: this.info.name, phone: this.info.phone}).then((res) => {
+          bindBarManager({ht_id: this.$route.query.id, name: this.info.name, phone: this.info.phone}).then((res) => {
             this.$vux.toast.show({
               text: '绑定成功',
               type: 'success'

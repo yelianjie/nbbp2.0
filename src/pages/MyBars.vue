@@ -105,8 +105,9 @@ export default {
     },
     goToBar (barId) {
       this.$router.push({
-        path: `/BusinessCenter/${barId}`,
+        path: `/BusinessCenter`,
         query: {
+          id: barId,
           type: 2
         }
       })

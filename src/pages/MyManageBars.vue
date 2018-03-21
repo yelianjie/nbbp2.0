@@ -48,8 +48,9 @@ export default {
       const info = this.info.list[index]
       localStorage.setItem('depositInfo', JSON.stringify({name: info.name, logo: info.logo, balance: info.supervise_balance}))
       this.$router.push({
-        path: `/Deposit/${barId}`,
+        path: `/Deposit`,
         query: {
+          id: barId,
           type: 4
         }
       })

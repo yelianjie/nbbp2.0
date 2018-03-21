@@ -76,7 +76,7 @@ export default {
         text: '正在提现'
       })
       this.loading = true
-      depositToCash({type: this.$route.query.type, ht_id: this.$route.params.id, money: this.toRMBValue}).then((res) => {
+      depositToCash({type: this.$route.query.type, ht_id: this.$route.query.id, money: this.toRMBValue}).then((res) => {
         this.getUserInfo()
         this.depositVisible = false
         var restBalance = Number(this.barInfo.balance) - Number(this.toRMBValue)

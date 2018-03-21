@@ -28,18 +28,24 @@ export default {
     }
   },
   created () {
-    getBarMoney({ht_id: this.$route.params.id}).then((res) => {
+    getBarMoney({ht_id: this.$route.query.id}).then((res) => {
       this.barInfo = res.result
-      localStorage.setItem('businessNeed', JSON.stringify({id: this.$route.params.id, name: res.result.name, qrcode: this.$options.filters.prefixImageUrl(res.result.phone_er_url)}))
+      localStorage.setItem('businessNeed', JSON.stringify({id: this.$route.query.id, name: res.result.name, qrcode: this.$options.filters.prefixImageUrl(res.result.phone_er_url)}))
       document.title = res.result.name + '管理'
     })
   },
   methods: {
     judgeRouter () {
       if (this.barInfo.province_id) {
-        this.$router.push(`/Main/${this.$route.params.id}`)
+        this.$router.push(`/Main/${this.$route.query.id}`)
       } else {
-        this.$router.push(`/BasicBusiness/${this.$route.params.id}?toMain=1`)
+        this.$router.push({
+          path: `/BasicBusiness`,
+          query: {
+            id: `${this.$route.query.id}`,
+            toMain: 1
+          }
+        })
       }
     }
   },

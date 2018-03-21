@@ -142,7 +142,7 @@
       <div class="" style="font-size: 20px;margin-bottom: 8px;">
       <p class="f14" style="color:#7b7b7b;margin-top:6px;">充值成功+{{chargeData.chargeMoney}}牛角</p>
       <p class="f14" style="color:#7b7b7b;margin-top:6px;" v-if="buyDialogInfo.extraInfo">{{buyDialogInfo.extraInfo.title}}购买成功-{{buyDialogInfo.price}}牛角</p>
-      <p class="f14" style="color: #88878f;"><svg-icon icon-class="tip" style="margin-top:-2px;margin-right:2px;" />当前余额可用：<svg-icon icon-class="coin"  style="margin-top:-2px;margin-right:2px;"/>{{userInfo.balance}}</p>
+      <p class="f14" style="color: #88878f;margin-top:6px;"><svg-icon icon-class="tip" style="margin-top:-2px;margin-right:2px;" />当前余额可用：<svg-icon icon-class="coin"  style="margin-top:-2px;margin-right:2px;"/>{{userInfo.balance}}</p>
       </div>
     </div>
   </bp-dialog>
@@ -159,11 +159,11 @@
   </template>
   <div v-transfer-dom>
     <popup v-model="chargeVisible" @on-show="chargeShow">
-      <div class="charge-container">
+      <div class="charge-container white" v-fixscroll="'.charge-price-list'">
         <svg-icon icon-class="close" @click.native="chargeVisible = false"/>
-        <p class="tc fff-bp f18">充值购买</p>
-        <p class="f12 fff-bp" style="margin-top:0.2rem;">当前余额：{{userInfo.balance}}</p>
-        <p class="f12 fff-bp" style="margin-top:0.1rem;margin-bottom:0.4rem;">1元=1牛角，经验值可用来升级贵族身份和获取特权</p>
+        <p class="tc f18">充值购买</p>
+        <p class="f12" style="margin-top:0.2rem;">当前余额：{{userInfo.balance}}</p>
+        <p class="f12" style="margin-top:0.1rem;margin-bottom:0.4rem;">1元=1牛角，经验值可用来升级贵族身份和获取特权</p>
         <charge :exps="exps" @onSelect="wxPayCharge" :selectItem="false"></charge>
       </div>
     </popup>
@@ -318,10 +318,10 @@ export default {
           })
           setTimeout(() => {
             this.adVisible = false
-            setTimeout(() => {
+            /* setTimeout(() => {
               // 如果是充值跳回来的，显示之前勾选的选项
               this.initIsSelected()
-            }, 1000)
+            }, 1000) */
           }, 1000)
         }
         img.onerror = () => {
@@ -334,10 +334,10 @@ export default {
           this.show = true
           this.$nextTick(() => {
             this.scrollFix = new ScrollFix(this.$refs.scrollWrapper)
-            setTimeout(() => {
+            /* setTimeout(() => {
               // 如果是充值跳回来的，显示之前勾选的选项
               this.initIsSelected()
-            }, 1000)
+            }, 1000) */
           })
         })
       }
@@ -640,7 +640,7 @@ export default {
     wxPay (cb) {
       var _self = this
       // cb && cb() 关闭弹框
-      console.log('直接微信支付')
+      // console.log('直接微信支付')
       wxPay(this.buyDialogInfo.postParams).then((res) => {
         console.log('成功', res)
         window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
@@ -655,7 +655,6 @@ export default {
               })
               break
             case 'get_brand_wcpay_request:ok':
-              console.log('zhifu成功')
               _self.buyDialogVisible = false
               _self.bpWindowVisible = false
               _self.dsWindowVisible = false
@@ -671,6 +670,7 @@ export default {
     },
     wxPayCharge (index) {
       var _self = this
+      this.chargeFlag = true // 标记充值下面弹起 充完去判断去修改buyDialogInfo.isCharge 还是不够就显示toast 够了直接执行confirmBuy
       this.chargeData.chargeMoney = this.exps[index].money
       rechargePay({eid: this.exps[index].id, money: this.exps[index].money}).then((res) => {
         window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
@@ -687,7 +687,7 @@ export default {
             case 'get_brand_wcpay_request:ok':
               // 成功要设置该用户是否充过值为true
               _self.$store.commit('user/SET_IS_RECHARGE', true)
-              var afterChargeBalance = accAdd(_self.userInfo.balanc, _self.exps[index].money)
+              var afterChargeBalance = accAdd(_self.userInfo.balance, _self.exps[index].money)
               // 比较购买的余额是否大于要支付的订单的价格
               if (afterChargeBalance >= ~~(_self.buyDialogInfo.price)) {
                 // 修改isCharge
@@ -717,7 +717,6 @@ export default {
         this.$router.push('/Charge') */
         this.buyDialogVisible = false
         this.chargeVisible = true
-        this.chargeFlag = true // 标记充值下面弹起 充完去判断去修改buyDialogInfo.isCharge 还是不够就显示toast 够了直接执行confirmBuy
         // window.location.href = window.location.origin + window.location.pathname + '#/Charge'
       } else {
         // 直接购买
@@ -726,6 +725,12 @@ export default {
           this.buyDialogVisible = false
           this.bpWindowVisible = false
           this.dsWindowVisible = false
+          this.chargeVisible = false
+          if (this.chargeFlag) {
+            // 确定是要充值过程的 显示提示充值后的dialog
+            this.buySuccessDialogVisible = true
+            this.chargeFlag = false
+          }
           if (this.buyDialogInfo.postParams.type === 2) {
             this.$refs.bpWindow.reset()
           } else if (this.buyDialogInfo.postParams.type === 1) {
@@ -1013,10 +1018,9 @@ export default {
   margin: 0.5rem auto;
 }
 .charge-container {
-  background-color: #181b2a;
   padding: 0.3rem 0.6rem;
+  background-color: #fff;
   .svg-icon {
-    fill: #fff;
     width: 0.54rem;
     height: 0.54rem;
     position: absolute;

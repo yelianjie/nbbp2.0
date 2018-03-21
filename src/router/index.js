@@ -81,7 +81,7 @@ export default new Router({
       }
     },
     {
-      path: '/BusinessCenter/:id',
+      path: '/BusinessCenter',
       name: 'BusinessCenter',
       component: (resolve) => {
         require(['@/pages/BusinessCenter'], resolve)
@@ -91,7 +91,7 @@ export default new Router({
       }
     },
     {
-      path: '/Deposit/:id',
+      path: '/Deposit',
       name: 'Deposit',
       component: (resolve) => {
         require(['@/pages/Deposit'], resolve)
@@ -102,7 +102,7 @@ export default new Router({
       }
     },
     {
-      path: '/BasicBusiness/:id',
+      path: '/BasicBusiness',
       name: 'BasicBusiness',
       component: (resolve) => {
         require(['@/pages/BasicBusiness'], resolve)
@@ -112,7 +112,7 @@ export default new Router({
       }
     },
     {
-      path: '/NoticeSetting/:id',
+      path: '/NoticeSetting',
       name: 'NoticeSetting',
       component: (resolve) => {
         require(['@/pages/NoticeSetting'], resolve)
@@ -122,7 +122,7 @@ export default new Router({
       }
     },
     {
-      path: '/AdSetting/:id',
+      path: '/AdSetting',
       name: 'AdSetting',
       component: (resolve) => {
         require(['@/pages/AdSetting'], resolve)
@@ -132,7 +132,7 @@ export default new Router({
       }
     },
     {
-      path: '/BapingSetting/:id',
+      path: '/BapingSetting',
       name: 'BapingSetting',
       component: (resolve) => {
         require(['@/pages/BapingSetting'], resolve)
@@ -142,7 +142,7 @@ export default new Router({
       }
     },
     {
-      path: '/BgSetting/:id',
+      path: '/BgSetting',
       name: 'BgSetting',
       component: (resolve) => {
         require(['@/pages/BgSetting'], resolve)
@@ -152,7 +152,7 @@ export default new Router({
       }
     },
     {
-      path: '/Manager/:id',
+      path: '/Manager',
       name: 'Manager',
       component: (resolve) => {
         require(['@/pages/Manager'], resolve)
@@ -162,7 +162,7 @@ export default new Router({
       }
     },
     {
-      path: '/AgentBarInfo/:id',
+      path: '/AgentBarInfo',
       name: 'AgentBarInfo',
       component: (resolve) => {
         require(['@/pages/AgentBarInfo'], resolve)
@@ -172,7 +172,7 @@ export default new Router({
       }
     },
     {
-      path: '/BindManage/:id',
+      path: '/BindManage',
       name: 'BindManage',
       component: (resolve) => {
         require(['@/pages/BindManage'], resolve)
@@ -219,6 +219,17 @@ export default new Router({
       name: 'About',
       component: (resolve) => {
         require(['@/pages/About'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business', 'manager'],
+        bg: '#121420'
+      }
+    },
+    {
+      path: '/Detail',
+      name: 'Detail',
+      component: (resolve) => {
+        require(['@/pages/Detail'], resolve)
       },
       meta: {
         roles: ['user', 'agent', 'business', 'manager'],

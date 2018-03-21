@@ -53,7 +53,7 @@ export default {
       showLogo: '',
       loading: false,
       form: {
-        id: this.$route.params.id ? this.$route.params.id : '',
+        id: this.$route.query.id ? this.$route.query.id : '',
         name: '',
         logo: '',
         address: '',
@@ -66,7 +66,7 @@ export default {
     }
   },
   created () {
-    getBarInfo({ht_id: this.$route.params.id}).then((res) => {
+    getBarInfo({ht_id: this.$route.query.id}).then((res) => {
       this.form = res.result
       this.showLogo = res.result.logo
       if (!res.result.province_id) {
@@ -96,7 +96,7 @@ export default {
           text: '修改成功'
         })
         if (this.$route.query.toMain) {
-          this.$router.replace(`/Main/${this.$route.params.id}`)
+          this.$router.replace(`/Main/${this.$route.query.id}`)
         }
       }).finally(() => {
         this.loading = false

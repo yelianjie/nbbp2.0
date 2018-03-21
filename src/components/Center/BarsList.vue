@@ -39,7 +39,7 @@ export default {
       if (this.enter === 'home') {
         this.$router.push({path: `/Main/${id}`})
       } else {
-        this.$router.push({path: `/AgentBarInfo/${id}`, query: {type: 3}})
+        this.$router.push({path: `/AgentBarInfo`, query: {id: id, type: 3}})
       }
     }
   },

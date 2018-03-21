@@ -133,7 +133,6 @@ export default {
         // 充过值显示取消 没冲过显示立即支付
         var extraParams = {
           cancelText: '立即支付',
-          cancelColor: '#28ab28',
           onCancel: (cb) => {
             this.$emit('onWxPay', cb)
           },

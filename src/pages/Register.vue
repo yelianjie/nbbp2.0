@@ -7,14 +7,14 @@
     <template v-if="type == 1">
       <group>
         <x-input title="酒吧名称" name="name" placeholder="" type="text"  data-vv-as="酒吧名称" v-model="r_business.name" v-validate.initial="'required'"></x-input>
-        <x-input title="手机号码" name="phone" placeholder="" type="number"  data-vv-as="手机号码" v-model="r_business.phone" v-validate.initial="'required|numeric|mobile'"></x-input>
+        <x-input title="手机号码" pattern="[0-9]*" name="phone" placeholder="" type="number"  data-vv-as="手机号码" v-model="r_business.phone" v-validate.initial="'required|numeric|mobile'"></x-input>
         <x-input title="推荐码" name="code" placeholder="" type="text"  data-vv-as="推荐码" v-model="r_business.code"></x-input>
       </group>
     </template>
     <template v-if="type == 2">
       <group>
         <x-input title="用户名" name="agentname" placeholder="" type="text" data-vv-as="用户名" v-model="r_agent.name" v-validate.initial="'required'"></x-input>
-        <x-input title="手机号码" name="mobile" placeholder="" type="number" data-vv-as="手机号码" v-model="r_agent.phone" v-validate.initial="'required|numeric|mobile'"></x-input>
+        <x-input title="手机号码" pattern="[0-9]*" name="mobile" placeholder="" type="number" data-vv-as="手机号码" v-model="r_agent.phone" v-validate.initial="'required|numeric|mobile'"></x-input>
       </group>
     </template>
     <div class="footer-btn">

@@ -127,7 +127,7 @@ export default {
         this.msg,
         function (icon, options, variant) {
           // return BASE_API + '/dist/emoji-apple-svg/' + icon + '.svg'
-          return 'http://weiqing.wurongchao.com/web/apple-svg/' + icon + '.svg'
+          return 'https://oss-niuba.oss-cn-hangzhou.aliyuncs.com/apple-svg/' + icon + '.svg'
         }
       )
       addNormalMsg({ht_id: this.$route.params.id, content: msg, img: this.base64}).then((res) => {

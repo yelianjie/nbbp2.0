@@ -30,7 +30,7 @@ export default {
     next()
   },
   created () {
-    getBarNotice({ht_id: this.$route.params.id}).then((res) => {
+    getBarNotice({ht_id: this.$route.query.id}).then((res) => {
       this.content = res.result ? res.result.content : ''
     })
   },
@@ -43,7 +43,7 @@ export default {
         return
       }
       this.loading = true
-      saveBarNotice({ht_id: this.$route.params.id, content: this.content}).then((res) => {
+      saveBarNotice({ht_id: this.$route.query.id, content: this.content}).then((res) => {
         this.$vux.toast.show({
           text: '保存成功'
         })

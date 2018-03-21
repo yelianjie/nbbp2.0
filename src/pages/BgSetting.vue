@@ -32,7 +32,7 @@ export default {
   },
   created () {
     var find = -1
-    getBg({ht_id: this.$route.params.id, type: 2}).then((res) => {
+    getBg({ht_id: this.$route.query.id, type: 2}).then((res) => {
       if (res.result.ht_selected) {
         find = res.result.default.findIndex(v => ~~(v.id) === ~~(res.result.ht_selected.id))
         if (find > -1) {
@@ -41,7 +41,7 @@ export default {
       }
       this.videos = res.result.default
     })
-    getBg({ht_id: this.$route.params.id, type: 1}).then((res) => {
+    getBg({ht_id: this.$route.query.id, type: 1}).then((res) => {
       if (res.result.ht_selected) {
         find = res.result.default.findIndex(v => ~~(v.id) === ~~(res.result.ht_selected.pic_id))
         if (find > -1) {
@@ -57,7 +57,7 @@ export default {
   methods: {
     setBgCheck (index) {
       let bgId = this.activeType === 1 ? this.images[index].id : this.videos[index].fid
-      setBg({ht_id: this.$route.params.id, type: this.activeType, background_id: bgId}).then((res) => {
+      setBg({ht_id: this.$route.query.id, type: this.activeType, background_id: bgId}).then((res) => {
         console.log(res)
       })
     }

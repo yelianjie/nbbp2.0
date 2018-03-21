@@ -1,5 +1,5 @@
 <template>
-  <div class="charge-price-list fff-bp">
+  <div class="charge-price-list fff-bp" :class="{'mainCharge': !selectItem}">
     <inline-loading v-if="loading" :color="'#f31374'" :bgColor="'rgba(255, 255, 255, 0.2)'"></inline-loading>
     <div class="charge-price-item" v-for="(v, i) in exps" :key="i" :class="{'selected': bpValueIndex == i}" v-else @click="select(i)">
       <div class="value f14"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{v.money}}</span><div class="f12 jingyan"><span class="jy-value">+{{v.experience}}经验值</span></div><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
@@ -51,6 +51,9 @@ export default {
 <style lang="less" scoped>
 @mainColor: #f31374;
 @borderColor: rgba(255, 255, 255, 0.3);
+.mainCharge.fff-bp {
+  color: #333;
+}
 .charge-price-item {
   display: inline-block;
   width: 1.5rem;
@@ -65,12 +68,19 @@ export default {
     border: 1px solid @borderColor;
     border-radius: 10px;
     position: relative;
+    .mainCharge & {
+      color: #333;
+      border: 1px solid rgba(51, 51, 51, 0.3);
+    }
   }
   .jingyan {
     height: 0.36rem;
     background-color: #3f414e;
     position: relative;
     border-radius: 0 0 10px 10px;
+    .mainCharge & {
+      background-color: #f5f5f5;
+    }
   }
   .jy-value {
     transform: translate3d(-50%, -50%, 0) scale(1);
@@ -100,6 +110,9 @@ export default {
     text-align: center;
     margin-top: 4px;
   }
+}
+.mainCharge .coin-color {
+  color: #f8c21a;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   .charge-price-item .jy-value {

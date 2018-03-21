@@ -56,7 +56,7 @@ export default {
     next()
   },
   created () {
-    getAd({ht_id: this.$route.params.id}).then((res) => {
+    getAd({ht_id: this.$route.query.id}).then((res) => {
       this.adScreenBg = res.result.screen.url
       this.adMobileBg = res.result.phone.url
     })
@@ -64,13 +64,13 @@ export default {
   methods: {
     adScreenUpload (url) {
       this.adScreenBg = url
-      updateAdImage({type: 2, url: url, ht_id: this.$route.params.id}).then((res) => {
+      updateAdImage({type: 2, url: url, ht_id: this.$route.query.id}).then((res) => {
         console.log(res)
       })
     },
     adMobileUpload (url) {
       this.adMobileBg = url
-      updateAdImage({type: 1, url: url, ht_id: this.$route.params.id}).then((res) => {
+      updateAdImage({type: 1, url: url, ht_id: this.$route.query.id}).then((res) => {
         console.log(res)
       })
     }
