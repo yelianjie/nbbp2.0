@@ -1,12 +1,13 @@
 <template>
-  <div class="container min-h bg1 borderbox">
+  <div class="container bg1 borderbox">
     <tab id="tab-header">
-      <tab-item selected @on-item-click="onItemClick">充值</tab-item>
-      <tab-item @on-item-click="onItemClick">消费</tab-item>
-      <tab-item @on-item-click="onItemClick">收益</tab-item>
-      <tab-item @on-item-click="onItemClick">兑换</tab-item>
-      <tab-item @on-item-click="onItemClick">提现</tab-item>
+      <tab-item :selected="$route.path == '/Detail/Charge' ? true : false" @on-item-click="$router.replace('/Detail/Charge')">充值</tab-item>
+      <tab-item :selected="$route.path == '/Detail/Consume' ? true : false" @on-item-click="$router.replace('/Detail/Consume')">消费</tab-item>
+      <tab-item :selected="$route.path == '/Detail/Income' ? true : false" @on-item-click="$router.replace('/Detail/Income')">收益</tab-item>
+      <tab-item :selected="$route.path == '/Detail/Exchange' ? true : false" @on-item-click="$router.replace('/Detail/Exchange')">兑换</tab-item>
+      <tab-item :selected="$route.path == '/Detail/Deposit' ? true : false" @on-item-click="$router.replace('/Detail/Deposit')">提现</tab-item>
     </tab>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -22,9 +23,6 @@ export default {
     TabItem
   },
   methods: {
-    onItemClick (index) {
-      console.log('on item click:', index)
-    }
   }
 }
 </script>
@@ -40,6 +38,9 @@ export default {
 .vux-tab .vux-tab-item.vux-tab-selected {
   color: @mainColor;
   border-bottom: 3px solid @mainColor;
+}
+.container {
+  height: 100%;
 }
 .container /deep/ .vux-tab-ink-bar {
   background-color: @mainColor;

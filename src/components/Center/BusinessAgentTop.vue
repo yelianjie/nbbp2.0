@@ -7,13 +7,23 @@
         <span class="u-name">{{name}}</span>
       </div>
     </div>
-    <div class="middle tc">
-      <p class="f14">当前收益</p>
-      <p class="benefit-account">{{currentMoney}}</p>
-      <p class="f16">总收益：{{totalMoney}} 元</p>
+    <div class="middle">
+      <button id="deposit-btn" class="fff-bp" @click="setLocalStorage">我要提现</button>
+      <div class="item-wrap flex">
+        <div class="flex-1">
+          <p class="f14 gray">可提现收益</p>
+          <p class="f14">{{currentMoney}}</p>
+        </div>
+      </div>
+      <div class="item-wrap flex">
+        <div class="flex-1">
+          <p class="f14 gray">总收益</p>
+          <p class="f14">{{totalMoney}}</p>
+        </div>
+      </div>
     </div>
     <group class="actions">
-      <cell title="我要提现" is-link @click.native="setLocalStorage"></cell>
+      <cell title="收益详情" is-link :link="{path: '/IncomeOthers', query: {id: this.$route.query.id}}"></cell>
     </group>
   </div>
 </template>
@@ -58,13 +68,19 @@ export default {
   vertical-align: middle;
 }
 .middle {
-  margin: 0 auto 30px;
+  margin: 0 auto 15px;
+  position: relative;
   .benefit-account {
     font-size: 24px;
     font-weight: bold;
   }
 }
-
+.item-wrap {
+  padding: 10px 15px;
+}
+.gray {
+  color: #ccc;
+}
 .center-wrap {
   /deep/ .weui-cells {
     background-color: #237dcb;
@@ -77,5 +93,13 @@ export default {
     background-color: #3d8dd3;
   }
 }
-
+#deposit-btn {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  padding: 2px 5px;
+  background-color: transparent;
+  border: 1px solid #fff;
+  border-radius: 8px;
+}
 </style>

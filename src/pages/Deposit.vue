@@ -1,16 +1,26 @@
 <template>
-  <div class="container min-h flex flex-v flex-align-center bg3">
-    <div class="top-img tc">
-      <img :src="barInfo.logo | prefixImageUrl" class="circle">
-      <p class="f14 fff-bp" style="margin-top: 10px;">{{barInfo.name}}</p>
+  <div class="container min-h flex flex-v">
+    <div class="center-wrap">
+    <div class="top">
+      <div class="logo-line">
+        <img :src="barInfo.logo | prefixImageUrl" class="logo-img circle" v-if="barInfo.logo">
+        <span class="u-name">{{barInfo.name}}</span>
+      </div>
     </div>
-    <div class="canDespoit-wrap">
-      <p class="money">¥{{barInfo.balance}}</p>
-      <p class="m-tip">当前可提现金额</p>
+    <div class="middle tc">
+      <p class="f14">当前可提现金额（元）</p>
+      <p class="benefit-account">{{barInfo.balance}}</p>
     </div>
+    <group class="actions">
+      <cell title="提现详情" is-link @click.native="$router.push({path: '/DepositOthers', query: {type: $route.query.id}})"></cell>
+    </group>
+  </div>
+
     <div class="despoit-btn">
-      <x-button :gradients="['#fff', '#fff']" @click.native="depositVisible = true" style="color:#2481d2;">立即提现</x-button>
+      <x-button :gradients="['#2481d2', '#2481d2']" @click.native="depositVisible = true" style="color:#fff;">立即提现</x-button>
     </div>
+    <p class="tip f12" style="margin-top: 40px;">说明：</p>
+    <p class="tip f12">1、提现金额将直接进入您的微信零钱，请注意查收。</p>
     <div v-transfer-dom>
       <bp-dialog :bg-title="true" :bgSrc="depositBg" v-model="depositVisible" @onConfirm="deposit">
       <div class="">
@@ -25,7 +35,7 @@
 </template>
 
 <script>
-import { XButton, TransferDomDirective as TransferDom } from 'vux'
+import { XButton, Group, Cell, TransferDomDirective as TransferDom } from 'vux'
 import BpDialog from '../components/bpDialog'
 import depositBg from '../assets/despoit-bg.png'
 import { depositToCash } from '@/api/'
@@ -38,7 +48,9 @@ export default {
   },
   components: {
     XButton,
-    BpDialog
+    BpDialog,
+    Group,
+    Cell
   },
   data () {
     return {
@@ -107,28 +119,56 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.money {
-  font-size: 20px;
+.center-wrap {
+  background-color: #2481d2;
   color: #fff;
 }
-.m-tip {
-  font-size: 13px;
-  color: #fff;
+.top {
+  padding: 10px 15px;
 }
-.top-img {
-  margin-top: 30px;
-  img {
-    width: 60px;
-    height: 60px;
+.logo-img {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+}
+.u-name {
+  display: inline-block;
+  vertical-align: middle;
+}
+.middle {
+  margin: 30px auto;
+  .benefit-account {
+    font-size: 24px;
+    font-weight: bold;
   }
 }
-.canDespoit-wrap {
-  text-align: center;
-  margin-top: 70px;
+.item-wrap {
+  padding: 10px 15px;
+}
+.gray {
+  color: #ccc;
+}
+.center-wrap {
+  /deep/ .weui-cells {
+    background-color: #237dcb;
+    &:after,
+    &:before {
+      border: 0;
+    }
+  }
+  /deep/ .weui-cell_access:active {
+    background-color: #3d8dd3;
+  }
 }
 .despoit-btn {
   width: 90%;
+  margin: 0 auto;
   max-width: 360px;
-  margin-top: 70px;
+  margin-top: 40px;
+}
+.tip {
+  color: #848484;
+  width: 90%;
+  margin: 0 auto;
 }
 </style>

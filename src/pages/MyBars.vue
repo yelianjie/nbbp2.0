@@ -18,7 +18,11 @@
             <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
             <div class="flex-1 flex flex-v">
               <p class="f16">{{v.name}}</p>
-              <p class="f14" style="color: #939393;">注册时间：{{v.add_time}}</p>
+              <p class="f12 line1" style="color: #939393;">注册时间：{{v.add_time}}</p>
+            </div>
+            <div class="tc bar-money pr">
+              <p class="f16" style="color:red;">234</p>
+              <p class="f13" style="color:#818181;">可提现收益</p>
             </div>
           </div>
         </swipeout-item>
@@ -130,6 +134,19 @@ export default {
 }
 .bars /deep/ .vux-1px-t::before {
   border: 0;
+}
+.bar-money {
+  padding: 0 10px;
+  margin-left: 10px;
+}
+.bar-money:before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #ddd;
+  content: "";
 }
 .bar-title:before {
   position: absolute;

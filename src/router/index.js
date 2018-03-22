@@ -97,8 +97,17 @@ export default new Router({
         require(['@/pages/Deposit'], resolve)
       },
       meta: {
-        roles: ['agent', 'business', 'manager'],
-        bg: '#2481d2'
+        roles: ['agent', 'business', 'manager']
+      }
+    },
+    {
+      path: '/DepositOthers',
+      name: 'DepositOthers',
+      component: (resolve) => {
+        require(['@/pages/DepositOthers'], resolve)
+      },
+      meta: {
+        roles: ['agent', 'business', 'manager']
       }
     },
     {
@@ -182,6 +191,26 @@ export default new Router({
       }
     },
     {
+      path: '/IncomeOthers',
+      name: 'IncomeOthers',
+      component: (resolve) => {
+        require(['@/pages/IncomeOthers'], resolve)
+      },
+      meta: {
+        roles: ['agent', 'business']
+      }
+    },
+    {
+      path: '/IncomeByMonth',
+      name: 'IncomeByMonth',
+      component: (resolve) => {
+        require(['@/pages/IncomeByMonth'], resolve)
+      },
+      meta: {
+        roles: ['agent', 'business']
+      }
+    },
+    {
       path: '/Main/:id',
       name: 'Main',
       component: (resolve) => {
@@ -234,7 +263,60 @@ export default new Router({
       meta: {
         roles: ['user', 'agent', 'business', 'manager'],
         bg: '#121420'
-      }
+      },
+      redirect: '/Detail/Charge',
+      children: [
+        {
+          path: 'Charge',
+          component: (resolve) => {
+            require(['@/components/Detail/Charge'], resolve)
+          },
+          meta: {
+            roles: ['user', 'agent', 'business', 'manager'],
+            bg: '#121420'
+          }
+        },
+        {
+          path: 'Consume',
+          component: (resolve) => {
+            require(['@/components/Detail/Consume'], resolve)
+          },
+          meta: {
+            roles: ['user', 'agent', 'business', 'manager'],
+            bg: '#121420'
+          }
+        },
+        {
+          path: 'Income',
+          component: (resolve) => {
+            require(['@/components/Detail/Income'], resolve)
+          },
+          meta: {
+            roles: ['user', 'agent', 'business', 'manager'],
+            bg: '#121420'
+          }
+        },
+        {
+          path: 'Exchange',
+          component: (resolve) => {
+            require(['@/components/Detail/Exchange'], resolve)
+          },
+          meta: {
+            roles: ['user', 'agent', 'business', 'manager'],
+            bg: '#121420'
+          }
+        },
+        {
+          path: 'Deposit',
+          component: (resolve) => {
+            require(['@/components/Detail/Deposit'], resolve)
+          },
+          meta: {
+            roles: ['user', 'agent', 'business', 'manager'],
+            bg: '#121420'
+          }
+        }
+      ]
     },
     {
       path: '/MyLevel',

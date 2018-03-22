@@ -433,6 +433,46 @@ export const isSupervise = () => {
 }
 
 /**
+ * 获取普通用户的充值记录
+ * @param {*} data
+ */
+export const getRechargeList = (data) => {
+  return request('/weixin/recharge/getRechargeList', 'POST', data)
+}
+
+/**
+ * 获取普通用户的消费记录
+ * @param {*} data
+ */
+export const getConsumeList = (data) => {
+  return request('/weixin/recharge/getConsumeList', 'POST', data)
+}
+
+/**
+ * 获取普通用户的收益记录
+ * @param {*} data
+ */
+export const getIncomeList = (data) => {
+  return request('/weixin/recharge/getIncomeList', 'POST', data)
+}
+
+/**
+ * 获取普通用户的兑换记录
+ * @param {*} data
+ */
+export const getExchangeList = (data) => {
+  return request('/weixin/recharge/getExchangeList', 'POST', data)
+}
+
+/**
+ * 获取普通用户的提现记录
+ * @param {*} data
+ */
+export const getWithdrawList = (data) => {
+  return request('/weixin/recharge/getWithdrawList', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */

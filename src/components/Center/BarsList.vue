@@ -12,6 +12,10 @@
           <div class="bar-distance flex flex flex-align-center" v-if="enter == 'home'">
             <svg-icon icon-class="position"/><span>{{v.distance | distance}}</span>
           </div>
+          <div class="tc bar-money pr flex flex-v flex-pack-center" v-if="enter != 'home'">
+            <p class="f16" style="color:red;">234</p>
+            <p class="f13" style="color:#818181;">可提现收益</p>
+          </div>
         </li>
       </ul>
     </div>
@@ -108,5 +112,18 @@ export default {
     width: 0.32rem;
     height: 0.32rem;
   }
+}
+.bar-money {
+  padding: 0 10px;
+  margin-left: 10px;
+}
+.bar-money:before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #ddd;
+  content: "";
 }
 </style>
