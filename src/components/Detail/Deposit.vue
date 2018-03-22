@@ -3,11 +3,11 @@
     <div class="detail-item flex flex-align-center bg2" v-for="(v, i) in list" :key="i">
       <div class="detail-item-left flex-1">
         <p class="overflow fff-bp f14">提现金额</p>
-        <p class="f13 scolor bottom-line">2018-03-04</p>
+        <p class="f13 scolor bottom-line">{{v.create_time}}</p>
       </div>
       <div class="detail-item-right">
-        <p class="overflow f14 ncolor">-100元</p>
-        <p class="f13 scolor bottom-line">提现中</p>
+        <p class="overflow f14 ncolor">-{{v.money}}元</p>
+        <p class="f13 scolor bottom-line">{{status[v.status]}}</p>
       </div>
     </div>
     <infinite-loading @infinite="infiniteHandler">
@@ -29,6 +29,11 @@ export default {
       params: {
         pageSize: 15,
         page: 1
+      },
+      status: {
+        '0': '提现中',
+        '1': '提现成功',
+        '2': '提现失败'
       }
     }
   },
