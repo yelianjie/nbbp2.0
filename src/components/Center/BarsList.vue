@@ -13,7 +13,7 @@
             <svg-icon icon-class="position"/><span>{{v.distance | distance}}</span>
           </div>
           <div class="tc bar-money pr flex flex-v flex-pack-center" v-if="enter != 'home'">
-            <p class="f16" style="color:red;">234</p>
+            <p class="f16" style="color:red;">{{v.agent_balance}}</p>
             <p class="f13" style="color:#818181;">可提现收益</p>
           </div>
         </li>

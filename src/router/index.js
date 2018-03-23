@@ -101,10 +101,10 @@ export default new Router({
       }
     },
     {
-      path: '/DepositOthers',
-      name: 'DepositOthers',
+      path: '/DepositDetails',
+      name: 'DepositDetails',
       component: (resolve) => {
-        require(['@/pages/DepositOthers'], resolve)
+        require(['@/pages/DepositDetails'], resolve)
       },
       meta: {
         roles: ['agent', 'business', 'manager']
@@ -263,60 +263,7 @@ export default new Router({
       meta: {
         roles: ['user', 'agent', 'business', 'manager'],
         bg: '#121420'
-      },
-      redirect: '/Detail/Charge',
-      children: [
-        {
-          path: 'Charge',
-          component: (resolve) => {
-            require(['@/components/Detail/Charge'], resolve)
-          },
-          meta: {
-            roles: ['user', 'agent', 'business', 'manager'],
-            bg: '#121420'
-          }
-        },
-        {
-          path: 'Consume',
-          component: (resolve) => {
-            require(['@/components/Detail/Consume'], resolve)
-          },
-          meta: {
-            roles: ['user', 'agent', 'business', 'manager'],
-            bg: '#121420'
-          }
-        },
-        {
-          path: 'Income',
-          component: (resolve) => {
-            require(['@/components/Detail/Income'], resolve)
-          },
-          meta: {
-            roles: ['user', 'agent', 'business', 'manager'],
-            bg: '#121420'
-          }
-        },
-        {
-          path: 'Exchange',
-          component: (resolve) => {
-            require(['@/components/Detail/Exchange'], resolve)
-          },
-          meta: {
-            roles: ['user', 'agent', 'business', 'manager'],
-            bg: '#121420'
-          }
-        },
-        {
-          path: 'Deposit',
-          component: (resolve) => {
-            require(['@/components/Detail/Deposit'], resolve)
-          },
-          meta: {
-            roles: ['user', 'agent', 'business', 'manager'],
-            bg: '#121420'
-          }
-        }
-      ]
+      }
     },
     {
       path: '/MyLevel',

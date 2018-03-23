@@ -1,14 +1,20 @@
 <template>
   <div class="container bg1">
-    <div style="height:10px;"></div>
-    <group style="background: #181b2a;">
-      <cell title="我的余额/牛角" color="#fd711a" :is-link="false" icon-name="money"><h2 style="font-weight:normal;">{{userInfo.balance}}</h2></cell>
-      <cell title="我的收益/元" color="#eccd1d" :is-link="false" icon-name="coin"><h2 style="color: #f31374;font-weight:normal;">{{userInfo.profit_balance}}</h2></cell>
-    </group>
-    <div style="margin: 25px 0.48rem;">
+    <div class="main-income bg2 tc">
+      <h2 style="font-weight:normal;color: #f31374;">{{userInfo.profit_balance}}</h2>
+      <span class="fff-bp tc f13"><svg-icon icon-class="coin" style="margin-bottom:3px;margin-right: 4px;"/>我的收益/元</span>
+    </div>
+    <p style="color:#ddd;margin-top: 0.6rem;" class="tc f13">您当前拥有牛角数：{{userInfo.balance}}个</p>
+    <div style="margin: 10px 15px;">
       <x-button :gradients="['#2b3044', '#2b3044']" @click.native="exchangeVisible = true">兑换牛角</x-button>
       <x-button :gradients="['#f31374', '#f31374']" @click.native="depositVisible = true" style="margin-top: 10px;">我要提现</x-button>
     </div>
+    <ul class="tip-ul f12" style="color:#ddd;margin: 40px 15px 0;">
+      <li>说明：</li>
+      <li>1、兑换比例：1元=1牛角。</li>
+      <li>2、兑换的牛角只能用于消费，不能提现。</li>
+      <li>3、提现金额将直接进入您的微信零钱，请注意查收。</li>
+    </ul>
     <div v-transfer-dom>
       <bp-dialog :bg-title="true" :bgSrc="exchangeBg" v-model="exchangeVisible" @onConfirm="exchange">
         <div class="">
@@ -35,8 +41,6 @@
 <script>
 import exchangeBg from '../assets/charge-bg.png'
 import depositBg from '../assets/despoit-bg.png'
-import Group from '../components/User/Group'
-import Cell from '../components/User/Cell'
 import { XButton, TransferDomDirective as TransferDom } from 'vux'
 import BpDialog from '../components/bpDialog'
 import { mapActions, mapGetters } from 'vuex'
@@ -46,8 +50,6 @@ export default {
     TransferDom
   },
   components: {
-    Group,
-    Cell,
     XButton,
     BpDialog
   },
@@ -120,7 +122,7 @@ export default {
       this.$vux.loading.show({
         text: '正在提现'
       })
-      depositToCash({type: 1, money: this.toRMBValue}).then((res) => {
+      depositToCash({type: 1, money: this.toRMBValue, ht_id: 0}).then((res) => {
         this.getUserInfo()
         this.depositVisible = false
         this.$vux.loading.hide()
@@ -155,5 +157,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.main-income {
+  padding: 1.2rem 0;
+}
+.container /deep/ .svg-icon {
+  fill: #f8c21a;
+}
 </style>

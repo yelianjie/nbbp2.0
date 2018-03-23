@@ -14,6 +14,10 @@
           <p class="f16">{{v.name}}</p>
           <p class="f14" style="color: #939393;">{{v.address}}</p>
         </div>
+        <div class="tc bar-money pr">
+          <p class="f16" style="color:red;">{{v.supervise_balance}}</p>
+          <p class="f13" style="color:#818181;">可提现收益</p>
+        </div>
       </div>
     </div>
   </div>
@@ -75,5 +79,18 @@ export default {
   background-color: #f2f2f2;
   content: "";
   transform: scaleY(0.5);
+}
+.bar-money {
+  padding: 0 10px;
+  margin-left: 10px;
+}
+.bar-money:before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #ddd;
+  content: "";
 }
 </style>

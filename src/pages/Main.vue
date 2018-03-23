@@ -696,7 +696,9 @@ export default {
               } else {
                 // 显示toast提示不够
                 _self.$vux.toast.show({
-                  text: '充值后的余额仍然不够，请继续充值'
+                  text: '充值后的余额仍然不够，请继续充值',
+                  width: '15em',
+                  time: 2500
                 })
               }
               break

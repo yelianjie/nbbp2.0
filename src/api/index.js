@@ -473,6 +473,30 @@ export const getWithdrawList = (data) => {
 }
 
 /**
+ * 获取商家、代理用户针对酒吧的提现记录
+ * @param {*} data
+ */
+export const getWithdrawListByHid = (data) => {
+  return request('/weixin/recharge/getWithdrawListByHid', 'POST', data)
+}
+
+/**
+ * 获取商家、代理用户针对酒吧的收益记录
+ * @param {*} data
+ */
+export const getIncomeListByHid = (data) => {
+  return request('/weixin/recharge/getIncomeListByHid', 'POST', data)
+}
+
+/**
+ * 获取代理Code
+ * @param {*} data
+ */
+export const getAgentCode = (data) => {
+  return request('/weixin/hotel/getAgentCode', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */

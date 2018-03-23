@@ -11,7 +11,7 @@
     <div class="charge-container">
       <div class="charge-tab">
         <span class="ct ncolor">充值购买</span>
-        <!-- <span class="ct darker1">交易明细</span> -->
+        <span class="ct darker1" @click="$router.push({path: '/Detail'})">充值详情</span>
       </div>
       <charge :exps="exps" @onSelect="setSelect" :loading="loadingPrice"></charge>
       <x-button :show-loading="loading" :disabled="loading" :gradients="['#f31374', '#f31374']" style="margin-top: 25px;" @click.native="requestPay">确认支付</x-button>

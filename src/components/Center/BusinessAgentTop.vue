@@ -10,20 +10,24 @@
     <div class="middle">
       <button id="deposit-btn" class="fff-bp" @click="setLocalStorage">我要提现</button>
       <div class="item-wrap flex">
-        <div class="flex-1">
+        <div class="flex-1 data-item">
           <p class="f14 gray">可提现收益</p>
           <p class="f14">{{currentMoney}}</p>
         </div>
       </div>
       <div class="item-wrap flex">
-        <div class="flex-1">
+        <div class="data-item">
           <p class="f14 gray">总收益</p>
           <p class="f14">{{totalMoney}}</p>
+        </div>
+        <div class="data-item">
+          <p class="f14 gray">昨日总收益</p>
+          <p class="f14">{{yesMoney}}</p>
         </div>
       </div>
     </div>
     <group class="actions">
-      <cell title="收益详情" is-link :link="{path: '/IncomeOthers', query: {id: this.$route.query.id}}"></cell>
+      <cell title="收益详情" is-link :link="{path: '/IncomeOthers', query: {id: this.$route.query.id, type: this.$route.query.type == 2 ? 2 : 1}}"></cell>
     </group>
   </div>
 </template>
@@ -31,7 +35,7 @@
 <script>
 import { Group, Cell } from 'vux'
 export default {
-  props: ['logo', 'name', 'currentMoney', 'totalMoney'],
+  props: ['logo', 'name', 'currentMoney', 'totalMoney', 'yesMoney'],
   data () {
     return {
 
@@ -101,5 +105,8 @@ export default {
   background-color: transparent;
   border: 1px solid #fff;
   border-radius: 8px;
+}
+.data-item {
+  min-width: 100px;
 }
 </style>

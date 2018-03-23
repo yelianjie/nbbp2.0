@@ -12,7 +12,7 @@
       <p class="benefit-account">{{barInfo.balance}}</p>
     </div>
     <group class="actions">
-      <cell title="提现详情" is-link @click.native="$router.push({path: '/DepositOthers', query: {type: $route.query.id}})"></cell>
+      <cell title="提现详情" is-link @click.native="$router.push({path: '/DepositDetails', query: {id: $route.query.id, type: $route.query.type}})"></cell>
     </group>
   </div>
 

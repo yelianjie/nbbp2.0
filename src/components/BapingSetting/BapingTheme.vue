@@ -72,6 +72,7 @@ export default {
       this.editIndex = index
       this.$vux.confirm.prompt('价格', {
         title: '请输入价格',
+        closeOnConfirm: false,
         onShow () {
           console.log('promt show')
           _this.$vux.confirm.setInputValue(_this.themes[index].price)
@@ -83,6 +84,13 @@ export default {
           console.log('prompt cancel')
         },
         onConfirm (msg) {
+          msg = typeof msg === 'number' ? msg : Number(msg)
+          if (!Number.isInteger(msg)) {
+            _this.$vux.toast.show({
+              text: '请输入整数'
+            })
+            return false
+          }
           let data = {
             price: msg,
             id: _this.themes[_this.editIndex].id,
@@ -91,6 +99,7 @@ export default {
           }
           updateBpPrice(data).then((res) => {
             _this.themes[_this.editIndex].price = Number(msg).toFixed(2)
+            _this.$vux.confirm.hide()
           })
         }
       })

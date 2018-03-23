@@ -111,7 +111,7 @@ export default {
     margin-top: 4px;
   }
 }
-.mainCharge .coin-color {
+.coin-color {
   color: #f8c21a;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {

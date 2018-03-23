@@ -15,7 +15,7 @@ import * as directives from './directives' // global directives
 import bpDialog from './plugins/bpDialog'
 import maskPlugin from './plugins/mask'
 import noscrollPlugin from './plugins/noscroll'
-import { ToastPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin } from 'vux'
+import { ToastPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin, DatetimePlugin } from 'vux'
 import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 import { validateRules } from './utils/validateRules'
@@ -31,7 +31,7 @@ import { getWxConfig, getHasToken } from './api/'
 window.sessionStorage.clear()
 var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  window.sessionStorage.setItem('tId', '3da2864cef72c8e1f088a8c88e49e0dbc3ef234d')
+  window.sessionStorage.setItem('tId', '8fc1d890f1c768f2c826ccc7c3598dd9281f3b5e')
   tId = window.sessionStorage.getItem('tId')
 }
 if (!tId && process.env.NODE_ENV === 'production') {
@@ -106,6 +106,7 @@ function init () {
     dictionary: dictionary
   })
   Vue.use(WechatPlugin)
+  Vue.use(DatetimePlugin)
   Vue.use(VueJsonp)
   Vue.use(bpDialog)
   Vue.use(maskPlugin)

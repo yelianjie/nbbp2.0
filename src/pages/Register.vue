@@ -8,7 +8,7 @@
       <group>
         <x-input title="酒吧名称" name="name" placeholder="" type="text"  data-vv-as="酒吧名称" v-model="r_business.name" v-validate.initial="'required'"></x-input>
         <x-input title="手机号码" pattern="[0-9]*" name="phone" placeholder="" type="number"  data-vv-as="手机号码" v-model="r_business.phone" v-validate.initial="'required|numeric|mobile'"></x-input>
-        <x-input title="推荐码" name="code" placeholder="" type="text"  data-vv-as="推荐码" v-model="r_business.code"></x-input>
+        <x-input title="推荐码" :disabled="code ? true : false" name="code" placeholder="" type="text"  data-vv-as="推荐码" v-model="r_business.code"></x-input>
       </group>
     </template>
     <template v-if="type == 2">
@@ -41,7 +41,8 @@ export default {
         name: '',
         phone: ''
       },
-      loading: false
+      loading: false,
+      code: ''
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -52,6 +53,12 @@ export default {
     }
     next(vm => {
       vm.type = to.query.type ? to.query.type : 0
+      var code = to.query.code.toString()
+      if (code && code !== '') {
+        code = code.replace(/\,/g, '').replace(/\s/g, '')
+        vm.code = code
+        vm.r_business.code = code
+      }
     })
   },
   created () {

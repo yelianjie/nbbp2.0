@@ -1,28 +1,47 @@
 <template>
   <div class="container bg1 borderbox">
     <tab id="tab-header">
-      <tab-item :selected="$route.path == '/Detail/Charge' ? true : false" @on-item-click="$router.replace('/Detail/Charge')">充值</tab-item>
-      <tab-item :selected="$route.path == '/Detail/Consume' ? true : false" @on-item-click="$router.replace('/Detail/Consume')">消费</tab-item>
-      <tab-item :selected="$route.path == '/Detail/Income' ? true : false" @on-item-click="$router.replace('/Detail/Income')">收益</tab-item>
-      <tab-item :selected="$route.path == '/Detail/Exchange' ? true : false" @on-item-click="$router.replace('/Detail/Exchange')">兑换</tab-item>
-      <tab-item :selected="$route.path == '/Detail/Deposit' ? true : false" @on-item-click="$router.replace('/Detail/Deposit')">提现</tab-item>
+      <tab-item :selected="currentView == 'Charge' ? true : false" @on-item-click="replace('Charge', '充值详情')">充值</tab-item>
+      <tab-item :selected="currentView == 'Consume' ? true : false" @on-item-click="replace('Consume', '消费详情')">消费</tab-item>
+      <tab-item :selected="currentView == 'Income' ? true : false" @on-item-click="replace('Income', '收益详情')">收益</tab-item>
+      <tab-item :selected="currentView == 'Exchange' ? true : false" @on-item-click="replace('Exchange', '兑换详情')">兑换</tab-item>
+      <tab-item :selected="currentView == 'Deposit' ? true : false" @on-item-click="replace('Deposit', '提现详情')">提现</tab-item>
     </tab>
-    <router-view></router-view>
+    <component v-bind:is="currentView">
+      <!-- 组件在 vm.currentview 变化时改变！ -->
+    </component>
   </div>
 </template>
 
 <script>
 import { Tab, TabItem } from 'vux'
 export default {
+  data () {
+    return {
+      currentView: 'Charge'
+    }
+  },
   beforeRouteEnter (to, from, next) {
     document.title = '详情记录'
     next()
   },
   components: {
     Tab,
-    TabItem
+    TabItem,
+    Charge: () => import('../components/Detail/Charge'),
+    Consume: () => import('../components/Detail/Consume'),
+    Deposit: () => import('../components/Detail/Deposit'),
+    Exchange: () => import('../components/Detail/Exchange'),
+    Income: () => import('../components/Detail/Income')
   },
   methods: {
+    replace (view, title) {
+      if (view === this.currentView) {
+        return false
+      }
+      document.title = title
+      this.currentView = view
+    }
   }
 }
 </script>

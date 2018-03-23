@@ -21,7 +21,7 @@
               <p class="f12 line1" style="color: #939393;">注册时间：{{v.add_time}}</p>
             </div>
             <div class="tc bar-money pr">
-              <p class="f16" style="color:red;">234</p>
+              <p class="f16" style="color:red;">{{v.merchant_balance}}</p>
               <p class="f13" style="color:#818181;">可提现收益</p>
             </div>
           </div>
