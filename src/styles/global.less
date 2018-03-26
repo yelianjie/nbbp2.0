@@ -18,12 +18,12 @@
   -webkit-transform: scaleY(0.5);
   transform: scaleY(0.5);
 }
-.setLeftLine(@lineColor: #f1f1f1) {
+.setLeftLine(@lineColor: #f1f1f1, @pos: 20%) {
   position: absolute;
   left: 0;
-  top: 20%;
+  top: @pos;
   width: 1px;
-  bottom: 20%;
+  bottom: @pos;
   border-left: 1px solid @lineColor;
   color: @lineColor;
   -webkit-transform-origin: 0 0;

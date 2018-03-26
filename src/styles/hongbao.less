@@ -1,0 +1,65 @@
+/* hongbao */
+@import (reference) './global.less';
+.hb-send-window {
+  width: 5.9rem;
+  padding: 0.2rem 0.4rem 0.4rem;
+  margin: 0 auto;
+  background-image: linear-gradient(top, #e92e41, #fa5b41);
+  box-sizing: border-box;
+  border-radius: 20px;
+}
+.hb-text-tip {
+  color: rgba(255, 255, 255, 0.5);
+}
+.hb-input-box {
+  margin-bottom: 0.3rem;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+.hb-input {
+  background-color: #fff;
+  border: 0;
+  outline: none;
+  display: block;
+  padding: 4px 0;
+  width: 100%;
+  -webkit-appearance: none;
+  &.tr {
+    text-align: right;
+  }
+  &::-webkit-input-placeholder{
+    font-size: 16px;
+  }
+}
+.hb-input-wrap {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.hb-text-tip {
+  margin: 5px 0;
+}
+.hb-input-label,
+.hb-input-label-unit {
+  color: #1d1d1d;
+}
+.hb-send-user {
+  padding-left: 1.6rem;
+}
+.hb-u-avatar {
+  position: absolute;
+  left: 0.4rem;
+  top: -0.8rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 4px solid #e92e41;
+}
+.hb-arrow {
+  color: #ddd;
+  padding-left: 10px;
+  position: relative;
+  &::before {
+    content: "";
+    .setLeftLine(#ddd, 0);
+  }
+}

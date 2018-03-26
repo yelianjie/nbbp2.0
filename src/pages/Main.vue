@@ -63,6 +63,7 @@
   <div id="fixed-bgds-btns">
     <div class="f-btn" @click="screenForAll"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>
+    <div class="f-btn" @click="hbForAll"><img src="../assets/hb-btn.png"/></div>
   </div>
   <bp-window v-model="bpWindowVisible" ref="bpWindow" @onWxPay="wxPay" :times="barDataInfo.time" :screens="barDataInfo.screen" @onBuy="buyDialogVisible = true"></bp-window>
   <ds-window v-model="dsWindowVisible" ref="dsWindow" @onWxPay="wxPay" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
@@ -108,6 +109,42 @@
       <svg-icon icon-class="close" className="close-u-dialog-btn"/>
     </div>
   </x-dialog>
+  <!--红包-->
+  <x-dialog v-model="hbWindowVisible" :dialog-style="{'padding-top': '0.8rem', 'max-width': '100%', width: '100%', 'background-color': 'transparent', 'text-align': 'left'}">
+    <div class="hb-send-window pr">
+      <img :src="userInfo.headimgurl | prefixImageUrl" class="circle hb-u-avatar"/>
+      <h3 class="hb-send-user pr line1">金主 鲜花</h3>
+      <p class="hb-text-tip f13">大于等于50元将在大屏幕上显示</p>
+      <div class="hb-input-box flex flex-align-center">
+        <div class="hb-input-icon"></div>
+        <div class="hb-input-label">总金额</div>
+        <div class="hb-input-wrap flex-1">
+          <input type="number" pattern="[0-9]*" class="hb-input f16 tr"/>
+        </div>
+        <div class="hb-input-label-unit">元</div>
+      </div>
+      <p class="hb-text-tip f13">当前为现金红包，切换为牛角红包</p>
+      <div class="hb-input-box flex flex-align-center">
+        <div class="hb-input-label">个数</div>
+        <div class="hb-input-wrap flex-1">
+          <input type="number" pattern="[0-9]*" class="hb-input f16 tr"/>
+        </div>
+        <div class="hb-input-label-unit">个</div>
+      </div>
+      <div class="hb-input-box flex flex-align-center">
+        <input type="text" readonly placeholder="谁可以抢" class="hb-input"/>
+        <div class="hb-arrow"><svg-icon icon-class="arrow-down"/></div>
+      </div>
+      <div class="hb-input-box flex flex-align-center">
+        <input type="text" placeholder="留言" class="hb-input" maxlength="10"/>
+        <div class="hb-arrow"><svg-icon icon-class="arrow-down"/></div>
+      </div>
+    </div>
+    <div @click="hbWindowVisible = false">
+      <svg-icon icon-class="close" className="close-u-dialog-btn"/>
+    </div>
+  </x-dialog>
+
   <x-dialog v-model="shareMaskVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', height: '100%', 'background-color': 'transparent'}">
     <div class="fullscreen"  @click="shareMaskVisible = false">
       <img src="../assets/share.png" style="max-width: 100%;float:right;width: 4.2rem;margin: 0.2rem 0.2rem 0 0;"/>
@@ -209,6 +246,7 @@ export default {
       onlinePeople: [],
       bpWindowVisible: false,
       dsWindowVisible: false,
+      hbWindowVisible: true,
       userDialogVisible: false,
       shareMaskVisible: false,
       buyDialogVisible: false,
@@ -757,6 +795,9 @@ export default {
       this.$store.commit('main/SET_CURRENT_USER_INFO', {})
       this.dsWindowVisible = true
     },
+    hbForAll () {
+      this.hbWindowVisible = true
+    },
     calTime (time) {
       var a = moment(time)
       var b = moment()
@@ -810,6 +851,7 @@ export default {
 
 <style lang="less" scoped>
 @import '../styles/main.less';
+@import '../styles/hongbao.less';
 .adbg {
   background-position: center;
   background-repeat: no-repeat;
@@ -1096,6 +1138,8 @@ export default {
     opacity: 1;
   }
 }
+
+
 .level-icon-id {
   position: absolute;
   width: 3.39rem;
