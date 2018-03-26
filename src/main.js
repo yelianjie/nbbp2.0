@@ -31,7 +31,7 @@ import { getWxConfig, getHasToken } from './api/'
 window.sessionStorage.clear()
 var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  window.sessionStorage.setItem('tId', '8fc1d890f1c768f2c826ccc7c3598dd9281f3b5e')
+  window.sessionStorage.setItem('tId', '63119f9477e394986be82298003566400349e6a3')
   tId = window.sessionStorage.getItem('tId')
 }
 if (!tId && process.env.NODE_ENV === 'production') {
@@ -43,6 +43,10 @@ if (!tId && process.env.NODE_ENV === 'production') {
     // 第一次登录
     if (error === '未登录') {
       var url = window.location.hash.substring(1)
+      if (url.indexOf('&') !== -1) {
+        url = url.replace(/&/g, '|')
+        url += '|parseWxUrl=1'
+      }
       window.location.href = window.location.origin + '/weixin/login/index?callback_url=' + url
     }
   })
@@ -131,6 +135,13 @@ function init () {
   let historyCount = history.getItem('count') * 1 || 0
   // history.setItem('/', 0)
   router.beforeEach(function (to, from, next) {
+    if (to.fullPath.indexOf('parseWxUrl') !== -1) {
+      // 重置url
+      var toPath = unescape(to.fullPath)
+      toPath = toPath.replace(/\|/g, '&')
+      toPath = toPath.substring(0, toPath.lastIndexOf('&'))
+      next(toPath)
+    }
     if (to.meta.bg) {
       document.body.style.backgroundColor = to.meta.bg
     } else {

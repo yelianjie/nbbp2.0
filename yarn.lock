@@ -6510,8 +6510,8 @@ vux-xscroll@^3.1.10:
   resolved "http://registry.npm.taobao.org/vux-xscroll/download/vux-xscroll-3.1.12.tgz#e352e7f9dc5f9fee9253db331c967dd56b3bc950"
 
 vux@^2.2.0:
-  version "2.8.0"
-  resolved "http://registry.npm.taobao.org/vux/download/vux-2.8.0.tgz#b71173a5aa93cb34abbd219f4025e7f629476c81"
+  version "2.8.1"
+  resolved "http://registry.npm.taobao.org/vux/download/vux-2.8.1.tgz#abc66ce3fdf5056db5babc9cb2f0f2c9f4e3f0a7"
   dependencies:
     array-filter "^1.0.0"
     array-find "^1.0.0"

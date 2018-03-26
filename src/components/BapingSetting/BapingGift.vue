@@ -92,7 +92,7 @@ export default {
             // selected: _this.gifts[_this.editIndex].selected
           }
           updateBpPrice(data).then((res) => {
-            _this.gifts[_this.editIndex].price = Number(msg).toFixed(2)
+            _this.gifts[_this.editIndex].price = Number(msg)
             _this.$vux.confirm.hide()
           })
         }

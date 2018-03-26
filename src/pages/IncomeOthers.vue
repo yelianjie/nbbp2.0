@@ -96,17 +96,21 @@ export default {
         }
       })
     },
-    getDate () {
+    getDate (day) {
       var d = new Date()
       var year = d.getFullYear()
       var month = d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1
-      return year + '-' + month
+      if (day) {
+        return year + '-' + month + '-' + d.getDate()
+      } else {
+        return year + '-' + month
+      }
     },
     infiniteHandler ($state) {
       getIncomeListByHid(this.params).then((res) => {
         this.shouyi = res.result.shouyi
-        this.dInfo.startDate = res.result.time.substring(0, 7)
-        this.dInfo.endDate = this.getDate()
+        this.dInfo.startDate = res.result.time.substring(0, 10)
+        this.dInfo.endDate = this.getDate(true)
         if (Array.isArray(res.result.data)) {
           this.list = this.list.concat(res.result.data)
           if (this.list.length >= res.result.total) {

@@ -98,7 +98,7 @@ export default {
             // selected: _this.themes[_this.editIndex].selected
           }
           updateBpPrice(data).then((res) => {
-            _this.themes[_this.editIndex].price = Number(msg).toFixed(2)
+            _this.themes[_this.editIndex].price = Number(msg)
             _this.$vux.confirm.hide()
           })
         }

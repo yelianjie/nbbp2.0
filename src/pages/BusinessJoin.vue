@@ -83,7 +83,7 @@ export default {
   created () {
     var codeStr = ''
     if (this.$route.query.code) {
-      this.code = '&code=' + this.$route.query.code
+      this.code = this.$route.query.code
     }
     getAgentCode().then((res) => {
       var code = res.result ? res.result : ''

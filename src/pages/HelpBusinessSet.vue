@@ -3,7 +3,7 @@
     <img :src="'./static/help/b-end.jpg'" style="width:100%;"/>
     <div class="bar f12">
       <p class="p1" style="margin-bottom: 0.1rem;">{{info.name}}</p>
-      <p class="p1">{{ info.id | screenUrl}}</p>
+      <p class="p1" style="-webkit-user-select: text;user-select: text;">{{ info.id | screenUrl}}</p>
     </div>
     <img v-if="info.qrcode" :src="info.qrcode" class="qrcode"/>
   </div>

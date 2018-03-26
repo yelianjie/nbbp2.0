@@ -53,9 +53,9 @@ export default {
     }
     next(vm => {
       vm.type = to.query.type ? to.query.type : 0
-      var code = to.query.code.toString()
+      var code = to.query.code ? to.query.code.toString() : ''
       if (code && code !== '') {
-        code = code.replace(/\,/g, '').replace(/\s/g, '')
+        // code = code.replace(/\,/g, '').replace(/\s/g, '')
         vm.code = code
         vm.r_business.code = code
       }
@@ -143,6 +143,8 @@ export default {
   left: 0;
   width: 100%; */
 }
-
+.vux-x-input.disabled {
+  color: rgba(0, 0, 0, 0.5);
+}
 </style>
 

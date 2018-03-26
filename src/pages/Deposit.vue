@@ -76,14 +76,14 @@ export default {
       if (this.loading) {
         return false
       }
-      /* if (!this.toRMBValue || (this.toRMBValue % 100) !== 0) {
+      if (!this.toRMBValue || (this.toRMBValue % 100) !== 0) {
         this.$vux.toast.show({
           text: '提现金额不为100的倍数',
           position: 'bottom',
           width: '12em'
         })
         return false
-      } */
+      }
       this.$vux.loading.show({
         text: '正在提现'
       })

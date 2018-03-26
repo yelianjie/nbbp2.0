@@ -80,6 +80,8 @@ body {
   background-color: #f5f5f5;
   font-size: 16px;
   line-height: 1.4;
+  -webkit-user-select: none;
+  user-select: none;
 }
 body, html, #app {
   height: 100%;
