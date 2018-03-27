@@ -9,7 +9,7 @@
   border-radius: 20px;
 }
 .hb-text-tip {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
 }
 .hb-input-box {
   margin-bottom: 0.3rem;
@@ -22,8 +22,10 @@
   border: 0;
   outline: none;
   display: block;
-  padding: 4px 0;
+  padding: 2px 0;
   width: 100%;
+  height: 20px;
+  font-size: 16px;
   -webkit-appearance: none;
   &.tr {
     text-align: right;
@@ -39,9 +41,11 @@
 .hb-text-tip {
   margin: 5px 0;
 }
-.hb-input-label,
-.hb-input-label-unit {
+.hb-input-label {
   color: #1d1d1d;
+}
+.hb-input-label-unit {
+  color: #b2b2b2;
 }
 .hb-send-user {
   padding-left: 1.6rem;
@@ -55,11 +59,266 @@
   border: 4px solid #e92e41;
 }
 .hb-arrow {
-  color: #ddd;
+  color: #b2b2b2;
   padding-left: 10px;
   position: relative;
   &::before {
     content: "";
-    .setLeftLine(#ddd, 0);
+    .setLeftLine(#b2b2b2, 0);
   }
+  /deep/ .vux-popup-picker-select {
+    display: none;
+  }
+}
+.hb-queen-container {
+  width: 1.83rem;
+  height: 2.47rem;
+  position: absolute;
+  right: 10px;
+  top: 1.1rem;
+  z-index: 1;
+  transition: transform .3s ease-out;
+  transform-origin: 100% 0;
+  &.in {
+    transform: scale(0.5);
+  }
+}
+#hb-put-btn {
+  background-color: #ffed2e;
+  color: #e2404f;
+  border-radius: 25px;
+}
+.hb-model {
+  width: 1.83rem;
+  height: 2.47rem;
+  background: url('../assets/hb-bag.png') no-repeat center;
+  background-size: cover;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  .hb-count {
+    width: 0.75rem;
+    height: 0.75rem;
+    overflow: hidden;
+    background-color: #f5e91b;
+    border: 2px solid #edb932;
+    position: absolute;
+    top: 0.7rem;
+    left: 50%;
+    margin-left: -0.375rem;
+    margin-top: -0.35rem;
+    text-align: center;
+    line-height: 0.75rem;
+    color: #43464d;
+  }
+  .hb-info {
+    position: absolute;
+    top: 1.2rem;
+    width: 2rem;
+    left: 50%;
+    margin-left: -1rem;
+    transform: scale(0.8);
+  }
+}
+
+.hb-open-window  {
+  width: 5rem;
+  height: 7rem;
+  background-image: linear-gradient(top, #e92e41, #fa5b41);
+  margin: 0 auto;
+  border-radius: 20px;
+  -webkit-perspective: 1000;
+  transform-style: preserve-3d;
+  transition: transform .3s ease-out;
+  &.back {
+    transform: rotateY(180deg);
+  }
+  .hb-open-front,
+  .hb-open-back {
+    padding: 0.3rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: block;
+    backface-visibility: hidden;
+    overflow: hidden;
+  }
+  &.out .hb-open-front {
+    display: none;
+  }
+  .hb-open-back-result {
+    z-index: 3;
+  }
+  .hb-open-front {
+    z-index: 1;
+  }
+  .hb-open-back {
+    transform: rotateY(-180deg);
+  }
+  &.out .hb-open-back {
+    transform: rotateY(0);
+  }
+  .hb-open-front:after {
+    position: absolute;
+    width: 10rem;
+    height: 10rem;
+    top: -5rem;
+    left: 50%;
+    margin-left: -5rem;
+    border-radius: 50%;
+    background-color: transparent;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, .25);
+    /* background: url('../assets/hb-shadow.png') no-repeat center;
+    background-size: cover; */
+    content: "";
+  }
+  .hb-open-avatar {
+    width: 1.2rem;
+    height: 1.2rem;
+    display: block;
+    margin: 0.1rem auto;
+  }
+  p {
+    margin: 4px 0;
+    color: #ffddac;
+  }
+  .vip-for {
+    padding: 2px 6px;
+    border: 1px solid #ffddac;
+    border-radius: 5px;
+    &.for-male {
+      color: #fff;
+      border: 0;
+      background-image: linear-gradient(left, #53bcff, #a96dea);
+    }
+    &.for-female {
+      color: #fff;
+      border: 0;
+      background-image: linear-gradient(left, #ff52a0, #ffb156);
+    }
+  }
+  .hb-open-btn {
+    position: absolute;
+    top: 3.9rem;
+    left: 50%;
+    margin-left: -1.05rem;
+    width: 2.1rem;
+    height: 2.1rem;
+    background: url('../assets/hb-oepn-btn.png') no-repeat center;
+    background-size: cover;
+    z-index: 1;
+  }
+  .hb-open-success,
+  .hb-open-noresult {
+    margin-bottom: 0.54rem;
+    font-weight: normal;
+    color: #ffddac;
+  }
+  .hb-open-noresult {
+    margin-bottom: 0;
+    margin-top: 2rem;
+  }
+  .hb-result {
+    margin-top: 0.8rem;
+  }
+  .hb-result-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+    display: block;
+    &.middle {
+      width: 0.44rem;
+      height: 0.44rem;
+    }
+    &.small {
+      width: 0.28rem;
+      height: 0.28rem;
+    }
+  }
+  .result-get {
+    font-size: 30px;
+    color: #fce33e;
+    margin-left: 6px;
+    &.middle {
+      font-size: 20px;
+    }
+    &.small {
+      font-size: 14px;
+    }
+  }
+  .check-hb-detail {
+    color: rgba(255, 224, 157, 0.7);
+    border-bottom: 1px solid rgba(255, 224, 157, 0.7);
+    position: absolute;
+    bottom: 0.3rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .hb-get-avatar {
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 10px;
+  }
+  .hb-get-results::-webkit-scrollbar{
+    width:0;
+    height:0;
+  }
+  .hb-get-results li {
+    padding: 0.12rem 0;
+    position: relative;
+    &:not(:last-child)::after {
+      content: "";
+      .setBottomLine(#ffddac);
+    }
+  }
+}
+
+.hb-slide-enter-active, .fade-leave-active {
+  transition: transform .3s ease-out;
+}
+.hb-slide-enter {
+  transform: translate3d(115%, 0, 0);
+}
+
+@keyframes swing {
+  5% {
+    -webkit-transform: rotate3d(0, 0, 1, 15deg);
+    transform: rotate3d(0, 0, 1, 15deg);
+  }
+
+  10% {
+    -webkit-transform: rotate3d(0, 0, 1, -10deg);
+    transform: rotate3d(0, 0, 1, -10deg);
+  }
+
+  15% {
+    -webkit-transform: rotate3d(0, 0, 1, 5deg);
+    transform: rotate3d(0, 0, 1, 5deg);
+  }
+
+  20% {
+    -webkit-transform: rotate3d(0, 0, 1, -5deg);
+    transform: rotate3d(0, 0, 1, -5deg);
+  }
+
+  25% {
+    -webkit-transform: rotate3d(0, 0, 1, 0deg);
+    transform: rotate3d(0, 0, 1, 0deg);
+  }
+}
+
+.swing {
+  -webkit-transform-origin: center;
+  transform-origin: center;
+  -webkit-animation-name: swing;
+  animation-name: swing;
+  -webkit-animation-duration: 4s;
+  animation-duration: 4s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-delay: infinite;
 }

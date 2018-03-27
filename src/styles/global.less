@@ -44,6 +44,19 @@
   -webkit-transform: scaleX(0.5);
   transform: scaleX(0.5);
 }
+.setBottomLine(@lineColor: #f1f1f1) {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid @lineColor;
+  color: @lineColor;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
 textarea {
   font-family: -apple-system-font, "Helvetica Neue", sans-serif;
 }
@@ -196,6 +209,9 @@ input[type="file"] {
 }
 .tc {
   text-align: center;
+}
+.db {
+  display: block;
 }
 .fff-bp {
   color: #fff;
