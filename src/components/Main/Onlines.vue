@@ -2,7 +2,7 @@
   <div class="fullscreen onlines flex flex-v" v-show="visible" v-fixscroll="'#online-scroller'">
     <div class="flex-1 scroll" id="online-scroller" style="padding: 0.4rem 0.4rem 0.95rem;">
       <ul>
-        <li v-for="(v, i) in peoples" :key="i" class="online-item" @click="showCard(v)">
+        <li v-for="(v, i) in peoples" :key="i" class="online-item" @click="onAvatarClick(v)" :class="{'hbselect': selectCustom[v.id]}">
           <div class="online-img"><img v-lazy="$options.filters.prefixImageUrl(v.headimgurl)" class="circle"></div>
           <div class="online-text overflow flex f12 flex-align-center">
             <template v-if="v.sex == 1">
@@ -16,14 +16,22 @@
               </span>{{v.nickname}}
             </template>
             <template v-if="v.sex == 0">
-              <span style="line-height: 16px;">{{v.nickname}}</span>
+              <span class="tc" style="line-height: 16px;">{{v.nickname}}</span>
             </template>
           </div>
         </li>
       </ul>
     </div>
     <div class="close-box flex flex-align-center flex-pack-center">
+      <template v-if="payBus == 1">
       <svg-icon icon-class="close" @click.native="close"/>
+      </template>
+      <template v-if="payBus == 2">
+        <div class="chose-group flex">
+          <button class="chose-group-btn cancel-btn fff-bp f15 pr" @click="close">取消</button>
+          <button class="flex-1 chose-group-btn confirm-btn fff-bp f15" :disabled="Object.keys(selectCustom).length == 0" @click="confirmCustom">确定({{Object.keys(selectCustom).length}}人)</button>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -34,13 +42,35 @@ export default {
     prop: 'visible',
     event: 'close'
   },
-  props: ['visible', 'peoples'],
+  data () {
+    return {
+      selectCustom: {}
+    }
+  },
+  props: ['visible', 'peoples', 'payBus'],
   methods: {
     close () {
       this.$emit('close', false)
     },
-    showCard (data) {
-      this.$emit('onShowCard', data)
+    onAvatarClick (data) {
+      if (this.payBus === 1) {
+        // 显示dialog信息
+        this.$emit('onShowCard', data)
+      } else if (this.payBus === 2) {
+        // 发红包时勾选状态
+        if (this.selectCustom[data.id]) {
+          this.$delete(this.selectCustom, data.id)
+        } else {
+          this.$set(this.selectCustom, data.id, data.id)
+        }
+      }
+    },
+    confirmCustom () {
+      this.close()
+      this.$emit('onHBChoseCustom', this.selectCustom)
+    },
+    resetHBInfo () {
+      this.selectCustom = {}
     }
   }
 }
@@ -48,8 +78,9 @@ export default {
 
 
 <style lang="less" scoped>
+@import (reference) '../../styles/global.less';
 .onlines {
-  z-index: 2;
+  z-index: 500;
   background: url(../../assets/online-bg.jpg) no-repeat center;
   background-size: cover;
 }
@@ -63,6 +94,18 @@ export default {
   display: inline-block;
   margin-bottom: 0.2rem;
   position: relative;
+  &.hbselect {
+    &::after {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border: 1px solid #f31374;
+      border-radius: 5px;
+      content: "";
+    }
+  }
   &:nth-child(4n+4) {
     margin-right: 0;
   }
@@ -94,6 +137,31 @@ export default {
   .svg-icon {
     width: 0.72rem;
     height: 0.72rem;
+  }
+}
+.chose-group {
+  position: absolute;
+  left: 0.4rem;
+  right: 0.4rem;
+  top: 0;
+  height: 0.9rem;
+}
+.chose-group-btn {
+  background-color: rgba(255, 255, 255, 0);
+  border: 0;
+  height: 0.9rem;
+  line-height: 0.9rem;
+  &.cancel-btn {
+    width: 30%;
+    border-radius: 25px 0 0 25px;
+    &:after {
+      content: "";
+      .setRightLine(rgba(255, 255, 255, 1));
+    }
+  }
+  &.confirm-btn {
+    border-radius: 0 25px 25px 0;
+    color: #38ec63;
   }
 }
 </style>

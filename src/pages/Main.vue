@@ -1,6 +1,6 @@
 <template>
   <div class="container" v-if="show">
-    <onlines :peoples="onlinePeople" @onShowCard="showCard" v-model="onlineVisible"></onlines>
+    <onlines :peoples="onlinePeople" :payBus="payBus" @onHBChoseCustom="customHBChose" @onShowCard="showCard" v-model="onlineVisible" ref="onlines"></onlines>
     <div class="main flex flex-v">
       <div class="flex boardcast flex-align-center" v-if="notice">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
@@ -131,16 +131,16 @@
     </div>
   </x-dialog>
   <!-- 红包输入信息 -->
-  <x-dialog v-model="hbWindowVisible" @on-hide="payBus = 2" :mask-z-index="498" :dialog-style="{'z-index': '499', 'padding-top': '0.8rem', 'max-width': '100%', width: '100%', 'background-color': 'transparent', 'text-align': 'left'}">
+  <x-dialog v-model="hbWindowVisible" @on-hide="hbWindowClose" :mask-z-index="498" :dialog-style="{'z-index': '499', 'padding-top': '0.8rem', 'max-width': '100%', width: '100%', 'background-color': 'transparent', 'text-align': 'left'}">
     <div class="hb-send-window pr">
       <img :src="userInfo.headimgurl | prefixImageUrl" class="circle hb-u-avatar"/>
       <h3 class="hb-send-user pr line1 fff-bp">金主 鲜花</h3>
       <p class="hb-text-tip f13">大于等于50元将在大屏幕上显示</p>
-      <div class="hb-input-box flex flex-align-center">
+      <div class="hb-input-box flex flex-align-center" style="margin-bottom: 0.2rem;">
         <div class="hb-input-icon"></div>
         <div class="hb-input-label">总金额</div>
         <div class="hb-input-wrap flex-1">
-          <input type="number" pattern="[0-9]*" class="hb-input f16 tr" v-model="hongbao.money"/>
+          <input type="number" pattern="[0-9]*" class="hb-input f16 tr" @input="validZero" v-model="hongbao.money"/>
         </div>
         <div class="hb-input-label-unit">元</div>
       </div>
@@ -155,23 +155,39 @@
       <div class="hb-input-box flex flex-align-center">
         <div class="hb-input-label">个数</div>
         <div class="hb-input-wrap flex-1">
-          <input type="number" pattern="[0-9]*" class="hb-input f16 tr" v-model="hongbao.number"/>
+          <input type="number" pattern="[0-9]*" class="hb-input f16 tr" v-model="hongbao.number" @input="validCount"/>
         </div>
         <div class="hb-input-label-unit">个</div>
       </div>
-      <div class="hb-input-box flex flex-align-center">
+      <!-- <div class="hb-input-box flex flex-align-center">
         <input type="text" readonly placeholder="谁可以抢" class="hb-input"/>
         <div class="hb-arrow"><svg-icon icon-class="arrow-down"/></div>
-      </div>
+      </div> -->
       <div class="hb-input-box flex flex-align-center">
         <input type="text" placeholder="留言" class="hb-input" maxlength="10" v-model="hongbao.msg"/>
-        <div class="hb-arrow">
+        <div class="hb-hid">
           <popup-picker :data="hongbaoMes" v-model="hongbao.message" @on-change="hbMesChange" :popup-style="{'z-index': 5003}">
             <template slot="title" slot-scope="props"><!-- use scope="props" when vue < 2.5.0 -->
+              <div class="hb-arrow">
               <svg-icon icon-class="arrow-down"/>
+              </div>
             </template>
           </popup-picker>
         </div>
+      </div>
+      <p class="hb-text-tip f13">谁可以抢？</p>
+      <div class="flex hb-for">
+        <label for="hb_all" class="f13" @click="hbForWhoChose(1)" :class="{'active' : hongbao.hb_for == 1}">全场</label>
+        <label for="hb_male" class="f13" @click="hbForWhoChose(2)" :class="{'active' : hongbao.hb_for == 2}">男士</label>
+        <label for="hb_female" class="f13" @click="hbForWhoChose(3)" :class="{'active' : hongbao.hb_for == 3}">女士</label>
+        <label for="hb_custom" class="f13" style="width:1.6rem;" @click="hbForWhoChose(4)" :class="{'active' : hongbao.hb_for == 4}">
+        <template v-if="hongbao.selected.length > 0">
+          已选&nbsp;({{hongbao.selected.length}})
+        </template>
+        <template v-else>
+          自定义
+        </template>
+        </label>
       </div>
       <x-button id="hb-put-btn" @click.native="packet">发红包</x-button>
     </div>
@@ -241,7 +257,7 @@
           <div class="hb-get-results flex-1 overscroll" style="text-align: left;">
             <ul>
               <li class="flex flex-align-center" v-for="i in 10" :key="i">
-                <img :src="userInfo.headimgurl | prefixImageUrl" class="circle db hb-get-avatar"/>
+                <img v-lazy="$options.filters.prefixImageUrl(userInfo.headimgurl)" class="circle db hb-get-avatar"/>
                 <p class="f14 flex-1 line1">Somer</p>
                 <div class="flex flex-pack-center flex-align-center">
                   <img src="../assets/hb-rmb.png" class="hb-result-icon small"/>
@@ -398,7 +414,9 @@ export default {
         msg: '',
         type: 1, // 1 现金 2 牛角,
         money: 50,
-        number: 10
+        number: 10,
+        selected: [],
+        hb_for: 1 // 1 全场 2 男士 3 女士 4 自定义
       },
       hongbaoMes: [['有钱任性，大家快抢啊！', '红包驾到，手慢无！']],
       hbState: {
@@ -979,6 +997,36 @@ export default {
       this.$store.commit('main/SET_CURRENT_USER_INFO', {})
       this.dsWindowVisible = true
     },
+    hbWindowClose () {
+      // 重置为普通态
+      this.payBus = 1
+      // 重置红包信息
+      this.hongbao = {
+        message: ['有钱任性，大家快抢啊！'],
+        msg: '',
+        type: 1, // 1 现金 2 牛角,
+        money: 50,
+        number: 10,
+        selected: [],
+        hb_for: 1 // 1 全场 2 男士 3 女士 4 自定义
+      }
+      this.$refs.onlines.resetHBInfo()
+    },
+    customHBChose (data) {
+      var arr = []
+      Object.keys(data).forEach(v => {
+        arr.push(data[v])
+      })
+      console.log(arr)
+      this.hongbao.selected = arr
+    },
+    hbForWhoChose (v) {
+      this.hongbao.hb_for = v
+      if (v === 4) {
+        this.payBus = 2
+        this.onlineVisible = true
+      }
+    },
     hbForAll () {
       this.hbWindowVisible = true
     },
@@ -1044,6 +1092,20 @@ export default {
           this.chargeVisible = true
         }
       } */
+    },
+    validZero () {
+      if (/^0/.test(event.target.value)) {
+        this.hongbao.money = ''
+      }
+    },
+    validCount () {
+      if (/^0/.test(event.target.value)) {
+        this.hongbao.number = ''
+      } else {
+        if (~~(event.target.value > 100)) {
+          this.hongbao.number = 100
+        }
+      }
     },
     calTime (time) {
       var a = moment(time)

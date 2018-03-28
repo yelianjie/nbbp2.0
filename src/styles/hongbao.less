@@ -47,6 +47,27 @@
 .hb-input-label-unit {
   color: #b2b2b2;
 }
+.hb-for {
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+  label {
+    display: block;
+    width: 0.9rem;
+    text-align: center;
+    padding: 5px 0;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    position: relative;
+    &.active {
+      color: #ffed2e;
+      border: 1px solid #ffed2e;
+      .selected-icon {
+        display: block;
+      }
+    }
+  }
+}
 .hb-send-user {
   padding-left: 1.6rem;
 }
@@ -66,9 +87,9 @@
     content: "";
     .setLeftLine(#b2b2b2, 0);
   }
-  /deep/ .vux-popup-picker-select {
-    display: none;
-  }
+}
+.hb-hid /deep/ .vux-popup-picker-select {
+  display: none;
 }
 .hb-queen-container {
   width: 1.83rem;
@@ -261,9 +282,12 @@
     height: 0.5rem;
     margin-right: 10px;
   }
-  .hb-get-results::-webkit-scrollbar{
-    width:0;
-    height:0;
+  .hb-get-results{
+    &::-webkit-scrollbar, &::-webkit-scrollbar-thumb, &::-webkit-scrollbar-track, &::-webkit-scrollbar-track-piece  {
+      width: 0;
+      height: 0;
+      display: none;
+    }
   }
   .hb-get-results li {
     padding: 0.12rem 0;
