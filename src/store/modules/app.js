@@ -4,14 +4,18 @@ const namespaced = true
 const state = {
   buyDialogInfo: {},
   direction: 'forward',
-  fontSize: 50
+  fontSize: 50,
+  hbCurInfo: {hb: {}},
+  hbRobInfo: {}
 }
 
 // getters
 const getters = {
   buyDialogInfo: () => state.buyDialogInfo,
   direction: () => state.direction,
-  fontSize: () => state.fontSize
+  fontSize: () => state.fontSize,
+  hbCurInfo: () => state.hbCurInfo,
+  hbRobInfo: () => state.hbRobInfo
 }
 
 // actions
@@ -34,6 +38,12 @@ const mutations = {
   },
   SET_IS_CHARGE (state, data) {
     state.buyDialogInfo.isCharge = data
+  },
+  SET_HB_CUR_INFO (state, data) {
+    state.hbCurInfo = data
+  },
+  SET_HB_ROB_INFO (state, data) {
+    state.hbRobInfo = data
   }
 }
 

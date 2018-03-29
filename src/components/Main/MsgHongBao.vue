@@ -5,18 +5,28 @@
     </div>
     <div class="msg-item-right flex-1">
       <msg-user :data="data"></msg-user>
-      <div class="msg-item-middle pr hbMsg flex flex-align-center" @click="hbClick">
-        <img src="../../assets/hb-rmb.png" class="rmb-icon"/>
+      <div class="msg-item-middle pr hbMsg flex flex-align-center" :class="{'out': data.hb.is_lq > 0 || data.hb.status > 1}" @click="hbClick">
+        <img src="../../assets/hb-rmb.png" class="rmb-icon" v-if="data.hb.pay_type == 0"/>
+        <img src="../../assets/hb-coin.png" class="rmb-icon" v-else/>
         <div class="hbmsg-main f14 fff-bp">
-          <p class="hb_msg_content">有钱任性，大家快抢吧！！</p>
-          <p>领取红包</p>
+          <p class="hb_msg_content">{{data.content}}</p>
+          <template v-if="data.hb.status == 0 && data.hb.show_time > 0 && data.hb.is_lq == 0">
+            <p>开抢倒计时：{{data.hb.show_time}}秒</p>
+          </template>
+          <template v-else>
+            <template v-if="data.hb.is_lq == 0">
+              <p>领取红包</p>
+            </template>
+            <template v-if="data.hb.is_lq > 0">
+              <p>您已领取红包</p>
+            </template>
+          </template>
         </div>
       </div>
       <div class="msg-item-bottom">
         <msg-bottom :data="data" @onLike="like" @onShare="share" @onBp="bp" @onDs="ds"></msg-bottom>
       </div>
     </div>
-    
   </div>
 </template>
 
@@ -24,12 +34,32 @@
 import MsgBottom from './MsgBottom'
 import MsgUser from './MsgUser'
 import UserAvatar from './UserAvatar'
+import { isDjsOver } from '@/api/'
 export default {
+  data () {
+    return {
+      hbTimer: null
+    }
+  },
   props: ['data', 'index'],
   components: {
     MsgBottom,
     MsgUser,
     UserAvatar
+  },
+  mounted () {
+    if (~~(this.data.hb.status) === 0) {
+      this.hbTimer = setInterval(() => {
+        if (this.data.hb.show_time - 1 > 0) {
+          this.data.hb.show_time -= 1
+        } else {
+          this.data.hb.show_time = 0
+          this.data.hb.status = 1
+          clearInterval(this.hbTimer)
+          isDjsOver({ht_id: this.$route.params.id, hb_id: this.data.hb.id}).then((res) => {})
+        }
+      }, 1000)
+    }
   },
   methods: {
     like () {

@@ -497,6 +497,54 @@ export const getAgentCode = (data) => {
 }
 
 /**
+ * 生成红包
+ * @param {*} data
+ */
+export const createHb = (data) => {
+  return request('/weixin/hongbao/createHb', 'POST', data)
+}
+
+/**
+ * 抢红包
+ * @param {*} data
+ */
+export const robHb = (data) => {
+  return request('/weixin/hongbao/robHb', 'POST', data)
+}
+
+/**
+ * 未抢完的红包列表
+ * @param {*} data
+ */
+export const unFinishHbList = (data) => {
+  return request('/weixin/hongbao/unFinishHbList', 'POST', data)
+}
+
+/**
+ * 判断红包是否已领取
+ * @param {*} data
+ */
+export const isRobByid = (data) => {
+  return request('/weixin/hongbao/isRobByid', 'POST', data)
+}
+
+/**
+ * 红包倒计时结束后请求下改变状态
+ * @param {*} data
+ */
+export const isDjsOver = (data) => {
+  return request('/weixin/hongbao/is_djs_over', 'POST', data)
+}
+
+/**
+ * 获取红包领取列表
+ * @param {*} data
+ */
+export const robHbMemberList = (data) => {
+  return request('/weixin/hongbao/robHbMemberList', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */
