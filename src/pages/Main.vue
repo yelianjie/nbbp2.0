@@ -135,7 +135,7 @@
   <x-dialog v-model="hbWindowVisible" @on-hide="hbWindowClose" :mask-z-index="498" :dialog-style="{'z-index': '499', 'padding-top': '0.8rem', 'max-width': '100%', width: '100%', 'background-color': 'transparent', 'text-align': 'left'}">
     <div class="hb-send-window pr">
       <img :src="userInfo.headimgurl | prefixImageUrl" class="circle hb-u-avatar"/>
-      <h3 class="hb-send-user pr line1 fff-bp">金主 鲜花</h3>
+      <h3 class="hb-send-user pr line1 fff-bp">金主 {{userInfo.nickname}}</h3>
       <p class="hb-text-tip f13">大于等于50元将在大屏幕上显示</p>
       <div class="hb-input-box flex flex-align-center" style="margin-bottom: 0.2rem;">
         <div class="hb-input-icon"></div>
@@ -198,7 +198,7 @@
   </x-dialog>
   <!-- 红包开 -->
   <x-dialog v-model="hbOpenVisible" @on-hide="onHBHide" :dialog-style="{'padding-top': '0.8rem', 'max-width': '100%', width: '100%', 'background-color': 'transparent', 'text-align': 'left'}">
-    <div class="hb-open-window borderbox pr" :class="{'back': hbState.openHb}" v-fixscroll="'.hb-get-results'">
+    <div class="hb-open-window borderbox pr" :class="{'back': hbState.openHb}" v-if="!hbState.hbDetail">
       <div class="hb-open-front tc">
         <img :src="hbCurInfo.initiator_headimgurl | prefixImageUrl" class="circle hb-open-avatar"/>
         <p class="f14">金主</p>
@@ -209,7 +209,7 @@
         <p class="msg f16">{{hbCurInfo.hb.content}}~</p>
         <a class="hb-open-btn" @click.prevent="openHbAction"></a>
       </div>
-      <div class="hb-open-back tc" v-show="!hbState.hbDetail">
+      <div class="hb-open-back tc">
         <template v-if="hbRobInfo.type != 2">
         <h3 class="hb-open-success">恭喜你抢到红包！</h3>
           <div class="hb-open-info">
@@ -244,9 +244,11 @@
             <h3 class="hb-open-noresult">手慢了，红包没有了</h3>
           </div>
         </template>
-        <a class="check-hb-detail f13" @click.prevent="openHbDetail">查看领取详情</a>
+        <a class="check-hb-detail f13" @click.prevent="openHbDetail(0)">查看领取详情</a>
       </div>
-      <div class="hb-open-back hb-open-back-result tc" v-if="hbState.hbDetail">
+    </div>
+    <div class="hb-open-window borderbox pr back" v-fixscroll="'.hb-get-results'" v-if="hbState.hbDetail">
+      <div class="hb-open-back hb-open-back-result tc">
         <div class="flex flex-v" style="height:100%;">
           <img :src="userInfo.headimgurl | prefixImageUrl" class="circle hb-open-avatar"/>
           <p class="f14">金主</p>
@@ -254,12 +256,12 @@
           <div class="flex flex-pack-center flex-align-center">
             <img src="../assets/hb-rmb.png" class="hb-result-icon middle" v-if="hbCurInfo.hb.pay_type == 0"/>
             <img src="../assets/hb-coin.png" class="hb-result-icon middle" v-if="hbCurInfo.hb.pay_type == 1"/>
-            <div class="result-get middle">1.73</div>
+            <div class="result-get middle">{{tmpRob.user.money}}</div>
           </div>
           <p class="f14" style="text-align: left;">红包领取记录 <!-- <span style="margin-left: 10px;">已领取 10/100</span> --></p>
           <div class="hb-get-results flex-1 overscroll" style="text-align: left;">
             <ul>
-              <li class="flex flex-align-center" v-for="(v, i) in tmpRobList" :key="i">
+              <li class="flex flex-align-center" v-for="(v, i) in tmpRob.list" :key="i">
                 <img v-lazy="$options.filters.prefixImageUrl(v.headimgurl)" class="circle db hb-get-avatar"/>
                 <p class="f14 flex-1 line1">{{v.nickname}}</p>
                 <div class="flex flex-pack-center flex-align-center">
@@ -444,7 +446,10 @@ export default {
         hbScale: false // 是否缩小
       },
       hbQueens: [],
-      tmpRobList: [],
+      tmpRob: {
+        list: [],
+        user: {}
+      },
       payBus: 1 // 1 购买霸屏礼物 2 发红包
     }
   },
@@ -1033,6 +1038,7 @@ export default {
         } else if (this.payBus === 2) {
           console.log('红包余额够了')
           createHb(this.hongbao).then((res) => {
+            console.log(res.result, res.result.balance)
             this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
             this.$vux.toast.show({
               text: '红包已生成',
@@ -1060,6 +1066,7 @@ export default {
       this.payBus = 1
       // 重置红包信息
       this.hongbao = {
+        ht_id: this.$route.params.id,
         message: ['有钱任性，大家快抢啊！'],
         content: '',
         pay_type: 0, // 0 现金 1 牛角,
@@ -1111,15 +1118,20 @@ export default {
       robHb({ht_id: this.$route.params.id, hb_id: this.hbCurInfo.hb.id}).then((res) => {
         console.log(res)
         var type = ~~(res.result.type)
-        this.$store.commit('app/SET_HB_ROB_INFO', {type: type, money: res.result.data.money})
+        this.$store.commit('app/SET_HB_ROB_INFO', {type: type, money: type === 1 ? res.result.data : res.result.data.money})
         this.hbState.openHb = true
+        // 设置chatList里的红包状态为已领取
+        var findHbMsg = this.chatlist.find(v => ~~(v.hb.id) === ~~(this.hbCurInfo.hb.id))
+        if (findHbMsg) {
+          findHbMsg.hb.is_lq = 1
+        }
       })
     },
     openHbDetail (hbid) {
       // 查询红包领取记录
-      hbid = hbid !== undefined ? hbid : this.hbCurInfo.hb.id
+      hbid = hbid !== 0 ? hbid : this.hbCurInfo.hb.id
       robHbMemberList({ht_id: this.$route.params.id, hb_id: hbid}).then((res) => {
-        this.tmpRobList = res.result.list
+        this.tmpRob = res.result
         this.hbState.hbDetail = true
       })
     },
