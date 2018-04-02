@@ -15,6 +15,7 @@
     "emoji-js": "^3.4.0",
     "es6-promise": "^4.2.2",
     "fastclick": "^1.0.6",
+    "lodash": "^4.17.5",
     "moment": "^2.21.0",
     "photoclip": "^3.3.6",
     "promise.prototype.finally": "^3.1.0",

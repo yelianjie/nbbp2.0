@@ -43,20 +43,20 @@
       <!-- 红包插入 -->
       <div class="hb-queen-container"  :class="{'in': hbState.hbScale}">
         <transition name="hb-slide">
-        <!-- <div class="hb-model pr" @click="hbOpenVisible = true" v-if="hbQueens.length > 0" ref="hbModel">
+        <div class="hb-model pr" @click="openHBModel(hbQueens[0])" v-if="hbQueens.length > 0" ref="hbModel">
           <div class="hb-count f15 circle">
-            <template v-if="hbQueens[0].time != 0">
-              {{hbQueens[0].time}}<span class="f12">s</span>
+            <template v-if="hbQueens[0].hb.show_time != 0 && hbQueens[0].hb.status == 0">
+              {{hbQueens[0].hb.show_time}}<span class="f12">s</span>
             </template>
-            <template v-else>
+            <template v-if="hbQueens[0].hb.status == 1 && hbQueens[0].hb.show_time == 0">
               <span class="f16">抢</span>
             </template>
           </div>
           <div class="hb-info fff-bp f14 tc">
-            <p class="hb-sender line1">鲜花的红包</p>
-            <p class="hb-msg">有钱任性，大家快抢啊！</p>
+            <p class="hb-sender line1">{{hbQueens[0].initiator_nickname}}的红包</p>
+            <p class="hb-msg">{{hbQueens[0].hb.content}}</p>
           </div>
-        </div> -->
+        </div>
         </transition>
       </div>
     </div>
@@ -165,7 +165,7 @@
         <div class="hb-arrow"><svg-icon icon-class="arrow-down"/></div>
       </div> -->
       <div class="hb-input-box flex flex-align-center">
-        <input type="text" placeholder="留言" class="hb-input" maxlength="10" v-model="hongbao.content"/>
+        <input type="text" placeholder="留言" class="hb-input" maxlength="15" v-model="hongbao.content"/>
         <div class="hb-hid">
           <popup-picker :data="hongbaoMes" v-model="hongbao.message" @on-change="hbMesChange" :popup-style="{'z-index': 5003}">
             <template slot="title" slot-scope="props"><!-- use scope="props" when vue < 2.5.0 -->
@@ -211,7 +211,10 @@
       </div>
       <div class="hb-open-back tc">
         <template v-if="hbRobInfo.type != 2">
-        <h3 class="hb-open-success">恭喜你抢到红包！</h3>
+        <h3 class="hb-open-success">
+          <template v-if="hbRobInfo.type == 0">恭喜你抢到红包！</template>
+          <template v-if="hbRobInfo.type == 1">恭喜你抢到经验值！</template>
+        </h3>
           <div class="hb-open-info">
             <div class="flex flex-pack-center f14">
               <div style="margin-right: 4px;">金主</div><div>{{hbCurInfo.initiator_nickname}}</div>
@@ -256,9 +259,9 @@
           <div class="flex flex-pack-center flex-align-center">
             <img src="../assets/hb-rmb.png" class="hb-result-icon middle" v-if="hbCurInfo.hb.pay_type == 0"/>
             <img src="../assets/hb-coin.png" class="hb-result-icon middle" v-if="hbCurInfo.hb.pay_type == 1"/>
-            <div class="result-get middle">{{tmpRob.user.money}}</div>
+            <div class="result-get middle">{{tmpRob.amount.money}}</div>
           </div>
-          <p class="f14" style="text-align: left;">红包领取记录 <!-- <span style="margin-left: 10px;">已领取 10/100</span> --></p>
+          <p class="f14" style="text-align: left;">红包领取记录  <span class="f12" style="margin-left: 4px;">已领取 {{tmpRob.amount.yq_amount}}/{{tmpRob.amount.total}}</span></p>
           <div class="hb-get-results flex-1 overscroll" style="text-align: left;">
             <ul>
               <li class="flex flex-align-center" v-for="(v, i) in tmpRob.list" :key="i">
@@ -368,6 +371,8 @@ import ScrollFix from '@/vendor/ScrollFix'
 import moment from 'moment'
 import LazyLoad from 'vanilla-lazyload'
 import { accAdd } from '@/utils/utils'
+import intersectionBy from 'lodash/intersectionBy'
+import differenceBy from 'lodash/differenceBy'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
   directives: {
@@ -424,6 +429,7 @@ export default {
         money: 50,
         amount: 10,
         selected: [],
+        auth_uid_str: '',
         type: 0 // 0 全场 2 男士 1 女士 3 自定义
       },
       hongbaoMsg: {
@@ -446,9 +452,10 @@ export default {
         hbScale: false // 是否缩小
       },
       hbQueens: [],
+      queenFirst: true,
       tmpRob: {
         list: [],
-        user: {}
+        amount: {}
       },
       payBus: 1 // 1 购买霸屏礼物 2 发红包
     }
@@ -573,24 +580,6 @@ export default {
       this.lazyload = new LazyLoad({
         elements_selector: '.lazy-bp-img'
       })
-      /* var flag = 1
-      var d = setInterval(() => {
-        if (flag % 5 === 0) {
-          this.hbQueens.push({
-            time: 15
-          })
-          clearInterval(d)
-          // 如果没有队列了 记得清除scaleHBtimer
-          this.$nextTick(() => {
-            this.setTimecountHB()
-          })
-        }
-        flag++
-      }, 1000) */
-      /* setTimeout(() => {
-        clearInterval(this.hbQueens[0].timer)
-        this.hbQueens.shift()
-      }, 10000) */
     })
   },
   watch: {
@@ -630,24 +619,40 @@ export default {
           this.$refs.hbModel.classList.add('swing')
         }, 1000)
       }
-      /* var filters = this.hbQueens.filter(v => !v.hasOwnProperty('timer'))
+      if (this.hbQueens.length === 0) {
+        return false
+      }
+      // 判断第一个是否超过1分钟 超过变小
+      var nA = moment()
+      var lB = moment(this.hbQueens[0].hb.create_time)
+      var chazhi = Number(nA.diff(lB, 'seconds'))
+      if (this.hbState.hbScale === false && chazhi >= 60) {
+        this.hbState.hbScale = true
+        this.hbQueens[0].hb.show_time = 0
+        console.log('chaoguo 60')
+      } else if (this.hbState.hbScale === true && chazhi < 60) {
+        this.hbState.hbScale = false
+      }
+      var filters = this.hbQueens.filter(v => !v.hasOwnProperty('timer') && ~~(v.hb.status) === 0)
       if (filters.length === 0) {
         return false
       }
       filters.forEach((v) => {
         v.timer = setInterval(() => {
-          if (v.time - 1 > 0) {
-            v.time -= 1
+          if (v.hb.show_time - 1 > 0) {
+            v.hb.show_time -= 1
           } else {
-            v.time -= 1
+            v.hb.show_time -= 1
+            v.hb.status = 1
             clearInterval(v.timer)
           }
+          console.log(v.hb.show_time)
         }, 1000)
       })
       // 如果1分钟未抢完收起红包
       this.scaleHBtimer = setTimeout(() => {
         this.hbState.hbScale = true
-      }, 20 * 1000) */
+      }, 60 * 1000)
     },
     initIsSelected () {
       var buyInfo = localStorage.getItem('buyDialogInfo')
@@ -674,17 +679,33 @@ export default {
     loopHbList (time) {
       this.hbListTimer = setTimeout(() => {
         unFinishHbList({ht_id: this.$route.params.id}).then((res) => {
-          Array.isArray(res.result) && (this.hbQueens = res.result)
-          // 如果没有队列了 记得清除scaleHBtimer
-          this.$nextTick(() => {
-            this.setTimecountHB()
-          })
+          if (Array.isArray(res.result)) {
+            // 并集
+            let intersection = intersectionBy(this.hbQueens, res.result, 'id')
+            // 已经抢完的集合 进行定时器清理
+            let difference1 = differenceBy(this.hbQueens, intersection, 'id')
+            // 差集
+            let difference2 = differenceBy(res.result, intersection, 'id')
+            // 清理定时器
+            if (!this.queenFirst) {
+              difference1.forEach(v => {
+                v.timer && clearInterval(v.timer)
+              })
+            }
+            this.queenFirst = false
+            var hbQueens = [...intersection, ...difference2]
+            this.hbQueens = hbQueens
+            // 如果没有队列了 记得清除scaleHBtimer
+            this.$nextTick(() => {
+              this.setTimecountHB()
+            })
+          }
         }).finally(() => {
           if (!this.hbListTimer) {
             return false
           }
           clearTimeout(this.hbListTimer)
-          this.loopHbList(1000 * 10)
+          this.loopHbList(1000)
         })
       }, time)
     },
@@ -1036,9 +1057,7 @@ export default {
             }
           })
         } else if (this.payBus === 2) {
-          console.log('红包余额够了')
           createHb(this.hongbao).then((res) => {
-            console.log(res.result, res.result.balance)
             this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
             this.$vux.toast.show({
               text: '红包已生成',
@@ -1073,6 +1092,7 @@ export default {
         money: 50,
         amount: 10,
         selected: [],
+        auth_uid_str: '',
         type: 0 // 0 全场 2 男士 1 女士 3 自定义
       }
       this.$refs.onlines.resetHBInfo()
@@ -1082,8 +1102,7 @@ export default {
       Object.keys(data).forEach(v => {
         arr.push(data[v])
       })
-      console.log(arr)
-      this.hongbao.selected = arr
+      this.hongbao.auth_uid_str = arr.join(',')
     },
     hbForWhoChose (v) {
       this.hongbao.type = v
@@ -1103,12 +1122,14 @@ export default {
       }
       // 如果已经抢过 直接显示详情
       if (data.hb.is_lq > 0) {
-        this.hbState.openHb = true
-        this.hbOpenVisible = true
-        this.openHbDetail(data.hb.id)
+        this.openHbDetail(data.hb.id, () => {
+          this.hbState.openHb = true
+          this.hbOpenVisible = true
+        })
         return false
+      } else {
+        this.hbOpenVisible = true
       }
-      this.hbOpenVisible = true
     },
     hbMesChange (v) {
       this.hongbao.content = v.join('')
@@ -1117,22 +1138,27 @@ export default {
       // 请求服务器判断是否已抢完 抢完之前显示已抢完状态
       robHb({ht_id: this.$route.params.id, hb_id: this.hbCurInfo.hb.id}).then((res) => {
         console.log(res)
+        // 抢到红包后更新余额
+        if (res.result.balance) {
+          this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
+        }
         var type = ~~(res.result.type)
         this.$store.commit('app/SET_HB_ROB_INFO', {type: type, money: type === 1 ? res.result.data : res.result.data.money})
         this.hbState.openHb = true
         // 设置chatList里的红包状态为已领取
-        var findHbMsg = this.chatlist.find(v => ~~(v.hb.id) === ~~(this.hbCurInfo.hb.id))
+        var findHbMsg = this.chatlist.find(v => v.hb && ~~(v.hb.id) === ~~(this.hbCurInfo.hb.id))
         if (findHbMsg) {
           findHbMsg.hb.is_lq = 1
         }
       })
     },
-    openHbDetail (hbid) {
+    openHbDetail (hbid, cb) {
       // 查询红包领取记录
       hbid = hbid !== 0 ? hbid : this.hbCurInfo.hb.id
       robHbMemberList({ht_id: this.$route.params.id, hb_id: hbid}).then((res) => {
         this.tmpRob = res.result
         this.hbState.hbDetail = true
+        cb && cb()
       })
     },
     onHBHide () {
