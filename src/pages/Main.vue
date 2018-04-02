@@ -1106,7 +1106,7 @@ export default {
     },
     hbForWhoChose (v) {
       this.hongbao.type = v
-      if (v === 4) {
+      if (v === 3) {
         this.payBus = 2
         this.onlineVisible = true
       }
