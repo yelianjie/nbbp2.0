@@ -34,7 +34,7 @@
 import MsgBottom from './MsgBottom'
 import MsgUser from './MsgUser'
 import UserAvatar from './UserAvatar'
-// import { isDjsOver } from '@/api/'
+import { isDjsOver } from '@/api/'
 export default {
   data () {
     return {
@@ -57,7 +57,7 @@ export default {
             this.data.hb.show_time = 0
             this.data.hb.status = 1
             clearInterval(this.hbTimer)
-            // isDjsOver({ht_id: this.$route.params.id, hb_id: this.data.hb.id}).then((res) => {})
+            isDjsOver({ht_id: this.$route.params.id, hb_id: this.data.hb.id}).then((res) => {})
           }
         }, 1000)
       }

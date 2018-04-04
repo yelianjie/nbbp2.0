@@ -47,9 +47,10 @@ export default {
       selectCustom: {}
     }
   },
-  props: ['visible', 'peoples', 'payBus'],
+  props: ['visible', 'peoples', 'payBus', 'hbLimit'],
   methods: {
     close () {
+      this.$emit('onHBChoseCustom', this.selectCustom)
       this.$emit('close', false)
     },
     onAvatarClick (data) {
@@ -66,8 +67,22 @@ export default {
       }
     },
     confirmCustom () {
-      this.close()
-      this.$emit('onHBChoseCustom', this.selectCustom)
+      var selectLength = Object.keys(this.selectCustom).length
+      if (selectLength > ~~(this.hbLimit)) {
+        this.$vux.toast.show({
+          text: '勾选人数大于红包个数',
+          width: '15em'
+        })
+        return false
+      } else if (selectLength < ~~(this.hbLimit)) {
+        this.$vux.toast.show({
+          text: '勾选人数小于红包个数',
+          width: '15em'
+        })
+        return false
+      } else {
+        this.close()
+      }
     },
     resetHBInfo () {
       this.selectCustom = {}

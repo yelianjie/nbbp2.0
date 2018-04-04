@@ -1,6 +1,6 @@
 <template>
   <div class="container" v-if="show">
-    <onlines :peoples="onlinePeople" :payBus="payBus" @onHBChoseCustom="customHBChose" @onShowCard="showCard" v-model="onlineVisible" ref="onlines"></onlines>
+    <onlines :peoples="onlinePeople" :payBus="payBus" :hbLimit="hongbao.amount" @onHBChoseCustom="customHBChose" @onShowCard="showCard" v-model="onlineVisible" ref="onlines"></onlines>
     <div class="main flex flex-v">
       <div class="flex boardcast flex-align-center" v-if="notice">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
@@ -76,7 +76,7 @@
         <msg-only-img :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-only-img>
         <bp-msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.msg_type == 2" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></bp-msg>
         <ds-msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></ds-msg>
-        <msg-hong-bao :key="v.id" v-if="v.msg_type == 3" :data="v" @onHBClick="openHBModel" @onDelete="deleteMsg" @onLike="like"></msg-hong-bao>
+        <msg-hong-bao :key="v.id" v-if="v.msg_type == 3" :data="v" @onHBClick="openHBModel(v)" @onDelete="deleteMsg" @onLike="like" @onAvatar="showCard"></msg-hong-bao>
       </template>
       
     </div>
@@ -165,7 +165,7 @@
         <div class="hb-arrow"><svg-icon icon-class="arrow-down"/></div>
       </div> -->
       <div class="hb-input-box flex flex-align-center">
-        <input type="text" placeholder="留言" class="hb-input" maxlength="15" v-model="hongbao.content"/>
+        <input type="text" :placeholder="hongbaoMes[0][0]" class="hb-input" maxlength="15" v-model="hongbao.content"/>
         <div class="hb-hid">
           <popup-picker :data="hongbaoMes" v-model="hongbao.message" @on-change="hbMesChange" :popup-style="{'z-index': 5003}">
             <template slot="title" slot-scope="props"><!-- use scope="props" when vue < 2.5.0 -->
@@ -301,7 +301,7 @@
   <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy" :cancelAutoClose="buyDialogInfo.cancelAutoClose" :onCancel="buyDialogInfo.onCancel" :cancelText="buyDialogInfo.cancelText" :cancelColor="buyDialogInfo.cancelColor" :confirmText="buyDialogInfo.confirmText">
     <div class="">
       <div style="font-size: 26px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;vertical-align: bottom;"/></div>
-      <template v-if="true">
+      <template v-if="userInfo.is_recharge">
       <p style="color: #88878f;"><svg-icon icon-class="tip" style="margin-top:-2px;margin-right:2px;" />当前余额可用：<svg-icon icon-class="coin"  style="margin-top:-2px;margin-right:2px;"/>{{userInfo.balance}}</p>
       <p class="f12" v-if="barManagerInfo.isManager && payBus == 1" style="color:#b187e4;margin-top:6px;">今日剩余免费霸屏、打赏{{barManagerInfo.game_count}}次</p>
       <p class="f13" v-if="buyDialogInfo.isCharge" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
@@ -464,14 +464,7 @@ export default {
     next()
   },
   beforeRouteLeave (to, from, next) {
-    clearTimeout(this.newsTimer)
-    clearTimeout(this.noticeTimer)
-    clearTimeout(this.onlineTimer)
-    clearTimeout(this.hbListTimer)
-    this.newsTimer = null
-    this.noticeTimer = null
-    this.onlineTimer = null
-    this.hbListTimer = null
+    this.clearTimeAllOut()
     if (this.scrollFix) {
       this.scrollFix.destory()
     }
@@ -613,6 +606,16 @@ export default {
     ...mapActions('app', {
       ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
     }),
+    clearTimeAllOut () {
+      clearTimeout(this.newsTimer)
+      clearTimeout(this.noticeTimer)
+      clearTimeout(this.onlineTimer)
+      clearTimeout(this.hbListTimer)
+      this.newsTimer = null
+      this.noticeTimer = null
+      this.onlineTimer = null
+      this.hbListTimer = null
+    },
     setTimecountHB () {
       if (this.$refs.hbModel && !this.$refs.hbModel.classList.contains('swing')) {
         setTimeout(() => {
@@ -629,7 +632,6 @@ export default {
       if (this.hbState.hbScale === false && chazhi >= 60) {
         this.hbState.hbScale = true
         this.hbQueens[0].hb.show_time = 0
-        console.log('chaoguo 60')
       } else if (this.hbState.hbScale === true && chazhi < 60) {
         this.hbState.hbScale = false
       }
@@ -646,7 +648,6 @@ export default {
             v.hb.status = 1
             clearInterval(v.timer)
           }
-          console.log(v.hb.show_time)
         }, 1000)
       })
       // 如果1分钟未抢完收起红包
@@ -677,6 +678,11 @@ export default {
       }
     },
     loopHbList (time) {
+      if (!this.$route.params.id) {
+        clearTimeout(this.hbListTimer)
+        this.hbListTimer = null
+        return false
+      }
       this.hbListTimer = setTimeout(() => {
         unFinishHbList({ht_id: this.$route.params.id}).then((res) => {
           if (Array.isArray(res.result)) {
@@ -710,6 +716,11 @@ export default {
       }, time)
     },
     loopOnlines (time) {
+      if (!this.$route.params.id) {
+        clearTimeout(this.onlineTimer)
+        this.onlineTimer = null
+        return false
+      }
       this.onlineTimer = setTimeout(() => {
         getOnlines({ht_id: this.$route.params.id}).then((res) => {
           Array.isArray(res.result) && (this.onlinePeople = res.result)
@@ -723,6 +734,11 @@ export default {
       }, time)
     },
     loopGetNotice (time) {
+      if (!this.$route.params.id) {
+        clearTimeout(this.noticeTimer)
+        this.noticeTimer = null
+        return false
+      }
       this.noticeTimer = setTimeout(() => {
         getBarNotice({ht_id: this.$route.params.id}).then((res) => {
           this.notice = res.result ? res.result.content : ''
@@ -736,6 +752,11 @@ export default {
       }, time)
     },
     loopGetNewMsg () {
+      if (!this.$route.params.id) {
+        clearTimeout(this.newsTimer)
+        this.newsTimer = null
+        return false
+      }
       this.newsTimer = setTimeout(() => {
         getMaxMsg(this.requestNewParams).then((res) => {
           if (Array.isArray(res.result) && res.result.length > 0) {
@@ -786,10 +807,10 @@ export default {
             this.requestNewParams.id = res.result[0].id
           }
         }).finally(() => {
-          if (!this.noticeTimer) {
+          if (!this.newsTimer) {
             return false
           }
-          clearTimeout(this.noticeTimer)
+          clearTimeout(this.newsTimer)
           this.loopGetNewMsg()
         })
       }, 1000)
@@ -1057,7 +1078,13 @@ export default {
             }
           })
         } else if (this.payBus === 2) {
-          createHb(this.hongbao).then((res) => {
+          var _params = {}
+          if (!this.hongbao.content) {
+            _params = Object.assign(this.hongbao, {content: this.hongbaoMes[0][0]})
+          } else {
+            _params = Object.assign(this.hongbao, {})
+          }
+          createHb(_params).then((res) => {
             this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
             this.$vux.toast.show({
               text: '红包已生成',
@@ -1102,6 +1129,7 @@ export default {
       Object.keys(data).forEach(v => {
         arr.push(data[v])
       })
+      this.hongbao.selected = arr
       this.hongbao.auth_uid_str = arr.join(',')
     },
     hbForWhoChose (v) {
@@ -1147,8 +1175,13 @@ export default {
         this.hbState.openHb = true
         // 设置chatList里的红包状态为已领取
         var findHbMsg = this.chatlist.find(v => v.hb && ~~(v.hb.id) === ~~(this.hbCurInfo.hb.id))
+        // 设置queens里红包状态为已领取
+        var findHBQueen = this.hbQueens.find(v => ~~(v.hb.id) === ~~(this.hbCurInfo.hb.id))
         if (findHbMsg) {
           findHbMsg.hb.is_lq = 1
+        }
+        if (findHBQueen) {
+          findHBQueen.hb.is_lq = 1
         }
       })
     },
@@ -1169,6 +1202,13 @@ export default {
     },
     packet () {
       var _self = this
+      if (~~(this.hongbao.type) === 3 && this.hongbao.selected.length === 0) {
+        this.$vux.toast.show({
+          text: '请选择接受红包的用户',
+          width: '15em'
+        })
+        return false
+      }
       // 验证表格是否为空和为整数
       /* if (!Number.isInteger(this.hongbao.money)) {
         this.$vux.toast.show({
@@ -1186,8 +1226,14 @@ export default {
 
       }) */
       if (this.hongbao.pay_type === 0) {
+        var _params = {}
+        if (!this.hongbao.content) {
+          _params = Object.assign(this.hongbao, {content: this.hongbaoMes[0][0]})
+        } else {
+          _params = Object.assign(this.hongbao, {})
+        }
         // 调起微信支付 现金红包
-        createHb(this.hongbao).then((res) => {
+        createHb(_params).then((res) => {
           window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
             switch (res.err_msg) {
               case 'get_brand_wcpay_request:cancel':

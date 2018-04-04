@@ -142,6 +142,12 @@ function init () {
       toPath = toPath.substring(0, toPath.lastIndexOf('&'))
       next(toPath)
     }
+    let { href } = window.location
+    if (/singlemessage|groupmessage|timeline/g.test(href)) {
+      // 微信分享重置URL
+      var newHref = window.location.origin + window.location.pathname + '#' + to.fullPath
+      window.location.replace(newHref)
+    }
     if (to.meta.bg) {
       document.body.style.backgroundColor = to.meta.bg
     } else {
