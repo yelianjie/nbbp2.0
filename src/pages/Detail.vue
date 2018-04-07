@@ -48,6 +48,9 @@ export default {
 
 <style lang="less" scoped>
 @mainColor: #f31374;
+#tab-header.vux-tab {
+  background-color: #181b2a;
+}
 #tab-header /deep/ .vux-tab {
   background-color: #181b2a;
 }

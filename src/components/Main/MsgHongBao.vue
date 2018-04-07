@@ -10,15 +10,26 @@
         <img src="../../assets/hb-coin.png" class="rmb-icon" v-else/>
         <div class="hbmsg-main f14 fff-bp">
           <p class="hb_msg_content line1">{{data.content}}</p>
-          <template v-if="data.hb.status == 0 && data.hb.show_time > 0 && data.hb.is_lq == 0">
+          <template v-if="data.hb.status == 0 && data.hb.show_time > 0 && data.hb.is_lq == 0 && data.hb.type != 3 && !data.hb.user.nickname">
             <p>开抢倒计时：{{data.hb.show_time}}秒</p>
           </template>
           <template v-else>
-            <template v-if="data.hb.is_lq == 0">
+            <template v-if="data.hb.type == 3 && data.hb.user.nickname">
               <p>领取红包</p>
             </template>
-            <template v-if="data.hb.is_lq > 0">
-              <p>您已领取红包</p>
+            <template v-else>
+              <template v-if="data.hb.is_lq == 0 && data.hb.status == 1">
+                <p>领取红包</p>
+              </template>
+              <template v-if="data.hb.is_lq > 0 && (data.hb.status == 1 || data.hb.status == 2)">
+                <p>您已领取红包</p>
+              </template>
+              <template v-if="data.hb.is_lq == 0 && data.hb.status == 2">
+                <p>红包已领完</p>
+              </template>
+              <template v-if="data.hb.status == 3">
+                <p>红包已过期</p>
+              </template>
             </template>
           </template>
         </div>
@@ -49,7 +60,8 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      if (~~(this.data.hb.status) === 0) {
+      // 非专属倒计时红包要计时
+      if (~~(this.data.hb.status) === 0 && ~~(this.data.hb.type) !== 3 && !this.data.hb.user.nickname) {
         this.hbTimer = setInterval(() => {
           if (this.data.hb.show_time - 1 > 0) {
             this.data.hb.show_time -= 1

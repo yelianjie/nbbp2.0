@@ -545,6 +545,22 @@ export const robHbMemberList = (data) => {
 }
 
 /**
+ * 获取红包订单
+ * @param {*} data
+ */
+export const getPacketOrder = (data) => {
+  return request('/weixin/order/getNewOrder', 'POST', data)
+}
+
+/**
+ * 获取红包状态
+ * @param {*} data
+ */
+export const getHbInfo = (data) => {
+  return request('/weixin/hongbao/getHbInfo', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */
