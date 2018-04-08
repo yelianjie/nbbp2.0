@@ -677,7 +677,7 @@ export default {
     setTimecountHB () {
       if (this.$refs.hbModel && !this.slideQueens && !this.$refs.hbModel.classList.contains('swing')) {
         setTimeout(() => {
-          this.$refs.hbModel.classList.add('swing')
+          this.$refs.hbModel && this.$refs.hbModel.classList.add('swing')
         }, 1000)
       } else if (this.slideQueens) {
         this.$refs.hbModel.classList.remove('swing')
@@ -785,7 +785,6 @@ export default {
       this.packetTimer = setTimeout(() => {
         getPacketOrder({ht_id: this.$route.params.id}).then((res) => {
           if (res.result && !Array.isArray(res.result)) {
-            console.log('123')
             clearTimeout(this.packetTimer)
             this.slideQueens = res.result
             this.hbSlideInState.slideIn = true
@@ -803,6 +802,7 @@ export default {
                   clearInterval(this.packetCountTimer)
                   setTimeout(() => {
                     var _self = this
+                    this.$refs.hbModelBig.classList.remove('swing')
                     this.bindEnd = () => {
                       _self.$refs.hbConBig.removeEventListener('webkitTransitionEnd', this.bindEnd)
                       _self.hbSlideInState.slideIn = false

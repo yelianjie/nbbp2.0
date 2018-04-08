@@ -46,7 +46,7 @@
         </div>
         <div class="w2 flex-1 tc" @click="$router.push({path: '/Income'})">
           <h3><countup v-if="userInfo.profit_balance" :start-val="0.00" :end-val="Number(userInfo.profit_balance)" :duration="2" class="demo2" :decimals="2"></countup></h3>
-          <h5>我的收益/员</h5>
+          <h5>我的收益/元</h5>
         </div>
       </div>
       <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isAgent > 0">
