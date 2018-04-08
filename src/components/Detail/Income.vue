@@ -2,11 +2,30 @@
   <div class="scroll-container scroll">
     <div class="detail-item flex flex-align-center bg2" v-for="(v, i) in list" :key="i">
       <div class="detail-item-left flex-1">
-        <p class="overflow fff-bp f14">礼物：{{v.title}}X{{v.odr_num}}</p>
+        <p class="overflow fff-bp f14">
+          <template v-if="v.source_flag == 0">
+            购买：{{v.title}}X{{v.odr_num}}
+          </template>
+          <template v-if="v.source_flag == 1">
+            领红包
+          </template>
+          <template v-if="v.source_flag == 2">
+            红包退款
+          </template>
+          <template v-if="v.source_flag == 3">
+            牛角退款
+          </template>
+        </p>
         <p class="f13 scolor v">{{v.create_time}}</p>
       </div>
       <div class="detail-item-right">
-        <p class="overflow f14 ncolor">+{{v.money}}元</p>
+        <p class="overflow f14 ncolor">
+          <template v-if="v.type == 1">+</template>
+          <template v-if="v.type == 2">-</template>
+          {{v.money}}
+          <template v-if="v.pay_type == 1">牛角</template>
+          <template v-if="v.pay_type == 2">元</template>
+        </p>
         <p class="f13 scolor bottom-line">来自{{v.nickname}}</p>
       </div>
     </div>

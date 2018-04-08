@@ -553,11 +553,19 @@ export const getPacketOrder = (data) => {
 }
 
 /**
- * 获取红包状态
+ * 获取红包信息
  * @param {*} data
  */
 export const getHbInfo = (data) => {
   return request('/weixin/hongbao/getHbInfo', 'POST', data)
+}
+
+/**
+ * 获取红包状态
+ * @param {*} data
+ */
+export const getHbStatus = (data) => {
+  return request('/weixin/hongbao/getHbStatus', 'POST', data)
 }
 
 /**

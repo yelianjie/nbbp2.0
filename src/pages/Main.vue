@@ -52,13 +52,13 @@
           </div>
           <div class="hb-info fff-bp f14 tc">
             <p class="hb-sender line1">{{hbQueens[0].initiator_nickname}}的红包</p>
-            <p class="hb-msg">{{hbQueens[0].hb.content}}</p>
+            <p class="hb-msg" style="line-height: 18px;">{{hbQueens[0].hb.content}}</p>
           </div>
         </div>
       </div>
-      <div class="hb-queen-container"  :class="{'in': hbSlideInState.scale}" ref="hbModelBig" v-if="slideQueens">
-        <transition name="hb-slide">
-        <div class="hb-model pr" @click="openHBModel(slideQueens)" v-if="hbSlideInState.slideIn">
+      <transition name="hb-slide">
+      <div class="hb-queen-container" :class="{'in': hbSlideInState.scale}"  v-if="slideQueens && hbSlideInState.slideIn" ref="hbConBig">
+        <div class="hb-model pr" ref="hbModelBig" @click="openHBModel(slideQueens)">
           <div class="hb-count f15 circle">
             <template v-if="slideQueens.hb.show_time != 0 && slideQueens.hb.status == 0">
               {{slideQueens.hb.show_time}}<span class="f12">s</span>
@@ -72,8 +72,8 @@
             <p class="hb-msg">{{slideQueens.hb.content}}</p>
           </div>
         </div>
-        </transition>
       </div>
+      </transition>
     </div>
     <div class="flex-1 main-content" ref="scrollWrapper">
       <infinite-loading @infinite="infiniteHandler" direction="top" :distance="1" ref="infiniteLoading"  style="margin-bottom: 25px;">
@@ -150,22 +150,30 @@
   <x-dialog v-model="hbWindowVisible" @on-hide="hbWindowClose" :mask-z-index="498" :dialog-style="{'z-index': '499', 'padding-top': '0.8rem', 'max-width': '100%', width: '100%', 'background-color': 'transparent', 'text-align': 'left'}" data-vv-scope="hbInputForm">
     <div class="hb-send-window pr">
       <img :src="userInfo.headimgurl | prefixImageUrl" class="circle hb-u-avatar"/>
-      <h3 class="hb-send-user pr line1 fff-bp">金主 {{userInfo.nickname}}</h3>
+      <h3 class="hb-send-user pr line1 fff-bp f18">金主 {{userInfo.nickname}}</h3>
       <p class="hb-text-tip f13">大于等于50元将在大屏幕上显示</p>
       <div class="hb-input-box flex flex-align-center" style="margin-bottom: 0.2rem;">
         <div class="hb-input-icon"></div>
         <div class="hb-input-label">总金额</div>
         <div class="hb-input-wrap flex-1">
-          <input type="number" pattern="[0-9]*" class="hb-input f16 tr" data-vv-as="红包金额" v-validate.initial="'required|numeric'" @input="validZero" v-model="hongbao.money"/>
+          <!-- <input type="number" pattern="[0-9]*" class="hb-input f16 tr" data-vv-as="红包金额" v-validate.initial="'required|numeric'" @input="validZero" v-model="hongbao.money"/> -->
+          <input type="text" class="hb-input f16 tr" data-vv-as="红包金额" v-validate.initial="'required'" v-model="hongbao.money"/>
         </div>
-        <div class="hb-input-label-unit">元</div>
+        <div class="hb-input-label-unit">
+          <template v-if="hongbao.pay_type == 1">
+            牛角
+          </template>
+          <template v-if="hongbao.pay_type == 2">
+            元
+          </template>
+        </div>
       </div>
       <p class="hb-text-tip f13">
-        <template v-if="hongbao.pay_type == 0">
+        <template v-if="hongbao.pay_type == 2">
           当前为现金红包，切换为<a style="color:#ffed2e;margin:0 4px;" @click.prevent="hongbao.pay_type = 1">牛角红包</a>
         </template>
         <template v-if="hongbao.pay_type == 1">
-          当前为牛角红包，切换为<a style="color:#ffed2e;margin:0 4px;" @click.prevent="hongbao.pay_type = 0">现金红包</a>
+          当前为牛角红包，切换为<a style="color:#ffed2e;margin:0 4px;" @click.prevent="hongbao.pay_type = 2">现金红包</a>
         </template>
       </p>  
       <div class="hb-input-box flex flex-align-center">
@@ -205,7 +213,7 @@
         </template>
         </label>
       </div>
-      <x-button id="hb-put-btn" @click.native="packet">发红包</x-button>
+      <x-button id="hb-put-btn" @click.native="packet" :disabled="packetLoading" :show-loading="packetLoading">发红包</x-button>
     </div>
     <div @click="hbWindowVisible = false">
       <svg-icon icon-class="close" className="close-u-dialog-btn"/>
@@ -262,6 +270,15 @@
             <h3 class="hb-open-noresult">手慢了，红包没有了</h3>
           </div>
         </template>
+        <template v-if="hbRobInfo.type == 3">
+          <div class="hb-open-info">
+            <div class="flex flex-pack-center f14">
+              <div style="margin-right: 4px;">金主</div><div>{{hbCurInfo.initiator_nickname}}</div>
+            </div>
+            <div class="f14">{{hbCurInfo.hb.content}}</div>
+            <h3 class="hb-open-noresult">该红包已过期</h3>
+          </div>
+        </template>
         <a class="check-hb-detail f13" @click.prevent="openHbDetail(0)">查看领取详情</a>
       </div>
     </div>
@@ -269,11 +286,11 @@
       <div class="hb-open-back hb-open-back-result tc">
         <div class="flex flex-v" style="height:100%;">
           <img :src="userInfo.headimgurl | prefixImageUrl" class="circle hb-open-avatar"/>
-          <p class="f14">金主</p>
+          <!-- <p class="f14">金主</p> -->
           <p class="line1 f14">{{hbCurInfo.initiator_nickname}}的{{hongbaoMsg.hb_pay_type[hbCurInfo.hb.pay_type]}}红包</p>
           <div class="flex flex-pack-center flex-align-center">
             <template v-if="tmpRob.amount.type == 1">
-              <img src="../assets/hb-rmb.png" class="hb-result-icon middle" v-if="hbCurInfo.hb.pay_type == 0"/>
+              <img src="../assets/hb-rmb.png" class="hb-result-icon middle" v-if="hbCurInfo.hb.pay_type == 2"/>
               <img src="../assets/hb-coin.png" class="hb-result-icon middle" v-if="hbCurInfo.hb.pay_type == 1"/>
               <div class="result-get middle">{{tmpRob.amount.money}}</div>
             </template>
@@ -298,8 +315,8 @@
                 <img v-lazy="$options.filters.prefixImageUrl(v.headimgurl)" class="circle db hb-get-avatar"/>
                 <p class="f14 flex-1 line1">{{v.nickname}}</p>
                 <div class="flex flex-pack-center flex-align-center">
-                  <img src="../assets/hb-rmb.png" class="hb-result-icon small" v-if="hbCurInfo.hb.pay_type == 0"/>
-                  <img src="../assets/hb-rmb.png" class="hb-result-icon small" v-if="hbCurInfo.hb.pay_type == 1"/>
+                  <img src="../assets/hb-rmb.png" class="hb-result-icon small" v-if="hbCurInfo.hb.pay_type == 2"/>
+                  <img src="../assets/hb-coin.png" class="hb-result-icon small" v-if="hbCurInfo.hb.pay_type == 1"/>
                   <div class="result-get small">{{v.money}}</div>
                 </div>
               </li>
@@ -377,7 +394,7 @@
 </template>
 
 <script>
-import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo } from '@/api/'
+import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus } from '@/api/'
 import { XDialog, TransferDom, Popup, PopupPicker, XButton } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -456,7 +473,7 @@ export default {
         ht_id: this.$route.params.id,
         message: ['有钱任性，大家快抢啊！'],
         content: '',
-        pay_type: 0, // 0 现金 1 牛角,
+        pay_type: 2, // 2 现金 1 牛角,
         money: 50,
         amount: 10,
         selected: [],
@@ -465,7 +482,7 @@ export default {
       },
       hongbaoMsg: {
         hb_pay_type: {
-          0: '现金',
+          2: '现金',
           1: '牛角'
         },
         hb_type: {
@@ -494,6 +511,7 @@ export default {
         list: [],
         amount: {}
       },
+      packetLoading: false,
       payBus: 1 // 1 购买霸屏礼物 2 发红包
     }
   },
@@ -657,10 +675,12 @@ export default {
       this.packetTimer = null
     },
     setTimecountHB () {
-      if (this.$refs.hbModel && !this.$refs.hbModel.classList.contains('swing')) {
+      if (this.$refs.hbModel && !this.slideQueens && !this.$refs.hbModel.classList.contains('swing')) {
         setTimeout(() => {
           this.$refs.hbModel.classList.add('swing')
         }, 1000)
+      } else if (this.slideQueens) {
+        this.$refs.hbModel.classList.remove('swing')
       }
       if (this.hbQueens.length === 0) {
         return false
@@ -765,30 +785,39 @@ export default {
       this.packetTimer = setTimeout(() => {
         getPacketOrder({ht_id: this.$route.params.id}).then((res) => {
           if (res.result && !Array.isArray(res.result)) {
+            console.log('123')
             clearTimeout(this.packetTimer)
             this.slideQueens = res.result
             this.hbSlideInState.slideIn = true
-            console.log('time = ' + this.slideQueens.hb.show_time)
-            this.packetCountTimer = setInterval(() => {
-              if (this.slideQueens.hb.show_time - 1 > 0) {
-                this.slideQueens.hb.show_time -= 1
-              } else {
-                this.slideQueens.hb.show_time = 0
-                this.slideQueens.hb.status = 1
-                clearInterval(this.packetCountTimer)
-                setTimeout(() => {
-                  var _self = this
-                  this.bindEnd = () => {
-                    _self.hbSlideInState.scale = false
-                    _self.$refs.hbModelBig.removeEventListener('webkitTransitionEnd', this.bindEnd)
-                    _self.hbSlideInState.slideIn = false
-                    _self.loopPacketOrder(0)
-                  }
-                  this.$refs.hbModelBig.addEventListener('webkitTransitionEnd', this.bindEnd)
-                  this.hbSlideInState.scale = true
-                }, 10000)
-              }
-            }, 1000)
+            // console.log('time = ' + this.slideQueens.hb.show_time)
+            this.$nextTick(() => {
+              setTimeout(() => {
+                this.$refs.hbModelBig.classList.add('swing')
+              }, 1300)
+              this.packetCountTimer = setInterval(() => {
+                if (this.slideQueens.hb.show_time - 1 > 0) {
+                  this.slideQueens.hb.show_time -= 1
+                } else {
+                  this.slideQueens.hb.show_time = 0
+                  this.slideQueens.hb.status = 1
+                  clearInterval(this.packetCountTimer)
+                  setTimeout(() => {
+                    var _self = this
+                    this.bindEnd = () => {
+                      _self.$refs.hbConBig.removeEventListener('webkitTransitionEnd', this.bindEnd)
+                      _self.hbSlideInState.slideIn = false
+                      _self.slideQueens = null
+                      _self.$nextTick(() => {
+                        _self.hbSlideInState.scale = false
+                        _self.loopPacketOrder(0)
+                      })
+                    }
+                    this.$refs.hbConBig.addEventListener('webkitTransitionEnd', this.bindEnd)
+                    this.hbSlideInState.scale = true
+                  }, 10000)
+                }
+              }, 1000)
+            })
           } else {
             clearTimeout(this.packetTimer)
             this.packetTimer = setTimeout(() => {
@@ -1204,7 +1233,7 @@ export default {
         ht_id: this.$route.params.id,
         message: ['有钱任性，大家快抢啊！'],
         content: '',
-        pay_type: 0, // 0 现金 1 牛角,
+        pay_type: 2, // 2 现金 1 牛角,
         money: 50,
         amount: 10,
         selected: [],
@@ -1272,32 +1301,43 @@ export default {
     hbMesChange (v) {
       this.hongbao.content = v.join('')
     },
-    openHbAction () {
+    async openHbAction () {
       // 请求服务器判断是否已抢完 抢完之前显示已抢完状态
-      robHb({ht_id: this.$route.params.id, hb_id: this.hbCurInfo.hb.id}).then((res) => {
-        console.log(res)
-        // 抢到红包后更新余额
-        if (res.result.balance) {
-          this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
-        }
-        var type = ~~(res.result.type)
-        this.$store.commit('app/SET_HB_ROB_INFO', {type: type, money: type === 1 ? res.result.data : res.result.data.money})
+      let response = await getHbStatus({ht_id: this.$route.params.id, hb_id: this.hbCurInfo.hb.id})
+      var status = ~~(response.result)
+      if (status === 1) {
+        // 可以抢
+        robHb({ht_id: this.$route.params.id, hb_id: this.hbCurInfo.hb.id}).then((res) => {
+          // 抢到红包后更新余额
+          if (res.result.balance) {
+            this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
+          }
+          var type = ~~(res.result.type)
+          this.$store.commit('app/SET_HB_ROB_INFO', {type: type, money: type === 1 ? res.result.data : res.result.data.money})
+          this.hbState.openHb = true
+          // 设置chatList里的红包状态为已领取
+          var findHbMsg = this.chatlist.find(v => v.hb && ~~(v.hb.id) === ~~(this.hbCurInfo.hb.id))
+          // 设置queens里红包状态为已领取
+          /* var findHBQueen = this.hbQueens.find(v => ~~(v.hb.id) === ~~(this.hbCurInfo.hb.id)) */
+          // 设置置顶红包状态为已领取
+          /* if (~~(this.slideQueens.hb.id) === ~~(this.hbCurInfo.hb.id)) {
+            this.slideQueens.hb.is_lq = 1
+          } */
+          if (findHbMsg) {
+            findHbMsg.hb.is_lq = 1
+          }
+          /* if (findHBQueen) {
+            findHBQueen.hb.is_lq = 1
+          } */
+        })
+      } else if (status === 2) {
+        // 已抢完
+        this.$store.commit('app/SET_HB_ROB_INFO', {type: 2, money: 0})
         this.hbState.openHb = true
-        // 设置chatList里的红包状态为已领取
-        var findHbMsg = this.chatlist.find(v => v.hb && ~~(v.hb.id) === ~~(this.hbCurInfo.hb.id))
-        // 设置queens里红包状态为已领取
-        /* var findHBQueen = this.hbQueens.find(v => ~~(v.hb.id) === ~~(this.hbCurInfo.hb.id)) */
-        // 设置置顶红包状态为已领取
-        /* if (~~(this.slideQueens.hb.id) === ~~(this.hbCurInfo.hb.id)) {
-          this.slideQueens.hb.is_lq = 1
-        } */
-        if (findHbMsg) {
-          findHbMsg.hb.is_lq = 1
-        }
-        /* if (findHBQueen) {
-          findHBQueen.hb.is_lq = 1
-        } */
-      })
+      } else if (status === 3) {
+        // 已超时
+        this.$store.commit('app/SET_HB_ROB_INFO', {type: 3, money: 0})
+      }
     },
     openHbDetail (hbid, cb) {
       // 查询红包领取记录
@@ -1339,16 +1379,18 @@ export default {
             })
             return false
           }
-          if (this.hongbao.pay_type === 0) {
+          if (this.hongbao.pay_type === 2) {
             var _params = {}
             if (!this.hongbao.content) {
-              _params = Object.assign(this.hongbao, {content: this.hongbaoMes[0][0]})
+              _params = Object.assign({}, this.hongbao, {content: this.hongbaoMes[0][0]})
             } else {
-              _params = Object.assign(this.hongbao, {})
+              _params = Object.assign({}, this.hongbao, {})
             }
+            this.packetLoading = true
             // 调起微信支付 现金红包
             createHb(_params).then((res) => {
               window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
+                _self.packetLoading = false
                 switch (res.err_msg) {
                   case 'get_brand_wcpay_request:cancel':
                     // alert('用户取消支付！')
@@ -1361,13 +1403,15 @@ export default {
                     break
                   case 'get_brand_wcpay_request:ok':
                     // 支付成功关闭红包
-                    _self.hbOpenVisible = false
+                    _self.hbWindowVisible = false
                     break
                   default:
                     alert(JSON.stringify(res))
                     break
                 }
               })
+            }).catch(() => {
+              this.packetLoading = false
             })
           } else {
             // 余额红包
@@ -1379,6 +1423,18 @@ export default {
               price: this.hongbao.money,
               isCharge: isCharge,
               confirmText: isCharge ? '充值购买' : '确定'
+            }
+            if (!this.userInfo.is_recharge) {
+              // 充过值显示取消 没冲过显示立即支付
+              var extraParams = {
+                cancelText: '立即支付',
+                onCancel: (cb) => {
+                  this.hongbao.pay_type = 2
+                  this.packet()
+                },
+                cancelAutoClose: false
+              }
+              params = Object.assign({}, params, extraParams)
             }
             this.ChangeBuyDialogInfo(params)
             this.buyDialogVisible = true

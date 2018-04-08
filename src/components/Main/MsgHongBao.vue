@@ -6,7 +6,7 @@
     <div class="msg-item-right flex-1">
       <msg-user :data="data"></msg-user>
       <div class="msg-item-middle pr hbMsg flex flex-align-center" :class="{'out': data.hb.is_lq > 0 || data.hb.status > 1}" @click="hbClick">
-        <img src="../../assets/hb-rmb.png" class="rmb-icon" v-if="data.hb.pay_type == 0"/>
+        <img src="../../assets/hb-rmb.png" class="rmb-icon" v-if="data.hb.pay_type == 2"/>
         <img src="../../assets/hb-coin.png" class="rmb-icon" v-else/>
         <div class="hbmsg-main f14 fff-bp">
           <p class="hb_msg_content line1">{{data.content}}</p>

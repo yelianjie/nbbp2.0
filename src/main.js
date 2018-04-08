@@ -31,7 +31,7 @@ import { getWxConfig, getHasToken } from './api/'
 window.sessionStorage.clear()
 var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  window.sessionStorage.setItem('tId', '63119f9477e394986be82298003566400349e6a3')
+  window.sessionStorage.setItem('tId', 'c731af1a446c51b153633e4de08a0f755fe59119')
   tId = window.sessionStorage.getItem('tId')
 }
 if (!tId && process.env.NODE_ENV === 'production') {
@@ -144,7 +144,7 @@ function init () {
     }
     let { href } = window.location
     if (/singlemessage|groupmessage|timeline/g.test(href)) {
-      // 微信分享重置URL
+      // 微信分享重置URL，否则微信支付地址会报未注册错误
       var newHref = window.location.origin + window.location.pathname + '#' + to.fullPath
       window.location.replace(newHref)
     }
