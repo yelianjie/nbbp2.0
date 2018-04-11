@@ -7,7 +7,7 @@
     <template v-else>
       <img :src="$options.filters.prefixImageUrl(data.initiator_headimgurl)" @click="avatar()"/>
     </template>
-    <div class="delete-msg f12 fff-bp" @click="deleteMsg" v-if="isShow">删除</div>
+    <div class="delete-msg f12 fff-bp" @click="deleteMsg" v-if="isShow && data.msg_type != 3">删除</div>
   </div>
 </template>
 

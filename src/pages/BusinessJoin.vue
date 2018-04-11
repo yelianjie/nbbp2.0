@@ -86,21 +86,26 @@ export default {
       this.code = this.$route.query.code
     }
     getAgentCode().then((res) => {
-      var code = res.result ? res.result : ''
+      var code = ''
+      if (res.result) {
+        code = res.result
+      } else if (!res.result && this.code) {
+        code = this.code
+      } 
       codeStr = '&code=' + code
       var shareParams = {}
       if (Number(this.$route.query.type) === 1) {
         shareParams = {
           title: '商户加盟：0成本增加收益，微信注册即可免费使用',
           desc: '该系统适用于酒吧、庆典、餐厅、婚礼等各种场合，帮您活跃气氛的同时提升30%以上收益',
-          link: window.location.href + codeStr,
+          link: window.location.origin + window.location.pathname + `#/BusinessJoin?type=${this.$route.query.type}` + codeStr,
           imgUrl: 'http://xnb.siweiquanjing.com/screen/images/logo1.png' // 分享图标
         }
       } else if (Number(this.$route.query.type) === 2) {
         shareParams = {
           title: '代理加盟：推荐商户免费使用牛霸系统获永久收益分成',
           desc: '该系统适用于酒吧、庆典、餐厅、婚礼等各种场合',
-          link: window.location.href + codeStr,
+          link: window.location.href,
           imgUrl: 'http://xnb.siweiquanjing.com/screen/images/logo1.png' // 分享图标
         }
       }
