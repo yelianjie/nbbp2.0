@@ -68,13 +68,7 @@ export default {
     },
     confirmCustom () {
       var selectLength = Object.keys(this.selectCustom).length
-      if (selectLength > ~~(this.hbLimit)) {
-        this.$vux.toast.show({
-          text: '勾选人数大于红包个数',
-          width: '15em'
-        })
-        return false
-      } else if (selectLength < ~~(this.hbLimit)) {
+      if (selectLength < ~~(this.hbLimit)) {
         this.$vux.toast.show({
           text: '勾选人数小于红包个数',
           width: '15em'

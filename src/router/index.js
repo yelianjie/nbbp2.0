@@ -323,7 +323,17 @@ export default new Router({
         require(['@/pages/HelpBusinessSet'], resolve)
       },
       meta: {
-        roles: ['user', 'business']
+        roles: ['business']
+      }
+    },
+    {
+      path: '/HelpBusinessInsert',
+      name: 'HelpBusinessInsert',
+      component: (resolve) => {
+        require(['@/pages/HelpBusinessInsert'], resolve)
+      },
+      meta: {
+        roles: ['business']
       }
     }
   ]
