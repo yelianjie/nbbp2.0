@@ -195,7 +195,7 @@ export default {
   bottom: 0;
   right: 0;
   min-height: 300px;
-  z-index: 3;
+  z-index: 2;
   border-radius: 15px 15px 0 0;
   background: -webkit-radial-gradient(circle closest-corner, #621653, #170127);
   background: radial-gradient(circle closest-corner at 50% 30%, #621653, #170127);

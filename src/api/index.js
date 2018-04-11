@@ -569,14 +569,6 @@ export const getHbStatus = (data) => {
 }
 
 /**
- * 获取删除的消息
- * @param {*} data
- */
-export const getDelMsg = (data) => {
-  return request('/weixin/hotel/getDelMsg', 'POST', data)
-}
-
-/**
  * 上传图片
 
  */

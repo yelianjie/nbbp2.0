@@ -4,9 +4,6 @@
     <div class="help-content fff">
       <div class="help-title" @click="$router.push({path: '/HelpBusinessSet'})">商户注册后如何使用牛霸系统？<svg-icon icon-class="arrow-right" class="right" ></svg-icon></div>
     </div>
-    <div class="help-content fff">
-      <div class="help-title" style="margin-top:10px;" @click="$router.push({path: '/HelpBusinessInsert'})">已认证公众号如何接入牛霸微上墙？<svg-icon icon-class="arrow-right" class="right" ></svg-icon></div>
-    </div>
     <h3 class="title">常见问题</h3>
     <div class="help-content fff">
       <div class="help-title" @click="click(0)">大屏幕霸屏内容显示不完整，如何解决？<svg-icon :class="{'move': isActive[0]}" icon-class="arrow-right"></svg-icon></div>

@@ -7,7 +7,7 @@
             购买：{{v.title}}X{{v.odr_num}}
           </template>
           <template v-if="v.source_flag == 1">
-            <template v-if="v.pay_type == 1">牛角</template><template v-if="v.pay_type == 2">现金</template>红包
+            领红包
           </template>
           <template v-if="v.source_flag == 2">
             红包退款

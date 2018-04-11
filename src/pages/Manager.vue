@@ -19,7 +19,7 @@
     
     <div class="manager-tips" :class="{'focus': focus == true}">
       <p>管理员权限：</p>
-      <p>1、每天可免费在该酒吧购买3次霸屏，不可累加。</p>
+      <p>1、每天可免费在该酒吧购买10次霸屏，不可累加。</p>
       <p>2、可在手机端删除已经上墙的消息。</p>
     </div>
     <inline-loading v-if="loading2" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>

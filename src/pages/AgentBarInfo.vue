@@ -270,7 +270,7 @@ export default {
   position: fixed;
   left: 50%;
   top: 50%;
-  z-index: 3;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;

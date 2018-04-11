@@ -43,16 +43,16 @@
       <div class="hb-queen-container in">
         <div class="hb-model pr" @click="openHBModel(hbQueens[0])" v-if="hbQueens.length > 0" ref="hbModel">
           <div class="hb-count f15 circle">
-            <template v-if="hbQueens[0].hb.show_time > 0 && hbQueens[0].hb.status == 0">
+            <template v-if="hbQueens[0].hb.show_time != 0 && hbQueens[0].hb.status == 0">
               {{hbQueens[0].hb.show_time}}<span class="f12">s</span>
             </template>
-            <template v-if="hbQueens[0].hb.status == 1 && hbQueens[0].hb.show_time <= 0">
+            <template v-if="hbQueens[0].hb.status == 1 && hbQueens[0].hb.show_time == 0">
               <span class="f16">抢</span>
             </template>
           </div>
           <div class="hb-info fff-bp f14 tc">
             <p class="hb-sender line1">{{hbQueens[0].initiator_nickname}}的红包</p>
-            <p class="hb-msg" style="line-height: 18px;word-break: break-all;">{{hbQueens[0].hb.content}}</p>
+            <p class="hb-msg" style="line-height: 18px;">{{hbQueens[0].hb.content}}</p>
           </div>
         </div>
       </div>
@@ -60,13 +60,12 @@
       <div class="hb-queen-container" :class="{'in': hbSlideInState.scale}"  v-if="slideQueens && hbSlideInState.slideIn" ref="hbConBig">
         <div class="hb-model pr" ref="hbModelBig" @click="openHBModel(slideQueens)">
           <div class="hb-count f15 circle">
-            <span class="f16">抢</span>
-            <!-- <template v-if="slideQueens.hb.show_time != 0 && slideQueens.hb.status == 0">
+            <template v-if="slideQueens.hb.show_time != 0 && slideQueens.hb.status == 0">
               {{slideQueens.hb.show_time}}<span class="f12">s</span>
             </template>
-            <template v-if="slideQueens.hb.status == 1 && slideQueens.hb.show_time <= 0">
+            <template v-if="slideQueens.hb.status == 1 && slideQueens.hb.show_time == 0">
               <span class="f16">抢</span>
-            </template> -->
+            </template>
           </div>
           <div class="hb-info fff-bp f14 tc">
             <p class="hb-sender line1">{{slideQueens.initiator_nickname}}的红包</p>
@@ -92,7 +91,7 @@
         <msg-only-img :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.content == '' && v.msg_type == 0" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></msg-only-img>
         <bp-msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.msg_type == 2" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></bp-msg>
         <ds-msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></ds-msg>
-        <msg-hong-bao :key="v.id" v-if="v.msg_type == 3" :data="v" @onHBClick="openHBModel(v)" @onDelete="deleteMsg" @onLike="like" @onBp="bp" @onDs="ds" @onAvatar="showCard"></msg-hong-bao>
+        <msg-hong-bao :key="v.id" v-if="v.msg_type == 3" :data="v" @onHBClick="openHBModel(v)" @onDelete="deleteMsg" @onLike="like" @onAvatar="showCard"></msg-hong-bao>
       </template>
       
     </div>
@@ -122,7 +121,7 @@
         <div class="msg-item-top flex flex-pack-center">
           <span class="sex sex-male" v-if="currentUserInfo.sex == 1"><svg-icon icon-class="male"/></span>
           <span class="sex sex-female" v-if="currentUserInfo.sex == 2"><svg-icon icon-class="female"/></span>
-          <span class="level" style="background-color: #625bc3;" v-if="currentUserInfo.city">{{currentUserInfo.city}}</span>
+          <span class="level" style="background-color: #625bc3;">{{currentUserInfo.city}}</span>
           <span class="level" :class="'level-' + currentUserInfo.mc_level_id"  v-if="currentUserInfo.grade_title != '平民'">{{currentUserInfo.grade_title}}</span>
         </div>
         <p class="sign f14" v-if="currentUserInfo.autograph">签名：{{currentUserInfo.autograph}}</p>
@@ -152,21 +151,13 @@
     <div class="hb-send-window pr">
       <img :src="userInfo.headimgurl | prefixImageUrl" class="circle hb-u-avatar"/>
       <h3 class="hb-send-user pr line1 fff-bp f18">金主 {{userInfo.nickname}}</h3>
-      <p class="hb-text-tip f13">
-        点击切换为
-        <template v-if="hongbao.pay_type == 2">
-          <a style="color:#ffed2e;margin:0 4px;" @click.prevent="hongbao.pay_type = 1">牛角红包</a>
-        </template>
-        <template v-if="hongbao.pay_type == 1">
-          <a style="color:#ffed2e;margin:0 4px;" @click.prevent="hongbao.pay_type = 2">现金红包</a>
-        </template>
-      </p>
-      <div class="hb-input-box flex flex-align-center" style="margin-bottom: 0.1rem;">
+      <p class="hb-text-tip f13">大于等于50元将在大屏幕上显示</p>
+      <div class="hb-input-box flex flex-align-center" style="margin-bottom: 0.2rem;">
         <div class="hb-input-icon"></div>
         <div class="hb-input-label">总金额</div>
         <div class="hb-input-wrap flex-1">
-          <input type="number" pattern="[0-9]*" class="hb-input f16 tr" data-vv-as="红包金额" v-validate.initial="'required|numeric'" @input="validZero" v-model="hongbao.money"/>
-          <!-- <input type="text" class="hb-input f16 tr" data-vv-as="红包金额" v-validate.initial="'required'" v-model="hongbao.money"/> -->
+          <!-- <input type="number" pattern="[0-9]*" class="hb-input f16 tr" data-vv-as="红包金额" v-validate.initial="'required|numeric'" @input="validZero" v-model="hongbao.money"/> -->
+          <input type="text" class="hb-input f16 tr" data-vv-as="红包金额" v-validate.initial="'required'" v-model="hongbao.money"/>
         </div>
         <div class="hb-input-label-unit">
           <template v-if="hongbao.pay_type == 1">
@@ -177,7 +168,14 @@
           </template>
         </div>
       </div>
-      <p class="hb-text-tip f13" style="margin: 0px 0 10px;">大于等于50元将在大屏幕上显示</p>
+      <p class="hb-text-tip f13">
+        <template v-if="hongbao.pay_type == 2">
+          当前为现金红包，切换为<a style="color:#ffed2e;margin:0 4px;" @click.prevent="hongbao.pay_type = 1">牛角红包</a>
+        </template>
+        <template v-if="hongbao.pay_type == 1">
+          当前为牛角红包，切换为<a style="color:#ffed2e;margin:0 4px;" @click.prevent="hongbao.pay_type = 2">现金红包</a>
+        </template>
+      </p>  
       <div class="hb-input-box flex flex-align-center">
         <div class="hb-input-label">个数</div>
         <div class="hb-input-wrap flex-1">
@@ -231,7 +229,7 @@
         <p class="f12" v-if="hbCurInfo.hb.type != 0">
           <span class="vip-for" :class="{'for-male': hbCurInfo.hb.type == 2, 'for-female':  hbCurInfo.hb.type == 1}">{{hongbaoMsg.hb_type[hbCurInfo.hb.type]}}</span>
         </p>
-        <p class="msg f16">{{hbCurInfo.hb.content}}</p>
+        <p class="msg f16">{{hbCurInfo.hb.content}}~</p>
         <a class="hb-open-btn" @click.prevent="openHbAction"></a>
       </div>
       <div class="hb-open-back tc">
@@ -396,7 +394,7 @@
 </template>
 
 <script>
-import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg } from '@/api/'
+import { getBarAllInfo, isSubscribe, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus } from '@/api/'
 import { XDialog, TransferDom, Popup, PopupPicker, XButton } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -420,9 +418,7 @@ import ScrollFix from '@/vendor/ScrollFix'
 import moment from 'moment'
 import LazyLoad from 'vanilla-lazyload'
 import { accAdd } from '@/utils/utils'
-import Hashes from 'jshashes'
-import intersectionBy from 'lodash/intersectionBy'
-import remove from 'lodash/remove'
+// import intersectionBy from 'lodash/intersectionBy'
 // import differenceBy from 'lodash/differenceBy'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
@@ -457,7 +453,6 @@ export default {
       onlineTimer: null,
       hbListTimer: null,
       packetTimer: null,
-      deleteTimer: null,
       ticket: '',
       requestParams: {
         ht_id: this.$route.params.id,
@@ -497,7 +492,7 @@ export default {
           3: '专属红包'
         }
       },
-      hongbaoMes: [['有钱任性，大家快抢啊！', '红包驾到，手慢无！', '红包给最可爱的你！', '给大家助兴，玩得开心~', '全场美女专属，约起来！']],
+      hongbaoMes: [['有钱任性，大家快抢啊！', '红包驾到，手慢无！']],
       hbState: {
         hbDetail: false, // 显示详情
         openHb: false, // 翻转
@@ -628,7 +623,6 @@ export default {
     this.loopOnlines(0)
     this.loopHbList(0)
     this.loopPacketOrder(0)
-    this.loopDelete(0)
   },
   mounted () {
     this.$nextTick(() => {
@@ -674,12 +668,11 @@ export default {
       clearTimeout(this.onlineTimer)
       clearTimeout(this.hbListTimer)
       clearTimeout(this.packetTimer)
-      clearTimeout(this.deleteTimer)
-      /* this.newsTimer = null
+      this.newsTimer = null
       this.noticeTimer = null
       this.onlineTimer = null
       this.hbListTimer = null
-      this.packetTimer = null */
+      this.packetTimer = null
     },
     setTimecountHB () {
       if (this.$refs.hbModel && !this.slideQueens && !this.$refs.hbModel.classList.contains('swing')) {
@@ -744,45 +737,6 @@ export default {
         }
       }
     },
-    loopDelete (time) {
-      if (!this.$route.params.id) {
-        clearTimeout(this.deleteTimer)
-        this.deleteTimer = null
-        return false
-      }
-      this.deleteTimer = setTimeout(() => {
-        getDelMsg({ht_id: this.$route.params.id}).then((res) => {
-          if (res.result.length === 0) {
-            return false
-          }
-          var intersections = intersectionBy(this.chatlist, res.result, 'id')
-          if (intersections.length > 0) {
-            let tmpChat = Object.assign([], this.chatlist)
-            remove(tmpChat, (v) => {
-              var find = intersections.findIndex((vv) => {
-                return v.id === vv.id
-              })
-              if (find !== -1) {
-                return true
-              } else {
-                return false
-              }
-            })
-            this.chatlist = tmpChat
-            this.lockHeight = true
-            this.$nextTick(() => {
-              this.height = this.$refs.scrollWrapper.scrollHeight
-            })
-          }
-        }).finally(() => {
-          if (!this.deleteTimer) {
-            return false
-          }
-          clearTimeout(this.deleteTimer)
-          this.loopDelete(1000)
-        })
-      }, time)
-    },
     loopHbList (time) {
       if (!this.$route.params.id) {
         clearTimeout(this.hbListTimer)
@@ -821,23 +775,6 @@ export default {
         })
       }, time)
     },
-    resetSlideHB (time) {
-      setTimeout(() => {
-        var _self = this
-        this.$refs.hbModelBig.classList.remove('swing')
-        this.bindEnd = () => {
-          _self.$refs.hbConBig.removeEventListener('webkitTransitionEnd', this.bindEnd)
-          _self.hbSlideInState.slideIn = false
-          _self.slideQueens = null
-          _self.$nextTick(() => {
-            _self.hbSlideInState.scale = false
-            _self.loopPacketOrder(0)
-          })
-        }
-        this.$refs.hbConBig.addEventListener('webkitTransitionEnd', this.bindEnd)
-        this.hbSlideInState.scale = true
-      }, time)
-    },
     loopPacketOrder (time) {
       // getPacketOrder
       if (!this.$route.params.id) {
@@ -848,17 +785,7 @@ export default {
       this.packetTimer = setTimeout(() => {
         getPacketOrder({ht_id: this.$route.params.id}).then((res) => {
           if (res.result && !Array.isArray(res.result)) {
-            if (~~(res.result.hb.show_time) <= 0) {
-              clearTimeout(this.packetTimer)
-              this.packetTimer = setTimeout(() => {
-                this.loopPacketOrder(1000)
-              }, 1000)
-              return false
-            }
             clearTimeout(this.packetTimer)
-            /* this.packetTimer = setTimeout(() => {
-              this.loopPacketOrder(1000)
-            }, 1000) */
             this.slideQueens = res.result
             this.hbSlideInState.slideIn = true
             // console.log('time = ' + this.slideQueens.hb.show_time)
@@ -866,8 +793,30 @@ export default {
               setTimeout(() => {
                 this.$refs.hbModelBig.classList.add('swing')
               }, 1300)
-              // 直接开始剩余秒数
-              this.resetSlideHB((~~(this.slideQueens.hb.show_time)) * 1000)
+              this.packetCountTimer = setInterval(() => {
+                if (this.slideQueens.hb.show_time - 1 > 0) {
+                  this.slideQueens.hb.show_time -= 1
+                } else {
+                  this.slideQueens.hb.show_time = 0
+                  this.slideQueens.hb.status = 1
+                  clearInterval(this.packetCountTimer)
+                  setTimeout(() => {
+                    var _self = this
+                    this.$refs.hbModelBig.classList.remove('swing')
+                    this.bindEnd = () => {
+                      _self.$refs.hbConBig.removeEventListener('webkitTransitionEnd', this.bindEnd)
+                      _self.hbSlideInState.slideIn = false
+                      _self.slideQueens = null
+                      _self.$nextTick(() => {
+                        _self.hbSlideInState.scale = false
+                        _self.loopPacketOrder(0)
+                      })
+                    }
+                    this.$refs.hbConBig.addEventListener('webkitTransitionEnd', this.bindEnd)
+                    this.hbSlideInState.scale = true
+                  }, 10000)
+                }
+              }, 1000)
             })
           } else {
             clearTimeout(this.packetTimer)
@@ -1330,10 +1279,8 @@ export default {
       } */
       getHbInfo({ht_id: this.$route.params.id, hb_id: data.hb.id}).then((res) => {
         this.$store.commit('app/SET_HB_CUR_INFO', res.result)
-        var status = ~~(res.result.hb.status)
-        data.hb.status = status
         // 如果已经结束显示红包已经被抢完
-        if (status === 2 && (res.result.hb.is_lq === 0)) {
+        if (~~(res.result.hb.status) === 2 && (res.result.hb.is_lq === 0)) {
           this.hbState.openHb = true
           this.hbOpenVisible = true
           return false
@@ -1344,10 +1291,6 @@ export default {
             this.hbOpenVisible = true
           })
           return false
-        } else if (status === 3) {
-          this.$store.commit('app/SET_HB_ROB_INFO', {type: status, money: 0})
-          this.hbState.openHb = true
-          this.hbOpenVisible = true
         } else {
           this.hbOpenVisible = true
         }
@@ -1359,20 +1302,12 @@ export default {
       this.hongbao.content = v.join('')
     },
     async openHbAction () {
-      this.$vux.loading.show({
-        text: '正在抢'
-      })
       // 请求服务器判断是否已抢完 抢完之前显示已抢完状态
       let response = await getHbStatus({ht_id: this.$route.params.id, hb_id: this.hbCurInfo.hb.id})
       var status = ~~(response.result)
       if (status === 1) {
         // 可以抢
-        // 加密
-        var time = moment().format('X')
-        var token = window.sessionStorage.getItem('tId')
-        var strEncypt = `ht_id=${this.$route.params.id}&key=niuba&time=${time}&token=${token}`
-        strEncypt = new Hashes.SHA1().hex(strEncypt)
-        robHb({ht_id: this.$route.params.id, hb_id: this.hbCurInfo.hb.id, time: time, sign: strEncypt}).then((res) => {
+        robHb({ht_id: this.$route.params.id, hb_id: this.hbCurInfo.hb.id}).then((res) => {
           // 抢到红包后更新余额
           if (res.result.balance) {
             this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
@@ -1394,18 +1329,14 @@ export default {
           /* if (findHBQueen) {
             findHBQueen.hb.is_lq = 1
           } */
-        }).finally(() => {
-          this.$vux.loading.hide()
         })
       } else if (status === 2) {
         // 已抢完
         this.$store.commit('app/SET_HB_ROB_INFO', {type: 2, money: 0})
         this.hbState.openHb = true
-        this.$vux.loading.hide()
       } else if (status === 3) {
         // 已超时
         this.$store.commit('app/SET_HB_ROB_INFO', {type: 3, money: 0})
-        this.$vux.loading.hide()
       }
     },
     openHbDetail (hbid, cb) {
@@ -1421,18 +1352,10 @@ export default {
       setTimeout(() => {
         this.hbState.hbDetail = false
         this.hbState.openHb = false
-        this.$store.commit('app/SET_HB_ROB_INFO', {})
       }, 300)
     },
     packet () {
       var _self = this
-      if (~~(this.hongbao.money) < 2) {
-        this.$vux.toast.show({
-          text: '红包金额最小2元',
-          width: '10em'
-        })
-        return false
-      }
       this.$validator.validateAll('hbInputForm').then(result => {
         let getErrors = this.vErrors.all()
         if (getErrors.length > 0) {
@@ -1449,7 +1372,7 @@ export default {
             })
             return false
           }
-          if (~~(this.hongbao.type) === 3 && ~~(this.hongbao.amount) > this.hongbao.selected.length) {
+          if (~~(this.hongbao.type) === 3 && ~~(this.hongbao.amount) !== this.hongbao.selected.length) {
             this.$vux.toast.show({
               text: '红包个数和自定义个数不等',
               width: '15em'

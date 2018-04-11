@@ -2,19 +2,11 @@
   <div class="scroll-container scroll">
     <div class="detail-item flex flex-align-center bg2" v-for="(v, i) in list" :key="i">
       <div class="detail-item-left flex-1">
-        <p class="overflow fff-bp f14">
-          <template v-if="v.odr_type == 3">
-            <template v-if="v.pay_type == 1">牛角</template><template v-if="v.pay_type == 2">现金</template>红包
-          </template>
-          <template v-else>
-            购买：{{v.title}}X{{v.odr_num}}
-          </template>
-        </p>
+        <p class="overflow fff-bp f14">购买：{{v.title}}X{{v.odr_num}}</p>
         <p class="f13 scolor bottom-line">{{v.create_time}}</p>
       </div>
       <div class="detail-item-right">
-        <p class="overflow f14 ncolor">-{{v.order_money}}<template v-if="v.pay_type == 1">个牛角</template><template v-if="v.pay_type == 2">元</template>
-        </p>
+        <p class="overflow f14 ncolor">-{{v.order_money}}个牛角</p>
       </div>
     </div>
     <infinite-loading @infinite="infiniteHandler">
