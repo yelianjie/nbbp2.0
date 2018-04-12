@@ -91,7 +91,7 @@ export default {
         code = res.result
       } else if (!res.result && this.code) {
         code = this.code
-      } 
+      }
       codeStr = '&code=' + code
       var shareParams = {}
       if (Number(this.$route.query.type) === 1) {
