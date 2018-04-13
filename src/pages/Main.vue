@@ -350,10 +350,10 @@
   <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy" :cancelAutoClose="buyDialogInfo.cancelAutoClose" :onCancel="buyDialogInfo.onCancel" :cancelText="buyDialogInfo.cancelText" :cancelColor="buyDialogInfo.cancelColor" :confirmText="buyDialogInfo.confirmText">
     <div class="">
       <div style="font-size: 26px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;vertical-align: bottom;"/></div>
-      <template v-if="userInfo.is_recharge">
+      <template v-if="userInfo.is_recharge || (!userInfo.is_recharge && barManagerInfo.isManager)">
       <p style="color: #88878f;"><svg-icon icon-class="tip" style="margin-top:-2px;margin-right:2px;" />当前余额可用：<svg-icon icon-class="coin"  style="margin-top:-2px;margin-right:2px;"/>{{userInfo.balance}}</p>
       <p class="f12" v-if="barManagerInfo.isManager && payBus == 1" style="color:#b187e4;margin-top:6px;">今日剩余免费霸屏、打赏{{barManagerInfo.game_count}}次</p>
-      <p class="f13" v-if="buyDialogInfo.isCharge" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
+      <p class="f13" v-if="buyDialogInfo.isCharge && barManagerInfo.game_count == 0" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
       </template>
       <template v-else>
         <p class="f13">选择购买充值即可成为牛霸会员贵族</p>

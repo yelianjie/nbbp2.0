@@ -110,7 +110,7 @@ export default {
       if (!e.data.type) {
         const res = JSON.parse(e.data)
         const o = {
-          address: res.address,
+          address: res.addressComponents.street + res.addressComponents.streetNumber,
           locationLng: res.point.lng,
           locationLat: res.point.lat,
           province_name: res.addressComponents.province,
