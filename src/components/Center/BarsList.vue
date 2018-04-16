@@ -7,7 +7,7 @@
           </div>
           <div class="bar-info flex flex-1 flex-v flex-pack-center">
             <h2 class="bar-name">{{v.name}}</h2>
-            <div class="bar-address">{{v.address}}</div>
+            <div class="bar-address">{{v.area_name}}{{v.address}}</div>
           </div>
           <div class="bar-distance flex flex flex-align-center" v-if="enter == 'home'">
             <svg-icon icon-class="position"/><span>{{v.distance | distance}}</span>

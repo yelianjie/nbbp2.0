@@ -31,7 +31,7 @@ import { getWxConfig, getHasToken } from './api/'
 window.sessionStorage.clear()
 var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  window.sessionStorage.setItem('tId', 'bffd60dadc47900cf2cff5c633946aefd1f713fc')
+  window.sessionStorage.setItem('tId', 'c7187a5f0d47f6489bbd3bd4445a4a98a4573820')
   tId = window.sessionStorage.getItem('tId')
 }
 if (!tId && process.env.NODE_ENV === 'production') {

@@ -8,11 +8,11 @@
           <label for="upload-logo" class="n-label"></label>
         </upload>
         
-        <p>酒吧logo，将展示在二维码、酒吧首页上</p>
+        <p>商户logo，将展示在二维码、商户首页上</p>
       </div>
       <group label-width="4.5em" label-margin-right="2em" label-align="right">
         <x-input title="昵&emsp;&emsp;称" v-model="form.name"></x-input>
-        <cell title="酒吧地址" :value="form.address" is-link value-align="left" @click.native="showMap"></cell>
+        <cell title="商户地址" :value="form.address" is-link value-align="left" @click.native="showMap"></cell>
       </group>
       
       <div class="bottom_abs">
@@ -22,7 +22,7 @@
         <iframe src="" id="iframe" frameborder="0" v-show="mapVisible" allowTransparency="true" style="background-color:#fff;"></iframe>
       </transition>
     </div>
-    <div class="tip f13" v-if="showTip">提示: 如果您的当前酒吧未填写地址将不会出现在牛霸酒吧列表页，请尽快填写。</div>
+    <div class="tip f13" v-if="showTip">提示: 如果您的当前商户未填写地址将不会出现在牛霸商户列表页，请尽快填写。</div>
   </div>
 </template>
 

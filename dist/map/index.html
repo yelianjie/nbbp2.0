@@ -103,14 +103,19 @@
   z-index: 1;  
 }
 .search-row .placeholder .iconfont {
-  display: inline-block; width: 19px; line-height: 24px; padding: 10px 0; 
+  display: inline-block; width:24px; line-height: 24px; padding: 10px 0; 
   font-size: 21px; color: #666;
+  background: url('./search-icon.png') no-repeat center;
+  background-size: contain;
 }
 .search-row .placeholder .text {
   line-height: 40px;
-  vertical-align: top;
+  vertical-align: bottom;
 }
-
+.search-row.active.icon-sousuo {
+  background: url('./search-icon.png') no-repeat 5px center;
+  background-size: 20px;
+}
 .active:before {
   position: absolute; top: 11px; left: 5px; right: auto;
   display: block; margin-right: 0;
@@ -217,12 +222,12 @@ ul,li {
 </head>
 <body>
   <header class="bar">
-      <form name="search" class="search flex flex-h" id="search" action="" onsubmit="return false;">
+      <form name="search" class="search flex flex-h" id="search" action="">
         <div class="search-row flex-1">
           <input type="search" name="word" id="word">
           <span class="placeholder "><span class="iconfont icon-sousuo"></span><span class="text">搜索</span></span>
         </div>
-        <button class="cancel-input" id="cancel-input">取消</button>
+        <button class="cancel-input" id="cancel-input" type="button">取消</button>
       </form>
     </header>
     
@@ -371,7 +376,12 @@ ul,li {
     _search.show()
   })
   word.addEventListener("blur", function(e){
-    searchRow.className = 'search-row flex-1'
+    // searchRow.className = 'search-row flex-1'
+    if (word.value) {
+      $(searchRow).addClass('active')
+    } else {
+      $(searchRow).removeClass('active')
+    }
   })
   var searchDebounce = window.debounce(300, getResult)
   word.addEventListener("input", searchDebounce)
@@ -381,7 +391,17 @@ ul,li {
     cancelBtn.hide()
     word.value = ''
     word.blur()
+    searchRow.className = 'search-row flex-1'
   })
+
+  document.getElementById('search').onsubmit = function(e) {
+    word.blur();
+    getResult()
+    var e = e || window.event;
+    if (e.preventDefault) e.preventDefault();
+    else window.event.returnValue = false;
+  }
+
   /* document.getElementById("search").addEventListener('submit', function(e) {
     local.search(word.value)
     //return false;
@@ -398,6 +418,7 @@ ul,li {
     cancelBtn.hide()
     word.value = ''
     word.blur()
+    searchRow.className = 'search-row flex-1'
     surroundingPoisShow(point)
   })
 

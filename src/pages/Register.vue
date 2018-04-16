@@ -6,10 +6,15 @@
     </div>
     <template v-if="type == 1">
       <group>
-        <x-input title="酒吧名称" name="name" placeholder="" type="text"  data-vv-as="酒吧名称" v-model="r_business.name" v-validate.initial="'required'"></x-input>
+        <x-input title="商户名称" name="name" placeholder="" type="text"  data-vv-as="商户名称" v-model="r_business.name" v-validate.initial="'required'"></x-input>
+        <cell title="商户地址" :value="r_business.address" is-link value-align="left" @click.native="showMap"></cell>
+        <x-input title="商户地址" name="address" placeholder="" type="text"  data-vv-as="商户地址" v-model="r_business.address" v-validate.initial="'required'" style="display: none;"></x-input>
         <x-input title="手机号码" pattern="[0-9]*" name="phone" placeholder="" type="number"  data-vv-as="手机号码" v-model="r_business.phone" v-validate.initial="'required|numeric|mobile'"></x-input>
         <x-input title="推荐码" :disabled="code ? true : false" name="code" placeholder="" type="text"  data-vv-as="推荐码" v-model="r_business.code"></x-input>
       </group>
+      <transition name="slide-fade">
+        <iframe src="" id="iframe" frameborder="0" v-show="mapVisible" allowTransparency="true" style="background-color:#fff;"></iframe>
+      </transition>
     </template>
     <template v-if="type == 2">
       <group>
@@ -24,7 +29,7 @@
 </template>
 
 <script>
-import { Group, XInput, XButton } from 'vux'
+import { Group, XInput, XButton, Cell } from 'vux'
 import { agentRegiste, registerBar } from '@/api/'
 import { mapActions } from 'vuex'
 export default {
@@ -32,6 +37,7 @@ export default {
   data () {
     return {
       type: 0,
+      mapVisible: false,
       r_business: {
         name: '',
         phone: '',
@@ -59,14 +65,50 @@ export default {
         vm.code = code
         vm.r_business.code = code
       }
+      vm.$nextTick(() => {
+        document.getElementById('iframe').style.width = window.innerWidth + 'px'
+        document.getElementById('iframe').style.height = window.innerHeight + 'px'
+        window.addEventListener('message', vm.onSelectAddress, false)
+      })
     })
   },
   created () {
+  },
+  mounted () {
+  },
+  beforeDestroy () {
+    window.removeEventListener('message', this.onSelectAddress, false)
   },
   methods: {
     ...mapActions('user', [
       'getUserInfo'
     ]),
+    showMap () {
+      this.mapVisible = true
+      if (this.mapLoad) {
+        return
+      }
+      setTimeout(() => {
+        // /dist/map/index.html
+        document.getElementById('iframe').src = process.env.NODE_ENV === 'production' ? './map/index.html' : '/dist/map/index.html'
+        this.mapLoad = true
+      }, 300)
+    },
+    onSelectAddress (e) {
+      if (!e.data.type) {
+        const res = JSON.parse(e.data)
+        const o = {
+          address: res.addressComponents.street ? res.addressComponents.street + res.addressComponents.streetNumber : res.address,
+          locationLng: res.point.lng,
+          locationLat: res.point.lat,
+          province_name: res.addressComponents.province,
+          city_name: res.addressComponents.city,
+          area_name: res.addressComponents.district
+        }
+        this.r_business = Object.assign({}, this.r_business, o)
+        this.mapVisible = false
+      }
+    },
     SubmitRegister () {
       this.$validator.validateAll().then(result => {
         let getErrors = this.vErrors.all()
@@ -89,7 +131,7 @@ export default {
                   this.$router.push('/MyBars')
                 }, 800)
               })
-            }).catch(() => {
+            }).finally(() => {
               this.loading = false
             })
           } else {
@@ -104,7 +146,7 @@ export default {
                   this.$router.push('/AgentCenter')
                 }, 800)
               })
-            }).catch(() => {
+            }).finally(() => {
               this.loading = false
             })
           }
@@ -115,12 +157,16 @@ export default {
   components: {
     Group,
     XInput,
-    XButton
+    XButton,
+    Cell
   }
 }
 </script>
 
 <style lang="less" scoped>
+.container /deep/ .vux-label {
+  width: 5em;
+}
 .register-top {
   padding-top: 20px;
   padding-bottom: 30px;
@@ -145,6 +191,14 @@ export default {
 }
 .vux-x-input.disabled {
   color: rgba(0, 0, 0, 0.5);
+}
+#iframe {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
 }
 </style>
 
