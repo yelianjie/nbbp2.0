@@ -12,7 +12,7 @@
       </div>
       <group label-width="4.5em" label-margin-right="2em" label-align="right">
         <x-input title="昵&emsp;&emsp;称" v-model="form.name"></x-input>
-        <cell title="商户地址" :value="form.address" is-link value-align="left" @click.native="showMap"></cell>
+        <cell title="商户地址" :value="calAddress" is-link value-align="left" @click.native="showMap"></cell>
       </group>
       
       <div class="bottom_abs">
@@ -107,10 +107,19 @@ export default {
       this.showLogo = base64
     },
     onSelectAddress (e) {
+      // res.addressComponents.street + res.addressComponents.streetNumber
       if (!e.data.type) {
         const res = JSON.parse(e.data)
+        if (res.address.indexOf('市') !== -1) {
+          var _index1 = res.address.indexOf('市')
+          res.address = res.address.substring(_index1 + 1)
+        }
+        if (res.address.indexOf('区') !== -1) {
+          var _index2 = res.address.indexOf('区')
+          res.address = res.address.substring(_index2 + 1)
+        }
         const o = {
-          address: res.addressComponents.street + res.addressComponents.streetNumber,
+          address: res.address,
           locationLng: res.point.lng,
           locationLat: res.point.lat,
           province_name: res.addressComponents.province,
@@ -132,6 +141,13 @@ export default {
         document.getElementById('iframe').src = process.env.NODE_ENV === 'production' ? './map/index.html' : '/dist/map/index.html'
         this.mapLoad = true
       }, 300)
+    }
+  },
+  computed: {
+    calAddress () {
+      if (this.form.address) {
+        return this.form.area_name + this.form.address
+      }
     }
   }
 }
