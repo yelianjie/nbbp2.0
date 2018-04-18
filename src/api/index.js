@@ -577,6 +577,22 @@ export const getDelMsg = (data) => {
 }
 
 /**
+ * 获取抽奖状态
+ * @param {*} data
+ */
+export const canJoin = (data) => {
+  return request('/weixin/chou/canJoin', 'POST', data)
+}
+
+/**
+ * 抽奖报名
+ * @param {*} data
+ */
+export const lotteryJoin = (data) => {
+  return request('/weixin/chou/baoMing', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */

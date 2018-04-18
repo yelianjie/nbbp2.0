@@ -222,6 +222,17 @@ export default new Router({
       }
     },
     {
+      path: '/Lottery',
+      name: 'Lottery',
+      component: (resolve) => {
+        require(['@/pages/Lottery'], resolve)
+      },
+      meta: {
+        roles: ['user', 'agent', 'business', 'manager'],
+        bg: '#181b2a'
+      }
+    },
+    {
       path: '/Charge',
       name: 'Charge',
       component: (resolve) => {
