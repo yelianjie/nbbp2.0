@@ -4,6 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <script>
+    if (window.location.href.indexOf('versiont') == -1) {
+      var href = window.location.href
+      window.location.replace(href.replace('#', '?versiont=' + new Date().getTime() + '#'))
+    }
+    </script>
+    <script>
     (function (doc, win) {
       var docEl = doc.documentElement,
           resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',

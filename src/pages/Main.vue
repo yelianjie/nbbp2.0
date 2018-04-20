@@ -119,7 +119,7 @@
           </template>
         </div>
         <!--<img src="../assets/logo.png" class="avatar"/>-->
-        <p class="uname f18 fff-bp">{{currentUserInfo.initiator_nickname}}</p>
+        <p class="uname f18 fff-bp line1">{{currentUserInfo.initiator_nickname}}</p>
         <div class="msg-item-top flex flex-pack-center">
           <span class="sex sex-male" v-if="currentUserInfo.sex == 1"><svg-icon icon-class="male"/></span>
           <span class="sex sex-female" v-if="currentUserInfo.sex == 2"><svg-icon icon-class="female"/></span>
@@ -1764,7 +1764,8 @@ export default {
     margin: 0.8rem 0 0.7rem;
   }
   .uname {
-    margin-bottom: 0.2rem;
+    width: 90%;
+    margin: 0 auto 0.2rem;
   }
   .msg-name {
     color: #161a25;

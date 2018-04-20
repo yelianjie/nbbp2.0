@@ -84,6 +84,8 @@
           v-show="isActive[6]">
           <canvas id="qrcode-zhuotie" style="display:none;"></canvas>
           <img v-if="zhuotieUrl" :src="zhuotieUrl" @click="previewImage(zhuotieUrl)" />
+          <canvas id="qrcode-zhuotie2" style="display:none;"></canvas>
+          <img v-if="zhuotieUrl2" :src="zhuotieUrl2" @click="previewImage(zhuotieUrl2)" />
           <p>长按图片保存，或者点击图片放大查看。</p>
           <slot></slot>
         </div> 
@@ -102,7 +104,8 @@ export default {
   data () {
     return {
       isActive: [0, 0, 0, 0, 0, 0, 0],
-      zhuotieUrl: ''
+      zhuotieUrl: '',
+      zhuotieUrl2: ''
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -111,37 +114,49 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      var info = JSON.parse(localStorage.getItem('businessNeed'))
+      this.info = JSON.parse(localStorage.getItem('businessNeed'))
       var zhuotieImg = new Image()
       zhuotieImg.src = './static/help/zhuotie.png'
       zhuotieImg.onload = () => {
-        this.qr = new QRious({
-          element: document.getElementById('qrcode-zhuotie'),
-          value: window.location.origin + window.location.pathname + '#/Main/' + info.id,
-          size: 400,
-          padding: 20
+        this.generateQrcode(document.getElementById('qrcode-zhuotie'), zhuotieImg, (url) => {
+          this.zhuotieUrl = url
         })
-        var dataUrl = this.qr.toDataURL('image/png')
-        var qrcodeImg = new Image()
-        qrcodeImg.onload = () => {
-          var canvas = document.createElement('canvas')
-          canvas.width = zhuotieImg.width
-          canvas.height = zhuotieImg.height
-          var ctx = canvas.getContext('2d')
-          ctx.drawImage(zhuotieImg, 0, 0)
-          ctx.save()
-          ctx.fillStyle = 'rgba(0,0,0,.2)'
-          ctx.fillRect(325, 285, 230, 230)
-          ctx.restore()
-          ctx.globalCompositeOperation = 'source-over'
-          ctx.drawImage(qrcodeImg, 0, 0, 400, 400, 340, 300, 200, 200)
-          this.zhuotieUrl = canvas.toDataURL('image/png')
-        }
-        qrcodeImg.src = dataUrl
+      }
+      var zhuotieImg2 = new Image()
+      zhuotieImg2.src = './static/help/zhuotie2.png'
+      zhuotieImg2.onload = () => {
+        this.generateQrcode(document.getElementById('qrcode-zhuotie2'), zhuotieImg2, (url) => {
+          this.zhuotieUrl2 = url
+        })
       }
     })
   },
   methods: {
+    generateQrcode (dom, zhuotieImg, cb) {
+      var qr = new QRious({
+        element: dom,
+        value: window.location.origin + window.location.pathname + '#/Main/' + this.info.id,
+        size: 400,
+        padding: 20
+      })
+      var dataUrl = qr.toDataURL('image/png')
+      var qrcodeImg = new Image()
+      qrcodeImg.onload = () => {
+        var canvas = document.createElement('canvas')
+        canvas.width = zhuotieImg.width
+        canvas.height = zhuotieImg.height
+        var ctx = canvas.getContext('2d')
+        ctx.drawImage(zhuotieImg, 0, 0)
+        ctx.save()
+        ctx.fillStyle = 'rgba(0,0,0,.2)'
+        ctx.fillRect(325, 285, 230, 230)
+        ctx.restore()
+        ctx.globalCompositeOperation = 'source-over'
+        ctx.drawImage(qrcodeImg, 0, 0, 400, 400, 340, 300, 200, 200)
+        cb(canvas.toDataURL('image/png'))
+      }
+      qrcodeImg.src = dataUrl
+    },
     previewImage (url) {
       var pics = {current: url, urls: [url]}
       this.$wechat.previewImage(pics)

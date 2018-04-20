@@ -14,10 +14,9 @@
             <p>开抢倒计时：{{data.hb.show_time}}秒</p>
           </template>
           <template v-else>
-            <template v-if="data.hb.type == 3 && data.hb.user.nickname">
+            <!-- <template v-if="data.hb.type == 3 && data.hb.user.nickname">
               <p>领取红包</p>
-            </template>
-            <template v-else>
+            </template> -->
               <template v-if="data.hb.is_lq == 0 && data.hb.status == 1">
                 <p>领取红包</p>
               </template>
@@ -30,7 +29,6 @@
               <template v-if="data.hb.status == 3">
                 <p>红包已过期</p>
               </template>
-            </template>
           </template>
         </div>
       </div>

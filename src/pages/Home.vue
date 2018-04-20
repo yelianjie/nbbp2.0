@@ -46,8 +46,8 @@ export default {
         }
       })
     })
-    this.loading = true
-    this.getAllRegions(29.88525897, 121.57900597)
+    /* this.loading = true
+    this.getAllRegions(29.88525897, 121.57900597) */
   },
   mounted () {
   },
