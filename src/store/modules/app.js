@@ -6,7 +6,8 @@ const state = {
   direction: 'forward',
   fontSize: 50,
   hbCurInfo: {hb: {}},
-  hbRobInfo: {}
+  hbRobInfo: {},
+  currentUserInfo: {}
 }
 
 // getters
@@ -15,7 +16,8 @@ const getters = {
   direction: () => state.direction,
   fontSize: () => state.fontSize,
   hbCurInfo: () => state.hbCurInfo,
-  hbRobInfo: () => state.hbRobInfo
+  hbRobInfo: () => state.hbRobInfo,
+  currentUserInfo: () => state.currentUserInfo
 }
 
 // actions
@@ -44,6 +46,9 @@ const mutations = {
   },
   SET_HB_ROB_INFO (state, data) {
     state.hbRobInfo = data
+  },
+  SET_CURRENT_USER_INFO (state, data) {
+    state.currentUserInfo = data
   }
 }
 

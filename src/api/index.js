@@ -5,9 +5,9 @@ const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/pr
 /**
  * 添加url记录 关注后直接点击链接
 */
-export const addWxMsg = (data) => {
+/* export const addWxMsg = (data) => {
   return request('/weixin/index/addWxMsg', 'POST', data)
-}
+} */
 
 /**
  * 客户端登录

@@ -730,7 +730,7 @@ export default {
         return false
       }
       if (currentUserInfo) {
-        this.$store.commit('main/SET_CURRENT_USER_INFO', JSON.parse(currentUserInfo))
+        this.$store.commit('app/SET_CURRENT_USER_INFO', JSON.parse(currentUserInfo))
         localStorage.removeItem('currentUserInfo')
       }
       this.ChangeBuyDialogInfo(JSON.parse(buyInfo))
@@ -1048,7 +1048,7 @@ export default {
         info.initiator_headimgurl = info.headimgurl
         info.initiator_nickname = info.nickname
         info.initiator_mc_id = info.id
-        this.$store.commit('main/SET_CURRENT_USER_INFO', info)
+        this.$store.commit('app/SET_CURRENT_USER_INFO', info)
       }
       this.userDialogVisible = true
     },
@@ -1278,11 +1278,11 @@ export default {
       }, 3000) */
     },
     screenForAll () {
-      this.$store.commit('main/SET_CURRENT_USER_INFO', {})
+      this.$store.commit('app/SET_CURRENT_USER_INFO', {})
       this.bpWindowVisible = true
     },
     rewardForAll () {
-      this.$store.commit('main/SET_CURRENT_USER_INFO', {})
+      this.$store.commit('app/SET_CURRENT_USER_INFO', {})
       this.dsWindowVisible = true
     },
     hbWindowClose () {
@@ -1565,14 +1565,12 @@ export default {
     ...mapGetters('app', {
       buyDialogInfo: 'buyDialogInfo',
       hbCurInfo: 'hbCurInfo',
-      hbRobInfo: 'hbRobInfo'
+      hbRobInfo: 'hbRobInfo',
+      currentUserInfo: 'currentUserInfo'
     }),
     ...mapGetters('user', {
       userInfo: 'userInfo',
       barManagerInfo: 'barManagerInfo'
-    }),
-    ...mapGetters('main', {
-      currentUserInfo: 'currentUserInfo'
     })
   },
   components: {

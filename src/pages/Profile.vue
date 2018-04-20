@@ -13,7 +13,7 @@
         </upload>
       </div>
       <group label-width="4.5em" label-align="center">
-        <x-input title="昵称" v-model="form.nickname" value-text-align="left" data-vv-as="昵称" v-validate.initial="'required'"></x-input>
+        <x-input title="昵称" v-model="form.nickname" value-text-align="left" data-vv-as="昵称" v-validate.initial="'required|max:10'"></x-input>
         <popup-picker title="性别" :data="sexs" @on-hide="onHide" v-model="form.sex" value-text-align="left" show-name></popup-picker>
         <datetime title="生日" :min-year="1940" v-model="form.birthday" value-text-align="left" placeholder="选择出生日期"></datetime>
         <popup-picker title="身高" :data="heights" v-model="form.stature" value-text-align="left" placeholder="选择身高"></popup-picker>
@@ -167,7 +167,8 @@ export default {
         let getErrors = this.vErrors.all()
         if (getErrors.length > 0) {
           this.$vux.toast.show({
-            text: getErrors[0]
+            text: getErrors[0],
+            width: '15em'
           })
         } else {
           this.loading = true

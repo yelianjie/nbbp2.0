@@ -42,7 +42,7 @@ export default {
   },
   filters: {
     screenUrl: (val) => {
-      return BASE_API + '/screen/?ht_id=' + val
+      return BASE_API + '/dist/#/Main/' + val
     },
     listUrl: (val) => {
       return BASE_API + '/dist/#/'

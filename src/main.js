@@ -21,7 +21,6 @@ import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 import { validateRules } from './utils/validateRules'
 import VueLazyload from 'vue-lazyload'
 import { getWxConfig, getHasToken } from './api/'
-// let isAddWxMsg = false
 // 判断 切换公众号时以前的号有localStorage 用这个变量判断删除
 // var changeFlag = localStorage.getItem('changeFlag') ? 1 : 0
 /* if (process.env.NODE_ENV === 'production') {
@@ -31,7 +30,7 @@ import { getWxConfig, getHasToken } from './api/'
 window.sessionStorage.clear()
 var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  window.sessionStorage.setItem('tId', 'c7187a5f0d47f6489bbd3bd4445a4a98a4573820')
+  window.sessionStorage.setItem('tId', 'a9bed4849f555de769e9f751bffc3b5f9623eaa8')
   tId = window.sessionStorage.getItem('tId')
 }
 if (!tId && process.env.NODE_ENV === 'production') {

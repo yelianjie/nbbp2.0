@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex flex-v" style="background-color:#121420;">
+  <div class="container flex flex-v" style="background-color:#121420;height: 100%;">
     <div class="home-header"><svg-icon icon-class="hot" className="hot-icon"/><span class="h-title f16">热门推荐</span><span class="city-now" @click="showAddress = true">{{cityName}}<svg-icon icon-class="arrow-down" className="arrow-down-icon"/></span></div>
     <div class="flex-1 scroll">
       <inline-loading v-if="loading" :color="'#f31374'" :bgColor="'rgba(255, 255, 255, 0.2)'"></inline-loading>
@@ -46,8 +46,8 @@ export default {
         }
       })
     })
-    /* this.loading = true
-    this.getAllRegions(29.88525897, 121.57900597) */
+    this.loading = true
+    this.getAllRegions(29.88525897, 121.57900597)
   },
   mounted () {
   },

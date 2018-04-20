@@ -170,7 +170,7 @@ export default {
       const texts = ['一', '二', '三']
       return texts[this.dsTimes - 1] + '连送礼'
     },
-    ...mapGetters('main', {
+    ...mapGetters('app', {
       currentUserInfo: 'currentUserInfo'
     }),
     ...mapGetters('user', {

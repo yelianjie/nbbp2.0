@@ -256,7 +256,7 @@ export default {
       const texts = ['一', '二', '三']
       return texts[this.bpTimes - 1] + '连霸屏'
     },
-    ...mapGetters('main', {
+    ...mapGetters('app', {
       currentUserInfo: 'currentUserInfo'
     }),
     ...mapGetters('user', {

@@ -65,7 +65,7 @@ export default {
       this.$emit('onBp')
     },
     setUserInfo () {
-      this.$store.commit('main/SET_CURRENT_USER_INFO', this.data)
+      this.$store.commit('app/SET_CURRENT_USER_INFO', this.data)
     }
   }
 }

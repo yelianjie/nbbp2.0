@@ -17,7 +17,7 @@ export default {
   props: ['data'],
   methods: {
     avatar () {
-      this.$store.commit('main/SET_CURRENT_USER_INFO', this.data)
+      this.$store.commit('app/SET_CURRENT_USER_INFO', this.data)
       this.$emit('onAvatar')
     },
     deleteMsg () {

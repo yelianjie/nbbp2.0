@@ -5,6 +5,7 @@
     <p class="tip fff-bp" v-if="lotteryState == 1">抽奖活动火热进行中...</p>
     <x-button id="lottery-btn" v-if="!isJoin" :gradients="['#ffdb69', '#ffdb69']" @click.native="join" :disabled="joinLoading" :show-loading="joinLoading">立即参与抽奖</x-button>
     <x-button id="lottery-btn" v-else :gradients="['#ffdb69', '#ffdb69']" :disabled="true">你已参加</x-button>
+    <x-button id="back-bar-btn" :gradients="['transparent', 'transparent']" @click.native="backTobar">返回酒吧</x-button>
   </div>
 </template>
 
@@ -53,9 +54,18 @@ export default {
     join () {
       this.joinLoading = true
       lotteryJoin({ht_id: this.$route.query.id}).then((res) => {
+        this.isJoin = true
       }).finally(() => {
         this.joinLoading = false
       })
+    },
+    backTobar () {
+      var count = ~~(window.sessionStorage.getItem('count'))
+      if (count === 1) {
+        this.$router.replace(`/Main/${this.$route.query.id}`)
+      } else {
+        this.$router.go(-1)
+      }
     }
   },
   components: {
@@ -82,7 +92,13 @@ export default {
 #lottery-btn {
   width: 4.76rem;
   border-radius: 20px;
-  margin-top: 2.8rem;
+  margin-top: 1.8rem;
   color: #fc3c37!important;
+}
+#back-bar-btn {
+  width: 4.76rem;
+  border-radius: 20px;
+  border: 1px solid #fff;
+  margin-top: 20px;
 }
 </style>
