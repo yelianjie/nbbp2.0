@@ -4,9 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <script>
-    if (window.location.href.indexOf('versiont') == -1) {
+    if (window.location.href.indexOf('version') == -1) {
       var href = window.location.href
-      window.location.replace(href.replace('#', '?versiont=' + new Date().getTime() + '#'))
+      var toHref = ''
+      if (href.indexOf('&') != -1) {
+        toHref = href + '?version=' + new Date().getTime()
+      } else {
+        if (href.indexOf('?') != -1) {
+          toHref = href + '&version=' + new Date().getTime()
+        } else {
+          toHref = href + '?version=' + new Date().getTime()
+        }
+      }
+      window.location.replace(decodeURIComponent(toHref))
     }
     </script>
     <script>

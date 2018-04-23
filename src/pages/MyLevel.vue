@@ -130,8 +130,9 @@ export default {
     calRest () {
       if (this.userInfo.hasOwnProperty('mc_level_id')) {
         var find = this.grades.find(v => ~~(v.id) === ~~(this.userInfo.next_grade_id))
+        var nowGrade = this.grades.find((v) => ~~(v.id) === ~~(this.userInfo.mc_level_id))
         if (find) {
-          return ~~((find.experience - this.userInfo.experience_less) / find.experience * 100)
+          return ~~((this.userInfo.total_mc_experience - nowGrade.experience) / (find.experience - nowGrade.experience) * 100) + '%'
         } else {
           return 0
         }
