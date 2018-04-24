@@ -3,22 +3,29 @@
     <div class="flex-1 scroll">
     <div class="top-manager tc">
       <img :src="info.headimgurl | prefixImageUrl" class="circle"/>
-      <p class="nickname line1 f13">{{info.nickname}}</p>
+      <p class="nickname line1 f14" style="margin: 0 15px;">{{info.nickname}}</p>
     </div>
      <group label-width="12em" label-margin-right="2em" label-align="left">
        <group-title slot="title">管理员权限设置</group-title>
-       <x-input title="每日最多免费打赏次数" text-align="right" type="number">
-        <span slot="right">人</span>
+       <x-input title="每日最多免费打赏次数" text-align="right" type="number" v-model="count" :show-clear="false" @on-change="countValid" pattern="[0-9]*">
+        <span slot="right" style="margin-left:6px;">次</span>
       </x-input>
       <cell title="最高免费霸屏时长不超过" value="60秒"></cell>
       <x-switch title="可登录商户后台" v-model="powerOn" @on-change="powerOnChange"></x-switch>
      </group>
      <template v-if="powerOn">
-      <checklist title="管理员权限" label-position="left" :options="powerList" v-model="powerCheck" @on-change="powerChange"></checklist>
+      <checklist title="管理员权限" label-position="left" :options="powerList" v-model="powerCheck"></checklist>
       </template>
     </div>
-     <div id="profile-submit-btn">
-      <x-button :gradients="['#2481d2', '#2481d2']" :show-loading="loading" :disabled="loading">确认添加</x-button>
+     <div class="flex" style="margin: 0 10px;padding: 10px 0;">
+      <template v-if="$route.query.type">
+      <x-button class="flex1" :gradients="['#e51c23', '#e51c23']" @click.native="handleManager" :show-loading="loading" :disabled="loading">删除</x-button>
+      <div style="width: 10px;"></div>
+      <x-button  class="flex1" :gradients="['#2481d2', '#2481d2']" @click.native="handleManager" :show-loading="loading" :disabled="loading">确认</x-button>
+      </template>
+      <template v-else>
+      <x-button  :gradients="['#2481d2', '#2481d2']" @click.native="handleManager" :show-loading="loading" :disabled="loading">确认添加</x-button>
+      </template>
       </div>
   </div>
 </template>
@@ -42,6 +49,7 @@ export default {
       powerList: [],
       powerOn: false,
       loading: false,
+      count: 3,
       info: {}
     }
   },
@@ -57,21 +65,43 @@ export default {
         res.result.forEach((v) => {
           v.key = v.id
           v.value = v.name
+          this.powerCheck.push(v.id.toString())
         })
         this.powerList = res.result
       }
     })
-    if (!this.$route.query.type) {
+    if (this.$route.query.type) {
       getManagerInfo({ht_id: this.$route.query.id, mc_id: this.$route.query.mc_id}).then((res) => {
         console.log(res)
+        if (res.result) {
+          this.powerCheck = res.result.info.function_id.split(',')
+          this.powerOn = Boolean(~~(res.result.info.is_allow_in))
+          this.count = ~~(res.result.info.screen_count)
+        }
       })
     }
   },
   mounted () {
   },
   methods: {
-    powerChange (val, label) {
-      console.log(val)
+    countValid (value) {
+      var toV = parseInt(value)
+      if (!Number.isNaN(toV)) {
+        this.count = toV > 50 ? 50 : toV
+      }
+    },
+    handleManager () {
+      var params = {
+        ht_id: this.$route.query.id,
+        mc_id: this.$route.query.mc_id,
+        allow: this.powerOn ? 1 : 0,
+        time: 60,
+        num: this.count,
+        function_id: this.powerOn ? this.powerCheck.join(',') : ''
+      }
+      addManager(params).then((res) => {
+        this.$router.go(-1)
+      })
     },
     powerOnChange (currentValue) {
       this.powerOn = currentValue
@@ -81,6 +111,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import (reference) '../styles/global.less';
+.container {
+  /deep/ .weui-switch:checked {
+    border-color: @centerColor;
+    background-color: @centerColor;
+  }
+  /deep/ .weui-cells_checkbox .weui-check:checked + .weui-icon-checked:before {
+    color:  @centerColor;
+  }
+  /deep/ .weui-btn + .weui-btn {
+    margin-top: 0;
+  }
+}
+
 .top-manager {
   padding: 0.2rem 0;
   img {

@@ -23,8 +23,9 @@
       </tab>
     </div>
     <inline-loading v-if="loading2" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
-    <div id="current-managers" class="fff">  
-      <Manager v-for="(v, i) in results" :show-add="false" :key="i" :index="i" :result="v"  @on-delete="onDeleteResult" :type="listType" @on-release="releaseBlack"></Manager>
+    <div id="current-managers" class="fff">
+      <p v-if="listType == 0" class="f12" style="padding: 8px 10px;">提示：最多只能添加6个管理员</p>
+      <Manager v-for="(v, i) in results" :show-add="false" :key="i" :index="i" :result="v"  @on-item-click="onEdit" @on-delete="onDeleteResult" :type="listType" @on-release="releaseBlack"></Manager>
     </div>
   </div>
 </template>
@@ -109,6 +110,10 @@ export default {
         })
       }) */
     },
+    onEdit (data) {
+      localStorage.setItem('managerInfo', JSON.stringify(this.results[data.index]))
+      this.$router.push(`/ManagerUpdate?id=${this.$route.query.id}&mc_id=${data.id}&type=edit`)
+    },
     onDelete (data) {
       deleteManager({ht_id: this.$route.query.id, mc_id: data.id}).then((res) => {
         this.$vux.toast.show({
@@ -185,6 +190,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import (reference) '../styles/global.less';
+.container /deep/ .vux-tab .vux-tab-item.vux-tab-selected {
+    color: @centerColor;
+  }
+
+.container /deep/ .vux-tab-ink-bar {
+  background-color: @centerColor;
+}
 #results {
   background-color: #fff;
 }

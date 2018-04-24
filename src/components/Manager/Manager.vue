@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-h flex-align-center result-item">
+  <div class="flex flex-h flex-align-center result-item pr" @click="onRoute(result.id, index)">
     <div class="u-img">
       <img v-lazy="$options.filters.prefixImageUrl(result.headimgurl)" class="circle">
     </div>
@@ -18,7 +18,8 @@
           <x-button mini type="warn" :show-loading="loading2" @click.native="releaseBlack(result.mc_id, index)">移除</x-button>
         </template>
         <template v-else>
-          <x-button mini type="warn" :show-loading="loading2" @click.native="deleteManager(result.mc_id, index)">删除</x-button>
+          <!-- <x-button mini type="warn" :show-loading="loading2" @click.native="deleteManager(result.mc_id, index)">删除</x-button> -->
+          <x-icon type="ios-arrow-right" size="25"></x-icon>
         </template>
       </template>
     </div>
@@ -75,20 +76,34 @@ export default {
           // this.loading2 = false
         }
       })
+    },
+    onRoute (id) {
+      this.$emit('on-item-click', {
+        id: id,
+        index: this.index
+      })
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+@import (reference) '../../styles/global.less';
 .result-item /deep/ {
   .weui-btn + .weui-btn {
     margin: 0;
+  }
+  .vux-x-icon {
+    fill: #989898;
   }
 }
 
 .result-item {
   padding: 10px 15px;
+  &:before {
+    .setTopLine(#e6e0e0);
+    content: "";
+  }
 }
 .u-img  {
   display: table;

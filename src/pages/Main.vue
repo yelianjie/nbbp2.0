@@ -371,6 +371,14 @@
       </div>
     </div>
   </bp-dialog>
+  <template v-if="blackVisible">
+    <bp-dialog :title="'提示'" v-model="blackVisible" @onConfirm="$router.go(-1)" :confirmText="'确定'" :one="true">
+      <div class="">
+        <p class="f14" style="color:#7b7b7b;">你已进入{{barDataInfo.ht_msg.name}}的黑名单</p>
+        <p class="f14" style="color:#7b7b7b;margin-top:6px;">如有异议，请联系酒吧管理员</p>
+      </div>
+    </bp-dialog>
+  </template>
   <bp-dialog :title="'提示'" v-model="deleteDialogVisible" @onConfirm="confirmDelete">
     <div class="">
       <div class="" style="font-size: 20px;margin-bottom: 8px;">
@@ -398,7 +406,7 @@
 
 <script>
 // isSubscribe
-import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg } from '@/api/'
+import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack } from '@/api/'
 import { XDialog, TransferDom, Popup, PopupPicker, XButton } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -449,6 +457,7 @@ export default {
       onlineVisible: false,
       deleteDialogVisible: false,
       buySuccessDialogVisible: false,
+      blackVisible: false,
       deleteInfo: {},
       height: 0,
       noMore: false,
@@ -616,6 +625,11 @@ export default {
           })
         })
       }
+      // 是否是黑名单
+      // this.blackVisible = true
+      isBlack({ht_id: this.$route.params.id}).then((res) => {
+        console.log(res)
+      })
     })
     /* isSubscribe({ht_id: this.$route.params.id, type: 1, url: window.location.hash.substring(1)}).then((res) => {
       if (res.result === '已关注') {

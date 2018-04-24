@@ -633,6 +633,14 @@ export const getFunction = (data) => {
 }
 
 /**
+ * 是否是黑名单
+ * @param {*} data
+ */
+export const isBlack = (data) => {
+  return request('/weixin/members/isBlack', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */
