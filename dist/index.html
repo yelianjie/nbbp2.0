@@ -1,10 +1,25 @@
-<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=0"><script>if (window.location.href.indexOf('version') == -1) {
-      var href = window.location.href
-      var toHref = ''
-      if (href.indexOf('&') != -1) {
-        toHref = href + '?version=' + new Date().getTime()
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=0"><script>function patch(s){
+      var re= /\?/ig
+      var m = s.match(re)
+      if (m) {
+        return m.length
       } else {
-        if (href.indexOf('?') != -1) {
+        return 0
+      }
+    }
+    var href = window.location.href
+    if (window.location.href.indexOf('version') == -1) {
+      var toHref = ''
+      var patchLength = patch(href)
+      if (/singlemessage|groupmessage|timeline/g.test(href)) {
+        // weixin
+        if(patchLength == 1) {
+          toHref = href + '?version=' + new Date().getTime()
+        } else {
+          toHref = href + '&version=' + new Date().getTime()
+        }
+      } else {
+        if(patchLength == 1) {
           toHref = href + '&version=' + new Date().getTime()
         } else {
           toHref = href + '?version=' + new Date().getTime()
@@ -47,4 +62,14 @@
       document.documentElement.className = 'ios'
       document.documentElement.setAttribute('data-dpr', dpr)
     }
-    window.sessionStorage.clear()</script><title>牛霸霸屏</title><link href=./static/css/app.874ed6e8ad20131ace1b7e2c0b4dd223.css rel=stylesheet></head><body><div id=app-box></div><script src=https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js></script><script type=text/javascript src=./static/js/manifest.9c4cd92adb104483d794.js></script><script type=text/javascript src=./static/js/vendor.4907625854d2fb3c7259.js></script><script type=text/javascript src=./static/js/app.f8a7d054e10781638cf2.js></script></body></html>
+    window.sessionStorage.clear()</script><title>牛霸霸屏</title><link href=./static/css/app.874ed6e8ad20131ace1b7e2c0b4dd223.css rel=stylesheet></head><body><div id=app-box></div><script src=https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js></script><script type=text/javascript src=./static/js/manifest.0cf3e438dca2c542fc7e.js></script><script type=text/javascript src=./static/js/vendor.4907625854d2fb3c7259.js></script><script type=text/javascript src=./static/js/app.d87dbecba667e31c1247.js></script>
+    <!--
+    <div></div>
+    </body>
+    -->
+    </body>
+    <!--
+    <div></div>
+    </body>
+    -->
+    </html>

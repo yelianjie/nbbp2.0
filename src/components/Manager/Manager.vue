@@ -3,14 +3,23 @@
     <div class="u-img">
       <img v-lazy="$options.filters.prefixImageUrl(result.headimgurl)" class="circle">
     </div>
-    <div class="u-nickname overflow flex-1">{{result.nickname}}</div>
+    <div class="u-nickname overflow flex-1">
+      <p>{{result.nickname}}</p>
+      <p class="f12" style="color:#989898;">{{result.create_time}}</p>
+    </div>
     <div class="u-op">
       <template v-if="from === 'searchResults'">
+        <x-button mini :gradients="['#e51c23', '#e51c23']" :show-loading="loading1" @click.native="addBlack(result.id, index)">拉黑</x-button>
         <x-button mini :gradients="['#1D62F0', '#1D62F0']" :show-loading="loading1" @click.native="addManager(result.id, index)" v-if="result.flag === null">添加</x-button>
         <x-button mini type="warn" :show-loading="loading2" @click.native="deleteManager(result.id, index)" v-if="result.flag">删除</x-button>
       </template>
       <template v-else>
-        <x-button mini type="warn" :show-loading="loading2" @click.native="deleteManager(result.mc_id, index)">删除</x-button>
+        <template v-if="type == 1">
+          <x-button mini type="warn" :show-loading="loading2" @click.native="releaseBlack(result.mc_id, index)">移除</x-button>
+        </template>
+        <template v-else>
+          <x-button mini type="warn" :show-loading="loading2" @click.native="deleteManager(result.mc_id, index)">删除</x-button>
+        </template>
       </template>
     </div>
   </div>
@@ -19,7 +28,7 @@
 <script>
 import { XButton } from 'vux'
 export default {
-  props: ['result', 'from', 'index'],
+  props: ['result', 'from', 'index', 'type'],
   data () {
     return {
       loading1: false,
@@ -31,12 +40,12 @@ export default {
   },
   methods: {
     addManager (id) {
-      this.loading1 = true
+      // this.loading1 = true
       this.$emit('on-add', {
         id: id,
         index: this.index,
         cb: () => {
-          this.loading1 = false
+          // this.loading1 = false
         }
       })
     },
@@ -48,12 +57,36 @@ export default {
           this.loading2 = false
         }
       })
+    },
+    addBlack (id) {
+      this.$emit('on-black', {
+        id: id,
+        index: this.index,
+        cb: () => {
+          // this.loading2 = false
+        }
+      })
+    },
+    releaseBlack (id) {
+      this.$emit('on-release', {
+        id: id,
+        index: this.index,
+        cb: () => {
+          // this.loading2 = false
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.result-item /deep/ {
+  .weui-btn + .weui-btn {
+    margin: 0;
+  }
+}
+
 .result-item {
   padding: 10px 15px;
 }
@@ -70,5 +103,4 @@ export default {
   margin-right: 10px;
   overflow: hidden;
 }
-
 </style>

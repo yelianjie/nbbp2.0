@@ -59,6 +59,7 @@ import { mapGetters } from 'vuex'
 import ScrollFix from '@/vendor/ScrollFix'
 import LazyLoad from 'vanilla-lazyload'
 import { getAgentCode } from '@/api/'
+import { delQueStr } from '@/utils/utils'
 export default {
   data () {
     return {
@@ -105,7 +106,7 @@ export default {
         shareParams = {
           title: '代理加盟：推荐商户免费使用牛霸系统获永久收益分成',
           desc: '该系统适用于酒吧、庆典、餐厅、婚礼等各种场合',
-          link: window.location.href,
+          link: delQueStr(window.location.href, 'version'),
           imgUrl: 'http://xnb.siweiquanjing.com/screen/images/logo1.png' // 分享图标
         }
       }

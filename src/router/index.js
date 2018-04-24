@@ -171,6 +171,16 @@ export default new Router({
       }
     },
     {
+      path: '/ManagerUpdate',
+      name: 'ManagerUpdate',
+      component: (resolve) => {
+        require(['@/pages/ManagerUpdate'], resolve)
+      },
+      meta: {
+        roles: ['business', 'manager']
+      }
+    },
+    {
       path: '/AgentBarInfo',
       name: 'AgentBarInfo',
       component: (resolve) => {

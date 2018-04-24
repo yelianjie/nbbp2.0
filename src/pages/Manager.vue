@@ -13,30 +13,32 @@
     ref="search">
     <div id="results" :style="{'min-height': resultHeight + 'px'}">
       <inline-loading v-if="loading1" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
-      <Manager v-for="(v, i) in searchResults" from="searchResults" :key="i" :index="i" :result="v" @on-add="onAdd" @on-delete="onDelete"></Manager>
+      <Manager v-for="(v, i) in searchResults" from="searchResults" :key="i" :index="i" :result="v" @on-add="onAdd" @on-delete="onDelete" @on-black="onAddBlack" :type="1"></Manager>
     </div>
     </search>
-    
-    <div class="manager-tips" :class="{'focus': focus == true}">
-      <p>管理员权限：</p>
-      <p>1、每天可免费在该酒吧购买3次霸屏，不可累加。</p>
-      <p>2、可在手机端删除已经上墙的消息。</p>
+    <div id="tabs-manager">
+      <tab>
+        <tab-item selected @on-item-click="onItemClick">管理员</tab-item>
+        <tab-item @on-item-click="onItemClick">黑名单</tab-item>
+      </tab>
     </div>
     <inline-loading v-if="loading2" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
     <div id="current-managers" class="fff">  
-      <Manager v-for="(v, i) in results" :show-add="false" :key="i" :index="i" :result="v"  @on-delete="onDeleteResult"></Manager>
+      <Manager v-for="(v, i) in results" :show-add="false" :key="i" :index="i" :result="v"  @on-delete="onDeleteResult" :type="listType" @on-release="releaseBlack"></Manager>
     </div>
   </div>
 </template>
 
 <script>
-import { Search } from 'vux'
+import { Search, Tab, TabItem } from 'vux'
 import Manager from '../components/Manager/Manager'
-import { getBarManagers, getMembersByName, addManager, deleteManager } from '@/api/'
+import { getBarManagers, getMembersByName, deleteManager, addBlack, blackList, releaseBlack } from '@/api/'
 import InlineLoading from '../components/InlineLoading'
 export default {
   components: {
     Search,
+    Tab,
+    TabItem,
     Manager,
     InlineLoading
   },
@@ -48,7 +50,8 @@ export default {
       results: [],
       searchResults: [],
       loading1: false,
-      loading2: true
+      loading2: true,
+      listType: 0
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -56,29 +59,55 @@ export default {
     next()
   },
   created () {
-    getBarManagers({ht_id: this.$route.query.id}).then((res) => {
-      this.loading2 = false
-      Array.isArray(res.result) && (this.results = res.result)
-    })
+    this.getBarManagerData()
   },
   mounted () {
     this.resultHeight = window.innerHeight - 44
   },
   methods: {
+    onItemClick (index) {
+      this.listType = index
+      this.results = []
+      if (index === 0) {
+        // 管理员列表
+        this.getBarManagerData()
+      } else {
+        // 黑名单列表
+        this.getBlackListData()
+      }
+    },
+    getBlackListData () {
+      this.loading2 = true
+      blackList({ht_id: this.$route.query.id}).then((res) => {
+        Array.isArray(res.result) && (this.results = res.result)
+      }).finally(() => {
+        this.loading2 = false
+      })
+    },
+    getBarManagerData () {
+      this.loading2 = true
+      getBarManagers({ht_id: this.$route.query.id}).then((res) => {
+        Array.isArray(res.result.list) && (this.results = res.result.list)
+      }).finally(() => {
+        this.loading2 = false
+      })
+    },
     onAdd (data) {
-      addManager({ht_id: this.$route.query.id, mc_id: data.id}).then((res) => {
+      localStorage.setItem('managerInfo', JSON.stringify(this.searchResults[data.index]))
+      this.$router.push(`/ManagerUpdate?id=${this.$route.query.id}&mc_id=${data.id}`)
+      /* addManager({ht_id: this.$route.query.id, mc_id: data.id}).then((res) => {
         this.$vux.toast.show({
           text: '添加成功',
           isShowMask: false
         })
         data.cb && data.cb()
         this.searchResults[data.index].flag = 1
-        this.results.push({
+        this.listType === 0 && this.results.push({
           nickname: this.searchResults[data.index].nickname,
           mc_id: this.searchResults[data.index].id,
           headimgurl: this.searchResults[data.index].headimgurl
         })
-      })
+      }) */
     },
     onDelete (data) {
       deleteManager({ht_id: this.$route.query.id, mc_id: data.id}).then((res) => {
@@ -88,6 +117,9 @@ export default {
         })
         data.cb && data.cb()
         this.searchResults[data.index].flag = null
+        if (this.listType !== 0) {
+          return false
+        }
         let find = this.results.findIndex(v => v.mc_id === data.id)
         if (find > -1) {
           this.results.splice(find, 1)
@@ -101,6 +133,27 @@ export default {
           isShowMask: false
         })
         data.cb && data.cb()
+        this.results.splice(data.index, 1)
+      })
+    },
+    onAddBlack (data) {
+      var _this = this
+      this.$vux.confirm.show({
+        title: '提示',
+        content: '是否确定拉黑该用户？',
+        onCancel () {
+          console.log(this) // 非当前 vm
+          console.log(_this) // 当前 vm
+        },
+        onConfirm () {
+          addBlack({ht_id: _this.$route.query.id, mc_id: data.id}).then((res) => {
+            _this.searchResults.splice(data.index, 1)
+          })
+        }
+      })
+    },
+    releaseBlack (data) {
+      releaseBlack({ht_id: this.$route.query.id, mc_id: data.id}).then((res) => {
         this.results.splice(data.index, 1)
       })
     },
@@ -135,9 +188,8 @@ export default {
 #results {
   background-color: #fff;
 }
-.manager-tips {
+#tabs-manager {
   background-color: #fff;
-  padding: 10px 15px;
   &.focus {
     padding-top: 54px;
   }

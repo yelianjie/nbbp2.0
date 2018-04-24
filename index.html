@@ -4,13 +4,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <script>
-    if (window.location.href.indexOf('version') == -1) {
-      var href = window.location.href
-      var toHref = ''
-      if (href.indexOf('&') != -1) {
-        toHref = href + '?version=' + new Date().getTime()
+    function patch(s){
+      var re= /\?/ig
+      var m = s.match(re)
+      if (m) {
+        return m.length
       } else {
-        if (href.indexOf('?') != -1) {
+        return 0
+      }
+    }
+    var href = window.location.href
+    if (window.location.href.indexOf('version') == -1) {
+      var toHref = ''
+      var patchLength = patch(href)
+      if (/singlemessage|groupmessage|timeline/g.test(href)) {
+        // weixin
+        if(patchLength == 1) {
+          toHref = href + '?version=' + new Date().getTime()
+        } else {
+          toHref = href + '&version=' + new Date().getTime()
+        }
+      } else {
+        if(patchLength == 1) {
           toHref = href + '&version=' + new Date().getTime()
         } else {
           toHref = href + '?version=' + new Date().getTime()

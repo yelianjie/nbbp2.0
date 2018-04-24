@@ -215,7 +215,7 @@ export const updateAdImage = (data) => {
  * @param {*} data
  */
 export const getBarManagers = (data) => {
-  return request('/weixin/hotel/getHotelManager', 'POST', data)
+  return request('/weixin/manager/managerList', 'POST', data)
 }
 
 /**
@@ -590,6 +590,46 @@ export const canJoin = (data) => {
  */
 export const lotteryJoin = (data) => {
   return request('/weixin/chou/baoMing', 'POST', data)
+}
+
+/**
+ * 拉黑
+ * @param {*} data
+ */
+export const addBlack = (data) => {
+  return request('/weixin/members/addBlack', 'POST', data)
+}
+
+/**
+ * 黑名单列表
+ * @param {*} data
+ */
+export const blackList = (data) => {
+  return request('/weixin/members/blackList', 'POST', data)
+}
+
+/**
+ * 解除黑名单
+ * @param {*} data
+ */
+export const releaseBlack = (data) => {
+  return request('/weixin/members/releaseBlack', 'POST', data)
+}
+
+/**
+ * 获取管理员信息
+ * @param {*} data
+ */
+export const getManagerInfo = (data) => {
+  return request('/weixin/manager/getManagerInfo', 'POST', data)
+}
+
+/**
+ * 获取权限列表
+ * @param {*} data
+ */
+export const getFunction = (data) => {
+  return request('/weixin/manager/getFunction', 'POST', data)
 }
 
 /**

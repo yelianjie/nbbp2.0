@@ -421,7 +421,7 @@ import '@/vendor/animation'
 import ScrollFix from '@/vendor/ScrollFix'
 import moment from 'moment'
 import LazyLoad from 'vanilla-lazyload'
-import { accAdd } from '@/utils/utils'
+import { accAdd, delQueStr } from '@/utils/utils'
 import Hashes from 'jshashes'
 import intersectionBy from 'lodash/intersectionBy'
 import remove from 'lodash/remove'
@@ -1089,7 +1089,7 @@ export default {
       let shareParams = {
         title: title,
         desc: data.content,
-        link: window.location.href,
+        link: delQueStr(window.location.href, 'version'),
         imgUrl: this.$options.filters.prefixImageUrl(data.initiator_headimgurl) // 分享图标
       }
       this.$wechat.onMenuShareTimeline({
