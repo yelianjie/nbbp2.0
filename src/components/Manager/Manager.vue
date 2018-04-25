@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-h flex-align-center result-item pr" @click="onRoute(result.id, index)">
+  <div class="flex flex-h flex-align-center result-item pr" @click="onRoute(result.mc_id, index)">
     <div class="u-img">
       <img v-lazy="$options.filters.prefixImageUrl(result.headimgurl)" class="circle">
     </div>
@@ -78,6 +78,9 @@ export default {
       })
     },
     onRoute (id) {
+      if (this.type === 1) {
+        return false
+      }
       this.$emit('on-item-click', {
         id: id,
         index: this.index

@@ -16,9 +16,10 @@
 <script>
 import MenuItem from './MenuItem'
 export default {
+  props: ['menus'],
   data () {
     return {
-      menus: [{
+      /* menus: [{
         name: '基本信息',
         icon: 'business-basic-icon',
         tip: '酒吧名称',
@@ -78,7 +79,7 @@ export default {
             id: this.$route.query.id
           }
         }
-      }],
+      }], */
       horizontalMenus: [{
         name: '帮助说明',
         icon: 'business-help-icon',

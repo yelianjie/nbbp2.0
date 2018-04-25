@@ -32,6 +32,7 @@ const actions = {
       if (response.result.isMM > 0) {
         role.push('business')
       }
+      // 酒吧管理不是酒吧管理员
       if (response.result.isHMM > 0) {
         role.push('manager')
       }

@@ -1,7 +1,7 @@
 <template>
   <div class="container padding-bar f7f7f7 borderbox">
     <BusinessAgentTop :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.merchant_balance" :totalMoney="barInfo.merchant_income" :yesMoney="barInfo.yst_money"></BusinessAgentTop>
-    <BusinessMenus></BusinessMenus>
+    <BusinessMenus :menus="menus"></BusinessMenus>
     <footer class="footer flex">
       <div class="flex-1 flex-v tc flex-pack-center flex-align-center">
         <a @click.prevent="judgeRouter" class="enter-bar">进入我的酒吧</a>
@@ -14,7 +14,8 @@
 import BusinessAgentTop from '@/components/Center/BusinessAgentTop'
 import BusinessMenus from '@/components/Center/BusinessMenus'
 import logo from '../assets/logo.png'
-import { getBarMoney } from '@/api/'
+import { getBarMoney, getManagerInfo } from '@/api/'
+import { mapGetters } from 'vuex'
 export default {
   name: 'BusinessCenter',
   data () {
@@ -24,7 +25,8 @@ export default {
         name: '我的酒吧',
         icon: 'business-bar-icon'
       }],
-      barInfo: {}
+      barInfo: {},
+      menus: []
     }
   },
   created () {
@@ -32,6 +34,19 @@ export default {
       this.barInfo = res.result
       localStorage.setItem('businessNeed', JSON.stringify({id: this.$route.query.id, name: res.result.name, qrcode: this.$options.filters.prefixImageUrl(res.result.phone_er_url)}))
       document.title = res.result.name + '管理'
+    })
+    getManagerInfo({ht_id: this.$route.query.id, mc_id: this.userInfo.id}).then((res) => {
+      if (res.result && res.result.function) {
+        res.result.function.forEach(v => {
+          v.route = {
+            path: v.path,
+            query: {
+              id: this.$route.query.id
+            }
+          }
+        })
+        this.menus = res.result.function
+      }
     })
   },
   methods: {
@@ -52,6 +67,11 @@ export default {
   components: {
     BusinessAgentTop,
     BusinessMenus
+  },
+  computed: {
+    ...mapGetters('user', {
+      userInfo: 'userInfo'
+    })
   }
 }
 </script>

@@ -101,10 +101,10 @@ export default {
   position: absolute;
   right: 15px;
   top: 15px;
-  padding: 2px 5px;
+  padding: 5px 18px;
   background-color: transparent;
   border: 1px solid #fff;
-  border-radius: 8px;
+  border-radius: 20px;
 }
 .data-item {
   min-width: 100px;

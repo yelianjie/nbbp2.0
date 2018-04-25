@@ -87,7 +87,8 @@ export default new Router({
         require(['@/pages/BusinessCenter'], resolve)
       },
       meta: {
-        roles: ['business']
+        roles: ['user', 'business'],
+        managerValid: true
       }
     },
     {
@@ -117,7 +118,8 @@ export default new Router({
         require(['@/pages/BasicBusiness'], resolve)
       },
       meta: {
-        roles: ['business']
+        roles: ['user', 'business'],
+        managerValid: true
       }
     },
     {
@@ -127,7 +129,8 @@ export default new Router({
         require(['@/pages/NoticeSetting'], resolve)
       },
       meta: {
-        roles: ['business']
+        roles: ['user', 'business'],
+        managerValid: true
       }
     },
     {
@@ -137,7 +140,8 @@ export default new Router({
         require(['@/pages/AdSetting'], resolve)
       },
       meta: {
-        roles: ['business']
+        roles: ['user', 'business'],
+        managerValid: true
       }
     },
     {
@@ -147,19 +151,20 @@ export default new Router({
         require(['@/pages/BapingSetting'], resolve)
       },
       meta: {
-        roles: ['business']
+        roles: ['user', 'business'],
+        managerValid: true
       }
     },
-    {
+    /* {
       path: '/BgSetting',
       name: 'BgSetting',
       component: (resolve) => {
         require(['@/pages/BgSetting'], resolve)
       },
       meta: {
-        roles: ['business']
+        roles: ['business', 'manager']
       }
-    },
+    }, */
     {
       path: '/Manager',
       name: 'Manager',
@@ -167,7 +172,8 @@ export default new Router({
         require(['@/pages/Manager'], resolve)
       },
       meta: {
-        roles: ['business']
+        roles: ['user', 'business'],
+        managerValid: true
       }
     },
     {
@@ -177,7 +183,8 @@ export default new Router({
         require(['@/pages/ManagerUpdate'], resolve)
       },
       meta: {
-        roles: ['business', 'manager']
+        roles: ['user', 'business'],
+        managerValid: true
       }
     },
     {

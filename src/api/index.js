@@ -625,6 +625,14 @@ export const getManagerInfo = (data) => {
 }
 
 /**
+ * 更新管理员信息
+ * @param {*} data
+ */
+export const updateManagerInfo = (data) => {
+  return request('/weixin/manager/updateManagerInfo', 'POST', data)
+}
+
+/**
  * 获取权限列表
  * @param {*} data
  */
@@ -638,6 +646,22 @@ export const getFunction = (data) => {
  */
 export const isBlack = (data) => {
   return request('/weixin/members/isBlack', 'POST', data)
+}
+
+/**
+ * 判断管理员是否有添加管理/进入管理页面的权限
+ * @param {*} data
+ */
+export const isSuperManager = (data) => {
+  return request('/weixin/manager/isSuperManager', 'POST', data)
+}
+
+/**
+ * 管理员是否可以进入商户中心
+ * @param {*} data
+ */
+export const isAllowIn = (data) => {
+  return request('/weixin/manager/isAllowIn', 'POST', data)
 }
 
 /**

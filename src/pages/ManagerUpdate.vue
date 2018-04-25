@@ -19,12 +19,12 @@
     </div>
      <div class="flex" style="margin: 0 10px;padding: 10px 0;">
       <template v-if="$route.query.type">
-      <x-button class="flex1" :gradients="['#e51c23', '#e51c23']" @click.native="handleManager" :show-loading="loading" :disabled="loading">删除</x-button>
+      <x-button class="flex1" :gradients="['#e51c23', '#e51c23']" @click.native="deleteManager" :show-loading="loading" :disabled="loading">删除</x-button>
       <div style="width: 10px;"></div>
-      <x-button  class="flex1" :gradients="['#2481d2', '#2481d2']" @click.native="handleManager" :show-loading="loading" :disabled="loading">确认</x-button>
+      <x-button  class="flex1" :gradients="['#2481d2', '#2481d2']" @click.native="handleManager" :show-loading="loading2" :disabled="loading2">确认</x-button>
       </template>
       <template v-else>
-      <x-button  :gradients="['#2481d2', '#2481d2']" @click.native="handleManager" :show-loading="loading" :disabled="loading">确认添加</x-button>
+      <x-button  :gradients="['#2481d2', '#2481d2']" @click.native="handleManager" :show-loading="loading2" :disabled="loading2">确认添加</x-button>
       </template>
       </div>
   </div>
@@ -32,7 +32,7 @@
 
 <script>
 import { GroupTitle, Group, Cell, XInput, XSwitch, Checklist, XButton } from 'vux'
-import { getManagerInfo, addManager, getFunction } from '@/api/'
+import { getManagerInfo, addManager, getFunction, updateManagerInfo, deleteManager } from '@/api/'
 export default {
   components: {
     GroupTitle,
@@ -49,6 +49,7 @@ export default {
       powerList: [],
       powerOn: false,
       loading: false,
+      loading2: false,
       count: 3,
       info: {}
     }
@@ -91,6 +92,7 @@ export default {
       }
     },
     handleManager () {
+      this.loading2 = true
       var params = {
         ht_id: this.$route.query.id,
         mc_id: this.$route.query.mc_id,
@@ -99,8 +101,32 @@ export default {
         num: this.count,
         function_id: this.powerOn ? this.powerCheck.join(',') : ''
       }
-      addManager(params).then((res) => {
+      var _action = addManager
+      var _text = '添加成功'
+      if (this.$route.query.type) {
+        _action = updateManagerInfo
+        _text = '更新成功'
+      }
+      _action(params).then((res) => {
+        this.$vux.toast.show({
+          text: _text,
+          isShowMask: false
+        })
         this.$router.go(-1)
+      }).finally(() => {
+        this.loading2 = false
+      })
+    },
+    deleteManager () {
+      this.loading = true
+      deleteManager({ht_id: this.$route.query.id, mc_id: this.$route.query.mc_id}).then((res) => {
+        this.$vux.toast.show({
+          text: '删除成功',
+          isShowMask: false
+        })
+        this.$router.go(-1)
+      }).finally(() => {
+        this.loading = false
       })
     },
     powerOnChange (currentValue) {
