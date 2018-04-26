@@ -30,7 +30,7 @@ import { getWxConfig, getHasToken, isAllowIn } from './api/'
 window.sessionStorage.clear()
 var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  window.sessionStorage.setItem('tId', 'db3dcd6a98d5a3a401859052ae5ed42732d4bbdf')
+  window.sessionStorage.setItem('tId', '7a33782ce2c4860100e08043e421ad4a3777f3ad')
   tId = window.sessionStorage.getItem('tId')
 }
 if (!tId && process.env.NODE_ENV === 'production') {
@@ -201,7 +201,8 @@ function init () {
             }
           }
         } else {
-          next({path: '/Main/1'})
+          // 管理员无权限进入
+          next({path: '/'})
         }
       })
     } else {

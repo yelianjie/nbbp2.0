@@ -574,7 +574,8 @@ export default {
       if (res.result.userinfo.isHMM > 0) {
         post = {
           isManager: true,
-          game_count: res.result.userinfo.game_count
+          game_count: res.result.userinfo.game_count,
+          max_bp_time: ~~(res.result.userinfo.max_bp_time)
         }
       }
       if (res.result.userinfo.isMer > 0) {
@@ -628,7 +629,9 @@ export default {
       // 是否是黑名单
       // this.blackVisible = true
       isBlack({ht_id: this.$route.params.id}).then((res) => {
-        console.log(res)
+        if (res.result) {
+          this.blackVisible = true
+        }
       })
     })
     /* isSubscribe({ht_id: this.$route.params.id, type: 1, url: window.location.hash.substring(1)}).then((res) => {

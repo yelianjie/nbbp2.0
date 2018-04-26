@@ -52,7 +52,7 @@
       <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isAgent > 0">
         <cell title="代理管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/AgentCenter'}"></cell>
       </group>
-      <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isMM > 0">
+      <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isMM > 0 || userInfo.is_allow_in == 1">
         <cell title="商户管理" color="#635ac3" :is-link="true" icon-name="agent" :link-path="{path: '/MyBars'}"></cell>
       </group>
       <group class="bg2" style="margin-top: 0.2rem;" v-if="userInfo.isHMM > 0">

@@ -13,14 +13,28 @@
       牛霸，聚元集团旗下品牌，是一家专为酒吧大屏提供”社交、互动、游戏“等解决方案的娱乐交互型平台。品牌自成立初就本着”成就客户成就自己“的经营理念，励志通过用更具创意的主题画面，更具互动的打赏玩法和更具趣味性的游戏内容，为酒吧带来更嗨的气氛，更酷的玩法和更爆的人气，让您的酒吧燥起来！
     </article>
     <p class="darker1 f14" style="margin-top: 20px;">客服热线：13616787882</p>
+    <p class="version-tip tc f13 darker1">当前版本：V{{version}}</p>
   </div>
 </template>
 
 <script>
+import { getNewVersion } from '@/api/'
 export default {
+  data () {
+    return {
+      version: '1.0.0'
+    }
+  },
   beforeRouteEnter (to, from, next) {
     document.title = '关于我们'
     next()
+  },
+  created () {
+    getNewVersion({type: 0}).then((res) => {
+      if (!Array.isArray(res.result)) {
+        this.version = res.result.data[0].version_num
+      }
+    })
   }
 }
 </script>
@@ -44,6 +58,12 @@ export default {
   &.line-right::after {
     background-image: linear-gradient(to right, rgba(84, 86, 98, 1), rgba(84, 86, 98, 1) 50%, rgba(84, 86, 98, 0));
   }
+}
+.version-tip {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
 }
 </style>
 

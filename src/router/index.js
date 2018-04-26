@@ -311,7 +311,7 @@ export default new Router({
         require(['@/pages/MyBars'], resolve)
       },
       meta: {
-        roles: ['business']
+        roles: ['user', 'business']
       }
     },
     {

@@ -11,15 +11,15 @@
         <span slot="right" style="margin-left:6px;">次</span>
       </x-input>
       <cell title="最高免费霸屏时长不超过" value="60秒"></cell>
-      <x-switch title="可登录商户后台" v-model="powerOn" @on-change="powerOnChange"></x-switch>
+      <x-switch title="可登录商户后台" v-model="powerOn" @on-change="powerOnChange" :disabled="is_merchant == 1"></x-switch>
      </group>
      <template v-if="powerOn">
-      <checklist title="管理员权限" label-position="left" :options="powerList" v-model="powerCheck"></checklist>
+      <checklist title="管理员权限" label-position="left" :options="powerList" v-model="powerCheck" :disabled="is_merchant == 1"></checklist>
       </template>
     </div>
      <div class="flex" style="margin: 0 10px;padding: 10px 0;">
       <template v-if="$route.query.type">
-      <x-button class="flex1" :gradients="['#e51c23', '#e51c23']" @click.native="deleteManager" :show-loading="loading" :disabled="loading">删除</x-button>
+      <x-button class="flex1" :gradients="['#e51c23', '#e51c23']" @click.native="deleteManager" :show-loading="loading" :disabled="loading" v-if="is_merchant == 0">删除</x-button>
       <div style="width: 10px;"></div>
       <x-button  class="flex1" :gradients="['#2481d2', '#2481d2']" @click.native="handleManager" :show-loading="loading2" :disabled="loading2">确认</x-button>
       </template>
@@ -51,7 +51,8 @@ export default {
       loading: false,
       loading2: false,
       count: 3,
-      info: {}
+      info: {},
+      is_merchant: 0
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -61,21 +62,25 @@ export default {
   created () {
     var info = JSON.parse(localStorage.getItem('managerInfo'))
     this.info = info
-    getFunction().then((res) => {
+    getFunction({ht_id: this.$route.query.id, mc_id: this.$route.query.mc_id}).then((res) => {
       if (Array.isArray(res.result)) {
         res.result.forEach((v) => {
           v.key = v.id
           v.value = v.name
-          this.powerCheck.push(v.id.toString())
+          !this.$route.query.type && this.powerCheck.push(v.id.toString())
         })
         this.powerList = res.result
       }
     })
     if (this.$route.query.type) {
       getManagerInfo({ht_id: this.$route.query.id, mc_id: this.$route.query.mc_id}).then((res) => {
-        console.log(res)
         if (res.result) {
-          this.powerCheck = res.result.info.function_id.split(',')
+          this.is_merchant = res.result.info.is_merchant
+          var powerChecks = []
+          res.result.function.map((v) => {
+            powerChecks.push(v.id.toString())
+          })
+          this.powerCheck = powerChecks
           this.powerOn = Boolean(~~(res.result.info.is_allow_in))
           this.count = ~~(res.result.info.screen_count)
         }
@@ -118,15 +123,24 @@ export default {
       })
     },
     deleteManager () {
-      this.loading = true
-      deleteManager({ht_id: this.$route.query.id, mc_id: this.$route.query.mc_id}).then((res) => {
-        this.$vux.toast.show({
-          text: '删除成功',
-          isShowMask: false
-        })
-        this.$router.go(-1)
-      }).finally(() => {
-        this.loading = false
+      var _this = this
+      this.$vux.confirm.show({
+        title: '提示',
+        content: '确定删除该管理员？',
+        onCancel () {
+        },
+        onConfirm () {
+          _this.loading = true
+          deleteManager({ht_id: _this.$route.query.id, mc_id: _this.$route.query.mc_id}).then((res) => {
+            _this.$vux.toast.show({
+              text: '删除成功',
+              isShowMask: false
+            })
+            _this.$router.go(-1)
+          }).finally(() => {
+            _this.loading = false
+          })
+        }
       })
     },
     powerOnChange (currentValue) {

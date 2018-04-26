@@ -1,33 +1,63 @@
 <template>
   <div class="container min-h fff flex flex-v">
-    <div class="middle tc fff-bp bg3" style="padding: 0.36rem 0;">
+    <div class="middle tc fff-bp bg3" style="padding: 0.36rem 0;" v-if="barList.length > 0">
       <p class="f14">当前累计未提现收益</p>
       <p class="benefit-account">{{moneyInfo.merchant_balance | fixedPrice}}</p>
       <p class="f16">累计总收益：{{moneyInfo.merchant_income | fixedPrice}} 元</p>
     </div>
-    <p style="padding: 0.2rem 0.3rem;" class="f18 pr bar-title">我的酒吧</p>
-    <div class="bars flex-1">
-      <div>
-      <inline-loading v-if="loading" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
-      <swipeout v-else>
-        <swipeout-item :sensitivity="15" :ref="'swipeoutItem' + i" transition-mode="follow" :auto-close-on-button-click="false" v-for="(v, i) in barList" :key="i">
-          <div slot="right-menu">
-            <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
-          </div>
-          <div slot="content" class="vux-1px-t flex flex-align-center" style="padding: 0.2rem 0.3rem;" @click="goToBar(v.id)">
-            <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
-            <div class="flex-1 flex flex-v">
-              <p class="f16">{{v.name}}</p>
-              <p class="f12 line1" style="color: #939393;">注册时间：{{v.add_time}}</p>
+    <div>
+    <template v-if="barList.length > 0">
+      <p style="padding: 0.2rem 0.3rem;" class="f18 pr bar-title">我的酒吧</p>
+      <div class="bars">
+        <div>
+        <inline-loading v-if="loading" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
+        <swipeout v-else>
+          <swipeout-item :sensitivity="15" :ref="'swipeoutItem' + i" transition-mode="follow" :auto-close-on-button-click="false" v-for="(v, i) in barList" :key="i">
+            <div slot="right-menu">
+              <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
             </div>
-            <div class="tc bar-money pr">
-              <p class="f16" style="color:red;">{{v.merchant_balance}}</p>
-              <p class="f13" style="color:#818181;">可提现收益</p>
+            <div slot="content" class="vux-1px-t flex flex-align-center" style="padding: 0.2rem 0.3rem;" @click="goToBar(v.id)">
+              <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
+              <div class="flex-1 flex flex-v">
+                <p class="f16">{{v.name}}</p>
+                <p class="f12 line1" style="color: #939393;">注册时间：{{v.add_time}}</p>
+              </div>
+              <div class="tc bar-money pr">
+                <p class="f16" style="color:red;">{{v.merchant_balance}}</p>
+                <p class="f13" style="color:#818181;">可提现收益</p>
+              </div>
             </div>
-          </div>
-        </swipeout-item>
-      </swipeout>
+          </swipeout-item>
+        </swipeout>
+        </div>
       </div>
+    </template>
+    <template v-if="managerList.length > 0">
+      <p style="padding: 0.2rem 0.3rem;" class="f18 pr bar-title">我管理的酒吧</p>
+      <div class="bars">
+        <div>
+        <inline-loading v-if="barList.length == 0 && loading" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
+        <swipeout v-else>
+          <swipeout-item :sensitivity="15" :ref="'swipeoutItem' + i" transition-mode="follow" :auto-close-on-button-click="false" v-for="(v, i) in managerList" :key="i" :disabled="true">
+            <div slot="right-menu">
+              <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
+            </div>
+            <div slot="content" class="vux-1px-t flex flex-align-center" style="padding: 0.2rem 0.3rem;" @click="goToBar(v.id)">
+              <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
+              <div class="flex-1 flex flex-v">
+                <p class="f16">{{v.name}}</p>
+                <p class="f12 line1" style="color: #939393;">注册时间：{{v.add_time}}</p>
+              </div>
+              <!-- <div class="tc bar-money pr">
+                <p class="f16" style="color:red;">{{v.merchant_balance}}</p>
+                <p class="f13" style="color:#818181;">可提现收益</p>
+              </div> -->
+            </div>
+          </swipeout-item>
+        </swipeout>
+        </div>
+      </div>
+    </template>
     </div>
     <bp-dialog :title="'提示'" v-model="confirmVisible" @onConfirm="confirmDelete">
       <p class="f16">确认删除该酒吧吗？</p>
@@ -60,6 +90,7 @@ export default {
       confirmVisible: false,
       moneyInfo: {},
       barList: [],
+      managerList: [],
       deleteInfo: null,
       loading: true,
       myScroll: null,
@@ -82,7 +113,8 @@ export default {
     })
     getBars().then((res) => {
       this.moneyInfo = res.result.money
-      this.barList = res.result.hotelList
+      this.barList = res.result.hotelList.merchant_hotel_list
+      this.managerList = res.result.hotelList.manage_hotel_list
       this.loading = false
     })
   },
@@ -119,7 +151,7 @@ export default {
   },
   filters: {
     fixedPrice (v) {
-      if (v) {
+      if (!Number.isNaN(Number(v))) {
         return v.toFixed(2)
       }
     }

@@ -665,6 +665,14 @@ export const isAllowIn = (data) => {
 }
 
 /**
+ * 获取版本号
+ * @param {*} data
+ */
+export const getNewVersion = (data) => {
+  return request('/weixin/version/getNewVersion', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */

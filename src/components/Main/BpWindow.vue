@@ -244,7 +244,7 @@ export default {
   },
   computed: {
     total () {
-      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0) {
+      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0 && this.bpTimeIndex > -1 && this.times[this.bpTimeIndex].time <= this.barManagerInfo.max_bp_time) {
         return 0
       } else {
         const timePrice = this.bpTimeIndex !== -1 ? Number(this.times[this.bpTimeIndex].price) : 0

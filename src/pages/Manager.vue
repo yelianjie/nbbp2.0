@@ -11,6 +11,7 @@
     @on-cancel="onCancel"
     placeholder="请输入微信昵称查找添加"
     ref="search">
+    <div class="search-tip f13">提示：只能搜索到关注牛霸霸屏公众号的用户</div>
     <div id="results" :style="{'min-height': resultHeight + 'px'}">
       <inline-loading v-if="loading1" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
       <Manager v-for="(v, i) in searchResults" from="searchResults" :key="i" :index="i" :result="v" @on-add="onAdd" @on-delete="onDelete" @on-black="onAddBlack" :type="1"></Manager>
@@ -22,9 +23,9 @@
         <tab-item @on-item-click="onItemClick">黑名单</tab-item>
       </tab>
     </div>
+    <p v-if="listType == 0" class="f12" style="padding: 8px 10px;">提示：最多只能添加6个管理员</p>
     <inline-loading v-if="loading2" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
     <div id="current-managers" class="fff">
-      <p v-if="listType == 0" class="f12" style="padding: 8px 10px;">提示：最多只能添加6个管理员</p>
       <Manager v-for="(v, i) in results" :show-add="false" :key="i" :index="i" :result="v"  @on-item-click="onEdit" @on-delete="onDeleteResult" :type="listType" @on-release="releaseBlack"></Manager>
     </div>
   </div>
@@ -209,5 +210,8 @@ export default {
   p {
     font-size: 14px;
   }
+}
+.search-tip {
+  position: absolute;
 }
 </style>

@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="middle">
-      <button id="deposit-btn" class="fff-bp" @click="setLocalStorage">我要提现</button>
+      <button id="deposit-btn" class="fff-bp" @click="setLocalStorage" v-if="!isManager">我要提现</button>
       <div class="item-wrap flex">
         <div class="flex-1 data-item">
           <p class="f14 gray">可提现收益</p>
@@ -35,7 +35,7 @@
 <script>
 import { Group, Cell } from 'vux'
 export default {
-  props: ['logo', 'name', 'currentMoney', 'totalMoney', 'yesMoney'],
+  props: ['logo', 'name', 'currentMoney', 'totalMoney', 'yesMoney', 'isManager'],
   data () {
     return {
 
