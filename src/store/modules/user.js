@@ -48,7 +48,7 @@ const actions = {
       // commit('SET_USER_INFO', response.result)
       return Promise.resolve(response.result)
     } catch (e) {
-
+      return Promise.reject(e)
     }
   }
   /* async isSubscribe ({commit, state}, data) {

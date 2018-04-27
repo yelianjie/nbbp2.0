@@ -11,8 +11,9 @@
     @on-cancel="onCancel"
     placeholder="请输入微信昵称查找添加"
     ref="search">
-    <div class="search-tip f13">提示：只能搜索到关注牛霸霸屏公众号的用户</div>
     <div id="results" :style="{'min-height': resultHeight + 'px'}">
+      <p class="search-tip f13">提示：只能搜索到关注牛霸霸屏公众号的用户</p>
+      <p class="search-tip f13">您本月还能再新添加{{monthCount}}个管理员</p>
       <inline-loading v-if="loading1" :color="'#2481d2'" :bgColor="'rgba(0, 0, 0, 0.2)'"></inline-loading>
       <Manager v-for="(v, i) in searchResults" from="searchResults" :key="i" :index="i" :result="v" @on-add="onAdd" @on-delete="onDelete" @on-black="onAddBlack" :type="1"></Manager>
     </div>
@@ -34,7 +35,7 @@
 <script>
 import { Search, Tab, TabItem } from 'vux'
 import Manager from '../components/Manager/Manager'
-import { getBarManagers, getMembersByName, deleteManager, addBlack, blackList, releaseBlack } from '@/api/'
+import { getBarManagers, getMembersByName, deleteManager, addBlack, blackList, releaseBlack, restAmountManager, isRest } from '@/api/'
 import InlineLoading from '../components/InlineLoading'
 export default {
   components: {
@@ -53,7 +54,8 @@ export default {
       searchResults: [],
       loading1: false,
       loading2: true,
-      listType: 0
+      listType: 0,
+      monthCount: 6
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -61,6 +63,9 @@ export default {
     next()
   },
   created () {
+    restAmountManager({ht_id: this.$route.query.id}).then((res) => {
+      this.monthCount = res.result
+    })
     this.getBarManagerData()
   },
   mounted () {
@@ -95,8 +100,12 @@ export default {
       })
     },
     onAdd (data) {
-      localStorage.setItem('managerInfo', JSON.stringify(this.searchResults[data.index]))
-      this.$router.push(`/ManagerUpdate?id=${this.$route.query.id}&mc_id=${data.id}`)
+      isRest({ht_id: this.$route.query.id}).then((res) => {
+        if (res.result) {
+          localStorage.setItem('managerInfo', JSON.stringify(this.searchResults[data.index]))
+          this.$router.push(`/ManagerUpdate?id=${this.$route.query.id}&mc_id=${data.id}`)
+        }
+      })
       /* addManager({ht_id: this.$route.query.id, mc_id: data.id}).then((res) => {
         this.$vux.toast.show({
           text: '添加成功',
@@ -212,6 +221,6 @@ export default {
   }
 }
 .search-tip {
-  position: absolute;
+  margin: 5px 10px;
 }
 </style>

@@ -82,7 +82,7 @@ export default {
           })
           this.powerCheck = powerChecks
           this.powerOn = Boolean(~~(res.result.info.is_allow_in))
-          this.count = ~~(res.result.info.screen_count)
+          this.count = ~~(res.result.info.daily_screen_count)
         }
       })
     }

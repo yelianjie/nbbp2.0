@@ -109,6 +109,7 @@
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
       <div class="user-info">
+        <button class="black-btn f12" @click="blackConfirmVisible = true" v-if="userInfo && (barManagerInfo.isManager > 0 || barManagerInfo.isHost > 0) && userInfo.id !== currentUserInfo.initiator_mc_id">拉黑</button>
         <div class="pr">
           <template v-if="currentUserInfo.grade_title != '平民'">
             <span class="level-icon-id" :style="{'background-image': 'url('+$options.filters.filterLevel(currentUserInfo.grade_title, 'avatarIcon')+')'}"></span>
@@ -379,6 +380,12 @@
       </div>
     </bp-dialog>
   </template>
+
+  <bp-dialog :title="'提示'" v-model="blackConfirmVisible" @onConfirm="addBlack" :maskIndex="5000">
+    <div class="">
+      <p class="f16" style="color:#7b7b7b;margin-top:6px;">确定拉黑该用户吗</p>
+    </div>
+  </bp-dialog>
   <bp-dialog :title="'提示'" v-model="deleteDialogVisible" @onConfirm="confirmDelete">
     <div class="">
       <div class="" style="font-size: 20px;margin-bottom: 8px;">
@@ -406,7 +413,7 @@
 
 <script>
 // isSubscribe
-import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack } from '@/api/'
+import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack, addBlack, getRestScreenAmount } from '@/api/'
 import { XDialog, TransferDom, Popup, PopupPicker, XButton } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -458,6 +465,7 @@ export default {
       deleteDialogVisible: false,
       buySuccessDialogVisible: false,
       blackVisible: false,
+      blackConfirmVisible: false,
       deleteInfo: {},
       height: 0,
       noMore: false,
@@ -469,6 +477,7 @@ export default {
       hbListTimer: null,
       packetTimer: null,
       deleteTimer: null,
+      blackTimer: null,
       ticket: '',
       requestParams: {
         ht_id: this.$route.params.id,
@@ -626,13 +635,6 @@ export default {
           })
         })
       }
-      // 是否是黑名单
-      // this.blackVisible = true
-      isBlack({ht_id: this.$route.params.id}).then((res) => {
-        if (res.result) {
-          this.blackVisible = true
-        }
-      })
     })
     /* isSubscribe({ht_id: this.$route.params.id, type: 1, url: window.location.hash.substring(1)}).then((res) => {
       if (res.result === '已关注') {
@@ -648,6 +650,7 @@ export default {
     this.loopHbList(0)
     this.loopPacketOrder(0)
     this.loopDelete(0)
+    this.loopBlack(0)
   },
   mounted () {
     this.$nextTick(() => {
@@ -694,6 +697,7 @@ export default {
       clearTimeout(this.hbListTimer)
       clearTimeout(this.packetTimer)
       clearTimeout(this.deleteTimer)
+      clearTimeout(this.blackTimer)
       /* this.newsTimer = null
       this.noticeTimer = null
       this.onlineTimer = null
@@ -762,6 +766,27 @@ export default {
           this.$refs.dsWindow.initSelected(this.buyDialogInfo.postParams)
         }
       }
+    },
+    loopBlack (time) {
+      if (!this.$route.params.id) {
+        clearTimeout(this.blackTimer)
+        this.blackTimer = null
+        return false
+      }
+      this.blackTimer = setTimeout(() => {
+        isBlack({ht_id: this.$route.params.id}).then((res) => {
+          if (res.result) {
+            this.blackVisible = true
+            clearTimeout(this.blackTimer)
+          }
+        }).finally(() => {
+          if (!this.blackTimer) {
+            return false
+          }
+          clearTimeout(this.blackTimer)
+          this.loopBlack(2000)
+        })
+      }, time)
     },
     loopDelete (time) {
       if (!this.$route.params.id) {
@@ -1130,6 +1155,15 @@ export default {
       this.userDialogVisible = false
       this.dsWindowVisible = true
     },
+    addBlack () {
+      addBlack({ht_id: this.$route.params.id, mc_id: this.currentUserInfo.initiator_mc_id}).then((res) => {
+        this.$vux.toast.show({
+          text: '已拉黑',
+          width: '10em'
+        })
+        this.blackConfirmVisible = false
+      })
+    },
     previewImage (pics) {
       this.$wechat.previewImage(pics)
     },
@@ -1269,8 +1303,11 @@ export default {
             }
             // game_count - 1
             if (this.barManagerInfo.isManager) {
-              var nextCount = Number(this.barManagerInfo.game_count) === 0 ? 0 : Number(this.barManagerInfo.game_count) - 1
-              this.$store.commit('user/SET_BAR_MANAGER', {isManager: true, game_count: nextCount})
+              // 获取剩余次数
+              getRestScreenAmount({ht_id: this.$route.params.id}).then((res) => {
+                var nextCount = Number(res.result)
+                this.$store.commit('user/SET_BAR_MANAGER', {isManager: true, game_count: nextCount, max_bp_time: this.barManagerInfo.max_bp_time})
+              })
             }
           })
         } else if (this.payBus === 2) {
@@ -1768,6 +1805,18 @@ export default {
   background-size: contain;
   border-radius: 15px;
   margin: 0 auto;
+  position: relative;
+  .black-btn {
+    position: absolute;
+    right: 0.2rem;
+    top: 0.2rem;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background-color: transparent;
+    padding: 2px 5px;
+    z-index: 1;
+  }
   .avatar {
     width: 1.7rem;
     height: 1.7rem;

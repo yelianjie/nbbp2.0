@@ -1,11 +1,11 @@
 <template>
-  <div class="container min-h fff flex flex-v">
+  <div class="container fff flex flex-v" style="height: 100%;">
     <div class="middle tc fff-bp bg3" style="padding: 0.36rem 0;" v-if="barList.length > 0">
       <p class="f14">当前累计未提现收益</p>
       <p class="benefit-account">{{moneyInfo.merchant_balance | fixedPrice}}</p>
       <p class="f16">累计总收益：{{moneyInfo.merchant_income | fixedPrice}} 元</p>
     </div>
-    <div>
+    <div class="flex-1 overscroll">
     <template v-if="barList.length > 0">
       <p style="padding: 0.2rem 0.3rem;" class="f18 pr bar-title">我的酒吧</p>
       <div class="bars">

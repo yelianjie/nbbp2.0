@@ -1,7 +1,7 @@
 <template>
   <div class="bp-dialog-wrap">
     <transition name="bp-mask">
-        <div class="bp-mask" v-show="visible" @click="$emit('closeDialog', false)"></div>
+        <div class="bp-mask" v-show="visible" @click="$emit('closeDialog', false)" :style="{'z-index': maskIndex}"></div>
     </transition>
     <transition name="bp-dialog">
         <div class="bp-dialog" :class="{'bp-dialog-top': position == 'top'}" :style="{'background': bgTitle ? 'transparent' : '#fff'}" v-show="visible">
@@ -51,6 +51,10 @@ export default {
     cancelColor: {
       type: String,
       default: '#6c6a75'
+    },
+    maskIndex: {
+      type: Number,
+      default: 1000
     },
     cancelText: {
       type: String,

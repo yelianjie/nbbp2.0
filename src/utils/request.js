@@ -26,12 +26,16 @@ const request = (url, method = 'POST', data = {}) => {
   if (method === 'POST') {
     return Vue.http.post(url, data).then((response) => {
       if (response.data.code !== '306000' && response.data.code !== '301001') {
+        var _textWidth = '10em'
+        if (typeof response.data.result === 'string' && response.data.result.length > 10) {
+          _textWidth = '15em'
+        }
         Vue.$vux.toast.show({
           text: response.data.result,
           position: 'middle',
           type: 'text',
           time: 1500,
-          width: '10em'
+          width: _textWidth
         })
         return Promise.reject(response.data.result)
       } else if (response.data.code === '301001') {

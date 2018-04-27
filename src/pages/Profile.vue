@@ -182,6 +182,7 @@ export default {
                 text: '保存成功'
               })
             })
+          }).finally(() => {
             this.loading = false
           })
         }

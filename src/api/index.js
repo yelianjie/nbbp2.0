@@ -1,4 +1,5 @@
 import { dataURLtoBlob } from '@/utils/utils'
+import Vue from 'vue'
 import request from '@/utils/request'
 const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/prod.env').BASE_API : require('../../config/dev.env').BASE_API
 
@@ -673,6 +674,30 @@ export const getNewVersion = (data) => {
 }
 
 /**
+ * 查询本月剩余添加次数
+ * @param {*} data
+ */
+export const restAmountManager = (data) => {
+  return request('/weixin/manager/restAmountManager', 'POST', data)
+}
+
+/**
+ * 查询本月是否能添加
+ * @param {*} data
+ */
+export const isRest = (data) => {
+  return request('/weixin/manager/isRest', 'POST', data)
+}
+
+/**
+ * 获取管理员剩余霸屏次数
+ * @param {*} data
+ */
+export const getRestScreenAmount = (data) => {
+  return request('/weixin/manager/getRestScreenAmount', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */
@@ -692,8 +717,22 @@ export function uploadImage (base64, type, cb, flag = 0, isLogo = false) {
     console.log('status' + xhr.status) */
     if (xhr.readyState === 4 && xhr.status === 200) {
       var response = JSON.parse(xhr.responseText)
-      const res1 = {error: false, msg: '上传成功', res: response.result}
-      cb(res1)
+      if (response.code !== '301000') {
+        var _textWidth = '10em'
+        if (typeof response.result === 'string' && response.result.length > 10) {
+          _textWidth = '18em'
+        }
+        Vue.$vux.toast.show({
+          text: response.result,
+          position: 'middle',
+          type: 'text',
+          time: 1500,
+          width: _textWidth
+        })
+      } else {
+        const res1 = {error: false, msg: '上传成功', res: response.result}
+        cb(res1)
+      }
     } else {
       const res2 = {error: true, msg: '上传失败'}
       cb(res2)
