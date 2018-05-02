@@ -7,8 +7,8 @@
         <span class="u-name">{{name}}</span>
       </div>
     </div>
-    <div class="middle">
-      <button id="deposit-btn" class="fff-bp" @click="setLocalStorage" v-if="!isManager">我要提现</button>
+    <div class="middle" v-if="!isManager">
+      <button id="deposit-btn" class="fff-bp" @click="setLocalStorage">我要提现</button>
       <div class="item-wrap flex">
         <div class="flex-1 data-item">
           <p class="f14 gray">可提现收益</p>
@@ -26,9 +26,9 @@
         </div>
       </div>
     </div>
-    <group class="actions">
+    <!-- <group class="actions">
       <cell title="收益详情" is-link :link="{path: '/IncomeOthers', query: {id: this.$route.query.id, type: this.$route.query.type == 2 ? 2 : 1}}"></cell>
-    </group>
+    </group> -->
   </div>
 </template>
 

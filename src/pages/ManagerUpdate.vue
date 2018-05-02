@@ -14,7 +14,7 @@
       <x-switch title="可登录商户后台" v-model="powerOn" @on-change="powerOnChange" :disabled="is_merchant == 1"></x-switch>
      </group>
      <template v-if="powerOn">
-      <checklist title="管理员权限" label-position="left" :options="powerList" v-model="powerCheck" :disabled="is_merchant == 1"></checklist>
+      <checklist title="管理员权限" label-position="left" :options="powerList" v-model="powerCheck" :check-disabled="false" :disabled="is_merchant == 1"></checklist>
       </template>
     </div>
      <div class="flex" style="margin: 0 10px;padding: 10px 0;">
@@ -80,7 +80,8 @@ export default {
           res.result.function.map((v) => {
             powerChecks.push(v.id.toString())
           })
-          this.powerCheck = powerChecks
+          // this.powerCheck = powerChecks
+          this.$set(this.$data, 'powerCheck', powerChecks)
           this.powerOn = Boolean(~~(res.result.info.is_allow_in))
           this.count = ~~(res.result.info.daily_screen_count)
         }

@@ -9,9 +9,11 @@
     </div>
     <div class="u-op">
       <template v-if="from === 'searchResults'">
-        <x-button mini :gradients="['#e51c23', '#e51c23']" :show-loading="loading1" @click.native="addBlack(result.id, index)">拉黑</x-button>
-        <x-button mini :gradients="['#1D62F0', '#1D62F0']" :show-loading="loading1" @click.native="addManager(result.id, index)" v-if="result.flag === null">添加</x-button>
-        <x-button mini type="warn" :show-loading="loading2" @click.native="deleteManager(result.id, index)" v-if="result.flag">删除</x-button>
+        <x-button mini :gradients="['#e51c23', '#e51c23']" :show-loading="loading1" @click.native="addBlack(result.id, index)" v-if="result.black_flag == null">拉黑</x-button>
+        <x-button mini :gradients="['#b3b3b3', '#b3b3b3']" v-else>已拉黑</x-button>
+        <x-button mini :gradients="['#1D62F0', '#1D62F0']" :show-loading="loading1" @click.native="addManager(result.id, index)" v-if="result.manage_flag === null">添加</x-button>
+        <x-button mini :gradients="['#b3b3b3', '#b3b3b3']" v-else>已添加</x-button>
+        <!-- <x-button mini type="warn" :show-loading="loading2" @click.native="deleteManager(result.id, index)" v-if="result.flag">删除</x-button> -->
       </template>
       <template v-else>
         <template v-if="type == 1">
