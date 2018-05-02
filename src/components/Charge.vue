@@ -2,7 +2,7 @@
   <div class="charge-price-list fff-bp" :class="{'mainCharge': !selectItem}">
     <inline-loading v-if="loading" :color="'#f31374'" :bgColor="'rgba(255, 255, 255, 0.2)'"></inline-loading>
     <div class="charge-price-item" v-for="(v, i) in exps" :key="i" :class="{'selected': bpValueIndex == i}" v-else @click="select(i)">
-      <div class="value f14"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{v.money}}</span><div class="f12 jingyan"><span class="jy-value">+{{v.experience}}经验值</span></div><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+      <div class="value f14"><svg-icon icon-class="coin" className="coin-color" /><span class="ml2 ver-mid">{{v.money}}</span><div class="f12 jingyan"><span class="jy-value">+{{v.experience | filterExperience}}经验值</span></div><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
       <div class="value-price f14">¥{{v.money}}</div>
     </div>
   </div>
@@ -44,6 +44,15 @@ export default {
   },
   components: {
     InlineLoading
+  },
+  filters: {
+    filterExperience (value) {
+      if (value && Number(value) >= 10000) {
+        return parseInt(Number(value) / 10000) + '万'
+      } else {
+        return value
+      }
+    }
   }
 }
 </script>
