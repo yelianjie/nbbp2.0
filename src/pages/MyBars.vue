@@ -17,7 +17,7 @@
               <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
             </div>
             <div slot="content" class="vux-1px-t flex flex-align-center" style="padding: 0.2rem 0.3rem;" @click="goToBar(v.id)">
-              <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
+              <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;display:block;"/>
               <div class="flex-1 flex flex-v">
                 <p class="f16">{{v.name}}</p>
                 <p class="f12 line1" style="color: #939393;">注册时间：{{v.add_time}}</p>
@@ -43,7 +43,7 @@
               <swipeout-button @click.native="onDeleteBar(i, v.id)" type="primary" background-color="#D23934">删除</swipeout-button>
             </div>
             <div slot="content" class="vux-1px-t flex flex-align-center" style="padding: 0.2rem 0.3rem;" @click="goToBar(v.id)">
-              <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;"/>
+              <img class="circle" :src="v.logo | prefixImageUrl" style="width: 1rem;height: 1rem;margin-right: 0.4rem;display:block;"/>
               <div class="flex-1 flex flex-v">
                 <p class="f16">{{v.name}}</p>
                 <p class="f12 line1" style="color: #939393;">注册时间：{{v.add_time}}</p>
