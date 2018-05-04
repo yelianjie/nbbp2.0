@@ -60,7 +60,7 @@ export default {
       updateBpSelect(data)
     },
     change (event) {
-      console.log(event)
+      // console.log(event)
     },
     edit (index) {
       let _this = this
@@ -69,14 +69,14 @@ export default {
         title: '请输入价格',
         closeOnConfirm: false,
         onShow () {
-          console.log('promt show')
+          // console.log('promt show')
           _this.$vux.confirm.setInputValue(_this.times[index].price)
         },
         onHide () {
-          console.log('prompt hide')
+          // console.log('prompt hide')
         },
         onCancel () {
-          console.log('prompt cancel')
+          // console.log('prompt cancel')
         },
         onConfirm (msg) {
           msg = typeof msg === 'number' ? msg : Number(msg)

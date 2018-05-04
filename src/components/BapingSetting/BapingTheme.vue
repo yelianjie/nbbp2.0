@@ -65,7 +65,7 @@ export default {
         ht_id: this.$route.query.id
       }
       updateBpSelect(data)
-      console.log(data)
+      // console.log(data)
     },
     edit (index) {
       let _this = this
@@ -74,14 +74,14 @@ export default {
         title: '请输入价格',
         closeOnConfirm: false,
         onShow () {
-          console.log('promt show')
+          // console.log('promt show')
           _this.$vux.confirm.setInputValue(_this.themes[index].price)
         },
         onHide () {
-          console.log('prompt hide')
+          // console.log('prompt hide')
         },
         onCancel () {
-          console.log('prompt cancel')
+          // console.log('prompt cancel')
         },
         onConfirm (msg) {
           msg = typeof msg === 'number' ? msg : Number(msg)

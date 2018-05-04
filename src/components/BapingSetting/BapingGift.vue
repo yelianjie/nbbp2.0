@@ -56,10 +56,8 @@ export default {
         ht_id: this.$route.query.id
       }
       updateBpSelect(data)
-      console.log(data)
     },
     change (event) {
-      console.log(event)
     },
     edit (index) {
       let _this = this

@@ -207,11 +207,18 @@ export default {
   display: inline-block;
   position: relative;
   .ds-img {
+    position: relative;
+    width: 0.92rem;
+    height: 1.22rem;
+    margin: 0 auto;
     img {
-      width: 0.92rem;
-      height: 0.92rem;
+      width: 1.24rem;
+      height: 1.24rem;
       display: block;
-      margin: 0.15rem auto;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
   }
   .ds-text {

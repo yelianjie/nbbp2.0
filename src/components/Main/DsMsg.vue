@@ -9,7 +9,9 @@
         <p class="send-for" style="word-break: break-all;">送{{data.title}}给{{toWho}}</p>
         <div class="ds-box flex">
           <div class="ds-box-gift flex-align-center">
-            <img v-lazy="$options.filters.prefixImageUrl(data.pro_img)" class="circle"/>
+            <div class="ds-gift-img">
+              <img v-lazy="$options.filters.prefixImageUrl(data.pro_img)" class="circle"/>
+            </div>
           </div>
           <div class="ds-box-arrow flex flex-align-center flex-pack-center flex-1">
             <svg-icon icon-class="arrow-ds"/>
@@ -105,8 +107,17 @@ export default {
   }
   .ds-box-gift {
     img {
+      width: 1.8rem;
+      height: 1.8rem;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .ds-gift-img {
       width: 1.2rem;
       height: 1.2rem;
+      position: relative;
     }
   }
   .ds-box-to {
