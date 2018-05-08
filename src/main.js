@@ -30,7 +30,7 @@ import { getWxConfig, getHasToken, isAllowIn, isHaveFunction } from './api/'
 window.sessionStorage.clear()
 var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  window.sessionStorage.setItem('tId', 'd1e330cec9b98468452ae24791d3106069734f2c')
+  window.sessionStorage.setItem('tId', '51f65d8c4b3008863742f043bfb20e7b01a055b4')
   tId = window.sessionStorage.getItem('tId')
 }
 if (!tId && process.env.NODE_ENV === 'production') {
@@ -134,6 +134,7 @@ function init () {
   let historyCount = history.getItem('count') * 1 || 0
   // history.setItem('/', 0)
   router.beforeEach(function (to, from, next) {
+    store.commit('updateLoadingStatus', {isLoading: true})
     if (to.fullPath.indexOf('parseWxUrl') !== -1) {
       // 重置url
       var toPath = unescape(to.fullPath)
@@ -182,7 +183,6 @@ function init () {
           store.dispatch('user/getUserInfo').then(() => {
             let role = store.getters['user/role']
             if (role.some((v) => to.meta.roles.indexOf(v) > -1)) {
-              store.commit('updateLoadingStatus', {isLoading: true})
               next()
             } else {
               next({path: '/'})
@@ -191,7 +191,6 @@ function init () {
         } else {
           let role = store.getters['user/role']
           if (role.some((v) => to.meta.roles.indexOf(v) > -1)) {
-            store.commit('updateLoadingStatus', {isLoading: true})
             next()
           } else {
             next({path: '/'})
@@ -226,6 +225,7 @@ function init () {
   })
 
   router.afterEach(function (to) {
+    store.commit('updateLoadingStatus', {isLoading: false})
     let shareParams = {}
     shareParams = {
       title: '这么有趣的霸屏交友互动，邀请你一起来玩~',
@@ -246,7 +246,6 @@ function init () {
       })
     })
     document.documentElement.classList.remove('noscroll')
-    store.commit('updateLoadingStatus', {isLoading: false})
   })
 
   Object.keys(filters).forEach(key => {
