@@ -373,7 +373,7 @@
     </div>
   </bp-dialog>
   <template v-if="blackVisible">
-    <bp-dialog :title="'提示'" v-model="blackVisible" @onConfirm="$router.go(-1)" :confirmText="'确定'" :one="true">
+    <bp-dialog :title="'提示'" v-model="blackVisible" @onConfirm="blackExit" :confirmText="'确定'" :one="true">
       <div class="">
         <p class="f14" style="color:#7b7b7b;">你已进入{{barDataInfo.ht_msg.name}}的黑名单</p>
         <p class="f14" style="color:#7b7b7b;margin-top:6px;">如有异议，请联系酒吧管理员</p>
@@ -1582,6 +1582,15 @@ export default {
           }
         }
       })
+    },
+    blackExit () {
+      var history = window.sessionStorage
+      history = history.getItem('count') * 1
+      if (history === 1) {
+        this.$router.replace('/')
+      } else {
+        this.$router.go(-1)
+      }
     },
     validZero () {
       if (/^0/.test(event.target.value)) {

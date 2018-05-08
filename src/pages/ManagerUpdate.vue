@@ -14,7 +14,8 @@
       <x-switch title="可登录商户后台" v-model="powerOn" @on-change="powerOnChange" :disabled="is_merchant == 1"></x-switch>
      </group>
      <template v-if="powerOn">
-      <checklist title="管理员权限" label-position="left" :options="powerList" v-model="powerCheck" :check-disabled="false" :disabled="is_merchant == 1"></checklist>
+      <checklist class="power-list" title="管理员权限" label-position="left" :options="powerList" v-model="powerCheck" :check-disabled="false" :disabled="is_merchant == 1"></checklist>
+      <checklist class="super-power-list" label-position="left" :options="superPowerList" v-model="superPowerCheck" :check-disabled="false" :disabled="hasSuperManager || is_merchant == 1"></checklist>
       </template>
     </div>
      <div class="flex" style="margin: 0 10px;padding: 10px 0;">
@@ -47,12 +48,17 @@ export default {
     return {
       powerCheck: [],
       powerList: [],
+      superPowerCheck: [],
+      superPowerList: [],
       powerOn: false,
       loading: false,
       loading2: false,
       count: 3,
       info: {},
-      is_merchant: 0
+      is_merchant: 0,
+      curUserIsSuper: false,
+      hasSuperManager: false,
+      curIsMerchant: 0
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -63,27 +69,44 @@ export default {
     var info = JSON.parse(localStorage.getItem('managerInfo'))
     this.info = info
     getFunction({ht_id: this.$route.query.id, mc_id: this.$route.query.mc_id}).then((res) => {
-      if (Array.isArray(res.result)) {
-        res.result.forEach((v) => {
+      if (Array.isArray(res.result.data)) {
+        res.result.data.forEach((v) => {
           v.key = v.id
           v.value = v.name
-          !this.$route.query.type && this.powerCheck.push(v.id.toString())
+          if (!this.$route.query.type) {
+            if (v.path !== '/Manager') {
+              this.powerCheck.push(v.id.toString())
+            }
+          }
+          if (v.path !== '/Manager') {
+            this.powerList.push(v)
+          } else {
+            v.inlineDesc = '只能设置一个超级管理员有此权限'
+            this.superPowerList.push(v)
+          }
         })
-        this.powerList = res.result
+        console.log(res.result.flag)
+        this.hasSuperManager = res.result.flag
+        this.curUserIsSuper = res.result.is_super
       }
     })
     if (this.$route.query.type) {
       getManagerInfo({ht_id: this.$route.query.id, mc_id: this.$route.query.mc_id}).then((res) => {
         if (res.result) {
-          this.is_merchant = res.result.info.is_merchant
+          this.is_merchant = ~~(res.result.info.is_merchant)
           var powerChecks = []
           res.result.function.map((v) => {
-            powerChecks.push(v.id.toString())
+            if (v.path !== '/Manager') {
+              powerChecks.push(v.id.toString())
+            } else {
+              this.superPowerCheck.push(v.id.toString())
+            }
           })
           // this.powerCheck = powerChecks
           this.$set(this.$data, 'powerCheck', powerChecks)
           this.powerOn = Boolean(~~(res.result.info.is_allow_in))
           this.count = ~~(res.result.info.daily_screen_count)
+          this.curIsMerchant = parseInt(res.result.is_merchant)
         }
       })
     }
@@ -105,7 +128,7 @@ export default {
         allow: this.powerOn ? 1 : 0,
         time: 60,
         num: this.count,
-        function_id: this.powerOn ? this.powerCheck.join(',') : ''
+        function_id: this.powerOn ? this.powerCheck.concat(this.superPowerCheck).join(',') : ''
       }
       var _action = addManager
       var _text = '添加成功'
@@ -118,7 +141,12 @@ export default {
           text: _text,
           isShowMask: false
         })
-        this.$router.go(-1)
+        if (this.curUserIsSuper && this.curIsMerchant === 0 && params.function_id.indexOf(this.superPowerList[0].id) === -1) {
+          // 自己取消管理员权限退出
+          this.$router.go(-2)
+        } else {
+          this.$router.go(-1)
+        }
       }).finally(() => {
         this.loading2 = false
       })
@@ -163,6 +191,21 @@ export default {
   }
   /deep/ .weui-btn + .weui-btn {
     margin-top: 0;
+  }
+  /deep/ .vux-checklist-disabled .weui-cell__bd {
+    opacity: 0.4;
+  }
+}
+
+.power-list {
+  /deep/ .weui-cells:last-child:after {
+    border: 0;
+  }
+}
+
+.super-power-list {
+  /deep/ .weui-cells:last-child:before {
+    left: 15px;
   }
 }
 

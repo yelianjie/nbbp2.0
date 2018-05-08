@@ -20,7 +20,7 @@ import VeeValidate, { Validator } from 'vee-validate'
 import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 import { validateRules } from './utils/validateRules'
 import VueLazyload from 'vue-lazyload'
-import { getWxConfig, getHasToken, isAllowIn } from './api/'
+import { getWxConfig, getHasToken, isAllowIn, isHaveFunction } from './api/'
 // 判断 切换公众号时以前的号有localStorage 用这个变量判断删除
 // var changeFlag = localStorage.getItem('changeFlag') ? 1 : 0
 /* if (process.env.NODE_ENV === 'production') {
@@ -30,7 +30,7 @@ import { getWxConfig, getHasToken, isAllowIn } from './api/'
 window.sessionStorage.clear()
 var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  window.sessionStorage.setItem('tId', 'd47f2cdc132fd2b6b66b024b07edbb0567506e36')
+  window.sessionStorage.setItem('tId', 'd1e330cec9b98468452ae24791d3106069734f2c')
   tId = window.sessionStorage.getItem('tId')
 }
 if (!tId && process.env.NODE_ENV === 'production') {
@@ -173,39 +173,8 @@ function init () {
     next() */
     ++historyCount
     history.setItem('count', historyCount)
-    // 判断管理员有没有进入页面的权限
-    if (to.meta.managerValid) {
-      isAllowIn({ht_id: to.query.id}).then((res) => {
-        if (~~(res.result)) {
-          // 判断当前角色有没有权限进入这个路由
-          if (store.getters['user/role']) {
-            let userInfo = store.getters['user/userInfo']
-            if (Object.keys(userInfo).length === 0) {
-              store.dispatch('user/getUserInfo').then(() => {
-                let role = store.getters['user/role']
-                if (role.some((v) => to.meta.roles.indexOf(v) > -1)) {
-                  store.commit('updateLoadingStatus', {isLoading: true})
-                  next()
-                } else {
-                  next({path: '/'})
-                }
-              })
-            } else {
-              let role = store.getters['user/role']
-              if (role.some((v) => to.meta.roles.indexOf(v) > -1)) {
-                store.commit('updateLoadingStatus', {isLoading: true})
-                next()
-              } else {
-                next({path: '/'})
-              }
-            }
-          }
-        } else {
-          // 管理员无权限进入
-          next({path: '/'})
-        }
-      })
-    } else {
+
+    function go () {
       // 判断当前角色有没有权限进入这个路由
       if (store.getters['user/role']) {
         let userInfo = store.getters['user/userInfo']
@@ -228,6 +197,30 @@ function init () {
             next({path: '/'})
           }
         }
+      }
+    }
+    // 判断管理员有没有进入页面的权限
+    if (to.meta.allowValid) {
+      isAllowIn({ht_id: to.query.id}).then((res) => {
+        if (~~(res.result)) {
+          go()
+        } else {
+          // 管理员无权限进入
+          next({path: '/'})
+        }
+      })
+    } else {
+      if (to.meta.managerValid) {
+        isHaveFunction({ht_id: to.query.id, path: to.meta.rights}).then((res1) => {
+          if (~~(res1.result)) {
+            go()
+          } else {
+            // 无权限
+            next({path: '/'})
+          }
+        })
+      } else {
+        go()
       }
     }
   })

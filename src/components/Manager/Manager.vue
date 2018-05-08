@@ -4,7 +4,7 @@
       <img v-lazy="$options.filters.prefixImageUrl(result.headimgurl)" class="circle">
     </div>
     <div class="u-nickname overflow flex-1">
-      <p>{{result.nickname}}</p>
+      <p>{{result.nickname}}<span class="label-name f13" v-if="type == 0 && result.is_merchant > 0">商家</span><span class="label-name f13" v-if="type == 0 && result.is_super">超级管理员</span></p>
       <p class="f12" style="color:#989898;">{{result.create_time}}</p>
     </div>
     <div class="u-op">
@@ -122,5 +122,12 @@ export default {
   margin-left: 10px;
   margin-right: 10px;
   overflow: hidden;
+}
+.label-name {
+  padding: 2px 4px;
+  background-color: red;
+  margin-left: 4px;
+  color: #fff;
+  border-radius: 2px;
 }
 </style>

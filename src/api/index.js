@@ -698,6 +698,14 @@ export const getRestScreenAmount = (data) => {
 }
 
 /**
+ * 判断权限
+ * @param {*} data
+ */
+export const isHaveFunction = (data) => {
+  return request('/weixin/manager/isHaveFunction', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */

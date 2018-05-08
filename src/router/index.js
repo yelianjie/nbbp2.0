@@ -88,7 +88,7 @@ export default new Router({
       },
       meta: {
         roles: ['user', 'business'],
-        managerValid: true
+        allowValid: true
       }
     },
     {
@@ -119,7 +119,8 @@ export default new Router({
       },
       meta: {
         roles: ['user', 'business'],
-        managerValid: true
+        managerValid: true,
+        rights: '/BasicBusiness'
       }
     },
     {
@@ -130,7 +131,8 @@ export default new Router({
       },
       meta: {
         roles: ['user', 'business'],
-        managerValid: true
+        managerValid: true,
+        rights: '/NoticeSetting'
       }
     },
     {
@@ -141,7 +143,8 @@ export default new Router({
       },
       meta: {
         roles: ['user', 'business'],
-        managerValid: true
+        managerValid: true,
+        rights: '/AdSetting'
       }
     },
     {
@@ -152,7 +155,8 @@ export default new Router({
       },
       meta: {
         roles: ['user', 'business'],
-        managerValid: true
+        managerValid: true,
+        rights: '/BapingSetting'
       }
     },
     /* {
@@ -173,7 +177,8 @@ export default new Router({
       },
       meta: {
         roles: ['user', 'business'],
-        managerValid: true
+        managerValid: true,
+        rights: '/Manager'
       }
     },
     {
@@ -184,7 +189,8 @@ export default new Router({
       },
       meta: {
         roles: ['user', 'business'],
-        managerValid: true
+        managerValid: true,
+        rights: '/Manager'
       }
     },
     {
