@@ -27,6 +27,7 @@
           <span class="sex sex-male flex flex-align-center" v-if="userInfo.sex == 1"><svg-icon icon-class="male"/></span>
           <span class="sex sex-female flex flex-align-center" v-if="userInfo.sex == 2"><svg-icon icon-class="female"/></span>
           <span class="tag tagcity" v-if="isCityPingYin">{{userInfo.city}}</span>
+          <span class="tag tagrole" v-if="getRole">{{getRole}}</span>
           <span class="level" :class="'level-' + userInfo.mc_level_id" v-if="userInfo.grade_title && userInfo.grade_title != '平民'" @click="$router.push({path: '/MyLevel'})">{{userInfo.grade_title}}</span>
           <span class="level level-1" v-else @click="$router.push({path: '/MyLevel'})">{{userInfo.grade_title}}</span>
         </div>
@@ -121,6 +122,17 @@ export default {
     ...mapGetters('user', [
       'userInfo'
     ]),
+    getRole () {
+      if (this.userInfo.isMM > 0) {
+        return '商户'
+      } else if (this.userInfo.isAgent > 0) {
+        return '代理'
+      } else if (this.userInfo.is_manager > 0) {
+        return '管理员'
+      } else {
+        return ''
+      }
+    },
     isCityPingYin () {
       if (this.userInfo && this.userInfo.city) {
         if (/^[\u4E00-\u9FA5]+$/.test(this.userInfo.city)) {

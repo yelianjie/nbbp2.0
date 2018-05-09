@@ -85,9 +85,9 @@ export default {
         },
         onConfirm (msg) {
           msg = typeof msg === 'number' ? msg : Number(msg)
-          if (!Number.isInteger(msg)) {
+          if (!Number.isInteger(msg) || !/^\d+(?=\.{0,1}\d+$|$)/.test(Number(msg))) {
             _this.$vux.toast.show({
-              text: '请输入整数'
+              text: '请输入正整数'
             })
             return false
           }

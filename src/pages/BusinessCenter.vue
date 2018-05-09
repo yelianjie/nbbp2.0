@@ -1,6 +1,6 @@
 <template>
   <div class="container padding-bar f7f7f7 borderbox">
-    <BusinessAgentTop :isManager="mInfo.is_merchant > 0 ? false : true" :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.merchant_balance" :totalMoney="barInfo.merchant_income" :yesMoney="barInfo.yst_money"></BusinessAgentTop>
+    <BusinessAgentTop :hideIncome="iSHideIncome" :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.merchant_balance" :totalMoney="barInfo.merchant_income" :yesMoney="barInfo.yst_money"></BusinessAgentTop>
     <BusinessMenus :menus="menus"></BusinessMenus>
     <footer class="footer flex">
       <div class="flex-1 flex-v tc flex-pack-center flex-align-center">
@@ -27,7 +27,8 @@ export default {
       }],
       barInfo: {},
       menus: [],
-      mInfo: {}
+      mInfo: {},
+      curIsSuper: false
     }
   },
   created () {
@@ -48,6 +49,7 @@ export default {
         })
         this.menus = res.result.function
         this.mInfo = res.result.info
+        this.curIsSuper = Boolean(res.result.is_super)
       }
     })
   },
@@ -73,7 +75,14 @@ export default {
   computed: {
     ...mapGetters('user', {
       userInfo: 'userInfo'
-    })
+    }),
+    iSHideIncome () {
+      if (this.mInfo.is_merchant > 0 || this.curIsSuper) {
+        return true
+      } else {
+        return false
+      }
+    }
   }
 }
 </script>

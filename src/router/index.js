@@ -12,7 +12,7 @@ export default new Router({
         require(['@/pages/Home'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#121420'
       }
     },
@@ -23,7 +23,7 @@ export default new Router({
         require(['@/pages/QrcodeLogin'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#f3f2f7'
       }
     },
@@ -34,7 +34,7 @@ export default new Router({
         require(['@/pages/Register'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager']
+        roles: ['user', 'agent', 'business']
       }
     },
     {
@@ -44,7 +44,7 @@ export default new Router({
         require(['@/pages/UserCenter'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#121420'
       }
     },
@@ -55,7 +55,7 @@ export default new Router({
         require(['@/pages/Profile'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#121420'
       }
     },
@@ -66,7 +66,7 @@ export default new Router({
         require(['@/pages/BusinessJoin'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#121420'
       }
     },
@@ -210,7 +210,7 @@ export default new Router({
         require(['@/pages/BindManage'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager']
+        roles: ['user', 'agent', 'business']
       }
     },
     {
@@ -240,7 +240,7 @@ export default new Router({
         require(['@/pages/Main'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#121420'
       }
     },
@@ -251,7 +251,7 @@ export default new Router({
         require(['@/pages/Lottery'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#181b2a'
       }
     },
@@ -262,7 +262,7 @@ export default new Router({
         require(['@/pages/Charge'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#181b2a'
       }
     },
@@ -273,7 +273,7 @@ export default new Router({
         require(['@/pages/Income'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#121420'
       }
     },
@@ -284,7 +284,7 @@ export default new Router({
         require(['@/pages/About'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#121420'
       }
     },
@@ -295,7 +295,7 @@ export default new Router({
         require(['@/pages/Detail'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#121420'
       }
     },
@@ -306,7 +306,7 @@ export default new Router({
         require(['@/pages/MyLevel'], resolve)
       },
       meta: {
-        roles: ['user', 'agent', 'business', 'manager'],
+        roles: ['user', 'agent', 'business'],
         bg: '#181b2a'
       }
     },

@@ -7,7 +7,7 @@
         <span class="u-name">{{name}}</span>
       </div>
     </div>
-    <div class="middle" v-if="!isManager">
+    <div class="middle" v-if="hideIncome">
       <button id="deposit-btn" class="fff-bp" @click="setLocalStorage">我要提现</button>
       <div class="item-wrap flex">
         <div class="flex-1 data-item">
@@ -35,7 +35,7 @@
 <script>
 import { Group, Cell } from 'vux'
 export default {
-  props: ['logo', 'name', 'currentMoney', 'totalMoney', 'yesMoney', 'isManager'],
+  props: ['logo', 'name', 'currentMoney', 'totalMoney', 'yesMoney', 'hideIncome'],
   data () {
     return {
 

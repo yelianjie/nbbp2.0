@@ -110,7 +110,6 @@ export default {
         }
       }, this.isFlag, this.isLogo)
       this.cancel()
-      this.$vux.loading.hide()
     },
     fileChange (event) {
       var file = event.target.files[0]

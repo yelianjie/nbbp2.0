@@ -187,6 +187,9 @@ body, html, #app {
   &.tagcity {
     background-color: #645bc4;
   }
+  &.tagrole {
+    background-color: #f43a4e;
+  }
 }
 .face-icon {
   width: 0.8rem;

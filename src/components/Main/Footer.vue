@@ -51,7 +51,8 @@ export default {
       msg: '',
       inputObj: null,
       emoji: null,
-      inputTimer: null
+      inputTimer: null,
+      sending: false
     }
   },
   watch: {
@@ -109,6 +110,9 @@ export default {
       })
     },
     sendMsg () {
+      if (this.sending) {
+        return false
+      }
       if (!this.msg && !this.base64) {
         this.$vux.toast.show({
           text: '请上传图片或输入文字',
@@ -123,6 +127,7 @@ export default {
         })
         return false
       }
+      this.sending = true
       var msg = twemoji.parse(
         this.msg,
         function (icon, options, variant) {
@@ -137,6 +142,8 @@ export default {
         this.$nextTick(() => {
           this.observeInput()
         })
+      }).finally(() => {
+        this.sending = false
       })
     },
     msgImgUploadPreview (base64) {
