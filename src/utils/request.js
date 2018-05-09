@@ -4,6 +4,8 @@ require('es6-promise').polyfill()
 require('promise.prototype.finally').shim()
 Vue.use(AjaxPlugin)
 const baseURL = process.env.NODE_ENV === 'production' ? require('../../config/prod.env').BASE_API : require('../../config/dev.env').BASE_API
+const CancelToken = Vue.http.CancelToken
+Vue.cancel = []
 Vue.http.defaults.baseURL = baseURL
 Vue.http.defaults.timeout = 5000
 Vue.http.interceptors.request.use(function (config) {
@@ -24,7 +26,11 @@ Vue.http.interceptors.request.use(function (config) {
 
 const request = (url, method = 'POST', data = {}) => {
   if (method === 'POST') {
-    return Vue.http.post(url, data).then((response) => {
+    return Vue.http.post(url, data, {
+      cancelToken: new CancelToken(function (cancel) {
+        Vue.cancel.push(cancel)
+      })
+    }).then((response) => {
       if (response.data.code !== '306000' && response.data.code !== '301001') {
         var _textWidth = '10em'
         if (typeof response.data.result === 'string' && response.data.result.length > 10) {

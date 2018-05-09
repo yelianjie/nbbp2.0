@@ -768,12 +768,12 @@ export default {
       }
     },
     loopBlack (time) {
-      if (!this.$route.params.id) {
-        clearTimeout(this.blackTimer)
-        this.blackTimer = null
-        return false
-      }
       this.blackTimer = setTimeout(() => {
+        if (!this.$route.params.id) {
+          clearTimeout(this.blackTimer)
+          this.blackTimer = null
+          return false
+        }
         isBlack({ht_id: this.$route.params.id}).then((res) => {
           if (res.result) {
             this.blackVisible = true
@@ -789,12 +789,12 @@ export default {
       }, time)
     },
     loopDelete (time) {
-      if (!this.$route.params.id) {
-        clearTimeout(this.deleteTimer)
-        this.deleteTimer = null
-        return false
-      }
       this.deleteTimer = setTimeout(() => {
+        if (!this.$route.params.id) {
+          clearTimeout(this.deleteTimer)
+          this.deleteTimer = null
+          return false
+        }
         getDelMsg({ht_id: this.$route.params.id}).then((res) => {
           if (res.result.length === 0) {
             return false
@@ -828,12 +828,12 @@ export default {
       }, time)
     },
     loopHbList (time) {
-      if (!this.$route.params.id) {
-        clearTimeout(this.hbListTimer)
-        this.hbListTimer = null
-        return false
-      }
       this.hbListTimer = setTimeout(() => {
+        if (!this.$route.params.id) {
+          clearTimeout(this.hbListTimer)
+          this.hbListTimer = null
+          return false
+        }
         unFinishHbList({ht_id: this.$route.params.id}).then((res) => {
           if (Array.isArray(res.result)) {
             /* // 并集
@@ -884,12 +884,12 @@ export default {
     },
     loopPacketOrder (time) {
       // getPacketOrder
-      if (!this.$route.params.id) {
-        clearTimeout(this.packetTimer)
-        this.packetTimer = null
-        return false
-      }
       this.packetTimer = setTimeout(() => {
+        if (!this.$route.params.id) {
+          clearTimeout(this.packetTimer)
+          this.packetTimer = null
+          return false
+        }
         getPacketOrder({ht_id: this.$route.params.id}).then((res) => {
           if (res.result && !Array.isArray(res.result)) {
             if (~~(res.result.hb.show_time) <= 0) {
@@ -929,12 +929,12 @@ export default {
       }, time)
     },
     loopOnlines (time) {
-      if (!this.$route.params.id) {
-        clearTimeout(this.onlineTimer)
-        this.onlineTimer = null
-        return false
-      }
       this.onlineTimer = setTimeout(() => {
+        if (!this.$route.params.id) {
+          clearTimeout(this.onlineTimer)
+          this.onlineTimer = null
+          return false
+        }
         getOnlines({ht_id: this.$route.params.id}).then((res) => {
           Array.isArray(res.result) && (this.onlinePeople = res.result)
         }).finally(() => {
@@ -947,12 +947,12 @@ export default {
       }, time)
     },
     loopGetNotice (time) {
-      if (!this.$route.params.id) {
-        clearTimeout(this.noticeTimer)
-        this.noticeTimer = null
-        return false
-      }
       this.noticeTimer = setTimeout(() => {
+        if (!this.$route.params.id) {
+          clearTimeout(this.noticeTimer)
+          this.noticeTimer = null
+          return false
+        }
         getBarNotice({ht_id: this.$route.params.id}).then((res) => {
           this.notice = res.result ? res.result.content : ''
         }).finally(() => {
@@ -965,12 +965,12 @@ export default {
       }, time)
     },
     loopGetNewMsg () {
-      if (!this.$route.params.id) {
-        clearTimeout(this.newsTimer)
-        this.newsTimer = null
-        return false
-      }
       this.newsTimer = setTimeout(() => {
+        if (!this.$route.params.id) {
+          clearTimeout(this.newsTimer)
+          this.newsTimer = null
+          return false
+        }
         getMaxMsg(this.requestNewParams).then((res) => {
           if (Array.isArray(res.result) && res.result.length > 0) {
             var chatLength = this.chatlist.length

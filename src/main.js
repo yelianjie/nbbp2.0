@@ -30,7 +30,7 @@ import { getWxConfig, getHasToken, isAllowIn, isHaveFunction } from './api/'
 window.sessionStorage.clear()
 var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  window.sessionStorage.setItem('tId', 'e507e26825826b82e7f6742aa8f37c934ef30d3d')
+  window.sessionStorage.setItem('tId', '25c5f96efc37b58151568823f1745e6e87d83ff6')
   tId = window.sessionStorage.getItem('tId')
 }
 if (!tId && process.env.NODE_ENV === 'production') {
@@ -134,6 +134,11 @@ function init () {
   let historyCount = history.getItem('count') * 1 || 0
   // history.setItem('/', 0)
   router.beforeEach(function (to, from, next) {
+    if (Vue.cancel) {
+      while (Vue.cancel.length > 0) {
+        Vue.cancel.pop()('请求中断')
+      }
+    }
     store.commit('updateLoadingStatus', {isLoading: true})
     if (to.fullPath.indexOf('parseWxUrl') !== -1) {
       // 重置url
