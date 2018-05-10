@@ -107,8 +107,10 @@ export default {
   }
   .ds-box-gift {
     img {
-      width: 1.8rem;
-      height: 1.8rem;
+     /*  width: 1.8rem;
+      height: 1.8rem; */
+      width: 1.2rem;
+      height: 1.2rem;
       position: absolute;
       left: 50%;
       top: 50%;

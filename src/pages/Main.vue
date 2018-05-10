@@ -6,10 +6,6 @@
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
         <div class="boardcast-scroller flex-1 flex flex-align-center">
           <MarqueeTips class="f15" :content="notice" :speed="15"></MarqueeTips>
-          <!--<div class="scroller-wrap f14">
-            我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强刷本领强粉刷本领强刷本领强粉刷本领强
-            <marquee direction="left" befavior="scroll" scrollamount="4">我是一个粉刷匠，粉刷本领强粉刷本领强粉刷本领强粉刷本领强</marquee>
-          </div>-->
         </div>
       </div>
     <div class="main-header flex flex-align-center pr">
@@ -104,8 +100,8 @@
     <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>
     <div class="f-btn" @click="hbForAll"><img src="../assets/hb-btn.png"/></div>
   </div>
-  <bp-window v-model="bpWindowVisible" ref="bpWindow" @onWxPay="wxPay" :times="barDataInfo.time" :screens="barDataInfo.screen" @onBuy="buyDialogVisible = true"></bp-window>
-  <ds-window v-model="dsWindowVisible" ref="dsWindow" @onWxPay="wxPay" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
+  <bp-window v-model="bpWindowVisible" ref="bpWindow" @onWxPay="wxPay" v-if="barDataInfo.time" :times="barDataInfo.time" :screens="barDataInfo.screen" @onBuy="buyDialogVisible = true"></bp-window>
+  <ds-window v-model="dsWindowVisible" ref="dsWindow" @onWxPay="wxPay" v-if="barDataInfo.gift" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
       <div class="user-info">
@@ -1607,7 +1603,8 @@ export default {
       }
     },
     calTime (time) {
-      var a = moment(time)
+      var _time = time.substring(0, 10)
+      var a = moment(_time)
       var b = moment()
       var t = time
       var betweenDay = Number(b.diff(a, 'days'))

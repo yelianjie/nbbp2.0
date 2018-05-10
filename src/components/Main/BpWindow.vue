@@ -15,7 +15,7 @@
           <div class="bp-time-container">
             <swiper :options="swiperTimeOption">
               <swiper-slide v-for="(v, i) in times" :key="i">
-                <div class="bp-time-item" :class="{'selected': bpTimeIndex == i}" @click="bpTimeIndex != i ? bpTimeIndex = i : bpTimeIndex = -1">
+                <div class="bp-time-item" :class="{'selected': bpTimeIndex == i}" @click="bpTimeSelect(i)">
                 <div class="time f13">{{v.time}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                 <div class="time-price overflow f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
               </div>
@@ -54,7 +54,7 @@
         </div>
         <div class="window-bottom f13 flex flex-align-center">
           <div class="account flex-1">总计：<svg-icon icon-class="coin" className="coin" />{{total}}</div>
-          <div class="repeat"><svg-icon icon-class="substract" @click.native="bpTimes == 1 ? '' : bpTimes--"/><span>{{timesBpText}}</span><svg-icon icon-class="plus" @click.native="bpTimes == 3 ? bpTimes = 1 : bpTimes++"/></div>
+          <div class="repeat"><svg-icon icon-class="substract" @click.native="takeTimes(0)"/><span>{{timesBpText}}</span><svg-icon icon-class="plus" @click.native="takeTimes(1)"/></div>
           <div class="submit"><button class="bp-button bp-submit" @click="goingBuy">购买</button></div>
         </div>
       </div>
@@ -85,19 +85,21 @@ export default {
       bpThemeIndex: -1,
       content: '',
       swiperTimeOption: {
-        slidesPerColumn: 1,
+        slidesPerColumn: this.times.length > 4 ? 2 : 1,
         slidesPerView: 4,
+        slidesPerGroup: 4,
         slidesPerColumnFill: 'row',
-        freeMode: true,
+        freeMode: false,
         pagination: {
           el: '.swiper-pagination'
         }
       },
       swiperThemeOption: {
-        slidesPerColumn: 2,
+        slidesPerColumn: 1,
         slidesPerView: 4,
+        slidesPerGroup: 4,
         slidesPerColumnFill: 'row',
-        freeMode: true,
+        freeMode: false,
         pagination: {
           el: '.swiper-pagination'
         }
@@ -109,6 +111,26 @@ export default {
     ...mapActions('app', {
       ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
     }),
+    bpTimeSelect (index) {
+      if (this.bpTimeIndex !== index) {
+        this.bpTimeIndex = index
+        // 判断当前用户是否是管理员 如果是 判断是否还有剩余次数
+        this.isTipForOverTime()
+      } else {
+        this.bpTimeIndex = -1
+      }
+    },
+    takeTimes (type) {
+      if (type === 0) {
+        if (this.bpTimes !== 1) {
+          this.bpTimes--
+          this.isTipForOverTime()
+        }
+      } else {
+        this.bpTimes = this.bpTimes === 3 ? 1 : this.bpTimes + 1
+        this.isTipForOverTime()
+      }
+    },
     bpfilterList (screens) {
       return screens.filter((v) => {
         return v.title !== '重金霸屏'
@@ -235,6 +257,14 @@ export default {
       this.bpTimes = info.count
       this.content = info.content
       this.base64Img = info.img
+    },
+    isTipForOverTime () {
+      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) !== 0 && (this.times[this.bpTimeIndex].time * this.bpTimes > this.barManagerInfo.max_bp_time)) {
+        this.$vux.toast.show({
+          text: '单次免费霸屏不能超过' + this.barManagerInfo.max_bp_time + '秒',
+          width: '14em'
+        })
+      }
     }
   },
   components: {
@@ -244,7 +274,7 @@ export default {
   },
   computed: {
     total () {
-      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0 && this.bpTimeIndex > -1 && this.times[this.bpTimeIndex].time <= this.barManagerInfo.max_bp_time) {
+      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0 && this.bpTimeIndex > -1 && (this.times[this.bpTimeIndex].time * this.bpTimes) <= this.barManagerInfo.max_bp_time) {
         return 0
       } else {
         const timePrice = this.bpTimeIndex !== -1 ? Number(this.times[this.bpTimeIndex].price) : 0

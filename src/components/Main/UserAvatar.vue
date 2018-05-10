@@ -32,7 +32,7 @@ export default {
       barManagerInfo: 'barManagerInfo'
     }),
     isShow () {
-      if (this.userInfo && (this.barManagerInfo.isManager > 0 || this.barManagerInfo.isHost > 0 || this.userInfo.id === this.data.initiator_mc_id)) {
+      if (this.userInfo && (this.barManagerInfo.isManager || this.barManagerInfo.isHost > 0 || this.userInfo.id === this.data.initiator_mc_id)) {
         return true
       } else {
         return false

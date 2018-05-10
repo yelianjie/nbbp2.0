@@ -62,7 +62,12 @@ const request = (url, method = 'POST', data = {}) => {
       return Promise.reject(errors)
     })
   } else {
-    return Vue.http.get(url, {params: data}).then((response) => {
+    return Vue.http.get(url, {
+      params: data,
+      cancelToken: new CancelToken(function (cancel) {
+        Vue.cancel.push(cancel)
+      })
+    }).then((response) => {
       return Promise.resolve(response.data)
     }, (error) => {
       if (error.response) {

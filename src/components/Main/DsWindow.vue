@@ -63,8 +63,9 @@ export default {
       swiperDsGiftOption: {
         slidesPerColumn: 2,
         slidesPerView: 4,
-        slidesPerColumnFill: 'row',
-        freeMode: true,
+        slidesPerGroup: 4,
+        slidesPerColumnFill: 'column',
+        freeMode: false,
         pagination: {
           el: '.swiper-pagination'
         }
@@ -212,8 +213,10 @@ export default {
     height: 1.22rem;
     margin: 0 auto;
     img {
-      width: 1.24rem;
-      height: 1.24rem;
+      /* width: 1.24rem;
+      height: 1.24rem; */
+      width: 1.1rem;
+      height: 1.1rem;
       display: block;
       position: absolute;
       left: 50%;

@@ -1,6 +1,6 @@
 <template>
   <div class="container padding-bar f7f7f7 borderbox">
-    <BusinessAgentTop :hideIncome="iSHideIncome" :isMerchant="mInfo.is_merchant > 0" :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.merchant_balance" :totalMoney="barInfo.merchant_income" :yesMoney="barInfo.yst_money"></BusinessAgentTop>
+    <BusinessAgentTop :hideIncome="iSHideIncome" :showTx="mInfo.is_merchant > 0" :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.merchant_balance" :totalMoney="barInfo.merchant_income" :yesMoney="barInfo.yst_money"></BusinessAgentTop>
     <BusinessMenus :menus="menus"></BusinessMenus>
     <footer class="footer flex">
       <div class="flex-1 flex-v tc flex-pack-center flex-align-center">
@@ -77,10 +77,10 @@ export default {
       userInfo: 'userInfo'
     }),
     iSHideIncome () {
-      if (this.mInfo.is_merchant > 0 || this.curIsSuper) {
-        return true
-      } else {
+      if (this.mInfo.is_merchant > 0) {
         return false
+      } else if (this.curIsSuper) {
+        return true
       }
     }
   }

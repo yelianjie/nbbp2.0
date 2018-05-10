@@ -1,6 +1,6 @@
 <template>
   <div class="container padding-bottom-btn borderbox">
-    <BusinessAgentTop :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.agent_balance" :totalMoney="barInfo.agent_income" :yesMoney="barInfo.yst_money"></BusinessAgentTop>
+    <BusinessAgentTop :name="barInfo.name" :hideIncome="false" :showTx="true" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.agent_balance" :totalMoney="barInfo.agent_income" :yesMoney="barInfo.yst_money"></BusinessAgentTop>
     <div class="percent-divide fff">
       <p class="set-title">分成比例设置</p>
       <div class="flex flex-h percent-box">
