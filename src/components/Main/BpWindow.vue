@@ -29,12 +29,14 @@
           <div class="rpxline" style="margin-bottom: 0.2rem;"></div>
           <div class="bp-theme-container">
             <swiper :options="swiperThemeOption">
-              <swiper-slide v-for="(v, i) in bpfilterList(screens)" :key="i">
-                <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i}" @click="bpThemeIndex != i ? bpThemeIndex = i : bpThemeIndex = -1">
-                  <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-                  <div class="theme-icon"><img class="lazy-bp-img" src="../../assets/blank.gif" :data-src="$options.filters.prefixImageUrl(v.icon)"></div>
-                  <div class="theme-name f13 overflow">{{v.title}}</div>
-                  <div class="time-price overflow f12 tc" style="margin-bottom: 0.15rem;"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
+              <swiper-slide v-for="(vv, ii) in screens" :key="ii">
+                <div class="flex-1" v-for="(v, i) in bpfilterList(vv)" :key="i">
+                  <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i && bpThemeRowIndex == ii}" @click="bpThemeSelect(ii, i)">
+                    <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+                    <div class="theme-icon"><img class="lazy-bp-img" src="../../assets/blank.gif" :data-src="$options.filters.prefixImageUrl(v.icon)"></div>
+                    <div class="theme-name f13 overflow">{{v.title}}</div>
+                    <div class="time-price overflow f12 tc" style="margin-bottom: 0.15rem;"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
+                  </div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -87,6 +89,7 @@ export default {
       bpTimeIndex: -1,
       bpTimeRowIndex: -1,
       bpThemeIndex: -1,
+      bpThemeRowIndex: -1,
       content: '',
       swiperTimeOption: {
         slidesPerColumn: 1,
@@ -100,8 +103,8 @@ export default {
       },
       swiperThemeOption: {
         slidesPerColumn: 1,
-        slidesPerView: 4,
-        slidesPerGroup: 4,
+        slidesPerView: 1,
+        slidesPerGroup: 1,
         slidesPerColumnFill: 'row',
         freeMode: false,
         pagination: {
@@ -124,6 +127,15 @@ export default {
       } else {
         this.bpTimeRowIndex = -1
         this.bpTimeIndex = -1
+      }
+    },
+    bpThemeSelect (bpThemeRowIndex, index) {
+      if (this.bpThemeIndex !== index) {
+        this.bpThemeRowIndex = bpThemeRowIndex
+        this.bpThemeIndex = index
+      } else {
+        this.bpThemeRowIndex = -1
+        this.bpThemeIndex = -1
       }
     },
     takeTimes (type) {
@@ -203,8 +215,14 @@ export default {
         return false
       }
       if (this.bpThemeIndex === -1) {
-        var isHasTextTheme = this.screens.findIndex((v) => v.title === '重金霸屏')
-        this.bpThemeIndex = isHasTextTheme
+        this.screens.some((v, i) => {
+          var isFind = v.findIndex((vv) => vv.title === '重金霸屏')
+          if (isFind > -1) {
+            this.bpThemeRowIndex = i
+            this.bpThemeIndex = isFind
+            return false
+          }
+        })
       }
       let isCharge = Number(this.total) > Number(this.userInfo.balance)
       var content = this.content
@@ -225,17 +243,19 @@ export default {
           return '1'
         }
       ) */
+      var curScreen = this.currentSelectItem(this.screens, this.bpThemeRowIndex, this.bpThemeIndex)
+      var curTime = this.currentSelectItem(this.times, this.bpTimeRowIndex, this.bpTimeIndex)
       let postParams = {
         ht_id: this.$route.params.id,
         type: 2,
-        screen_id: this.bpThemeIndex === -1 ? 0 : this.screens[this.bpThemeIndex].id,
-        time_id: this.times[this.bpTimeIndex].id,
+        screen_id: this.bpThemeIndex === -1 ? 0 : curScreen.id,
+        time_id: curTime.id,
         count: this.bpTimes,
         content: content,
         img: this.base64Img,
         reward_uid: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : ''
       }
-      postParams = {postParams: postParams, extraInfo: {title: this.screens[this.bpThemeIndex].title}, price: this.total, confirmText: isCharge ? '充值购买' : '确定', isCharge: isCharge}
+      postParams = {postParams: postParams, extraInfo: {title: curScreen.title}, price: this.total, confirmText: isCharge ? '充值购买' : '确定', isCharge: isCharge}
       if (!this.userInfo.is_recharge && ~~(this.barManagerInfo.game_count) === 0) {
         // 充过值显示取消 没冲过显示立即支付
         var extraParams = {
@@ -259,13 +279,17 @@ export default {
     initSelected (info) {
       this.bpTimeIndex = this.times.findIndex((v) => ~~(v.id) === ~~(info.time_id))
       this.bpThemeIndex = this.screens.findIndex((v) => ~~(v.id) === ~~(info.screen_id))
-      console.log(this.bpTimeIndex, this.bpThemeIndex)
       this.bpTimes = info.count
       this.content = info.content
       this.base64Img = info.img
     },
+    currentSelectItem (arr, rowIndex, index) {
+      if (arr && arr[rowIndex][index]) {
+        return arr[rowIndex][index]
+      }
+    },
     isTipForOverTime () {
-      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) !== 0 && (this.times[this.bpTimeIndex].time * this.bpTimes > this.barManagerInfo.max_bp_time)) {
+      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) !== 0 && (this.currentSelectItem(this.times, this.bpTimeRowIndex, this.bpTimeIndex).time * this.bpTimes > this.barManagerInfo.max_bp_time)) {
         this.$vux.toast.show({
           text: '单次免费霸屏不能超过' + this.barManagerInfo.max_bp_time + '秒',
           width: '14em'
@@ -280,11 +304,11 @@ export default {
   },
   computed: {
     total () {
-      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0 && this.bpTimeIndex > -1 && (this.times[this.bpTimeIndex].time * this.bpTimes) <= this.barManagerInfo.max_bp_time) {
+      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0 && this.bpTimeIndex > -1 && (this.currentSelectItem(this.times, this.bpTimeRowIndex, this.bpTimeIndex).time * this.bpTimes) <= this.barManagerInfo.max_bp_time) {
         return 0
       } else {
-        const timePrice = this.bpTimeIndex !== -1 ? Number(this.times[this.bpTimeIndex].price) : 0
-        const themePrice = this.bpThemeIndex !== -1 ? Number(this.screens[this.bpThemeIndex].price) : 0
+        const timePrice = this.bpTimeIndex !== -1 ? Number(this.currentSelectItem(this.times, this.bpTimeRowIndex, this.bpTimeIndex).price) : 0
+        const themePrice = this.bpThemeIndex !== -1 ? Number(this.currentSelectItem(this.screens, this.bpThemeRowIndex, this.bpThemeIndex).price) : 0
         return Number((timePrice + themePrice) * this.bpTimes).toFixed(2)
       }
     },
@@ -333,9 +357,9 @@ export default {
 
 .bp-time-item {
   display: inline-block;
-  width: 1.5rem;
+  width: 1.2rem;
   margin-bottom: 0.3rem;
-  margin: 0 0.0875rem 0.3rem;
+  margin: 0 0.2375rem 0.3rem;
   .time {
     height: 0.5rem;
     line-height: 0.5rem;

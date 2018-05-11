@@ -595,6 +595,7 @@ export default {
       res.result.gift.sort((a, b) => b.pro_id - a.pro_id)
       res.result.gift = chunk(res.result.gift, 8)
       res.result.time = chunk(res.result.time, 8)
+      res.result.screen = chunk(res.result.screen, 4)
       this.barDataInfo = res.result
       var adFlag = JSON.parse(sessionStorage.getItem('adFlag'))
       if (!adFlag || !adFlag[this.$route.params.id]) {

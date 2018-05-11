@@ -17,7 +17,7 @@
           <div class="ds-gift-container">
             <swiper :options="swiperDsGiftOption">
               <swiper-slide v-for="(vv, ii) in gifts" :key="ii">
-                <div>
+                <div class="flex-1">
                 <div class="ds-gift-item borderbox ds-item" v-for="(v, i) in vv" :key="i" :class="{'selected': rowGiftIndex == ii && dsGiftIndex == i}" @click="takeTimes(ii, i)">
                   <div class="ds-gift-selected ds-selected"><span class="select-num">{{dsTimes}}<!-- <svg-icon icon-class="selected"/> --></span></div>
                   <div class="gift-icon ds-img"><img class="lazy-bp-img" src="../../assets/blank.gif" :data-src="$options.filters.prefixImageUrl(v.icon)"></div>
