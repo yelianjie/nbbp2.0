@@ -106,7 +106,7 @@ export default {
           res.weight = res.weight !== '0' ? [res.weight.toString()] : ['']
           res.stature = res.stature !== '0' ? [res.stature.toString()] : ['']
           let region = filterRegionByName(res.province, res.city, this.addressData)
-          if (region.city_id && region.province_id) {
+          if (region && region.city_id && region.province_id) {
             this.adsValue = [region.province_id, region.city_id]
           }
           this.form = Object.assign({}, res)
@@ -119,7 +119,7 @@ export default {
         userInfo.weight = userInfo.weight !== '0' ? [userInfo.weight.toString()] : ['']
         userInfo.stature = userInfo.stature !== '0' ? [userInfo.stature.toString()] : ['']
         let region = filterRegionByName(userInfo.province, userInfo.city, this.addressData)
-        if (region.city_id && region.province_id) {
+        if (region && region.city_id && region.province_id) {
           this.adsValue = [region.province_id, region.city_id]
         }
         this.form = Object.assign({}, userInfo)

@@ -117,7 +117,7 @@ export const getDistance = (lon1, lat1, lon2, lat2) => {
  */
 export const filterRegionByName = (province, city, datas) => {
   if (province === '' && city === '') {
-    return {}
+    return null
   }
   let findProvice = datas.find((v, i) => v.name.indexOf(province) !== -1)
   let findCity = datas.find((v, i) => v.name.indexOf(city) !== -1)
@@ -129,7 +129,7 @@ export const filterRegionByName = (province, city, datas) => {
       city_id: findCity.value
     }
   } else {
-    return {}
+    return null
   }
 }
 

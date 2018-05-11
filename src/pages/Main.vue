@@ -436,6 +436,7 @@ import { accAdd, delQueStr } from '@/utils/utils'
 import Hashes from 'jshashes'
 import intersectionBy from 'lodash/intersectionBy'
 import remove from 'lodash/remove'
+import chunk from 'lodash/chunk'
 // import differenceBy from 'lodash/differenceBy'
 // type 0 msg type 1 msgImg type 2 Img tpye 3 bp type 4 ds
 export default {
@@ -590,6 +591,10 @@ export default {
       res.result.advert && (res.result.advert.phone.url = this.$options.filters.prefixImageUrl(res.result.advert.phone.url))
       // 排序时间
       res.result.time.sort((a, b) => a.time - b.time)
+      // 排序礼物
+      res.result.gift.sort((a, b) => b.pro_id - a.pro_id)
+      res.result.gift = chunk(res.result.gift, 8)
+      res.result.time = chunk(res.result.time, 8)
       this.barDataInfo = res.result
       var adFlag = JSON.parse(sessionStorage.getItem('adFlag'))
       if (!adFlag || !adFlag[this.$route.params.id]) {

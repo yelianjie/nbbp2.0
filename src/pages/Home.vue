@@ -42,12 +42,12 @@ export default {
           this.getAllRegions(res.latitude, res.longitude)
         },
         fail: () => {
-          this.getAllRegions(29.88525897, 121.57900597)
+          this.getAllRegions(32.06898, 118.803473)
         }
       })
     })
     /* this.loading = true
-    this.getAllRegions(29.88525897, 121.57900597) */
+    this.getAllRegions(31.554571, 120.281585) */
   },
   mounted () {
   },
@@ -104,10 +104,18 @@ export default {
       }).then(json => {
         var detail = json.result.addressComponent
         var data = filterRegionByName(detail.province, detail.city, this.addressData)
-        this.adsValue = [data.province_id, data.city_id]
-        this.userPosition.lng = json.result.location.lng
-        this.userPosition.lat = json.result.location.lat
-        this.closeAddress(true)
+        if (data) {
+          this.adsValue = [data.province_id, data.city_id]
+          this.userPosition.lng = json.result.location.lng
+          this.userPosition.lat = json.result.location.lat
+          this.closeAddress(true)
+        } else {
+          this.$vux.toast.show({
+            text: '当前城市暂无入驻酒吧,现已切换到宁波市',
+            width: '15em'
+          })
+          this.getAllRegions(29.88525897, 121.57900597)
+        }
       })
     },
     wxCoordsToBaidu (data) {

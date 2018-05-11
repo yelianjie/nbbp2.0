@@ -14,10 +14,13 @@
         <div class="window-middle">
           <div class="bp-time-container">
             <swiper :options="swiperTimeOption">
-              <swiper-slide v-for="(v, i) in times" :key="i">
-                <div class="bp-time-item" :class="{'selected': bpTimeIndex == i}" @click="bpTimeSelect(i)">
-                <div class="time f13">{{v.time}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
-                <div class="time-price overflow f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
+              <swiper-slide v-for="(vv, ii) in times" :key="ii">
+                <div style="text-align: left;">
+                  <div class="bp-time-item" v-for="(v, i) in vv" :key="i" :class="{'selected': bpTimeIndex == i}" @click="bpTimeSelect(ii, i)">
+                  <div class="time f13">{{v.time}}秒<span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+                  <div class="time-price overflow f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
+                </div>
+
               </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -82,12 +85,13 @@ export default {
       scroll: null,
       bpTimes: 1,
       bpTimeIndex: -1,
+      bpTimeRowIndex: -1,
       bpThemeIndex: -1,
       content: '',
       swiperTimeOption: {
-        slidesPerColumn: this.times.length > 4 ? 2 : 1,
-        slidesPerView: 4,
-        slidesPerGroup: 4,
+        slidesPerColumn: 1,
+        slidesPerView: 1,
+        slidesPerGroup: 1,
         slidesPerColumnFill: 'row',
         freeMode: false,
         pagination: {
@@ -111,12 +115,14 @@ export default {
     ...mapActions('app', {
       ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
     }),
-    bpTimeSelect (index) {
+    bpTimeSelect (bpTimeRowIndex, index) {
       if (this.bpTimeIndex !== index) {
+        this.bpTimeRowIndex = bpTimeRowIndex
         this.bpTimeIndex = index
         // 判断当前用户是否是管理员 如果是 判断是否还有剩余次数
         this.isTipForOverTime()
       } else {
+        this.bpTimeRowIndex = -1
         this.bpTimeIndex = -1
       }
     },
@@ -327,8 +333,9 @@ export default {
 
 .bp-time-item {
   display: inline-block;
-  width: 1.15rem;
-  margin-bottom: 0.4rem;
+  width: 1.5rem;
+  margin-bottom: 0.3rem;
+  margin: 0 0.0875rem 0.3rem;
   .time {
     height: 0.5rem;
     line-height: 0.5rem;
@@ -353,7 +360,7 @@ export default {
   }
 }
 .bp-theme-item {
-  width: 1.5rem;
+  width: 1.38rem;
   margin: 0 0.0875rem 0.2rem;
   display: inline-block;
   position: relative;
@@ -370,7 +377,7 @@ export default {
   }
   .theme-name {
     text-align: center;
-    margin-bottom: 0.15rem;
+    margin-bottom: 2px;
   }
   .bp-theme-selected {
     position: absolute;

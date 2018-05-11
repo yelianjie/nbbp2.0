@@ -16,12 +16,14 @@
           <div class="rpxline" style="margin-bottom: 0.2rem;"></div>
           <div class="ds-gift-container">
             <swiper :options="swiperDsGiftOption">
-              <swiper-slide v-for="(v, i) in gifts" :key="i">
-                <div class="ds-gift-item borderbox ds-item" :class="{'selected': dsGiftIndex == i}" @click="dsGiftIndex != i ? dsGiftIndex = i : dsGiftIndex = -1">
-                  <div class="ds-gift-selected ds-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
+              <swiper-slide v-for="(vv, ii) in gifts" :key="ii">
+                <div>
+                <div class="ds-gift-item borderbox ds-item" v-for="(v, i) in vv" :key="i" :class="{'selected': rowGiftIndex == ii && dsGiftIndex == i}" @click="takeTimes(ii, i)">
+                  <div class="ds-gift-selected ds-selected"><span class="select-num">{{dsTimes}}<!-- <svg-icon icon-class="selected"/> --></span></div>
                   <div class="gift-icon ds-img"><img class="lazy-bp-img" src="../../assets/blank.gif" :data-src="$options.filters.prefixImageUrl(v.icon)"></div>
                   <div class="gift-name ds-text overflow f13">{{v.title}}</div>
                   <div class="gift-price overflow f12"><svg-icon icon-class="coin" className="coin" />{{v.price}}</div>
+                </div>
                 </div>
               </swiper-slide>
               <div class="swiper-pagination" slot="pagination"></div>
@@ -58,13 +60,14 @@ export default {
       inputTimer: null,
       scroll: null,
       dsTimes: 1,
+      rowGiftIndex: -1,
       dsGiftIndex: -1,
       content: '',
       swiperDsGiftOption: {
-        slidesPerColumn: 2,
-        slidesPerView: 4,
-        slidesPerGroup: 4,
-        slidesPerColumnFill: 'column',
+        slidesPerColumn: 1,
+        slidesPerView: 1,
+        slidesPerGroup: 1,
+        slidesPerColumnFill: 'row',
         freeMode: false,
         pagination: {
           el: '.swiper-pagination'
@@ -93,6 +96,19 @@ export default {
     },
     closeWindow () {
       this.$emit('closeWindow', false)
+    },
+    takeTimes (rowIndex, index) {
+      if (this.dsGiftIndex === index && this.rowGiftIndex === rowIndex) {
+        if (this.dsTimes + 1 > 3) {
+          this.dsTimes = 1
+        } else {
+          this.dsTimes++
+        }
+      } else {
+        this.dsTimes = 1
+      }
+      this.rowGiftIndex = rowIndex
+      this.dsGiftIndex = index
     },
     buy () {
       if (this.dsGiftIndex === -1) {
@@ -125,11 +141,11 @@ export default {
         type: 1,
         count: this.dsTimes,
         content: content,
-        gift_id: this.gifts[this.dsGiftIndex].id,
+        gift_id: this.currentSelectItem().id,
         reward_uid: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : 0,
         img: ''
       }
-      postParams = {postParams: postParams, extraInfo: {title: this.gifts[this.dsGiftIndex].title}, price: this.total, confirmText: isCharge ? '充值购买' : '确定', isCharge: isCharge}
+      postParams = {postParams: postParams, extraInfo: {title: this.currentSelectItem().title}, price: this.total, confirmText: isCharge ? '充值购买' : '确定', isCharge: isCharge}
       if (!this.userInfo.is_recharge && ~~(this.barManagerInfo.game_count) === 0) {
         // 充过值显示取消 没冲过显示立即支付
         var extraParams = {
@@ -152,6 +168,11 @@ export default {
       this.dsGiftIndex = this.gifts.findIndex((v) => ~~(v.id) === ~~(info.gift_id))
       this.dsTimes = info.count
       this.content = info.content
+    },
+    currentSelectItem () {
+      if (this.gifts && this.gifts[this.rowGiftIndex][this.dsGiftIndex]) {
+        return this.gifts[this.rowGiftIndex][this.dsGiftIndex]
+      }
     }
   },
   components: {
@@ -163,7 +184,7 @@ export default {
       if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0) {
         return 0
       } else {
-        const giftPrice = this.dsGiftIndex !== -1 ? Number(this.gifts[this.dsGiftIndex].price) : 0
+        const giftPrice = this.dsGiftIndex !== -1 ? Number(this.currentSelectItem().price) : 0
         return Number(giftPrice * this.dsTimes).toFixed(2)
       }
     },
@@ -203,7 +224,7 @@ export default {
 }
 
 .ds-item {
-  width: 1.5rem;
+  width: 1.48rem;
   margin: 0 0.0875rem 0.2rem;
   display: inline-block;
   position: relative;
@@ -213,10 +234,10 @@ export default {
     height: 1.22rem;
     margin: 0 auto;
     img {
-      /* width: 1.24rem;
-      height: 1.24rem; */
-      width: 1.1rem;
-      height: 1.1rem;
+      width: 1.3rem;
+      height: 1.3rem;
+      /* width: 1.1rem;
+      height: 1.1rem; */
       display: block;
       position: absolute;
       left: 50%;
@@ -226,7 +247,7 @@ export default {
   }
   .ds-text {
     text-align: center;
-    margin: 0 0 0.15rem;
+    margin-bottom: 2px;
   }
   .ds-selected {
     position: absolute;
@@ -239,9 +260,28 @@ export default {
     z-index: 1;
     display: none;
   }
+  .select-num {
+    color: #fff;
+    text-align: center;
+    line-height: 0.6rem;
+    background-color: @mainColor;
+    position: absolute;
+    right: 0;
+    top: 0;
+    -webkit-transform: translate3d(50%, -50%, 0) scale(0.5);
+    transform: translate3d(50%, -50%, 0) scale(0.5);
+    display: none;
+    width: 0.6rem;
+    height: 0.6rem;
+    font-size: 0.48rem;
+    border-radius: 50%;
+  }
   &.selected .ds-selected {
     display: block;
     .selected-icon {
+      display: block; 
+    }
+    .select-num {
       display: block;
     }
   }
