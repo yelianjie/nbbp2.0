@@ -120,6 +120,7 @@ export default {
 }
 .content {
   text-align: left;
+  word-break: break-all;
 }
 @media screen and (min-width: 320px) and (max-width: 374px) {
   .msg-bp-title {

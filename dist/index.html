@@ -1,32 +1,4 @@
-<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=0"><script>function patch(s){
-      var re= /\?/ig
-      var m = s.match(re)
-      if (m) {
-        return m.length
-      } else {
-        return 0
-      }
-    }
-    var href = window.location.href
-    if (window.location.href.indexOf('version') == -1) {
-      var toHref = ''
-      var patchLength = patch(href)
-      if (/singlemessage|groupmessage|timeline/g.test(href)) {
-        // weixin
-        if(patchLength == 1) {
-          toHref = href + '?version=' + new Date().getTime()
-        } else {
-          toHref = href + '&version=' + new Date().getTime()
-        }
-      } else {
-        if(patchLength == 1) {
-          toHref = href + '&version=' + new Date().getTime()
-        } else {
-          toHref = href + '?version=' + new Date().getTime()
-        }
-      }
-      window.location.replace(decodeURIComponent(toHref))
-    }</script><script>(function (doc, win) {
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=0"><script>(function (doc, win) {
       var docEl = doc.documentElement,
           resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
           recalc = function () {
@@ -62,4 +34,4 @@
       document.documentElement.className = 'ios'
       document.documentElement.setAttribute('data-dpr', dpr)
     }
-    window.sessionStorage.clear()</script><title>牛霸霸屏</title><link href=./static/css/app.3e068f4f325eac852fcc11b468eafd0b.css rel=stylesheet></head><body><div id=app-box></div><script src=https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js></script><script type=text/javascript src=./static/js/manifest.4f0add2d702cf7624dca.js></script><script type=text/javascript src=./static/js/vendor.4907625854d2fb3c7259.js></script><script type=text/javascript src=./static/js/app.f23aad912b5d73bc5cad.js></script></body></html>
+    window.sessionStorage.clear()</script><title>牛霸霸屏</title><link href=./static/css/app.3e068f4f325eac852fcc11b468eafd0b.css rel=stylesheet></head><body><div id=app-box></div><script src=https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js></script><script type=text/javascript src=./static/js/manifest.99a38d4b90004c705a98.js></script><script type=text/javascript src=./static/js/vendor.05c010d5d693ea869e31.js></script><script type=text/javascript src=./static/js/app.6d573975e87785329573.js></script></body></html>

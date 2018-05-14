@@ -30,7 +30,7 @@
           <div class="bp-theme-container">
             <swiper :options="swiperThemeOption">
               <swiper-slide v-for="(vv, ii) in screens" :key="ii">
-                <div class="flex-1" v-for="(v, i) in bpfilterList(vv)" :key="i">
+                <div class="flex-1" v-for="(v, i) in vv" :key="i">
                   <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i && bpThemeRowIndex == ii}" @click="bpThemeSelect(ii, i)">
                     <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                     <div class="theme-icon"><img class="lazy-bp-img" src="../../assets/blank.gif" :data-src="$options.filters.prefixImageUrl(v.icon)"></div>
@@ -80,7 +80,7 @@ export default {
     prop: 'visible',
     event: 'closeWindow'
   },
-  props: ['visible', 'times', 'screens'],
+  props: ['visible', 'times', 'screens', 'orginscreens'],
   data () {
     return {
       inputTimer: null,
@@ -214,16 +214,6 @@ export default {
         })
         return false
       }
-      if (this.bpThemeIndex === -1) {
-        this.screens.some((v, i) => {
-          var isFind = v.findIndex((vv) => vv.title === '重金霸屏')
-          if (isFind > -1) {
-            this.bpThemeRowIndex = i
-            this.bpThemeIndex = isFind
-            return false
-          }
-        })
-      }
       let isCharge = Number(this.total) > Number(this.userInfo.balance)
       var content = this.content
       if (emojiReg.test(content)) {
@@ -248,7 +238,7 @@ export default {
       let postParams = {
         ht_id: this.$route.params.id,
         type: 2,
-        screen_id: this.bpThemeIndex === -1 ? 0 : curScreen.id,
+        screen_id: curScreen.id,
         time_id: curTime.id,
         count: this.bpTimes,
         content: content,
@@ -284,7 +274,10 @@ export default {
       this.base64Img = info.img
     },
     currentSelectItem (arr, rowIndex, index) {
-      if (arr && arr[rowIndex][index]) {
+      if (index === -1) {
+        var isFind = this.orginscreens.find((v, i) => v.title === '重金霸屏')
+        return isFind
+      } else if (arr && arr[rowIndex][index]) {
         return arr[rowIndex][index]
       }
     },

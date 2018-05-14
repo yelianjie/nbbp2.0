@@ -77,9 +77,9 @@ export default {
       userInfo: 'userInfo'
     }),
     iSHideIncome () {
-      if (this.mInfo.is_merchant > 0) {
+      if (this.mInfo.is_merchant > 0 || this.curIsSuper) {
         return false
-      } else if (this.curIsSuper) {
+      } else {
         return true
       }
     }

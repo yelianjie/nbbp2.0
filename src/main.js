@@ -21,6 +21,8 @@ import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 import { validateRules } from './utils/validateRules'
 import VueLazyload from 'vue-lazyload'
 import { getWxConfig, getHasToken, isAllowIn, isHaveFunction } from './api/'
+// import cookies from 'cookiesjs'
+import Cookies from 'js-cookie'
 // 判断 切换公众号时以前的号有localStorage 用这个变量判断删除
 // var changeFlag = localStorage.getItem('changeFlag') ? 1 : 0
 /* if (process.env.NODE_ENV === 'production') {
@@ -133,7 +135,16 @@ function init () {
   // history.removeItem('count')
   let historyCount = history.getItem('count') * 1 || 0
   // history.setItem('/', 0)
+  var isFirst = true
   router.beforeEach(function (to, from, next) {
+    if (isFirst) {
+      isFirst = false
+      if (!Cookies.get('refreshPage')) {
+        Cookies.set('refreshPage', 'reload', { expires: 1 / (24 * 60) })
+        window.location.reload()
+        next(false)
+      }
+    }
     if (Vue.cancel) {
       while (Vue.cancel.length > 0) {
         Vue.cancel.pop()('请求中断')

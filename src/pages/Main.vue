@@ -100,7 +100,7 @@
     <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>
     <div class="f-btn" @click="hbForAll"><img src="../assets/hb-btn.png"/></div>
   </div>
-  <bp-window v-model="bpWindowVisible" ref="bpWindow" @onWxPay="wxPay" v-if="barDataInfo.time" :times="barDataInfo.time" :screens="barDataInfo.screen" @onBuy="buyDialogVisible = true"></bp-window>
+  <bp-window v-model="bpWindowVisible" ref="bpWindow" @onWxPay="wxPay" v-if="barDataInfo.time" :times="barDataInfo.time" :screens="barDataInfo.screen" :orginscreens="barDataInfo.orginScreen" @onBuy="buyDialogVisible = true"></bp-window>
   <ds-window v-model="dsWindowVisible" ref="dsWindow" @onWxPay="wxPay" v-if="barDataInfo.gift" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="user-box">
@@ -595,7 +595,11 @@ export default {
       res.result.gift.sort((a, b) => b.pro_id - a.pro_id)
       res.result.gift = chunk(res.result.gift, 8)
       res.result.time = chunk(res.result.time, 8)
-      res.result.screen = chunk(res.result.screen, 4)
+      var screens = res.result.screen.filter((v) => {
+        return v.title !== '重金霸屏'
+      })
+      res.result.orginScreen = res.result.screen
+      res.result.screen = chunk(screens, 4)
       this.barDataInfo = res.result
       var adFlag = JSON.parse(sessionStorage.getItem('adFlag'))
       if (!adFlag || !adFlag[this.$route.params.id]) {
