@@ -137,7 +137,7 @@ function init () {
   // history.setItem('/', 0)
   var isFirst = true
   router.beforeEach(function (to, from, next) {
-    if (isFirst) {
+    if (isFirst && process.env.NODE_ENV === 'production') {
       isFirst = false
       if (!Cookies.get('refreshPage')) {
         Cookies.set('refreshPage', 'reload', { expires: 1 / (24 * 60) })

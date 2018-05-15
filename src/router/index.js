@@ -1,16 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import store from '@/store/'
+const _import = file => () => import('@/pages/' + file + '.vue').then().catch(error => {
+  console.log(error)
+  store.commit('updateLoadingStatus', {isLoading: false})
+  if (Vue.$vux) {
+    Vue.$vux.toast.show({
+      text: '网络错误，请重试或刷新页面',
+      width: '15em'
+    })
+  }
+})
 Vue.use(Router)
-
 export default new Router({
   routes: [
     {
       path: '/',
       name: 'Home',
-      component: (resolve) => {
-        require(['@/pages/Home'], resolve)
-      },
+      component: _import('Home'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#121420'
@@ -19,9 +26,7 @@ export default new Router({
     {
       path: '/QrcodeLogin',
       name: 'QrcodeLogin',
-      component: (resolve) => {
-        require(['@/pages/QrcodeLogin'], resolve)
-      },
+      component: _import('QrcodeLogin'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#f3f2f7'
@@ -30,9 +35,7 @@ export default new Router({
     {
       path: '/Register',
       name: 'Register',
-      component: (resolve) => {
-        require(['@/pages/Register'], resolve)
-      },
+      component: _import('Register'),
       meta: {
         roles: ['user', 'agent', 'business']
       }
@@ -40,9 +43,7 @@ export default new Router({
     {
       path: '/UserCenter',
       name: 'UserCenter',
-      component: (resolve) => {
-        require(['@/pages/UserCenter'], resolve)
-      },
+      component: _import('UserCenter'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#121420'
@@ -51,9 +52,7 @@ export default new Router({
     {
       path: '/Profile',
       name: 'Profile',
-      component: (resolve) => {
-        require(['@/pages/Profile'], resolve)
-      },
+      component: _import('Profile'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#121420'
@@ -62,9 +61,7 @@ export default new Router({
     {
       path: '/BusinessJoin',
       name: 'BusinessJoin',
-      component: (resolve) => {
-        require(['@/pages/BusinessJoin'], resolve)
-      },
+      component: _import('BusinessJoin'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#121420'
@@ -73,9 +70,7 @@ export default new Router({
     {
       path: '/AgentCenter',
       name: 'AgentCenter',
-      component: (resolve) => {
-        require(['@/pages/AgentCenter'], resolve)
-      },
+      component: _import('AgentCenter'),
       meta: {
         roles: ['agent']
       }
@@ -83,9 +78,7 @@ export default new Router({
     {
       path: '/BusinessCenter',
       name: 'BusinessCenter',
-      component: (resolve) => {
-        require(['@/pages/BusinessCenter'], resolve)
-      },
+      component: _import('BusinessCenter'),
       meta: {
         roles: ['user', 'business'],
         allowValid: true
@@ -94,9 +87,7 @@ export default new Router({
     {
       path: '/Deposit',
       name: 'Deposit',
-      component: (resolve) => {
-        require(['@/pages/Deposit'], resolve)
-      },
+      component: _import('Deposit'),
       meta: {
         roles: ['agent', 'business', 'manager']
       }
@@ -104,9 +95,7 @@ export default new Router({
     {
       path: '/DepositDetails',
       name: 'DepositDetails',
-      component: (resolve) => {
-        require(['@/pages/DepositDetails'], resolve)
-      },
+      component: _import('DepositDetails'),
       meta: {
         roles: ['agent', 'business', 'manager']
       }
@@ -114,9 +103,7 @@ export default new Router({
     {
       path: '/BasicBusiness',
       name: 'BasicBusiness',
-      component: (resolve) => {
-        require(['@/pages/BasicBusiness'], resolve)
-      },
+      component: _import('BasicBusiness'),
       meta: {
         roles: ['user', 'business'],
         managerValid: true,
@@ -126,9 +113,7 @@ export default new Router({
     {
       path: '/NoticeSetting',
       name: 'NoticeSetting',
-      component: (resolve) => {
-        require(['@/pages/NoticeSetting'], resolve)
-      },
+      component: _import('NoticeSetting'),
       meta: {
         roles: ['user', 'business'],
         managerValid: true,
@@ -138,9 +123,7 @@ export default new Router({
     {
       path: '/AdSetting',
       name: 'AdSetting',
-      component: (resolve) => {
-        require(['@/pages/AdSetting'], resolve)
-      },
+      component: _import('AdSetting'),
       meta: {
         roles: ['user', 'business'],
         managerValid: true,
@@ -150,9 +133,7 @@ export default new Router({
     {
       path: '/BapingSetting',
       name: 'BapingSetting',
-      component: (resolve) => {
-        require(['@/pages/BapingSetting'], resolve)
-      },
+      component: _import('BapingSetting'),
       meta: {
         roles: ['user', 'business'],
         managerValid: true,
@@ -172,9 +153,7 @@ export default new Router({
     {
       path: '/Manager',
       name: 'Manager',
-      component: (resolve) => {
-        require(['@/pages/Manager'], resolve)
-      },
+      component: _import('Manager'),
       meta: {
         roles: ['user', 'business'],
         managerValid: true,
@@ -184,9 +163,7 @@ export default new Router({
     {
       path: '/ManagerUpdate',
       name: 'ManagerUpdate',
-      component: (resolve) => {
-        require(['@/pages/ManagerUpdate'], resolve)
-      },
+      component: _import('ManagerUpdate'),
       meta: {
         roles: ['user', 'business'],
         managerValid: true,
@@ -196,9 +173,7 @@ export default new Router({
     {
       path: '/AgentBarInfo',
       name: 'AgentBarInfo',
-      component: (resolve) => {
-        require(['@/pages/AgentBarInfo'], resolve)
-      },
+      component: _import('AgentBarInfo'),
       meta: {
         roles: ['agent']
       }
@@ -206,9 +181,7 @@ export default new Router({
     {
       path: '/BindManage',
       name: 'BindManage',
-      component: (resolve) => {
-        require(['@/pages/BindManage'], resolve)
-      },
+      component: _import('BindManage'),
       meta: {
         roles: ['user', 'agent', 'business']
       }
@@ -216,9 +189,7 @@ export default new Router({
     {
       path: '/IncomeOthers',
       name: 'IncomeOthers',
-      component: (resolve) => {
-        require(['@/pages/IncomeOthers'], resolve)
-      },
+      component: _import('IncomeOthers'),
       meta: {
         roles: ['agent', 'business']
       }
@@ -226,9 +197,7 @@ export default new Router({
     {
       path: '/IncomeByMonth',
       name: 'IncomeByMonth',
-      component: (resolve) => {
-        require(['@/pages/IncomeByMonth'], resolve)
-      },
+      component: _import('IncomeByMonth'),
       meta: {
         roles: ['agent', 'business']
       }
@@ -236,9 +205,7 @@ export default new Router({
     {
       path: '/Main/:id',
       name: 'Main',
-      component: (resolve) => {
-        require(['@/pages/Main'], resolve)
-      },
+      component: _import('Main'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#121420'
@@ -247,9 +214,7 @@ export default new Router({
     {
       path: '/Lottery',
       name: 'Lottery',
-      component: (resolve) => {
-        require(['@/pages/Lottery'], resolve)
-      },
+      component: _import('Lottery'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#181b2a'
@@ -258,9 +223,7 @@ export default new Router({
     {
       path: '/Charge',
       name: 'Charge',
-      component: (resolve) => {
-        require(['@/pages/Charge'], resolve)
-      },
+      component: _import('Charge'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#181b2a'
@@ -269,9 +232,7 @@ export default new Router({
     {
       path: '/Income',
       name: 'Income',
-      component: (resolve) => {
-        require(['@/pages/Income'], resolve)
-      },
+      component: _import('Income'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#121420'
@@ -280,9 +241,7 @@ export default new Router({
     {
       path: '/About',
       name: 'About',
-      component: (resolve) => {
-        require(['@/pages/About'], resolve)
-      },
+      component: _import('About'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#121420'
@@ -291,9 +250,7 @@ export default new Router({
     {
       path: '/Detail',
       name: 'Detail',
-      component: (resolve) => {
-        require(['@/pages/Detail'], resolve)
-      },
+      component: _import('Detail'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#121420'
@@ -302,9 +259,7 @@ export default new Router({
     {
       path: '/MyLevel',
       name: 'MyLevel',
-      component: (resolve) => {
-        require(['@/pages/MyLevel'], resolve)
-      },
+      component: _import('MyLevel'),
       meta: {
         roles: ['user', 'agent', 'business'],
         bg: '#181b2a'
@@ -313,9 +268,7 @@ export default new Router({
     {
       path: '/MyBars',
       name: 'MyBars',
-      component: (resolve) => {
-        require(['@/pages/MyBars'], resolve)
-      },
+      component: _import('MyBars'),
       meta: {
         roles: ['user', 'business']
       }
@@ -323,9 +276,7 @@ export default new Router({
     {
       path: '/MyManageBars',
       name: 'MyManageBars',
-      component: (resolve) => {
-        require(['@/pages/MyManageBars'], resolve)
-      },
+      component: _import('MyManageBars'),
       meta: {
         roles: ['manager']
       }
@@ -333,9 +284,7 @@ export default new Router({
     {
       path: '/HelpAgent',
       name: 'HelpAgent',
-      component: (resolve) => {
-        require(['@/pages/HelpAgent'], resolve)
-      },
+      component: _import('HelpAgent'),
       meta: {
         roles: ['agent']
       }
@@ -343,9 +292,7 @@ export default new Router({
     {
       path: '/HelpBusiness',
       name: 'HelpBusiness',
-      component: (resolve) => {
-        require(['@/pages/HelpBusiness'], resolve)
-      },
+      component: _import('HelpBusiness'),
       meta: {
         roles: ['business']
       }
@@ -353,9 +300,7 @@ export default new Router({
     {
       path: '/HelpBusinessSet',
       name: 'HelpBusinessSet',
-      component: (resolve) => {
-        require(['@/pages/HelpBusinessSet'], resolve)
-      },
+      component: _import('HelpBusinessSet'),
       meta: {
         roles: ['business']
       }
@@ -363,9 +308,7 @@ export default new Router({
     {
       path: '/HelpBusinessInsert',
       name: 'HelpBusinessInsert',
-      component: (resolve) => {
-        require(['@/pages/HelpBusinessInsert'], resolve)
-      },
+      component: _import('HelpBusinessInsert'),
       meta: {
         roles: ['business']
       }
