@@ -335,13 +335,14 @@
       <img src="../assets/share.png" style="max-width: 100%;float:right;width: 4.2rem;margin: 0.2rem 0.2rem 0 0;"/>
     </div>
   </x-dialog>
-  <x-dialog v-model="concernVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
+  <x-dialog v-model="concernVisible" hide-on-blur :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
     <div class="qrcode-box">
       <div class="qrcode-info flex flex-v flex-align-center">
         <img v-if="ticket" :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + ticket" class="qrcode"/>
-        <p class="f14">请长按二维码</p>
+        <p class="f14" style="margin-bottom: 0.8rem;margin-top:4px;">请长按二维码</p>
         <p class="f14">关注牛霸霸屏官方公众号</p>
-        <p class="f14">即可加入{{barDataInfo.ht_msg.name}}聊天室</p>
+        <!-- <p class="f14">即可加入{{barDataInfo.ht_msg.name}}聊天室</p> -->
+        <p class="f14" style="margin-top: 2px;">获取<span style="color: red;">红包、抽奖、提现</span>等信息提示</p>
       </div>
     </div>
   </x-dialog>
@@ -409,7 +410,7 @@
 
 <script>
 // isSubscribe
-import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack, addBlack, getRestScreenAmount } from '@/api/'
+import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack, addBlack, getRestScreenAmount, isSubscribe } from '@/api/'
 import { XDialog, TransferDom, Popup, PopupPicker, XButton } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -642,15 +643,15 @@ export default {
         })
       }
     })
-    /* isSubscribe({ht_id: this.$route.params.id, type: 1, url: window.location.hash.substring(1)}).then((res) => {
-      if (res.result === '已关注') {
+    isSubscribe({ht_id: this.$route.params.id, type: 1, url: window.location.hash.substring(1)}).then((res) => {
+      if (res.result === 1) {
         this.concernVisible = false
       } else {
         this.ticket = res.result
         this.concernVisible = true
       }
     }).catch(() => {
-    }) */
+    })
     this.loopGetNotice(0)
     this.loopOnlines(0)
     this.loopHbList(0)
@@ -1914,7 +1915,6 @@ export default {
   .qrcode {
     width: 2.2rem;
     height: 2.2rem;
-    margin-bottom: 0.8rem;
   }
   p {
     line-height: 0.4rem;
