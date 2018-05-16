@@ -21,6 +21,7 @@ import ZH_CN from 'vee-validate/dist/locale/zh_CN'
 import { validateRules } from './utils/validateRules'
 import VueLazyload from 'vue-lazyload'
 import { getWxConfig, getHasToken, isAllowIn, isHaveFunction } from './api/'
+import { fixReloadUrl, isiOS } from './utils/utils'
 // import cookies from 'cookiesjs'
 import Cookies from 'js-cookie'
 // 判断 切换公众号时以前的号有localStorage 用这个变量判断删除
@@ -54,13 +55,18 @@ if (!tId && process.env.NODE_ENV === 'production') {
 } else {
   init()
 }
-var isFirst = true
+
 function init () {
+  var isFirst = true
   if (isFirst && process.env.NODE_ENV === 'production') {
     isFirst = false
     if (!Cookies.get('refreshPage')) {
       Cookies.set('refreshPage', 'reload', { expires: 1 / (24 * 60) })
-      window.location.reload()
+      if (isiOS()) {
+        window.location.reload()
+      } else {
+        window.location.href = fixReloadUrl(window.location.href)
+      }
     }
   }
   // object.assign for wx
