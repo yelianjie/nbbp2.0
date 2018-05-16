@@ -140,6 +140,26 @@ export default new Router({
         rights: '/BapingSetting'
       }
     },
+    {
+      path: '/BapingCustom',
+      name: 'BapingCustom',
+      component: _import('BapingCustom'),
+      meta: {
+        roles: ['user', 'business'],
+        managerValid: true,
+        rights: '/BapingSetting'
+      }
+    },
+    {
+      path: '/BapingSong',
+      name: 'BapingSong',
+      component: _import('BapingSong'),
+      meta: {
+        roles: ['user', 'business'],
+        managerValid: true,
+        rights: '/BapingSetting'
+      }
+    },
     /* {
       path: '/BgSetting',
       name: 'BgSetting',

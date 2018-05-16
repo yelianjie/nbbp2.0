@@ -1,24 +1,27 @@
 <template>
   <div class="container min-h">
-    <div class="flex tab-wrap">
+    <group style="margin-top: 0;">
+      <cell title="点歌霸屏" :link="{path: '/BapingSong', query: { type: 'BapingSong', id: $route.query.id}}" inline-desc='搜索添加上架歌曲'></cell>
+      <cell title="打赏礼物" :link="{path: '/BapingCustom', query: { type: 'BapingGift', id: $route.query.id}}" inline-desc='勾选添加的礼物将上架给用户购买'></cell>
+      <cell title="主题霸屏" :link="{path: '/BapingCustom', query: { type: 'BapingTheme', id: $route.query.id}}" inline-desc='勾选添加的主题霸屏将上架给用户购买'></cell>
+      <cell title="霸屏时间" :link="{path: '/BapingCustom', query: { type: 'BapingTime', id: $route.query.id}}" inline-desc='勾选添加的时间将上架给用户购买'></cell>
+    </group>
+    <!-- <div class="flex tab-wrap">
       <a class="flex-1 tab" :class="{'active': activeName== 'BapingTheme'}" @click.prevent="activeName = 'BapingTheme'">主题霸屏</a>
       <a class="flex-1 tab" :class="{'active': activeName== 'BapingGift'}" @click.prevent="activeName = 'BapingGift'">礼物霸屏</a>
       <a class="flex-1 tab" :class="{'active': activeName== 'BapingTime'}" @click.prevent="activeName = 'BapingTime'">霸屏时间</a>
-    </div>
-    <component :is="activeName"></component>
+    </div> -->
+    <!-- <component :is="activeName"></component> -->
   </div>
 </template>
 
 <script>
-import BapingTheme from '../components/BapingSetting/BapingTheme'
-import BapingGift from '../components/BapingSetting/BapingGift'
-import BapingTime from '../components/BapingSetting/BapingTime'
+import { Group, Cell } from 'vux'
 export default {
   name: 'BapingSetting',
   components: {
-    BapingTheme,
-    BapingGift,
-    BapingTime
+    Group,
+    Cell
   },
   beforeRouteEnter (to, from, next) {
     document.title = '霸屏设置'
@@ -65,6 +68,9 @@ export default {
 }
 .container {
   overflow: hidden;
+  /deep/ .vux-no-group-title {
+    margin-top: 0;
+  }
   /deep/ .baping-item {
     display: block;
     padding: 10px 15px;
