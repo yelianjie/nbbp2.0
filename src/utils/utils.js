@@ -229,6 +229,37 @@ export const iOSversion = () => {
   }
 }
 
+export const fixReloadUrl = (url) => {
+  var href = url
+  var toHref = ''
+  var patchLength = patch(href)
+  if (/singlemessage|groupmessage|timeline/g.test(href)) {
+    // weixin
+    if (patchLength === 1) {
+      toHref = href + '?version=' + new Date().getTime()
+    } else {
+      toHref = href + '&version=' + new Date().getTime()
+    }
+  } else {
+    if (patchLength === 1) {
+      toHref = href + '&version=' + new Date().getTime()
+    } else {
+      toHref = href + '?version=' + new Date().getTime()
+    }
+  }
+  return toHref
+}
+
+function patch (s) {
+  var re = /\?/ig
+  var m = s.match(re)
+  if (m) {
+    return m.length
+  } else {
+    return 0
+  }
+}
+
 /**
  * 去除左右空格
 */
