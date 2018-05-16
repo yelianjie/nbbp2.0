@@ -39,7 +39,7 @@ export default {
 
 <style lang="less" scoped>
 @topHeight: 44px;
-.tab-wrap {
+/* .tab-wrap {
   margin-bottom: 10px;
 }
 .tab {
@@ -65,7 +65,7 @@ export default {
     border-right: 1px solid #f2f2f2;
     content: "";
   }
-}
+} */
 .container {
   overflow: hidden;
   /deep/ .vux-no-group-title {
@@ -102,7 +102,7 @@ export default {
     }
   }
 }
-.scroller-bp {
+/* .scroller-bp {
   position: absolute;
   top: @topHeight + 10;
   left: 0;
@@ -111,5 +111,5 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-}
+} */
 </style>
