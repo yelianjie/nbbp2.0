@@ -32,7 +32,7 @@ import Cookies from 'js-cookie'
 window.sessionStorage.clear()
 var tId = window.sessionStorage.getItem('tId')
 if (process.env.NODE_ENV !== 'production' && !tId) {
-  window.sessionStorage.setItem('tId', '25c5f96efc37b58151568823f1745e6e87d83ff6')
+  window.sessionStorage.setItem('tId', '113d6dfd45b9fd68cc09c705eace9b6ca5b9da61')
   tId = window.sessionStorage.getItem('tId')
 }
 if (!tId && process.env.NODE_ENV === 'production') {
@@ -54,7 +54,15 @@ if (!tId && process.env.NODE_ENV === 'production') {
 } else {
   init()
 }
+var isFirst = true
 function init () {
+  if (isFirst && process.env.NODE_ENV === 'production') {
+    isFirst = false
+    if (!Cookies.get('refreshPage')) {
+      Cookies.set('refreshPage', 'reload', { expires: 1 / (24 * 60) })
+      window.location.reload()
+    }
+  }
   // object.assign for wx
   if (typeof Object.assign !== 'function') {
     // Must be writable: true, enumerable: false, configurable: true
@@ -135,16 +143,7 @@ function init () {
   // history.removeItem('count')
   let historyCount = history.getItem('count') * 1 || 0
   // history.setItem('/', 0)
-  var isFirst = true
   router.beforeEach(function (to, from, next) {
-    if (isFirst && process.env.NODE_ENV === 'production') {
-      isFirst = false
-      if (!Cookies.get('refreshPage')) {
-        Cookies.set('refreshPage', 'reload', { expires: 1 / (24 * 60) })
-        window.location.reload()
-        next(false)
-      }
-    }
     if (Vue.cancel) {
       while (Vue.cancel.length > 0) {
         Vue.cancel.pop()('请求中断')

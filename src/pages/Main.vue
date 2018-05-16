@@ -477,6 +477,7 @@ export default {
       deleteTimer: null,
       blackTimer: null,
       ticket: '',
+      confirmDisable: false,
       requestParams: {
         ht_id: this.$route.params.id,
         min_id: 0
@@ -1291,6 +1292,10 @@ export default {
       } else {
         // 直接购买
         // 判断是红包还是购买霸屏打赏
+        if (this.confirmDisable) {
+          return false
+        }
+        this.confirmDisable = true
         if (this.payBus === 1) {
           addBpDsMsg(this.buyDialogInfo.postParams).then((res) => {
             this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
@@ -1316,6 +1321,8 @@ export default {
                 this.$store.commit('user/SET_BAR_MANAGER', {isManager: true, game_count: nextCount, max_bp_time: this.barManagerInfo.max_bp_time})
               })
             }
+          }).finally(() => {
+            this.confirmDisable = false
           })
         } else if (this.payBus === 2) {
           var _params = {}
@@ -1332,6 +1339,8 @@ export default {
             })
             this.buyDialogVisible = false
             this.hbWindowVisible = false
+          }).finally(() => {
+            this.confirmDisable = false
           })
         }
       }

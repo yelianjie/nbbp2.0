@@ -86,7 +86,7 @@ export default {
   },
   created () {
     isSubscribe({ht_id: 0, type: 3, url: window.location.hash.substring(1)}).then((res) => {
-      if (res.result === '已关注') {
+      if (res.result === 1) {
         this.concernVisible = false
       } else {
         this.ticket = res.result
