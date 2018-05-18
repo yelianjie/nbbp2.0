@@ -95,12 +95,13 @@
     <footer-main :scorllEnd="scrollToEnd"></footer-main>
   </div>
   <div id="fixed-bgds-btns">
-    <div class="f-btn" @click="screenForAll"><img src="../assets/music-btn.png"/></div>
+    <div class="f-btn" @click="songVisible = true"><img src="../assets/music-btn.png"/></div>
     <div class="f-btn" @click="$router.push({path: '/Lottery', query: {id: $route.params.id}})"><img src="../assets/chou-btn.png"/></div>
     <div class="f-btn" @click="screenForAll"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>
     <div class="f-btn" @click="hbForAll"><img src="../assets/hb-btn.png"/></div>
   </div>
+  <song-window v-model="songVisible" v-if="barDataInfo.gift" :gifts="barDataInfo.gift"></song-window>
   <bp-window v-model="bpWindowVisible" ref="bpWindow" @onWxPay="wxPay" v-if="barDataInfo.time" :times="barDataInfo.time" :screens="barDataInfo.screen" :orginscreens="barDataInfo.orginScreen" @onBuy="buyDialogVisible = true"></bp-window>
   <ds-window v-model="dsWindowVisible" ref="dsWindow" @onWxPay="wxPay" v-if="barDataInfo.gift" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
@@ -465,6 +466,7 @@ export default {
       buySuccessDialogVisible: false,
       blackVisible: false,
       blackConfirmVisible: false,
+      songVisible: false,
       deleteInfo: {},
       height: 0,
       noMore: false,
@@ -1667,6 +1669,12 @@ export default {
     DsMsg,
     BpWindow,
     DsWindow,
+    SongWindow: () => import('@/components/Main/songWindow').then(de => {
+      return de.default
+      // this.$vux.loading.show('213')
+    }).catch(() => {
+      console.log('error')
+    }),
     Onlines,
     XDialog,
     InfiniteLoading,
