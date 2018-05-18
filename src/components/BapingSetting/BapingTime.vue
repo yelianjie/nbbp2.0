@@ -34,6 +34,8 @@ export default {
   },
   created () {
     getBpDatas({ht_id: this.$route.query.id, type: 3}).then((res) => {
+      // 排序时间
+      res.result.sort((a, b) => a.time - b.time)
       let selecteds = []
       res.result.forEach((v, i) => {
         if (Number(v.selected) === 1) {
@@ -41,8 +43,6 @@ export default {
         }
       })
       this.timeSelected = selecteds
-      // 排序时间
-      res.result.sort((a, b) => a.time - b.time)
       this.times = res.result
     })
   },
