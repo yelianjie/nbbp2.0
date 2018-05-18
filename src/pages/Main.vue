@@ -95,6 +95,7 @@
     <footer-main :scorllEnd="scrollToEnd"></footer-main>
   </div>
   <div id="fixed-bgds-btns">
+    <div class="f-btn" @click="screenForAll"><img src="../assets/music-btn.png"/></div>
     <div class="f-btn" @click="$router.push({path: '/Lottery', query: {id: $route.params.id}})"><img src="../assets/chou-btn.png"/></div>
     <div class="f-btn" @click="screenForAll"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>

@@ -229,6 +229,10 @@ export const iOSversion = () => {
   }
 }
 
+/**
+ * 返回重置的url
+ * @param {*} url
+ */
 export const fixReloadUrl = (url) => {
   var href = url
   var toHref = ''
@@ -257,6 +261,29 @@ function patch (s) {
     return m.length
   } else {
     return 0
+  }
+}
+
+/**
+ * 字符串解码
+ * @param {*} str
+ */
+export const htmlDecode = (str) => {
+  return str.replace(/&#(x)?([^&]{1,5});?/g, function($, $1, $2) {
+    return String.fromCharCode(parseInt($2, $1 ? 16 : 10))
+  })
+}
+
+/**
+ * 判断正整数
+ * @param {*} val
+ */
+export const isInteger = (val) => {
+  var reg = /^[1-9]{1}[0-9]*$/
+  if (reg.test(val)) {
+    return true
+  } else {
+    return false
   }
 }
 
