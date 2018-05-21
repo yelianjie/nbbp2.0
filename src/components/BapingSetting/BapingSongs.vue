@@ -9,7 +9,23 @@
         @on-click-left="$emit('setVisible', false)"
         @on-click-right="$emit('setVisible', false)"></popup-header>
       <div id="songs-list" class="flex-1 overscroll">
-        <checklist label-position="left" :options="songList" v-model="songListValue"></checklist>
+        <checker v-model="songListValue" type="checkbox" default-item-class="song-item" selected-item-class="song-item-selected">
+        <template v-for="(v, i) in songList">
+          <checker-item :value="v.song_id" :key="i" @on-item-click="onClick">
+            <div class="flex flex-align-center flex-1 song-search-item">
+              <div class="flex flex-v flex-pack-center flex-1">
+                <p class="">{{v.name}}</p>
+                <div class="flex flex-align-center">
+                  <div class="flex1 f13" style="color:#666;">{{v.author}}</div>
+                </div>
+              </div>
+              <div class="">
+                <check-icon :value="songListValue.some((vv,ii) => vv == v.song_id)" type="plain"></check-icon>
+              </div>
+            </div>
+          </checker-item>
+        </template>
+      </checker>
         <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading">
         <inline-loading slot="spinner" style="background-color:#fff;" :color="'#2481d2'" :bgColor="'rgba(200, 200, 200, 0.3)'"></inline-loading>
         <span slot="no-results">没有已经添加的歌曲</span>
@@ -21,9 +37,10 @@
 </template>
 
 <script>
-import { Checklist, XButton, Popup, PopupHeader, TransferDomDirective as TransferDom } from 'vux'
+import { XButton, Popup, PopupHeader, TransferDomDirective as TransferDom, Checker, CheckerItem, CheckIcon } from 'vux'
 import InfiniteLoading from 'vue-infinite-loading'
 import InlineLoading from '@/components/InlineLoading'
+import { getSongIds } from '@/api/'
 export default {
   directives: {
     TransferDom
@@ -34,8 +51,10 @@ export default {
   },
   props: ['visible'],
   components: {
+    Checker,
+    CheckerItem,
+    CheckIcon,
     PopupHeader,
-    Checklist,
     XButton,
     Popup,
     InfiniteLoading,
@@ -59,43 +78,31 @@ export default {
     }
   },
   methods: {
+    onClick (itemValue, itemDisabled) {
+      /* let song = this.songList.find(v => v.songid === itemValue)
+      if (song) {
+        let params = {
+          ht_id: this.$route.query.id,
+          song_id: song.songid,
+          name: song.songname,
+          author: song.author
+        }
+        addSong(params)
+      } */
+    },
     infiniteHandler ($state) {
       if (!this.infiniteLoading) {
         this.infiniteLoading = $state
       }
-      var arr = [
-        {key: '1', value: '晴天', inlineDesc: '周杰伦'},
-        {key: '2', value: '告白气球', inlineDesc: '周杰伦'},
-        {key: '3', value: '倔强', inlineDesc: '五月天'},
-        {key: '4', value: '爱上未来的你', inlineDesc: '潘玮柏'},
-        {key: '5', value: '第三类接触', inlineDesc: '周杰伦'},
-        {key: '6', value: '黑夜问白天', inlineDesc: '林俊杰'},
-        {key: '7', value: '丹宁执着', inlineDesc: '林俊杰'},
-        {key: '8', value: '千里之外', inlineDesc: '周杰伦'},
-        {key: '9', value: '发如雪', inlineDesc: '周杰伦'},
-        {key: '10', value: '时光机', inlineDesc: '周杰伦'},
-        {key: '11', value: '你不是真正的快乐', inlineDesc: '五月天'},
-        {key: '12', value: '夜曲', inlineDesc: '周杰伦'},
-        {key: '13', value: '菊花台', inlineDesc: '周杰伦'},
-        {key: '14', value: '温柔', inlineDesc: '五月天'},
-        {key: '15', value: '不爱我就拉倒', inlineDesc: '周杰伦'},
-        {key: '16', value: '黑色毛衣', inlineDesc: '周杰伦'},
-        {key: '17', value: '编号89757', inlineDesc: '林俊杰'},
-        {key: '18', value: '我想更懂你', inlineDesc: '潘玮柏'}
-      ]
-      var newArr = []
-      for (var i = 0; i < 10; i++) {
-        newArr.push(arr[parseInt(Math.random() * arr.length)])
-      }
-      setTimeout(() => {
-        this.songList = [...this.songList, ...newArr]
-        if (this.time > 3) {
-          $state.complete()
-        } else {
-          this.time++
-          $state.loaded()
+      getSongIds({ht_id: this.$route.query.id}).then((res) => {
+        if (Array.isArray(res.result)) {
+          this.songList = [...this.songList, ...res.result]
+          this.songListValue = this.songList.map(v => {
+            return v.song_id
+          })
         }
-      }, 3000)
+        $state.complete()
+      })
     },
     resetEvent () {
       setTimeout(() => {
@@ -117,4 +124,10 @@ export default {
   bottom: 0;
   z-index: 1;
 } */
+.song-item {
+  display: block;
+  padding: 10px 15px;
+  border-top: 1px solid #f2f2f2;
+  background-color: #fff;
+}
 </style>

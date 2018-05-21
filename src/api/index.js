@@ -706,6 +706,54 @@ export const isHaveFunction = (data) => {
 }
 
 /**
+ * 商家后台歌曲上架
+ * @param {*} data
+ */
+export const addSong = (data) => {
+  return request('/weixin/diange/addSong', 'POST', data)
+}
+
+/**
+ * 查询已上架歌曲
+ * @param {*} data
+ */
+export const getSongIds = (data) => {
+  return request('/weixin/diange/idsOnShelvers', 'POST', data)
+}
+
+/**
+ * 手动添加歌曲
+ * @param {*} data
+ */
+export const manualAddSong = (data) => {
+  return request('/weixin/diange/addSongShelvers', 'POST', data)
+}
+
+/**
+ * 获取上架歌曲数量
+ * @param {*} data
+ */
+export const getShelvesAmount = (data) => {
+  return request('/weixin/diange/getShelvesAmount', 'POST', data)
+}
+
+/**
+ * 保存商家点歌设置
+ * @param {*} data
+ */
+export const merchantSetting = (data) => {
+  return request('/weixin/diange/merchantSetting', 'POST', data)
+}
+
+/**
+ * 获取商家点歌设置
+ * @param {*} data
+ */
+export const getMerchantSetting = (data) => {
+  return request('/weixin/diange/getMerchantSetting', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */

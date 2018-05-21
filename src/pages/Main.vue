@@ -95,13 +95,14 @@
     <footer-main :scorllEnd="scrollToEnd"></footer-main>
   </div>
   <div id="fixed-bgds-btns">
-    <div class="f-btn" @click="songVisible = true"><img src="../assets/music-btn.png"/></div>
+    <div class="f-btn" @click="songForAll"><img src="../assets/music-btn.png"/></div>
     <div class="f-btn" @click="$router.push({path: '/Lottery', query: {id: $route.params.id}})"><img src="../assets/chou-btn.png"/></div>
     <div class="f-btn" @click="screenForAll"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>
     <div class="f-btn" @click="hbForAll"><img src="../assets/hb-btn.png"/></div>
   </div>
-  <song-window v-model="songVisible" v-if="barDataInfo.gift" :gifts="barDataInfo.gift"></song-window>
+  <component :is="currentView" @onClose="currentView = ''" @onMounted="asyncComponentLoaded"></component>
+  <!-- <song-window v-model="songVisible" v-if="barDataInfo.gift" :gifts="barDataInfo.gift"></song-window> -->
   <bp-window v-model="bpWindowVisible" ref="bpWindow" @onWxPay="wxPay" v-if="barDataInfo.time" :times="barDataInfo.time" :screens="barDataInfo.screen" :orginscreens="barDataInfo.orginScreen" @onBuy="buyDialogVisible = true"></bp-window>
   <ds-window v-model="dsWindowVisible" ref="dsWindow" @onWxPay="wxPay" v-if="barDataInfo.gift" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
   <x-dialog v-model="userDialogVisible" :dialog-style="{'max-width': '100%', width: '100%', 'background-color': 'transparent'}">
@@ -136,9 +137,13 @@
             <img src="../assets/ba-b-icon.png"/>
             <span>为TA霸屏</span>
           </div>
-          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="like(currentUserInfo)">
+          <!-- <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="like(currentUserInfo)">
             <img src="../assets/like-b-icon.png"/>
             <span>为TA点赞</span>
+          </div> -->
+          <div class="u-d flex flex-1 flex-v flex-pack-center flex-align-center" @click="dg">
+            <img src="../assets/music-b-icon.png"/>
+            <span>为TA点歌</span>
           </div>
         </div>
       </div>
@@ -466,7 +471,7 @@ export default {
       buySuccessDialogVisible: false,
       blackVisible: false,
       blackConfirmVisible: false,
-      songVisible: false,
+      /* songVisible: false, */
       deleteInfo: {},
       height: 0,
       noMore: false,
@@ -479,6 +484,7 @@ export default {
       packetTimer: null,
       deleteTimer: null,
       blackTimer: null,
+      currentView: '',
       ticket: '',
       confirmDisable: false,
       requestParams: {
@@ -1166,6 +1172,24 @@ export default {
       this.userDialogVisible = false
       this.dsWindowVisible = true
     },
+    asyncComponentLoaded () {
+      clearTimeout(this.viewTimer)
+      this.onlineVisible = false
+      this.userDialogVisible = false
+      this.$vux.loading.hide()
+    },
+    dg () {
+      this.$vux.loading.show({
+        text: '正在加载'
+      })
+      this.currentView = 'SongWindow'
+      this.viewTimer = setTimeout(() => {
+        this.$vux.loading.hide()
+        this.$vux.toast.show('加载失败')
+        this.currentView = ''
+        clearTimeout(this.viewTimer)
+      }, 5000)
+    },
     addBlack () {
       addBlack({ht_id: this.$route.params.id, mc_id: this.currentUserInfo.initiator_mc_id}).then((res) => {
         this.$vux.toast.show({
@@ -1350,6 +1374,10 @@ export default {
       /* setTimeout(() => {
         this.buyDialogVisible = false
       }, 3000) */
+    },
+    songForAll () {
+      this.$store.commit('app/SET_CURRENT_USER_INFO', {})
+      this.dg()
     },
     screenForAll () {
       this.$store.commit('app/SET_CURRENT_USER_INFO', {})
@@ -1669,8 +1697,8 @@ export default {
     DsMsg,
     BpWindow,
     DsWindow,
-    SongWindow: () => import('@/components/Main/songWindow').then(de => {
-      return de.default
+    SongWindow: () => import('@/components/Main/songWindow').then(component => {
+      return component.default
       // this.$vux.loading.show('213')
     }).catch(() => {
       console.log('error')
