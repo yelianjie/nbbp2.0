@@ -45,10 +45,10 @@
     </search>
     <div id="song-set" class="flex-1 overscroll">
       <group label-width="14em" label-align="left">
-        <x-switch title="开启点歌功能" v-model="form.is_open"></x-switch>
+        <x-switch title="开启点歌功能" v-model="form.is_open" :value-map="['2', '1']"></x-switch>
         <p class="f12" style="padding:0 15px;margin: -2px 0 10px;color: #aaaaaa;">请根据实际情况设置该数量以避免点歌订单过多而无法安排的退款情况</p>
       </group>
-      <template v-if="form.is_open">
+      <template v-if="form.is_open == 1">
       <group label-width="14em" label-align="left">
        <group-title slot="title">价格设置</group-title>
        <x-input title="每首歌单价" text-align="right" type="number" :debounce="50" v-model="form.price" :show-clear="false" @on-change="validisPrice" pattern="[0-9]*">
@@ -57,7 +57,8 @@
      </group>
      <group label-width="13em" label-align="left">
        <group-title slot="title">设置可点歌时间段</group-title>
-       <datetime title="开始时间" format="HH:mm" v-model="form.open_time" value-text-align="right" placeholder="选择"></datetime>
+       <cell title="开始时间" :value="form.open_time" is-link @click.native="showDate"></cell>
+       <!-- <datetime title="开始时间" format="HH:mm" v-model="form.open_time" value-text-align="right" placeholder="选择"></datetime> -->
        <x-input title="几小时后结束" text-align="right" type="number" :debounce="50" v-model="form.open_hour" :show-clear="false" @on-change="validisTime" pattern="[0-9]*">
         <span slot="right" style="margin-left:6px;">小时</span>
       </x-input>
@@ -67,11 +68,14 @@
      </group>
      <group label-align="left" style="margin-bottom: 0.77em;">
        <group-title slot="title">其他设置</group-title>
-       <x-switch title="不可重复点歌" v-model="form.is_shelves"></x-switch>
+       <x-switch title="不可重复点歌" v-model="form.is_shelves" :value-map="['2', '1']"></x-switch>
        <p class="f12" style="padding:0 15px;margin: -2px 0 10px;color: #aaaaaa;">打开后，每场点歌不可重复购买同一首歌</p>
        <p class="f12" style="padding:0 15px;margin: -8px 0 10px;color: #aaaaaa;">下一场点歌开始时，自动下架的歌曲会自动恢复上架</p>
      </group>
      </template>
+     <div style="width: 90%;margin: 0 auto 0.77em;">
+       <x-button :gradients="['#1D62F0', '#1D62F0']" @click.native="saveSetting">设置</x-button>
+     </div>
     </div>
     <footer class="footer flex">
       <div class="flex-1 flex-v tc flex-pack-center flex-align-center">
@@ -105,7 +109,7 @@ import { GroupTitle, Group, Cell, XInput, XSwitch, XButton, Search, Datetime, XD
 import InfiniteLoading from 'vue-infinite-loading'
 import InlineLoading from '@/components/InlineLoading'
 import { isInteger, htmlDecode } from '@/utils/utils'
-import { addSong, getSongIds, manualAddSong, getShelvesAmount, getMerchantSetting } from '@/api/'
+import { addSong, getSongIds, manualAddSong, getShelvesAmount, getMerchantSetting, merchantSetting } from '@/api/'
 export default {
   directives: {
     TransferDom
@@ -133,12 +137,13 @@ export default {
       focus: false,
       value: '',
       form: {
+        ht_id: this.$route.query.id,
         amount: 50,
         open_hour: 1,
         price: 100,
         open_time: '',
-        is_shelves: false,
-        is_open: false
+        is_shelves: '2',
+        is_open: '2'
       },
       manualForm: {
         name: '',
@@ -166,7 +171,10 @@ export default {
   created () {
     this.getSongNumber()
     getMerchantSetting({ht_id: this.$route.query.id}).then((res) => {
-      console.log(res)
+      if (res.result) {
+        res.result.price = Number(res.result.price)
+        this.form = Object.assign(this.form, res.result)
+      }
     })
   },
   mounted () {
@@ -201,6 +209,26 @@ export default {
     }
   },
   methods: {
+    showDate () {
+      document.body.classList.add('third-center')
+      this.$vux.datetime.show({
+        cancelText: '取消',
+        confirmText: '确定',
+        format: 'HH:mm',
+        value: this.form.open_time,
+        onConfirm (val) {},
+        onHide () {
+          setTimeout(() => {
+            document.body.classList.remove('third-center')
+          }, 350)
+        }
+      })
+    },
+    saveSetting () {
+      merchantSetting(this.form).then((res) => {
+        this.$vux.toast.show('设置成功')
+      })
+    },
     getSongNumber () {
       getShelvesAmount({ht_id: this.$route.query.id}).then((res) => {
         this.songNum = res.result

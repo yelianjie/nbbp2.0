@@ -754,6 +754,30 @@ export const getMerchantSetting = (data) => {
 }
 
 /**
+ * 点歌搜索歌曲
+ * @param {*} data
+ */
+export const searchSong = (data) => {
+  return request('/weixin/diange/searchSong', 'POST', data)
+}
+
+/**
+ * 判断是否有点歌权限
+ * @param {*} data
+ */
+export const isHaveRight = (data) => {
+  return request('/weixin/diange/isHaveRight', 'POST', data)
+}
+
+/**
+ * 判断是否可以点歌
+ * @param {*} data
+ */
+export const canDianGe = (data) => {
+  return request('/weixin/diange/canDianGe', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */

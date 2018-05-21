@@ -20,21 +20,25 @@
           <div v-if="true">
             <form action="" @submit.prevent="onSubmit">
               <div class="pr">
-                <input type="search" class="f14" name="search_song_input" id="search_song_input" placeholder="请输入歌曲名、原唱歌手" v-model="search">
+                <input type="search" class="f14" name="search_song_input" id="search_song_input" placeholder="请输入歌曲名、原唱歌手" v-model="keyword" autocomplete="off">
                 <svg-icon icon-class="search" class="search-icon" />
               </div>
             </form>
             <div class="songs-container overscroll" style="margin-top: 0.3rem;margin-bottom: 0.2rem;">
               <div class="song-search-result pr flex flex-align-center" v-for="(v, i) in songs" :key="i" @click="songIndex == i ? songIndex = -1 : songIndex = i" :class="{'selected': songIndex == i}">
                 <div class="song-search-info flex-1 flex flex-v flex-pack-center">
-                  <p class="f15 line1">{{v.value}}</p>
-                  <p class="f13 line1">{{v.inlineDesc}}</p>
+                  <p class="f15 line1">{{v.name}}</p>
+                  <p class="f13 line1">{{v.author}}</p>
                 </div>
-                <div class="song-search-listened f13">40人点过</div>
+                <div class="song-search-listened f13">{{v.order_num}}人点过</div>
                 <div class="song-search-select pr flex flex-align-center">
                   <svg-icon icon-class="selected" class="song-select-icon" v-if="songIndex == i"/>
                 </div>
               </div>
+          
+              <div v-if="searchTap && this.lastKeyword && songs.length == 0" class="tc f13">找不到与“{{this.lastKeyword}}”相关的歌曲</div>
+              
+              
             </div>
             <div class="bp-input-area flex">
               <input class="bp-input borderbox f14" maxlength="15" @focus="inputFocus" @blur="inputBlur" placeholder="请输入点歌上墙语，30字以内"  v-model="content"/>
@@ -70,7 +74,7 @@
                   <p class="f13 line1">{{v.inlineDesc}}</p>
                 </div>
                 <div class="song-item-right flex flex-v flex-pack-center">
-                  <template v-if="!barManagerInfo.isManager">
+                  <template v-if="!hasRight">
                     <p class="f13 line1">16人点过</p>
                     <p class="f13">20:31:17</p>
                   </template>
@@ -82,7 +86,7 @@
                 </div>
               </div>
             </div>
-            <div class="manager-btn-group f15 flex" v-if="barManagerInfo.isManager">
+            <div class="manager-btn-group f15 flex" v-if="hasRight">
               <router-link to="/" class="flex-1">历史点歌详情</router-link>
               <div style="width: 0.8rem;"></div>
               <router-link to="/" class="flex-1">点歌霸屏管理</router-link>
@@ -95,11 +99,11 @@
 </template>
 
 <script>
-import 'swiper/dist/css/swiper.css'
 import { mapGetters, mapActions } from 'vuex'
 // import twemoji from '@/vendor/twemoji.npm'
 // import { BASE_API } from '../../../config/prod.env'
 import { iOSversion, emojiReg } from '@/utils/utils'
+import { searchSong, isHaveRight, canDianGe } from '@/api/'
 export default {
   /* model: {
     prop: 'visible',
@@ -113,26 +117,27 @@ export default {
       dsGiftIndex: -1,
       content: '',
       visible: false,
-      songs: [
-        {key: '1', value: '晴天', inlineDesc: '周杰伦'},
-        {key: '2', value: '告白气球', inlineDesc: '周杰伦'},
-        {key: '3', value: '倔强', inlineDesc: '五月天'},
-        {key: '4', value: '爱上未来的你', inlineDesc: '潘玮柏'},
-        {key: '5', value: '第三类接触', inlineDesc: '周杰伦'},
-        {key: '6', value: '黑夜问白天', inlineDesc: '林俊杰'},
-        {key: '7', value: '丹宁执着', inlineDesc: '林俊杰'}
-      ],
-      search: '',
+      songs: [],
+      keyword: '',
+      lastKeyword: '',
+      searchTap: false,
       songIndex: -1,
       songConfirmIndex: [],
+      hasRight: false,
       tabView: 1 // 1我要点歌 2本场已点 3不在点歌时间段内（我要点歌）
     }
   },
   props: ['gifts'],
   mounted () {
-    this.$nextTick(() => {
-      this.$emit('onMounted')
-      this.visible = true
+    let id = this.$route.params.id
+    var p1 = isHaveRight({ht_id: id})
+    var p2 = canDianGe({ht_id: id})
+    Promise.all([p1, p2]).then(results => {
+      this.hasRight = results[0].result
+      this.$nextTick(() => {
+        this.$emit('onMounted')
+        this.visible = true
+      })
     })
   },
   methods: {
@@ -181,7 +186,15 @@ export default {
       }
     },
     onSubmit () {
-      alert(this.search)
+      if (!this.keyword) {
+        return false
+      }
+      this.lastKeyword = this.keyword
+      this.searchTap = true
+      this.songIndex = -1
+      searchSong({ht_id: this.$route.params.id, key: this.keyword}).then((res) => {
+        this.songs = res.result
+      })
     },
     buy () {
       if (this.dsGiftIndex === -1) {
@@ -365,15 +378,15 @@ export default {
       .setBottomLine(rgba(255, 255, 255, 0.3));
     }
     &.selected {
-      /* border-color: @mainColor; */
+      border-color: @mainColor;
       .song-search-select:after {
         background-color: #fff;
         border: 0;
       }
     }
-    &.selected:after {
+    /* &.selected:after {
       border-color: @mainColor;
-    }
+    } */
   }
   .song-search-singer,
   .song-search-listened {
