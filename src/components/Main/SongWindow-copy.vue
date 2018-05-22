@@ -96,30 +96,16 @@
           </div>
         </template>
       </div>
-    </transition>
-    <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy" :cancelAutoClose="buyDialogInfo.cancelAutoClose" :onCancel="buyDialogInfo.onCancel" :cancelText="buyDialogInfo.cancelText" :cancelColor="buyDialogInfo.cancelColor" :confirmText="buyDialogInfo.confirmText">
-    <div class="">
-      <div style="font-size: 26px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;vertical-align: bottom;"/></div>
-      <template v-if="userInfo.is_recharge">
-      <p style="color: #88878f;"><svg-icon icon-class="tip" style="margin-top:-2px;margin-right:2px;" />当前余额可用：<svg-icon icon-class="coin"  style="margin-top:-2px;margin-right:2px;"/>{{userInfo.balance}}</p>
-      <p class="f13" v-if="buyDialogInfo.isCharge" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
-      </template>
-      <template v-else>
-        <p class="f13">选择购买充值即可成为牛霸会员贵族</p>
-        <p class="f13">全平台永久享受贵族特权</p>
-      </template>
-    </div>
-  </bp-dialog>
+    </transition>  
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 // import twemoji from '@/vendor/twemoji.npm'
 // import { BASE_API } from '../../../config/prod.env'
 import { iOSversion, emojiReg } from '@/utils/utils'
-import { searchSong, canDianGe, tonightOdrList, onShelvesList, getMerchantSetting, isFinish, addSongOrder } from '@/api/'
-import BpDialog from '../bpDialog'
+import { searchSong, canDianGe, tonightOdrList, onShelvesList, getMerchantSetting, isFinish } from '@/api/'
 export default {
   /* model: {
     prop: 'visible',
@@ -127,7 +113,6 @@ export default {
   }, */
   data () {
     return {
-      buyDialogVisible: false,
       inputTimer: null,
       content: '',
       visible: false,
@@ -141,7 +126,6 @@ export default {
       hasRight: false,
       dgStatusCode: 306000,
       setting: {},
-      buyDialogInfo: {},
       tabView: 1 // 1我要点歌 2本场已点 3不在点歌时间段内（我要点歌）
     }
   },
@@ -165,6 +149,9 @@ export default {
     })
   },
   methods: {
+    ...mapActions('app', {
+      ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
+    }),
     afterLeave () {
       this.$emit('onClose')
     },
@@ -230,7 +217,7 @@ export default {
       ) */
       let postParams = {
         ht_id: this.$route.params.id,
-        price: Number(this.setting.price),
+        price: 0.01,
         content: content === '' ? '好听的歌一起来分享~' : content,
         song_id: this.currentSelectItem().song_id,
         to_id: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : 0,
@@ -242,77 +229,15 @@ export default {
         var extraParams = {
           cancelText: '立即支付',
           onCancel: (cb) => {
-            this.dgWxPay()
+            this.$emit('onWxPay', cb)
           },
           cancelAutoClose: false
         }
         postParams = Object.assign({}, postParams, extraParams)
       }
-      this.buyDialogInfo = postParams
+      this.ChangeBuyDialogInfo(postParams)
       this.$store.commit('app/SET_PAY_TYPE', 1)
-      this.buyDialogVisible = true
-    },
-    dgWxPay () {
-      // 直接微信支付买歌
-      var _self = this
-      this.$store.commit('app/SET_PAY_TYPE', 2)
-      let params = Object.assign({}, this.buyDialogInfo.postParams)
-      params.pay_type = this.payType
-      addSongOrder(params).then((res) => {
-        window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
-          switch (res.err_msg) {
-            case 'get_brand_wcpay_request:cancel':
-              // alert('用户取消支付！')
-              break
-            case 'get_brand_wcpay_request:fail':
-              _self.$vux.toast.show({
-                text: '支付失败！（' + res.err_desc + '）',
-                width: '10em'
-              })
-              break
-            case 'get_brand_wcpay_request:ok':
-              // 支付成功关闭
-              _self.buyDialogVisible = false
-              _self.closeAsyncComponent()
-              break
-            default:
-              alert(JSON.stringify(res))
-              break
-          }
-        })
-      })
-    },
-    confirmBuy () {
-      if (this.buyDialogInfo.isCharge) {
-        // 需要充值跳转充值页
-        // 在当前页购买
-        /* localStorage.setItem('buyDialogInfo', JSON.stringify(this.buyDialogInfo))
-        localStorage.setItem('currentUserInfo', JSON.stringify(this.currentUserInfo))
-        localStorage.setItem('payBack', '1')
-        this.$router.push('/Charge') */
-        this.buyDialogVisible = false
-        this.$store.commit('app/SET_PAY_TYPE', 3)
-        this.$store.commit('app/SET_CHARGEVISIBLE', true)
-        this.$store.commit('app/SET_CHARGECALLBACK', () => this.confirmBuy())
-        // window.location.href = window.location.origin + window.location.pathname + '#/Charge'
-      } else {
-        // 直接购买
-        // 判断是红包还是购买霸屏打赏
-        if (this.confirmDisable) {
-          return false
-        }
-        this.confirmDisable = true
-        // 牛角买歌
-        let params = Object.assign({}, this.buyDialogInfo.postParams)
-        params.pay_type = this.payType
-        addSongOrder(params).then(res => {
-          this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
-          this.buyDialogVisible = false
-          this.closeAsyncComponent()
-        }).finally(() => {
-          this.confirmDisable = false
-        })
-      }
+      this.$emit('onBuy')
     },
     currentSelectItem () {
       if (this.songs && this.songs[this.songIndex]) {
@@ -321,7 +246,6 @@ export default {
     }
   },
   components: {
-    BpDialog
   },
   computed: {
     total () {
@@ -339,8 +263,7 @@ export default {
       return texts[this.dsTimes - 1] + '连送礼'
     },
     ...mapGetters('app', {
-      currentUserInfo: 'currentUserInfo',
-      payType: 'payType'
+      currentUserInfo: 'currentUserInfo'
     }),
     ...mapGetters('user', {
       userInfo: 'userInfo',

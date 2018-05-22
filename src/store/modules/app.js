@@ -6,8 +6,14 @@ const state = {
   direction: 'forward',
   fontSize: 50,
   hbCurInfo: {hb: {}},
+  onlineVisible: false,
+  onlineHbChose: [],
+  scene: '',
+  hbmount: 50,
   hbRobInfo: {},
   currentUserInfo: {},
+  chargeVisible: false,
+  chargeCallback: () => {},
   payType: 1 // 1=》牛角支付 2=》直接支付3=>充值购买
 }
 
@@ -19,7 +25,12 @@ const getters = {
   hbCurInfo: () => state.hbCurInfo,
   hbRobInfo: () => state.hbRobInfo,
   currentUserInfo: () => state.currentUserInfo,
-  payType: () => state.payType
+  payType: () => state.payType,
+  chargeVisible: () => state.chargeVisible,
+  chargeCallback: () => state.chargeCallback,
+  onlineVisible: () => state.onlineVisible,
+  onlineHbChose: () => state.onlineHbChose,
+  scene: () => state.scene
 }
 
 // actions
@@ -54,6 +65,21 @@ const mutations = {
   },
   SET_PAY_TYPE (state, data) {
     state.payType = data
+  },
+  SET_CHARGEVISIBLE (state, data) {
+    state.chargeVisible = data
+  },
+  SET_CHARGECALLBACK (state, data) {
+    state.chargeCallback = data
+  },
+  SET_ONLINEVISIBLE (state, data) {
+    state.onlineVisible = data
+  },
+  SET_ONLINESELECTED (state, data) {
+    state.onlineHbChose = data
+  },
+  SET_FIELD (state, data) {
+    state[data.field] = data.value
   }
 }
 

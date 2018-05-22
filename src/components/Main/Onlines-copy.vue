@@ -1,5 +1,5 @@
 <template>
-  <div class="fullscreen onlines flex flex-v" v-show="onlineVisible" v-fixscroll="'#online-scroller'">
+  <div class="fullscreen onlines flex flex-v" v-show="visible" v-fixscroll="'#online-scroller'">
     <div class="flex-1 scroll" id="online-scroller" style="padding: 0.4rem 0.4rem 0.95rem;">
       <ul>
         <li v-for="(v, i) in peoples" :key="i" class="online-item" @click="onAvatarClick(v)" :class="{'hbselect': selectCustom[v.id]}">
@@ -23,73 +23,64 @@
       </ul>
     </div>
     <div class="close-box flex flex-align-center flex-pack-center">
-      <template v-if="this.scene == 'hongbao'">
+      <template v-if="payBus == 1">
+      <svg-icon icon-class="close" @click.native="close"/>
+      </template>
+      <template v-if="payBus == 2">
         <div class="chose-group flex">
           <button class="chose-group-btn cancel-btn fff-bp f15 pr" @click="close">取消</button>
           <button class="flex-1 chose-group-btn confirm-btn fff-bp f15" :disabled="Object.keys(selectCustom).length == 0" @click="confirmCustom">确定({{Object.keys(selectCustom).length}}人)</button>
         </div>
-      </template>
-      <template v-else>
-        <svg-icon icon-class="close" @click.native="close"/>
       </template>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
+  model: {
+    prop: 'visible',
+    event: 'close'
+  },
   data () {
     return {
       selectCustom: {}
     }
   },
-  props: ['peoples', 'payBus', 'hbLimit'],
+  props: ['visible', 'peoples', 'payBus', 'hbLimit'],
   methods: {
     close () {
-      this.$store.commit('app/SET_ONLINEVISIBLE', false)
-      this.$store.commit('app/SET_FIELD', {field: 'scene', value: ''})
-      if (Object.keys(this.selectCustom).length === 0) {
-        this.$store.commit('app/SET_ONLINESELECTED', [])
-      }
+      this.$emit('onHBChoseCustom', this.selectCustom)
+      this.$emit('close', false)
     },
     onAvatarClick (data) {
-      if (this.scene === 'hongbao') {
+      if (this.payBus === 1) {
+        // 显示dialog信息
+        this.$emit('onShowCard', data)
+      } else if (this.payBus === 2) {
         // 发红包时勾选状态
         if (this.selectCustom[data.id]) {
           this.$delete(this.selectCustom, data.id)
         } else {
           this.$set(this.selectCustom, data.id, data.id)
         }
-      } else {
-        // 显示dialog信息
-        this.$emit('onShowCard', data)
       }
     },
     confirmCustom () {
       var selectLength = Object.keys(this.selectCustom).length
-      if (selectLength < ~~(this.$store.state.app.hbmount)) {
+      if (selectLength < ~~(this.hbLimit)) {
         this.$vux.toast.show({
           text: '勾选人数小于红包个数',
           width: '15em'
         })
         return false
       } else {
-        var keyIds = Object.keys(this.selectCustom).map(v => v)
-        this.$store.commit('app/SET_ONLINESELECTED', keyIds)
         this.close()
       }
     },
     resetHBInfo () {
       this.selectCustom = {}
     }
-  },
-  computed: {
-    ...mapGetters('app', {
-      onlineVisible: 'onlineVisible',
-      onlineHbChose: 'onlineHbChose',
-      scene: 'scene'
-    })
   }
 }
 </script>
