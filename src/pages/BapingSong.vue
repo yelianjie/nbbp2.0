@@ -109,7 +109,7 @@ import { GroupTitle, Group, Cell, XInput, XSwitch, XButton, Search, Datetime, XD
 import InfiniteLoading from 'vue-infinite-loading'
 import InlineLoading from '@/components/InlineLoading'
 import { isInteger, htmlDecode } from '@/utils/utils'
-import { addSong, getSongIds, manualAddSong, getShelvesAmount, getMerchantSetting, merchantSetting } from '@/api/'
+import { addSong, getSongs, manualAddSong, getShelvesAmount, getMerchantSetting, merchantSetting } from '@/api/'
 export default {
   directives: {
     TransferDom
@@ -180,7 +180,7 @@ export default {
   mounted () {
     this.resultHeight = window.innerHeight - 44
     window.jsonp4 = (response) => {
-      getSongIds({ht_id: this.$route.query.id}).then((res) => {
+      getSongs({ht_id: this.$route.query.id}).then((res) => {
         if (Array.isArray(res.result)) {
           res.result.map(v => {
             this.songListValue.push(Number(v.song_id))
@@ -210,13 +210,16 @@ export default {
   },
   methods: {
     showDate () {
+      let _self = this
       document.body.classList.add('third-center')
       this.$vux.datetime.show({
         cancelText: '取消',
         confirmText: '确定',
         format: 'HH:mm',
         value: this.form.open_time,
-        onConfirm (val) {},
+        onConfirm (val) {
+          _self.form.open_time = val
+        },
         onHide () {
           setTimeout(() => {
             document.body.classList.remove('third-center')

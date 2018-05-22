@@ -7,7 +7,8 @@ const state = {
   fontSize: 50,
   hbCurInfo: {hb: {}},
   hbRobInfo: {},
-  currentUserInfo: {}
+  currentUserInfo: {},
+  payType: 1 // 1=》牛角支付 2=》直接支付3=>充值购买
 }
 
 // getters
@@ -17,7 +18,8 @@ const getters = {
   fontSize: () => state.fontSize,
   hbCurInfo: () => state.hbCurInfo,
   hbRobInfo: () => state.hbRobInfo,
-  currentUserInfo: () => state.currentUserInfo
+  currentUserInfo: () => state.currentUserInfo,
+  payType: () => state.payType
 }
 
 // actions
@@ -49,6 +51,9 @@ const mutations = {
   },
   SET_CURRENT_USER_INFO (state, data) {
     state.currentUserInfo = data
+  },
+  SET_PAY_TYPE (state, data) {
+    state.payType = data
   }
 }
 

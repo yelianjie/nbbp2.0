@@ -332,6 +332,14 @@ export default new Router({
       meta: {
         roles: ['business']
       }
+    },
+    {
+      path: '/SongOrders',
+      name: 'SongOrders',
+      component: _import('SongOrders'),
+      meta: {
+        roles: ['user']
+      }
     }
   ]
 })

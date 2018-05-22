@@ -717,7 +717,7 @@ export const addSong = (data) => {
  * 查询已上架歌曲
  * @param {*} data
  */
-export const getSongIds = (data) => {
+export const getSongs = (data) => {
   return request('/weixin/diange/idsOnShelvers', 'POST', data)
 }
 
@@ -775,6 +775,46 @@ export const isHaveRight = (data) => {
  */
 export const canDianGe = (data) => {
   return request('/weixin/diange/canDianGe', 'POST', data)
+}
+
+/**
+ * 点歌下单
+ * @param {*} data
+ */
+export const addSongOrder = (data) => {
+  return request('/weixin/diange/addSongOrder', 'POST', data)
+}
+
+/**
+ * 本场已点
+ * @param {*} data
+ */
+export const tonightOdrList = (data) => {
+  return request('/weixin/diange/tonightOdrList', 'POST', data)
+}
+
+/**
+ * 历史点歌列表
+ * @param {*} data
+ */
+export const historyOdrList = (data) => {
+  return request('/weixin/diange/historyOdrList', 'POST', data)
+}
+
+/**
+ * 管理员标记是否已唱
+ * @param {*} data
+ */
+export const isFinish = (data) => {
+  return request('/weixin/diange/isFinish', 'POST', data)
+}
+
+/**
+ * 获取上架歌曲列表
+ * @param {*} data
+ */
+export const onShelvesList = (data) => {
+  return request('/weixin/diange/onShelvesList', 'POST', data)
 }
 
 /**

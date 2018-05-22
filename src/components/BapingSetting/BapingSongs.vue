@@ -40,7 +40,7 @@
 import { XButton, Popup, PopupHeader, TransferDomDirective as TransferDom, Checker, CheckerItem, CheckIcon } from 'vux'
 import InfiniteLoading from 'vue-infinite-loading'
 import InlineLoading from '@/components/InlineLoading'
-import { getSongIds } from '@/api/'
+import { getSongs } from '@/api/'
 export default {
   directives: {
     TransferDom
@@ -94,7 +94,7 @@ export default {
       if (!this.infiniteLoading) {
         this.infiniteLoading = $state
       }
-      getSongIds({ht_id: this.$route.query.id}).then((res) => {
+      getSongs({ht_id: this.$route.query.id}).then((res) => {
         if (Array.isArray(res.result)) {
           this.songList = [...this.songList, ...res.result]
           this.songListValue = this.songList.map(v => {

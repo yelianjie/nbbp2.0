@@ -89,8 +89,9 @@
         <bp-msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onPreviewImage="previewImage" @onLike="like" v-if="v.msg_type == 2" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></bp-msg>
         <ds-msg :key="v.id" :index="i" :data="v" @onDelete="deleteMsg" @onLike="like" v-if="v.msg_type == 1" @onAvatar="showCard" @onShare="share" @onBp="bp" @onDs="ds"></ds-msg>
         <msg-hong-bao :key="v.id" v-if="v.msg_type == 3" :data="v" @onHBClick="openHBModel(v)" @onDelete="deleteMsg" @onLike="like" @onBp="bp" @onDs="ds" @onAvatar="showCard"></msg-hong-bao>
+        <dg-msg :key="v.id" v-if="v.msg_type == 4" :data="v" @onShare="share" @onAvatar="showCard" @onDelete="deleteMsg"></dg-msg>
       </template>
-      
+      <!-- <dg-msg v-if="chatlist.length > 0" :data="chatlist[2]"></dg-msg> -->
     </div>
     <footer-main :scorllEnd="scrollToEnd"></footer-main>
   </div>
@@ -101,7 +102,7 @@
     <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>
     <div class="f-btn" @click="hbForAll"><img src="../assets/hb-btn.png"/></div>
   </div>
-  <component :is="currentView" @onClose="currentView = ''" @onMounted="asyncComponentLoaded"></component>
+  <component :is="currentView" ref="asyncComponent" @onClose="asyncComponentClosed" @onWxPay="dgWxPay" @onBuy="buyDialogVisible = true" @onMounted="asyncComponentLoaded"></component>
   <!-- <song-window v-model="songVisible" v-if="barDataInfo.gift" :gifts="barDataInfo.gift"></song-window> -->
   <bp-window v-model="bpWindowVisible" ref="bpWindow" @onWxPay="wxPay" v-if="barDataInfo.time" :times="barDataInfo.time" :screens="barDataInfo.screen" :orginscreens="barDataInfo.orginScreen" @onBuy="buyDialogVisible = true"></bp-window>
   <ds-window v-model="dsWindowVisible" ref="dsWindow" @onWxPay="wxPay" v-if="barDataInfo.gift" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
@@ -417,7 +418,7 @@
 
 <script>
 // isSubscribe
-import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack, addBlack, getRestScreenAmount, isSubscribe } from '@/api/'
+import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, createHb, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack, addBlack, getRestScreenAmount, isSubscribe, addSongOrder } from '@/api/'
 import { XDialog, TransferDom, Popup, PopupPicker, XButton } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -429,6 +430,7 @@ import MsgImg from '../components/Main/MsgImg'
 import MsgOnlyImg from '../components/Main/Img'
 import BpMsg from '../components/Main/BpMsg'
 import DsMsg from '../components/Main/DsMsg'
+import DgMsg from '../components/Main/DgMsg'
 import MsgHongBao from '../components/Main/MsgHongBao'
 import BpWindow from '../components/Main/BpWindow'
 import DsWindow from '../components/Main/DsWindow'
@@ -453,6 +455,7 @@ export default {
   },
   data () {
     return {
+      order_pay_type: 0,
       notice: '',
       show: false,
       chatlist: [],
@@ -762,7 +765,7 @@ export default {
         this.hbState.hbScale = true
       }, 15 * 1000) */
     },
-    initIsSelected () {
+    /* initIsSelected () {
       var buyInfo = localStorage.getItem('buyDialogInfo')
       var currentUserInfo = localStorage.getItem('currentUserInfo')
       if (!buyInfo) {
@@ -783,7 +786,7 @@ export default {
           this.$refs.dsWindow.initSelected(this.buyDialogInfo.postParams)
         }
       }
-    },
+    }, */
     loopBlack (time) {
       this.blackTimer = setTimeout(() => {
         if (!this.$route.params.id) {
@@ -1144,6 +1147,8 @@ export default {
         title = data.initiator_nickname + '重金' + data.title + data.odr_show_time + '秒，一起来围观互动！'
       } else if (~~(data.msg_type) === 1) {
         title = data.initiator_nickname + '送' + data.title + '给' + who + '，一起来玩！'
+      } else if (~~(data.msg_type) === 4) {
+        title = data.initiator_nickname + '点了一首' + data.title + '给' + who + '，一起来玩！'
       }
       let shareParams = {
         title: title,
@@ -1172,10 +1177,15 @@ export default {
       this.userDialogVisible = false
       this.dsWindowVisible = true
     },
+    asyncComponentClosed () {
+      this.currentView = ''
+      this.payBus = 1
+    },
     asyncComponentLoaded () {
       clearTimeout(this.viewTimer)
       this.onlineVisible = false
       this.userDialogVisible = false
+      this.payBus = 3
       this.$vux.loading.hide()
     },
     dg () {
@@ -1261,6 +1271,7 @@ export default {
             case 'get_brand_wcpay_request:ok':
               // 成功要设置该用户是否充过值为true
               _self.$store.commit('user/SET_IS_RECHARGE', true)
+              _self.$store.commit('app/SET_PAY_TYPE', 3)
               var afterChargeBalance = accAdd(_self.userInfo.balance, _self.exps[index].money)
               // 比较购买的余额是否大于要支付的订单的价格
               if (afterChargeBalance >= ~~(_self.buyDialogInfo.price)) {
@@ -1288,6 +1299,9 @@ export default {
                       _self.hbWindowVisible = false
                     }
                   })
+                } else if (_self.payBus === 3) {
+                  // 买歌
+                  _self.confirmBuy()
                 }
               } else {
                 // 显示toast提示不够
@@ -1322,6 +1336,8 @@ export default {
         if (this.confirmDisable) {
           return false
         }
+        // 如果是0 1表示直接牛角支付 如果有3了不改变
+        // this.order_pay_type = this.order_pay_type !== 0 ? this.order_pay_type : 1
         this.confirmDisable = true
         if (this.payBus === 1) {
           addBpDsMsg(this.buyDialogInfo.postParams).then((res) => {
@@ -1369,11 +1385,19 @@ export default {
           }).finally(() => {
             this.confirmDisable = false
           })
+        } else if (this.payBus === 3) {
+          // 牛角买歌
+          let params = Object.assign({}, this.buyDialogInfo.postParams)
+          params.pay_type = this.order_pay_type
+          addSongOrder(params).then(res => {
+            this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
+            this.buyDialogVisible = false
+            this.closeAsyncComponent()
+          }).finally(() => {
+            this.confirmDisable = false
+          })
         }
       }
-      /* setTimeout(() => {
-        this.buyDialogVisible = false
-      }, 3000) */
     },
     songForAll () {
       this.$store.commit('app/SET_CURRENT_USER_INFO', {})
@@ -1630,6 +1654,64 @@ export default {
         }
       })
     },
+    closeAsyncComponent () {
+      this.$refs.asyncComponent.closeWindow()
+    },
+    dgWxPay () {
+      // 直接微信支付买歌
+      var _self = this
+      this.$store.commit('app/SET_PAY_TYPE', 2)
+      let params = Object.assign({}, this.buyDialogInfo.postParams)
+      params.pay_type = this.payType
+      addSongOrder(params).then((res) => {
+        window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
+          switch (res.err_msg) {
+            case 'get_brand_wcpay_request:cancel':
+              // alert('用户取消支付！')
+              break
+            case 'get_brand_wcpay_request:fail':
+              _self.$vux.toast.show({
+                text: '支付失败！（' + res.err_desc + '）',
+                width: '10em'
+              })
+              break
+            case 'get_brand_wcpay_request:ok':
+              // 支付成功关闭
+              _self.buyDialogVisible = false
+              _self.closeAsyncComponent()
+              break
+            default:
+              alert(JSON.stringify(res))
+              break
+          }
+        })
+      })
+      /* createHb(_params).then((res) => {
+        window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
+          _self.packetLoading = false
+          switch (res.err_msg) {
+            case 'get_brand_wcpay_request:cancel':
+              // alert('用户取消支付！')
+              break
+            case 'get_brand_wcpay_request:fail':
+              _self.$vux.toast.show({
+                text: '支付失败！（' + res.err_desc + '）',
+                width: '10em'
+              })
+              break
+            case 'get_brand_wcpay_request:ok':
+              // 支付成功关闭红包
+              _self.hbWindowVisible = false
+              break
+            default:
+              alert(JSON.stringify(res))
+              break
+          }
+        })
+      }).catch(() => {
+        this.packetLoading = false
+      }) */
+    },
     blackExit () {
       var history = window.sessionStorage
       history = history.getItem('count') * 1
@@ -1678,7 +1760,8 @@ export default {
       buyDialogInfo: 'buyDialogInfo',
       hbCurInfo: 'hbCurInfo',
       hbRobInfo: 'hbRobInfo',
-      currentUserInfo: 'currentUserInfo'
+      currentUserInfo: 'currentUserInfo',
+      payType: 'payType'
     }),
     ...mapGetters('user', {
       userInfo: 'userInfo',
@@ -1709,7 +1792,8 @@ export default {
     Popup,
     Charge,
     PopupPicker,
-    XButton
+    XButton,
+    DgMsg
   }
 }
 </script>

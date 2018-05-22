@@ -12,27 +12,28 @@
         </div>
         <div class="window-middle">
           <div class="song-tab flex f14">
-            <a class="flex-1 tc db" :class="{'selected' : tabView == 1}" @click="tabView = 1">我要点歌<span class="song-number f12">(347首)</span></a>
-            <a class="flex-1 tc db" :class="{'selected' : tabView == 2}" @click="tabView = 2">本场已点<span class="song-number f12">(347首)</span></a>
+            <a class="flex-1 tc db" :class="{'selected' : tabView == 1}" @click="tabView = 1">我要点歌<span class="song-number f12">({{songs.length}}首)</span></a>
+            <a class="flex-1 tc db" :class="{'selected' : tabView == 2}" @click="tabView = 2">本场已点<span class="song-number f12">({{tonightSongs.length}}首)</span></a>
           </div>
         </div>
         <template v-if="tabView == 1">
-          <div v-if="true">
+          <div v-if="dgStatusCode == 306000">
             <form action="" @submit.prevent="onSubmit">
               <div class="pr">
                 <input type="search" class="f14" name="search_song_input" id="search_song_input" placeholder="请输入歌曲名、原唱歌手" v-model="keyword" autocomplete="off">
                 <svg-icon icon-class="search" class="search-icon" />
               </div>
             </form>
-            <div class="songs-container overscroll" style="margin-top: 0.3rem;margin-bottom: 0.2rem;">
+            <div class="songs-container overscroll" style="margin-top: 0.3rem;margin-bottom: 0.3rem;">
               <div class="song-search-result pr flex flex-align-center" v-for="(v, i) in songs" :key="i" @click="songIndex == i ? songIndex = -1 : songIndex = i" :class="{'selected': songIndex == i}">
                 <div class="song-search-info flex-1 flex flex-v flex-pack-center">
                   <p class="f15 line1">{{v.name}}</p>
-                  <p class="f13 line1">{{v.author}}</p>
+                  <p class="f13 line1">原唱：{{v.author}}</p>
                 </div>
-                <div class="song-search-listened f13">{{v.order_num}}人点过</div>
+                <div class="song-search-listened f13" v-if="v.order_num != 0">{{v.order_num}}人点过</div>
                 <div class="song-search-select pr flex flex-align-center">
                   <svg-icon icon-class="selected" class="song-select-icon" v-if="songIndex == i"/>
+                  <svg-icon icon-class="circle" class="song-select-icon" v-else />
                 </div>
               </div>
           
@@ -41,7 +42,7 @@
               
             </div>
             <div class="bp-input-area flex">
-              <input class="bp-input borderbox f14" maxlength="15" @focus="inputFocus" @blur="inputBlur" placeholder="请输入点歌上墙语，30字以内"  v-model="content"/>
+              <input class="bp-input borderbox f14" maxlength="30" @focus="inputFocus" @blur="inputBlur" placeholder="好听的歌一起来分享~"  v-model="content"/>
             </div> 
             <div class="window-bottom f13 flex flex-align-center">
               <div class="account  flex-1">总计：<svg-icon icon-class="coin" className="coin" />{{total}}</div>
@@ -49,47 +50,48 @@
             </div>
           </div>
           <div class="song-fixed-height flex flex-v flex-align-center tc f14 no-permission" v-else>
-            <template v-if="false">
+            <template v-if="dgStatusCode == 306002">
               <p>可点歌时间段</p>
-              <span class="time-range">22:00 ~ 2:00</span>
-              <p>每场最多可点34首，先到先得~</p>
+              <span class="time-range">{{setting.open_time}} ~ {{setting.end_time}}</span>
+              <p>每场最多可点{{setting.amount}}首，先到先得~</p>
             </template>
-            <template v-else>
-              <p>本场可点歌曲34首已全部售完</p>
+            <template v-if="dgStatusCode == 306003">
+              <p>本场可点歌曲{{setting.amount}}首已全部售完</p>
               <p>下一场可点歌时间段</p>
-              <span class="time-range">22:00 ~ 2:00</span>
+              <span class="time-range">{{setting.open_time}} ~ {{setting.end_time}}</span>
             </template>
           </div>
         </template>
         <template v-if="tabView == 2">
           <div class="song-fixed-height pr" :class="{'manager-height': barManagerInfo.isManager}">
             <div class="song-list overscroll">
-              <div class="song-item flex flex-align-center" :class="{'selected': songConfirmIndex.indexOf(i) != -1}" v-for="(v, i) in songs" :key="i" @click="confirmSong(i)">
+              <div class="song-item flex flex-align-center" :class="{'selected': v.is_finish == 1}" v-for="(v, i) in tonightSongs" :key="i" @click="confirmSong(i)">
                 <div class="song-item-img pr flex flex-align-center">
-                  <img src="http://thirdwx.qlogo.cn/mmopen/gwhELYibibFdQyGHrGudaxKGxF7JrrxyGblUcHr0uybeD24umWNsohxCCiaFrKgy6TXFIoZvxViaQuPEJQU7TmYNFg/132" class="sender-avatar db"/>
-                  <img src="http://thirdwx.qlogo.cn/mmopen/gwhELYibibFdQyGHrGudaxKGxF7JrrxyGblUcHr0uybeD24umWNsohxCCiaFrKgy6TXFIoZvxViaQuPEJQU7TmYNFg/132" class="receiver-avatar db"/>
+                  <img :src="$options.filters.prefixImageUrl(v.headimgurl)" class="sender-avatar db"/>
+                  <img :src="$options.filters.prefixImageUrl(v.toimgurl)" class="receiver-avatar db" v-if="v.to_id != 0"/>
                 </div>
                 <div class="song-item-info flex-1 flex flex-v flex-pack-center">
-                  <p class="f15 line1">{{v.value}}</p>
-                  <p class="f13 line1">{{v.inlineDesc}}</p>
+                  <p class="f15 line1">{{v.name}}</p>
+                  <p class="f13 line1">原唱：{{v.author}}</p>
                 </div>
                 <div class="song-item-right flex flex-v flex-pack-center">
                   <template v-if="!hasRight">
-                    <p class="f13 line1">16人点过</p>
-                    <p class="f13">20:31:17</p>
+                    <p class="f13 line1">{{v.order_num}}人点过</p>
+                    <p class="f13">{{v.pay_time.substring(11)}}</p>
                   </template>
                   <template v-else>
                     <div class="song-search-select pr flex flex-align-center">
-                      <svg-icon icon-class="selected" class="song-select-icon" v-if="songConfirmIndex.indexOf(i) != -1"/>
+                      <svg-icon icon-class="selected" class="song-select-icon" v-if="v.is_finish == 1"/>
+                      <svg-icon icon-class="circle" class="song-select-icon" v-else />
                     </div>
                   </template>
                 </div>
               </div>
             </div>
             <div class="manager-btn-group f15 flex" v-if="hasRight">
-              <router-link to="/" class="flex-1">历史点歌详情</router-link>
+              <router-link :to="`/SongOrders?id=${$route.params.id}`" class="flex-1">历史点歌详情</router-link>
               <div style="width: 0.8rem;"></div>
-              <router-link to="/" class="flex-1">点歌霸屏管理</router-link>
+              <router-link :to="`/BapingSong?type=BapingSong&id=${$route.params.id}`" class="flex-1">点歌霸屏管理</router-link>
             </div>
           </div>
         </template>
@@ -103,7 +105,7 @@ import { mapGetters, mapActions } from 'vuex'
 // import twemoji from '@/vendor/twemoji.npm'
 // import { BASE_API } from '../../../config/prod.env'
 import { iOSversion, emojiReg } from '@/utils/utils'
-import { searchSong, isHaveRight, canDianGe } from '@/api/'
+import { searchSong, canDianGe, tonightOdrList, onShelvesList, getMerchantSetting, isFinish } from '@/api/'
 export default {
   /* model: {
     prop: 'visible',
@@ -112,28 +114,34 @@ export default {
   data () {
     return {
       inputTimer: null,
-      scroll: null,
-      rowGiftIndex: -1,
-      dsGiftIndex: -1,
       content: '',
       visible: false,
       songs: [],
+      tonightSongs: [],
       keyword: '',
       lastKeyword: '',
       searchTap: false,
       songIndex: -1,
       songConfirmIndex: [],
       hasRight: false,
+      dgStatusCode: 306000,
+      setting: {},
       tabView: 1 // 1我要点歌 2本场已点 3不在点歌时间段内（我要点歌）
     }
   },
-  props: ['gifts'],
   mounted () {
     let id = this.$route.params.id
-    var p1 = isHaveRight({ht_id: id})
-    var p2 = canDianGe({ht_id: id})
-    Promise.all([p1, p2]).then(results => {
-      this.hasRight = results[0].result
+    var p1 = canDianGe({ht_id: id})
+    var p2 = tonightOdrList({ht_id: id})
+    var p3 = onShelvesList({ht_id: id})
+    var p4 = getMerchantSetting({ht_id: id})
+    Promise.all([p1, p2, p3, p4]).then(results => {
+      this.dgStatusCode = results[0].result
+      // this.hasRight = results[0].result
+      this.tonightSongs = results[1].result.list
+      this.hasRight = results[1].result.is_manager
+      this.songs = results[2].result
+      this.setting = results[3].result
       this.$nextTick(() => {
         this.$emit('onMounted')
         this.visible = true
@@ -164,42 +172,27 @@ export default {
     closeWindow () {
       this.visible = false
     },
-    takeTimes (rowIndex, index) {
-      if (this.dsGiftIndex === index && this.rowGiftIndex === rowIndex) {
-        if (this.dsTimes + 1 > 3) {
-          this.dsTimes = 1
-        } else {
-          this.dsTimes++
-        }
-      } else {
-        this.dsTimes = 1
-      }
-      this.rowGiftIndex = rowIndex
-      this.dsGiftIndex = index
-    },
     confirmSong (index) {
-      var find = this.songConfirmIndex.indexOf(index)
-      if (find !== -1) {
-        this.songConfirmIndex.splice(find, 1)
-      } else {
-        this.songConfirmIndex.push(index)
-      }
+      this.tonightSongs[index].is_finish = Number(this.tonightSongs[index].is_finish) === 0 ? 1 : 0
+      isFinish(Object.assign(this.tonightSongs[index], {ht_id: this.$route.params.id})).then(res => {
+        console.log(res)
+      })
     },
     onSubmit () {
       if (!this.keyword) {
         return false
       }
       this.lastKeyword = this.keyword
-      this.searchTap = true
       this.songIndex = -1
       searchSong({ht_id: this.$route.params.id, key: this.keyword}).then((res) => {
         this.songs = res.result
+        this.searchTap = true
       })
     },
     buy () {
-      if (this.dsGiftIndex === -1) {
+      if (this.songIndex === -1) {
         this.$vux.toast.show({
-          text: '请选择礼物'
+          text: '请选择歌曲'
         })
         return false
       }
@@ -208,9 +201,9 @@ export default {
       if (emojiReg.test(content)) {
         content = content.replace(emojiReg, '')
       }
-      if (content.length > 15) {
+      if (content.length > 30) {
         this.$vux.toast.show({
-          text: '文字不能超过15个',
+          text: '文字不能超过30个',
           width: '12em'
         })
         return false
@@ -224,14 +217,13 @@ export default {
       ) */
       let postParams = {
         ht_id: this.$route.params.id,
-        type: 1,
-        count: this.dsTimes,
-        content: content,
-        gift_id: this.currentSelectItem().id,
-        reward_uid: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : 0,
+        price: 0.01,
+        content: content === '' ? '好听的歌一起来分享~' : content,
+        song_id: this.currentSelectItem().song_id,
+        to_id: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : 0,
         img: ''
       }
-      postParams = {postParams: postParams, extraInfo: {title: this.currentSelectItem().title}, price: this.total, confirmText: isCharge ? '充值购买' : '确定', isCharge: isCharge}
+      postParams = {postParams: postParams, extraInfo: {title: this.currentSelectItem().name}, price: this.total, confirmText: isCharge ? '充值购买' : '确定', isCharge: isCharge}
       if (!this.userInfo.is_recharge && ~~(this.barManagerInfo.game_count) === 0) {
         // 充过值显示取消 没冲过显示立即支付
         var extraParams = {
@@ -244,20 +236,12 @@ export default {
         postParams = Object.assign({}, postParams, extraParams)
       }
       this.ChangeBuyDialogInfo(postParams)
+      this.$store.commit('app/SET_PAY_TYPE', 1)
       this.$emit('onBuy')
     },
-    reset () {
-      // this.dsGiftIndex = -1
-      this.content = ''
-    },
-    initSelected (info) {
-      this.dsGiftIndex = this.gifts.findIndex((v) => ~~(v.id) === ~~(info.gift_id))
-      this.dsTimes = info.count
-      this.content = info.content
-    },
     currentSelectItem () {
-      if (this.gifts && this.gifts[this.rowGiftIndex][this.dsGiftIndex]) {
-        return this.gifts[this.rowGiftIndex][this.dsGiftIndex]
+      if (this.songs && this.songs[this.songIndex]) {
+        return this.songs[this.songIndex]
       }
     }
   },
@@ -265,12 +249,14 @@ export default {
   },
   computed: {
     total () {
-      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0) {
+      const songPrice = this.songIndex !== -1 ? Number(this.setting.price) : 0
+      return Number(songPrice)
+      /* if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0) {
         return 0
       } else {
-        const giftPrice = this.dsGiftIndex !== -1 ? Number(this.currentSelectItem().price) : 0
-        return Number(giftPrice * this.dsTimes).toFixed(2)
-      }
+        const songPrice = this.songIndex !== -1 ? Number(this.setting.price) : 0
+        return Number(songPrice).toFixed(2)
+      } */
     },
     timesDsText () {
       const texts = ['一', '二', '三']
@@ -379,10 +365,10 @@ export default {
     }
     &.selected {
       border-color: @mainColor;
-      .song-search-select:after {
+      /* .song-search-select:after {
         background-color: #fff;
         border: 0;
-      }
+      } */
     }
     /* &.selected:after {
       border-color: @mainColor;
@@ -397,32 +383,34 @@ export default {
     margin-right: 0.15rem;
   }
 }
+.selected .song-select-icon {
+  fill: @mainColor;
+}
 .song-select-icon {
   display: block;
   width: 0.4rem;
   height: 0.4rem;
-  fill: @mainColor;
 }
 .song-search-select {
   width: 0.4rem;
 }
-.song-search-select:after {
+.selected .song-search-select:after {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 0.32rem;
-  height: 0.32rem;
+  width: 0.28rem;
+  height: 0.28rem;
   border-radius: 50%;
-  border: 1px solid #675f6e;
   transform: translate(-50%, -50%);
   content: "";
   z-index: -1;
+  background-color: #fff;
 }
 .song-fixed-height {
-  height: 7.04rem;
+  height: 7.14rem;
   margin-bottom: 0.2rem;
   &.manager-height {
-    height: 5.84rem;
+    height: 5.94rem;
     margin-bottom: 1.4rem;
   }
 }
@@ -436,12 +424,6 @@ export default {
   &:not(:last-child):after {
     content: '';
     .setBottomLine(rgba(255, 255, 255, 0.3));
-  }
-  &.selected {
-    .song-search-select:after {
-      background-color: #fff;
-      border: 0;
-    }
   }
 }
 .song-item-img {
