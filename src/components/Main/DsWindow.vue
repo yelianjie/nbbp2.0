@@ -158,6 +158,7 @@ export default {
         postParams = Object.assign({}, postParams, extraParams)
       }
       this.ChangeBuyDialogInfo(postParams)
+      this.$store.commit('app/SET_FIELD', {field: 'sourceType', value: 2})
       this.$emit('onBuy')
     },
     reset () {

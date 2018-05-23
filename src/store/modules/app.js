@@ -12,8 +12,8 @@ const state = {
   hbmount: 50,
   hbRobInfo: {},
   currentUserInfo: {},
-  chargeVisible: false,
-  chargeCallback: () => {},
+  buyComponetName: '',
+  sourceType: 1, // 1=》霸屏 2=》礼物 3=》红包 4=》点歌 5=》其他
   payType: 1 // 1=》牛角支付 2=》直接支付3=>充值购买
 }
 
@@ -26,8 +26,6 @@ const getters = {
   hbRobInfo: () => state.hbRobInfo,
   currentUserInfo: () => state.currentUserInfo,
   payType: () => state.payType,
-  chargeVisible: () => state.chargeVisible,
-  chargeCallback: () => state.chargeCallback,
   onlineVisible: () => state.onlineVisible,
   onlineHbChose: () => state.onlineHbChose,
   scene: () => state.scene
@@ -65,12 +63,6 @@ const mutations = {
   },
   SET_PAY_TYPE (state, data) {
     state.payType = data
-  },
-  SET_CHARGEVISIBLE (state, data) {
-    state.chargeVisible = data
-  },
-  SET_CHARGECALLBACK (state, data) {
-    state.chargeCallback = data
   },
   SET_ONLINEVISIBLE (state, data) {
     state.onlineVisible = data

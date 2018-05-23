@@ -2,9 +2,12 @@
   <div class="scroll-container scroll">
     <div class="detail-item flex flex-align-center bg2" v-for="(v, i) in list" :key="i">
       <div class="detail-item-left flex-1">
-        <p class="overflow fff-bp f14">
+        <p class="fff-bp f14 line1">
           <template v-if="v.odr_type == 3">
             <template v-if="v.pay_type == 1">牛角</template><template v-if="v.pay_type == 2">现金</template>红包
+          </template>
+          <template v-if="v.odr_type == 4">
+            点歌：{{v.name}}-{{v.author}}
           </template>
           <template v-else>
             购买：{{v.title}}X{{v.odr_num}}
@@ -13,7 +16,7 @@
         <p class="f13 scolor bottom-line">{{v.create_time}}</p>
       </div>
       <div class="detail-item-right">
-        <p class="overflow f14 ncolor">-{{v.order_money}}<template v-if="v.pay_type == 1">个牛角</template><template v-if="v.pay_type == 2">元</template>
+        <p class="overflow f14 ncolor">-{{v.order_money}}<template v-if="v.pay_type == 1 || v.pay_type == 3">个牛角</template><template v-if="v.pay_type == 2">元</template>
         </p>
       </div>
     </div>

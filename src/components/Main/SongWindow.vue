@@ -28,7 +28,7 @@
               <div class="song-search-result pr flex flex-align-center" v-for="(v, i) in songs" :key="i" @click="songIndex == i ? songIndex = -1 : songIndex = i" :class="{'selected': songIndex == i}">
                 <div class="song-search-info flex-1 flex flex-v flex-pack-center">
                   <p class="f15 line1">{{v.name}}</p>
-                  <p class="f13 line1">原唱：{{v.author}}</p>
+                  <p class="f12 line1" style="color: rgba(255,255,255, 0.5);">原唱：{{v.author}}</p>
                 </div>
                 <div class="song-search-listened f13" v-if="v.order_num != 0">{{v.order_num}}人点过</div>
                 <div class="song-search-select pr flex flex-align-center">
@@ -72,7 +72,7 @@
                 </div>
                 <div class="song-item-info flex-1 flex flex-v flex-pack-center">
                   <p class="f15 line1">{{v.name}}</p>
-                  <p class="f13 line1">原唱：{{v.author}}</p>
+                  <p class="f12 line1" style="color: rgba(255,255,255, 0.5);">原唱：{{v.author}}</p>
                 </div>
                 <div class="song-item-right flex flex-v flex-pack-center">
                   <template v-if="!hasRight">
@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 // import twemoji from '@/vendor/twemoji.npm'
 // import { BASE_API } from '../../../config/prod.env'
 import { iOSversion, emojiReg } from '@/utils/utils'
@@ -141,7 +141,6 @@ export default {
       hasRight: false,
       dgStatusCode: 306000,
       setting: {},
-      buyDialogInfo: {},
       tabView: 1 // 1我要点歌 2本场已点 3不在点歌时间段内（我要点歌）
     }
   },
@@ -165,6 +164,9 @@ export default {
     })
   },
   methods: {
+    ...mapActions('app', {
+      ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
+    }),
     afterLeave () {
       this.$emit('onClose')
     },
@@ -228,9 +230,10 @@ export default {
           return ''
         }
       ) */
+      // Number(this.setting.price)
       let postParams = {
         ht_id: this.$route.params.id,
-        price: Number(this.setting.price),
+        price: 0.01,
         content: content === '' ? '好听的歌一起来分享~' : content,
         song_id: this.currentSelectItem().song_id,
         to_id: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : 0,
@@ -248,7 +251,7 @@ export default {
         }
         postParams = Object.assign({}, postParams, extraParams)
       }
-      this.buyDialogInfo = postParams
+      this.ChangeBuyDialogInfo(postParams)
       this.$store.commit('app/SET_PAY_TYPE', 1)
       this.buyDialogVisible = true
     },
@@ -273,7 +276,7 @@ export default {
             case 'get_brand_wcpay_request:ok':
               // 支付成功关闭
               _self.buyDialogVisible = false
-              _self.closeAsyncComponent()
+              _self.closeWindow()
               break
             default:
               alert(JSON.stringify(res))
@@ -291,9 +294,10 @@ export default {
         localStorage.setItem('payBack', '1')
         this.$router.push('/Charge') */
         this.buyDialogVisible = false
+        this.$parent.chargeVisible = true
         this.$store.commit('app/SET_PAY_TYPE', 3)
-        this.$store.commit('app/SET_CHARGEVISIBLE', true)
-        this.$store.commit('app/SET_CHARGECALLBACK', () => this.confirmBuy())
+        this.$store.commit('app/SET_FIELD', {field: 'buyComponetName', value: 'asyncComponent'})
+        this.$store.commit('app/SET_FIELD', {field: 'sourceType', value: 4})
         // window.location.href = window.location.origin + window.location.pathname + '#/Charge'
       } else {
         // 直接购买
@@ -308,7 +312,13 @@ export default {
         addSongOrder(params).then(res => {
           this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
           this.buyDialogVisible = false
-          this.closeAsyncComponent()
+          this.$parent.chargeVisible = false
+          this.closeWindow()
+          if (this.$parent.chargeFlag) {
+            // 确定是要充值过程的 显示提示充值后的dialog
+            this.$parent.buySuccessDialogVisible = true
+            this.$parent.chargeFlag = false
+          }
         }).finally(() => {
           this.confirmDisable = false
         })
@@ -325,7 +335,8 @@ export default {
   },
   computed: {
     total () {
-      const songPrice = this.songIndex !== -1 ? Number(this.setting.price) : 0
+      // Number(this.setting.price)
+      const songPrice = this.songIndex !== -1 ? 0.01 : 0
       return Number(songPrice)
       /* if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0) {
         return 0
@@ -340,6 +351,7 @@ export default {
     },
     ...mapGetters('app', {
       currentUserInfo: 'currentUserInfo',
+      buyDialogInfo: 'buyDialogInfo',
       payType: 'payType'
     }),
     ...mapGetters('user', {

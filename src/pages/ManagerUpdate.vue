@@ -7,7 +7,7 @@
     </div>
      <group label-width="12em" label-margin-right="2em" label-align="left">
        <group-title slot="title">管理员权限设置</group-title>
-       <x-input title="每日最多免费打赏次数" text-align="right" type="number" v-model="count" :show-clear="false" @on-change="countValid" pattern="[0-9]*">
+       <x-input title="每日最多免费打赏次数" text-align="right" type="number" v-model="count" :debounce="50" :show-clear="false" @on-change="countValid" pattern="[0-9]*">
         <span slot="right" style="margin-left:6px;">次</span>
       </x-input>
       <cell title="最高免费霸屏时长不超过" value="60秒"></cell>

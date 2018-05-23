@@ -818,6 +818,14 @@ export const onShelvesList = (data) => {
 }
 
 /**
+ * 下架歌曲
+ * @param {*} data
+ */
+export const underShelves = (data) => {
+  return request('/weixin/diange/underShelves', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */

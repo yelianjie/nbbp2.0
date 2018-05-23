@@ -59,10 +59,10 @@
        <group-title slot="title">设置可点歌时间段</group-title>
        <cell title="开始时间" :value="form.open_time" is-link @click.native="showDate"></cell>
        <!-- <datetime title="开始时间" format="HH:mm" v-model="form.open_time" value-text-align="right" placeholder="选择"></datetime> -->
-       <x-input title="几小时后结束" text-align="right" type="number" :debounce="50" v-model="form.open_hour" :show-clear="false" @on-change="validisTime" pattern="[0-9]*">
+       <x-input title="几小时后结束" text-align="right" type="number" v-model="form.open_hour" :show-clear="false" @on-blur="validisTime" pattern="[0-9]*">
         <span slot="right" style="margin-left:6px;">小时</span>
       </x-input>
-      <x-input title="点歌时间段内最多可点歌数量" text-align="right" type="number" :debounce="50" v-model="form.amount" :show-clear="false" @on-change="validisSong" pattern="[0-9]*">
+      <x-input title="点歌时间段内最多可点歌数量" text-align="right" type="number" v-model="form.amount" :debounce="50" :show-clear="false" @on-change="validisSong" pattern="[0-9]*">
         <span slot="right" style="margin-left:6px;">首</span>
       </x-input>
      </group>

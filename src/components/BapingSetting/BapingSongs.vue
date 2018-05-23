@@ -1,26 +1,25 @@
 <template>
-  <div v-transfer-dom>
+  <div v-transfer-dom class="song-pop">
     <popup v-model="visible" height="100%" class="flex flex-v" v-fixscroll="'#songs-list'" @on-hide="resetEvent" :should-rerender-on-show="true">
       <popup-header
         left-text="取消"
-        right-text="确定"
-        :title="'已选歌曲(' + songListValue.length + ')'"
+        right-text=""
+        :title="'已选歌曲(' + songList.length + ')'"
         :show-bottom-border="false"
-        @on-click-left="$emit('setVisible', false)"
-        @on-click-right="$emit('setVisible', false)"></popup-header>
+        @on-click-left="$emit('setVisible', false)"></popup-header>
       <div id="songs-list" class="flex-1 overscroll">
         <checker v-model="songListValue" type="checkbox" default-item-class="song-item" selected-item-class="song-item-selected">
         <template v-for="(v, i) in songList">
-          <checker-item :value="v.song_id" :key="i" @on-item-click="onClick">
+          <checker-item :value="i" :key="i" @on-item-click="onClick">
             <div class="flex flex-align-center flex-1 song-search-item">
               <div class="flex flex-v flex-pack-center flex-1">
                 <p class="">{{v.name}}</p>
                 <div class="flex flex-align-center">
-                  <div class="flex1 f13" style="color:#666;">{{v.author}}</div>
+                  <div class="flex1 f13" style="color:#666;">原唱：{{v.author}}</div>
                 </div>
               </div>
               <div class="">
-                <check-icon :value="songListValue.some((vv,ii) => vv == v.song_id)" type="plain"></check-icon>
+                <check-icon :value="Boolean(v.is_confirm)" type="plain"></check-icon>
               </div>
             </div>
           </checker-item>
@@ -40,7 +39,7 @@
 import { XButton, Popup, PopupHeader, TransferDomDirective as TransferDom, Checker, CheckerItem, CheckIcon } from 'vux'
 import InfiniteLoading from 'vue-infinite-loading'
 import InlineLoading from '@/components/InlineLoading'
-import { getSongs } from '@/api/'
+import { getSongs, underShelves, addSong } from '@/api/'
 export default {
   directives: {
     TransferDom
@@ -79,16 +78,12 @@ export default {
   },
   methods: {
     onClick (itemValue, itemDisabled) {
-      /* let song = this.songList.find(v => v.songid === itemValue)
-      if (song) {
-        let params = {
-          ht_id: this.$route.query.id,
-          song_id: song.songid,
-          name: song.songname,
-          author: song.author
-        }
-        addSong(params)
-      } */
+      if (this.songList[itemValue].is_confirm * 1) {
+        underShelves({ht_id: this.$route.query.id, song_id: this.songList[itemValue].song_id})
+      } else {
+        addSong({ht_id: this.$route.query.id, ...this.songList[itemValue]})
+      }
+      this.songList[itemValue].is_confirm = !this.songList[itemValue].is_confirm
     },
     infiniteHandler ($state) {
       if (!this.infiniteLoading) {
@@ -97,17 +92,18 @@ export default {
       getSongs({ht_id: this.$route.query.id}).then((res) => {
         if (Array.isArray(res.result)) {
           this.songList = [...this.songList, ...res.result]
-          this.songListValue = this.songList.map(v => {
+          /* this.songListValue = this.songList.map(v => {
             return v.song_id
-          })
+          }) */
         }
+        $state.loaded()
         $state.complete()
       })
     },
     resetEvent () {
       setTimeout(() => {
         this.songList = []
-        this.songListValue = []
+        /* this.songListValue = [] */
         this.infiniteLoading && this.infiniteLoading.reset()
       }, 1000)
     }
@@ -129,5 +125,8 @@ export default {
   padding: 10px 15px;
   border-top: 1px solid #f2f2f2;
   background-color: #fff;
+}
+.song-pop /deep/ .vux-popup-header-right {
+  width: 47px;
 }
 </style>

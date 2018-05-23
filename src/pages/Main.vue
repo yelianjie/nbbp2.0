@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-if="show">
     <!-- :hbLimit="hongbao.amount" -->
-    <onlines :peoples="onlinePeople" :payBus="payBus"  @onHBChoseCustom="customHBChose" @onShowCard="showCard" ref="onlines"></onlines>
+    <onlines :peoples="onlinePeople" @onShowCard="showCard" ref="onlines"></onlines>
     <div class="main flex flex-v">
       <div class="flex boardcast flex-align-center" v-if="notice">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
@@ -97,14 +97,14 @@
     <footer-main :scorllEnd="scrollToEnd"></footer-main>
   </div>
   <div id="fixed-bgds-btns">
-    <div class="f-btn" @click="songForAll"><img src="../assets/music-btn.png"/></div>
+    <div class="f-btn" @click="songForAll" v-if="dgCode != 306001"><img src="../assets/music-btn.png"/></div>
     <div class="f-btn" @click="$router.push({path: '/Lottery', query: {id: $route.params.id}})"><img src="../assets/chou-btn.png"/></div>
     <div class="f-btn" @click="screenForAll"><img src="../assets/bp-btn.png"/></div>
     <div class="f-btn" @click="rewardForAll"><img src="../assets/ds-btn.png"/></div>
     <div class="f-btn" @click="hbWindowVisible = true"><img src="../assets/hb-btn.png"/></div>
   </div>
   <component :is="currentView" ref="asyncComponent" @onClose="asyncComponentClosed" @onMounted="asyncComponentLoaded"></component>
-  <hb-window v-if="hbWindowVisible" v-model="hbWindowVisible" @onClose="$refs.onlines.resetHBInfo()"></hb-window>
+  <hb-window v-if="hbWindowVisible" ref="hbRef" v-model="hbWindowVisible" @onClose="$refs.onlines.resetHBInfo()"></hb-window>
   <!-- <song-window v-model="songVisible" v-if="barDataInfo.gift" :gifts="barDataInfo.gift"></song-window> -->
   <bp-window v-model="bpWindowVisible" ref="bpWindow" @onWxPay="wxPay" v-if="barDataInfo.time" :times="barDataInfo.time" :screens="barDataInfo.screen" :orginscreens="barDataInfo.orginScreen" @onBuy="buyDialogVisible = true"></bp-window>
   <ds-window v-model="dsWindowVisible" ref="dsWindow" @onWxPay="wxPay" v-if="barDataInfo.gift" :gifts="barDataInfo.gift" @onBuy="buyDialogVisible = true"></ds-window>
@@ -234,14 +234,6 @@
             <template v-else>
               <div class="result-get middle">
                 <template v-if="tmpRob.amount.money">+{{tmpRob.amount.money}}经验值</template>
-                <!-- <template v-else>
-                  <template v-if="hbCurInfo.hb.type === 3 && hbCurInfo.hb.user.nickname">
-                    好气哦，并不是给你的
-                  </template>
-                  <template v-else>
-                    好气哦，没抢到
-                  </template>
-                </template> -->
                 </div>
             </template>
           </div>
@@ -288,7 +280,7 @@
       <div style="font-size: 26px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;vertical-align: bottom;"/></div>
       <template v-if="userInfo.is_recharge || (!userInfo.is_recharge && barManagerInfo.isManager)">
       <p style="color: #88878f;"><svg-icon icon-class="tip" style="margin-top:-2px;margin-right:2px;" />当前余额可用：<svg-icon icon-class="coin"  style="margin-top:-2px;margin-right:2px;"/>{{userInfo.balance}}</p>
-      <p class="f12" v-if="barManagerInfo.isManager && payBus == 1" style="color:#b187e4;margin-top:6px;">今日剩余免费霸屏、打赏{{barManagerInfo.game_count}}次</p>
+      <p class="f12" v-if="barManagerInfo.isManager" style="color:#b187e4;margin-top:6px;">今日剩余免费霸屏、打赏{{barManagerInfo.game_count}}次</p>
       <p class="f13" v-if="buyDialogInfo.isCharge && barManagerInfo.game_count == 0" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
       </template>
       <template v-else>
@@ -331,7 +323,7 @@
     </transition>
   </template>
   <div v-transfer-dom>
-    <popup :value="chargeVisible" @on-show="chargeShow" @on-hide="resetCharge">
+    <popup v-model="chargeVisible" @on-show="chargeShow" @on-hide="resetCharge">
       <div class="charge-container white" v-fixscroll="'.charge-price-list'">
         <svg-icon icon-class="close" @click.native="chargeVisible = false"/>
         <p class="tc f18">充值购买</p>
@@ -346,7 +338,7 @@
 
 <script>
 // isSubscribe
-import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack, addBlack, getRestScreenAmount, isSubscribe } from '@/api/'
+import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack, addBlack, getRestScreenAmount, isSubscribe, canDianGe } from '@/api/'
 import { XDialog, TransferDom, Popup, PopupPicker, XButton } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -402,6 +394,7 @@ export default {
       buySuccessDialogVisible: false,
       blackVisible: false,
       blackConfirmVisible: false,
+      chargeVisible: false,
       /* songVisible: false, */
       deleteInfo: {},
       height: 0,
@@ -415,6 +408,7 @@ export default {
       packetTimer: null,
       deleteTimer: null,
       blackTimer: null,
+      dgTimer: null,
       currentView: '',
       ticket: '',
       confirmDisable: false,
@@ -462,7 +456,7 @@ export default {
         list: [],
         amount: {}
       },
-      payBus: 1 // 1 购买霸屏礼物 2 发红包
+      dgCode: 0
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -585,6 +579,7 @@ export default {
     this.loopPacketOrder(0)
     this.loopDelete(0)
     this.loopBlack(0)
+    this.loopDg(0)
   },
   mounted () {
     this.$nextTick(() => {
@@ -632,6 +627,7 @@ export default {
       clearTimeout(this.packetTimer)
       clearTimeout(this.deleteTimer)
       clearTimeout(this.blackTimer)
+      clearTimeout(this.dgTimer)
       /* this.newsTimer = null
       this.noticeTimer = null
       this.onlineTimer = null
@@ -796,6 +792,24 @@ export default {
           }
           clearTimeout(this.hbListTimer)
           this.loopHbList(1000)
+        })
+      }, time)
+    },
+    loopDg (time) {
+      this.dgTimer = setTimeout(() => {
+        if (!this.$route.params.id) {
+          clearTimeout(this.dgTimer)
+          this.dgTimer = null
+          return false
+        }
+        canDianGe({ht_id: this.$route.params.id}).then((res) => {
+          this.dgCode = res.result
+        }).finally(() => {
+          if (!this.dgTimer) {
+            return false
+          }
+          clearTimeout(this.dgTimer)
+          this.loopDg(3000)
         })
       }, time)
     },
@@ -1093,13 +1107,11 @@ export default {
     },
     asyncComponentClosed () {
       this.currentView = ''
-      this.payBus = 1
     },
     asyncComponentLoaded () {
       clearTimeout(this.viewTimer)
       this.onlineVisible = false
       this.userDialogVisible = false
-      this.payBus = 3
       this.$vux.loading.hide()
     },
     dg () {
@@ -1166,15 +1178,13 @@ export default {
       })
     },
     resetCharge () {
-      this.$store.commit('app/SET_CHARGEVISIBLE', false)
-      this.$store.commit('app/SET_CHARGECALLBACK', () => {})
+      this.$store.commit('app/SET_FIELD', {field: 'buyComponetName', value: ''})
     },
     wxPayCharge (index) {
       var _self = this
       this.chargeFlag = true // 标记充值下面弹起 充完去判断去修改buyDialogInfo.isCharge 还是不够就显示toast 够了直接执行confirmBuy
       this.chargeData.chargeMoney = this.exps[index].money
-      // var payType = this.payBus === 1 ? 2 : 3
-      rechargePay({eid: this.exps[index].id, money: this.exps[index].money, pay_type: 1}).then((res) => {
+      rechargePay({eid: this.exps[index].id, money: this.exps[index].money, pay_type: 3, source_type: this.$store.state.app.sourceType}).then((res) => {
         window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
           switch (res.err_msg) {
             case 'get_brand_wcpay_request:cancel':
@@ -1194,9 +1204,9 @@ export default {
               if (afterChargeBalance >= ~~(_self.buyDialogInfo.price)) {
                 // 修改isCharge
                 _self.$store.commit('app/SET_IS_CHARGE', false)
-                this.chargeCallback()
-                if (_self.payBus === 3) {
-                  // 买歌
+                if (_self.$store.state.app.buyComponetName) {
+                  _self.$refs[_self.$store.state.app.buyComponetName].confirmBuy()
+                } else {
                   _self.confirmBuy()
                 }
               } else {
@@ -1224,8 +1234,8 @@ export default {
         localStorage.setItem('payBack', '1')
         this.$router.push('/Charge') */
         this.buyDialogVisible = false
-        this.$store.commit('app/SET_CHARGEVISIBLE', true)
-        this.$store.commit('app/SET_CHARGECALLBACK', () => this.confirmBuy())
+        this.chargeVisible = true
+        this.$store.commit('app/SET_FIELD', {field: 'buyComponetName', value: ''})
         // window.location.href = window.location.origin + window.location.pathname + '#/Charge'
       } else {
         // 直接购买
@@ -1234,35 +1244,33 @@ export default {
           return false
         }
         this.confirmDisable = true
-        if (this.payBus === 1) {
-          addBpDsMsg(this.buyDialogInfo.postParams).then((res) => {
-            this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
-            this.buyDialogVisible = false
-            this.bpWindowVisible = false
-            this.dsWindowVisible = false
-            this.chargeVisible = false
-            if (this.chargeFlag) {
-              // 确定是要充值过程的 显示提示充值后的dialog
-              this.buySuccessDialogVisible = true
-              this.chargeFlag = false
-            }
-            if (this.buyDialogInfo.postParams.type === 2) {
-              this.$refs.bpWindow.reset()
-            } else if (this.buyDialogInfo.postParams.type === 1) {
-              this.$refs.dsWindow.reset()
-            }
-            // game_count - 1
-            if (this.barManagerInfo.isManager) {
-              // 获取剩余次数
-              getRestScreenAmount({ht_id: this.$route.params.id}).then((res) => {
-                var nextCount = Number(res.result)
-                this.$store.commit('user/SET_BAR_MANAGER', {isManager: true, game_count: nextCount, max_bp_time: this.barManagerInfo.max_bp_time})
-              })
-            }
-          }).finally(() => {
-            this.confirmDisable = false
-          })
-        }
+        addBpDsMsg(this.buyDialogInfo.postParams).then((res) => {
+          this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
+          this.buyDialogVisible = false
+          this.bpWindowVisible = false
+          this.dsWindowVisible = false
+          this.chargeVisible = false
+          if (this.chargeFlag) {
+            // 确定是要充值过程的 显示提示充值后的dialog
+            this.buySuccessDialogVisible = true
+            this.chargeFlag = false
+          }
+          if (this.buyDialogInfo.postParams.type === 2) {
+            this.$refs.bpWindow.reset()
+          } else if (this.buyDialogInfo.postParams.type === 1) {
+            this.$refs.dsWindow.reset()
+          }
+          // game_count - 1
+          if (this.barManagerInfo.isManager) {
+            // 获取剩余次数
+            getRestScreenAmount({ht_id: this.$route.params.id}).then((res) => {
+              var nextCount = Number(res.result)
+              this.$store.commit('user/SET_BAR_MANAGER', {isManager: true, game_count: nextCount, max_bp_time: this.barManagerInfo.max_bp_time})
+            })
+          }
+        }).finally(() => {
+          this.confirmDisable = false
+        })
       }
     },
     songForAll () {
@@ -1276,14 +1284,6 @@ export default {
     rewardForAll () {
       this.$store.commit('app/SET_CURRENT_USER_INFO', {})
       this.dsWindowVisible = true
-    },
-    customHBChose (data) {
-      /* var arr = []
-      Object.keys(data).forEach(v => {
-        arr.push(data[v])
-      })
-      this.hongbao.selected = arr
-      this.hongbao.auth_uid_str = arr.join(',') */
     },
     hbForAll () {
       this.hbWindowVisible = true
@@ -1398,9 +1398,6 @@ export default {
         this.$store.commit('app/SET_HB_ROB_INFO', {})
       }, 300)
     },
-    closeAsyncComponent () {
-      this.$refs.asyncComponent.closeWindow()
-    },
     blackExit () {
       var history = window.sessionStorage
       history = history.getItem('count') * 1
@@ -1436,9 +1433,7 @@ export default {
       hbCurInfo: 'hbCurInfo',
       hbRobInfo: 'hbRobInfo',
       currentUserInfo: 'currentUserInfo',
-      payType: 'payType',
-      chargeVisible: 'chargeVisible',
-      chargeCallback: 'chargeCallback'
+      payType: 'payType'
     }),
     ...mapGetters('user', {
       userInfo: 'userInfo',

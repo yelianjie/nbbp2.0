@@ -91,7 +91,7 @@
 
 <script>
 import { XDialog, PopupPicker, XButton } from 'vux'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { createHb } from '@/api/'
 import BpDialog from '../bpDialog'
 export default {
@@ -121,8 +121,7 @@ export default {
         amount: 10,
         auth_uid_str: '',
         type: 0 // 0 全场 2 男士 1 女士 3 自定义
-      },
-      buyDialogInfo: {}
+      }
     }
   },
   mounted () {
@@ -137,6 +136,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions('app', {
+      ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
+    }),
     hbWindowClose () {
       this.$store.commit('app/SET_ONLINESELECTED', [])
       this.$emit('onClose')
@@ -259,7 +261,7 @@ export default {
               }
               params = Object.assign({}, params, extraParams)
             }
-            this.buyDialogInfo = params
+            this.ChangeBuyDialogInfo(params)
             this.buyDialogVisible = true
           }
         }
@@ -274,8 +276,9 @@ export default {
         localStorage.setItem('payBack', '1')
         this.$router.push('/Charge') */
         this.buyDialogVisible = false
-        this.$store.commit('app/SET_CHARGEVISIBLE', true)
-        this.$store.commit('app/SET_CHARGECALLBACK', () => this.confirmBuy())
+        this.$parent.chargeVisible = true
+        this.$store.commit('app/SET_FIELD', {field: 'buyComponetName', value: 'hbRef'})
+        this.$store.commit('app/SET_FIELD', {field: 'sourceType', value: 3})
         // window.location.href = window.location.origin + window.location.pathname + '#/Charge'
       } else {
         // 直接购买
@@ -295,7 +298,13 @@ export default {
             width: '10em'
           })
           this.buyDialogVisible = false
+          this.$parent.chargeVisible = false
           this.hbWindowVisible = false
+          if (this.$parent.chargeFlag) {
+            // 确定是要充值过程的 显示提示充值后的dialog
+            this.$parent.buySuccessDialogVisible = true
+            this.$parent.chargeFlag = false
+          }
         })
       }
     }
@@ -303,7 +312,8 @@ export default {
   computed: {
     ...mapGetters('app', {
       currentUserInfo: 'currentUserInfo',
-      onlineHbChose: 'onlineHbChose'
+      onlineHbChose: 'onlineHbChose',
+      buyDialogInfo: 'buyDialogInfo'
     }),
     ...mapGetters('user', {
       userInfo: 'userInfo'
@@ -313,12 +323,112 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '../../styles/hongbao.less';
+@import (reference) '../../styles/global.less';
+.hb-send-window {
+  width: 5.9rem;
+  padding: 0.2rem 0.4rem 0.4rem;
+  margin: 0 auto;
+  background-image: linear-gradient(top, #e92e41, #fa5b41);
+  box-sizing: border-box;
+  border-radius: 20px;
+}
+.hb-text-tip {
+  color: rgba(255, 255, 255, 0.7);
+}
+.hb-input-box {
+  margin-bottom: 0.3rem;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+.hb-input {
+  background-color: #fff;
+  border: 0;
+  outline: none;
+  display: block;
+  padding: 2px 0;
+  width: 100%;
+  height: 20px;
+  font-size: 16px;
+  -webkit-appearance: none;
+  &.tr {
+    text-align: right;
+  }
+  &::-webkit-input-placeholder{
+    font-size: 16px;
+  }
+}
+.hb-input-wrap {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.hb-text-tip {
+  margin: 10px 0 5px;
+}
+.hb-input-label {
+  color: #1d1d1d;
+}
+.hb-input-label-unit {
+  color: #b2b2b2;
+}
+.hb-for {
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+  label {
+    display: block;
+    width: 0.9rem;
+    text-align: center;
+    padding: 5px 0;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    position: relative;
+    &.active {
+      color: #ffed2e;
+      border: 1px solid #ffed2e;
+      .selected-icon {
+        display: block;
+      }
+    }
+  }
+}
+.hb-send-user {
+  padding-left: 1.6rem;
+}
+.hb-u-avatar {
+  position: absolute;
+  left: 0.4rem;
+  top: -0.8rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 4px solid #e92e41;
+}
+.hb-arrow {
+  color: #b2b2b2;
+  padding-left: 10px;
+  position: relative;
+  &::before {
+    content: "";
+    .setLeftLine(#b2b2b2, 0);
+  }
+}
+.hb-hid /deep/ .vux-popup-picker-select,
+.hb-hid /deep/ .weui-cell__ft {
+  display: none;
+}
+.hb-hid /deep/ .weui-cell  {
+  padding: 0;
+}
 .close-u-dialog-btn.svg-icon {
   width: 0.7rem;
   height: 0.7rem;
   box-sizing: content-box;
   display: block;
   margin: 0.5rem auto;
+}
+#hb-put-btn {
+  background-color: #ffed2e;
+  color: #e2404f;
+  border-radius: 25px;
 }
 </style>
