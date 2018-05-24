@@ -11,8 +11,8 @@
     @on-cancel="onCancel"
     placeholder="搜索添加上架歌曲"
     ref="search">
-    <div id="results" :style="{'min-height': resultHeight + 'px'}" style="padding-bottom: 44px;">
-      <p class="f14" style="padding: 10px 15px;" v-if="songList.length > 0">请勾选歌曲上架</p>
+    <p class="f14" style="padding: 10px 15px;box-shadow: 0px 1px 1px rgba(0,0,0,0.1);" v-if="songList.length > 0">请勾选歌曲上架<!-- <span style="float: right;color: #09BB07;" @click="showPopSong">已上架歌曲{{songNum}}首</span> --></p>
+    <div id="results" class="overscroll" :style="{'height': resultHeight + 'px'}" style="padding-bottom: 44px;">
       <checker v-model="songListValue" type="checkbox" default-item-class="song-item" selected-item-class="song-item-selected">
       <template v-for="(v, i) in songList">
         <checker-item :value="v.songid" :key="i" @on-item-click="onClick">
@@ -81,7 +81,7 @@ import { XInput, XButton, Search, XDialog, TransferDomDirective as TransferDom, 
 import InfiniteLoading from 'vue-infinite-loading'
 import InlineLoading from '@/components/InlineLoading'
 import { htmlDecode } from '@/utils/utils'
-import { addSong, getSongs, manualAddSong, getShelvesAmount } from '@/api/'
+import { addSong, getSongs, manualAddSong, getShelvesAmount, underShelves } from '@/api/'
 export default {
   directives: {
     TransferDom
@@ -129,7 +129,7 @@ export default {
     this.getSongNumber()
   },
   mounted () {
-    this.resultHeight = window.innerHeight - 44
+    this.resultHeight = window.innerHeight - 44 - 39
     window.jsonp4 = (response) => {
       getSongs({ht_id: this.$route.query.id}).then((res) => {
         if (Array.isArray(res.result)) {
@@ -170,17 +170,22 @@ export default {
       })
     },
     onClick (itemValue, itemDisabled) {
-      let song = this.songList.find(v => v.songid === itemValue)
-      if (song) {
+      let songIndex = this.songList.findIndex(v => v.songid === itemValue)
+      if (songIndex > -1) {
+        let song = this.songList[songIndex]
         let params = {
           ht_id: this.$route.query.id,
           song_id: song.songid,
           name: song.songname,
           author: song.author
         }
-        addSong(params).then(() => {
-          this.getSongNumber()
-        })
+        if (song.checked) {
+          song.checked = 0
+          underShelves(params)
+        } else {
+          song.checked = 1
+          addSong(params)
+        }
       }
     },
     clearForm () {
@@ -279,7 +284,10 @@ export default {
 .container {
   /deep/ .weui-cells.vux-search_show .weui-cell:last-child {
     margin-bottom: 0;
-  } 
+  }
+  .weui-cells.vux-search_show {
+    overflow: hidden;
+  }
 }
 
 footer .enter-bar {

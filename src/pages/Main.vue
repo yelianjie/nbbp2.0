@@ -1124,7 +1124,7 @@ export default {
         this.$vux.toast.show('加载失败')
         this.currentView = ''
         clearTimeout(this.viewTimer)
-      }, 5000)
+      }, 8000)
     },
     addBlack () {
       addBlack({ht_id: this.$route.params.id, mc_id: this.currentUserInfo.initiator_mc_id}).then((res) => {

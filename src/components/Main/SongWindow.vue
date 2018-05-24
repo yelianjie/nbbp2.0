@@ -12,20 +12,19 @@
         </div>
         <div class="window-middle">
           <div class="song-tab flex f14">
-            <a class="flex-1 tc db" :class="{'selected' : tabView == 1}" @click="tabView = 1">我要点歌<span class="song-number f12">({{originSongs.length}}首)</span></a>
+            <a class="flex-1 tc db" :class="{'selected' : tabView == 1}" @click="tabView = 1">我要点歌<span class="song-number f12">({{totalSong}}首)</span></a>
             <a class="flex-1 tc db" :class="{'selected' : tabView == 2}" @click="tabView = 2">本场已点<span class="song-number f12">({{tonightSongs.length}}首)</span></a>
           </div>
         </div>
-        <template v-if="tabView == 1">
-          <div v-if="dgStatusCode == 306000">
+        <div class="pr" style="height: 7.34rem;">
+          <div v-if="dgStatusCode == 306000" v-show="tabView == 1">
             <form action="" @submit.prevent="onSubmit">
               <div class="pr">
-                <input type="search" class="f14" name="search_song_input" id="search_song_input" placeholder="请输入歌曲名、原唱歌手" v-model="keyword" autocomplete="off" @input="searchChange">
+                <input type="search" class="f14" name="search_song_input" id="search_song_input" placeholder="请输入歌曲名、原唱歌手" v-model="keyword" autocomplete="off" @input="searchChange" ref="searchSong">
                 <svg-icon icon-class="search" class="search-icon" />
               </div>
             </form>
             <div class="songs-container overscroll" style="margin-top: 0.3rem;margin-bottom: 0.3rem;">
-              <div v-if="searchTap && this.lastKeyword && songs.length == 0" class="tc f13">找不到与“{{this.lastKeyword}}”相关的歌曲</div>
               <div class="song-search-result pr flex flex-align-center" v-for="(v, i) in songs" :key="i" @click="songIndex == i ? songIndex = -1 : songIndex = i" :class="{'selected': songIndex == i}">
                 <div class="song-search-info flex-1 flex flex-v flex-pack-center">
                   <p class="f15 line1">{{v.name}}</p>
@@ -38,10 +37,11 @@
                 </div>
               </div>
               <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading">
-                <inline-loading slot="spinner" :color="'#2481d2'" :bgColor="'rgba(255, 255, 255, 1)'"></inline-loading>
-                <span slot="no-results">没有记录</span>
-                <span slot="no-more">没有更多啦</span>
+                <inline-loading slot="spinner" :color="'#f31374'" :bgColor="'rgba(255, 255, 255, 0.2)'"></inline-loading>
+                <span slot="no-results" style="display: none;"></span>
+                <span slot="no-more"  style="display: none;"></span>
               </infinite-loading>
+              <div v-if="searchTap && this.lastKeyword && songs.length == 0" class="tc f13">找不到与“{{this.lastKeyword}}”相关的歌曲</div>
             </div>
             <div class="bp-input-area flex">
               <input class="bp-input borderbox f14" maxlength="30" @focus="inputFocus" @blur="inputBlur" placeholder="好听的歌一起来分享~"  v-model="content"/>
@@ -63,9 +63,7 @@
               <span class="time-range">{{setting.open_time}} ~ {{setting.end_time}}</span>
             </template>
           </div>
-        </template>
-        <template v-if="tabView == 2">
-          <div class="song-fixed-height pr" :class="{'manager-height': barManagerInfo.isManager}">
+          <div class="song-fixed-height pr" :class="{'manager-height': barManagerInfo.isManager}" v-show="tabView == 2">
             <div class="song-list overscroll">
               <div class="song-item flex flex-align-center" :class="{'selected': v.is_finish == 1}" v-for="(v, i) in tonightSongs" :key="i" @click="confirmSong(i)">
                 <div class="song-item-img pr flex flex-align-center">
@@ -96,7 +94,7 @@
               <router-link :to="`/BapingSong?type=BapingSong&id=${$route.params.id}`" class="flex-1">点歌霸屏管理</router-link>
             </div>
           </div>
-        </template>
+        </div>
       </div>
     </transition>
     <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy" :cancelAutoClose="buyDialogInfo.cancelAutoClose" :onCancel="buyDialogInfo.onCancel" :cancelText="buyDialogInfo.cancelText" :cancelColor="buyDialogInfo.cancelColor" :confirmText="buyDialogInfo.confirmText">
@@ -122,7 +120,7 @@ import InlineLoading from '@/components/InlineLoading'
 // import twemoji from '@/vendor/twemoji.npm'
 // import { BASE_API } from '../../../config/prod.env'
 import { iOSversion, emojiReg, debounce } from '@/utils/utils'
-import { searchSong, canDianGe, tonightOdrList, onShelvesList, getMerchantSetting, isFinish, addSongOrder } from '@/api/'
+import { searchSong, canDianGe, tonightOdrList, getMerchantSetting, isFinish, addSongOrder } from '@/api/'
 import BpDialog from '../bpDialog'
 export default {
   /* model: {
@@ -145,7 +143,8 @@ export default {
       hasRight: false,
       dgStatusCode: 306000,
       setting: {},
-      originSongs: [],
+      totalSong: 0,
+      infiniteLoading: null,
       form: {
         page: 1,
         pageSize: 10
@@ -163,12 +162,13 @@ export default {
     var p3 = searchSong({ht_id: id, key: this.keyword, ...this.form})
     var p4 = getMerchantSetting({ht_id: id})
     Promise.all([p1, p2, p3, p4]).then(results => {
+      this.form.page++
       this.dgStatusCode = results[0].result
       // this.hasRight = results[0].result
       this.tonightSongs = results[1].result.list
       this.hasRight = results[1].result.is_manager
-      this.songs = results[2].result
-      this.originSongs = results[2].result
+      this.songs = results[2].result.data
+      this.totalSong = results[2].result.total
       this.setting = results[3].result
       this.$nextTick(() => {
         this.$emit('onMounted')
@@ -211,27 +211,36 @@ export default {
       this.lastKeyword = this.keyword
       this.songIndex = -1
       this.songs = []
-      if (!this.keyword) {
-        this.songs = Object.assign([], this.originSongs)
-        this.searchTap = true
-      } else {
-        this.searchSong()
-      }
+      this.form.page = 1
+      this.searchSong(true)
     },
     infiniteHandler ($state) {
-      this.searchSong().then(() => {
-        console.log('123')
+      if (!this.infiniteLoading) {
+        this.infiniteLoading = $state
+      }
+      this.searchSong().then((res) => {
+        if (res.length < this.form.pageSize) {
+          $state.complete()
+        } else {
+          $state.loaded()
+        }
       })
     },
-    searchSong () {
+    searchSong (resetInfinite) {
       return new Promise((resolve, reject) => {
         return searchSong({ht_id: this.$route.params.id, key: this.keyword, ...this.form}).then((res) => {
-          this.songs = [...this.songs, ...res.result]
-          resolve()
+          if (resetInfinite && this.infiniteLoading) {
+            this.infiniteLoading.reset()
+          }
+          this.songs = [...this.songs, ...res.result.data]
+          this.form.page++
+          this.searchTap = true
+          resolve(res.result.data)
         })
       })
     },
     onSubmit () {
+      this.$refs.searchSong.blur()
       return false
       /* if (!this.keyword) {
         return false
@@ -536,6 +545,9 @@ export default {
   &.manager-height {
     height: 5.94rem;
     margin-bottom: 1.4rem;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 }
 .song-list {

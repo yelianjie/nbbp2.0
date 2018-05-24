@@ -5,7 +5,7 @@
         @on-hide="popVisible = false"
         left-text=""
         right-text="确定"
-        :title="'已选歌曲(' + songList.length + ')'"
+        :title="'已选歌曲(' + songLength + ')'"
         :show-bottom-border="false"
         @on-click-right="popVisible = false"></popup-header>
       <div id="songs-list" class="flex-1 overscroll">
@@ -66,7 +66,9 @@ export default {
     popVisible (newVal) {
       if (newVal) {
         this.$nextTick(() => {
-          this.$refs.infiniteLoading.attemptLoad()
+          setTimeout(() => {
+            this.$refs.infiniteLoading.attemptLoad()
+          }, 400)
         })
       }
     }
@@ -77,7 +79,8 @@ export default {
       songList: [],
       songListValue: [],
       time: 1,
-      infiniteLoading: null
+      infiniteLoading: null,
+      deleteCount: 0
     }
   },
   methods: {
@@ -86,9 +89,13 @@ export default {
     },
     onClick (itemValue, itemDisabled) {
       if (this.songList[itemValue].is_confirm * 1) {
-        underShelves({ht_id: this.$route.query.id, song_id: this.songList[itemValue].song_id})
+        underShelves({ht_id: this.$route.query.id, song_id: this.songList[itemValue].song_id}).then(() => {
+          this.deleteCount++
+        })
       } else {
-        addSong({ht_id: this.$route.query.id, ...this.songList[itemValue]})
+        addSong({ht_id: this.$route.query.id, ...this.songList[itemValue]}).then(() => {
+          this.deleteCount--
+        })
       }
       this.songList[itemValue].is_confirm = !this.songList[itemValue].is_confirm
     },
@@ -112,7 +119,12 @@ export default {
         this.songList = []
         /* this.songListValue = [] */
         this.infiniteLoading && this.infiniteLoading.reset()
-      }, 1000)
+      }, 600)
+    }
+  },
+  computed: {
+    songLength () {
+      return this.songList.length - this.deleteCount
     }
   }
 }
