@@ -186,7 +186,7 @@ export default {
         return 0
       } else {
         const giftPrice = this.dsGiftIndex !== -1 ? Number(this.currentSelectItem().price) : 0
-        return Number(giftPrice * this.dsTimes).toFixed(2)
+        return Number(giftPrice * this.dsTimes)
       }
     },
     timesDsText () {

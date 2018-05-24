@@ -12,7 +12,7 @@
         </div>
         <div class="window-middle">
           <div class="song-tab flex f14">
-            <a class="flex-1 tc db" :class="{'selected' : tabView == 1}" @click="tabView = 1">我要点歌<span class="song-number f12">({{songs.length}}首)</span></a>
+            <a class="flex-1 tc db" :class="{'selected' : tabView == 1}" @click="tabView = 1">我要点歌<span class="song-number f12">({{originSongs.length}}首)</span></a>
             <a class="flex-1 tc db" :class="{'selected' : tabView == 2}" @click="tabView = 2">本场已点<span class="song-number f12">({{tonightSongs.length}}首)</span></a>
           </div>
         </div>
@@ -20,11 +20,12 @@
           <div v-if="dgStatusCode == 306000">
             <form action="" @submit.prevent="onSubmit">
               <div class="pr">
-                <input type="search" class="f14" name="search_song_input" id="search_song_input" placeholder="请输入歌曲名、原唱歌手" v-model="keyword" autocomplete="off">
+                <input type="search" class="f14" name="search_song_input" id="search_song_input" placeholder="请输入歌曲名、原唱歌手" v-model="keyword" autocomplete="off" @input="searchChange">
                 <svg-icon icon-class="search" class="search-icon" />
               </div>
             </form>
             <div class="songs-container overscroll" style="margin-top: 0.3rem;margin-bottom: 0.3rem;">
+              <div v-if="searchTap && this.lastKeyword && songs.length == 0" class="tc f13">找不到与“{{this.lastKeyword}}”相关的歌曲</div>
               <div class="song-search-result pr flex flex-align-center" v-for="(v, i) in songs" :key="i" @click="songIndex == i ? songIndex = -1 : songIndex = i" :class="{'selected': songIndex == i}">
                 <div class="song-search-info flex-1 flex flex-v flex-pack-center">
                   <p class="f15 line1">{{v.name}}</p>
@@ -36,10 +37,11 @@
                   <svg-icon icon-class="circle" class="song-select-icon" v-else />
                 </div>
               </div>
-          
-              <div v-if="searchTap && this.lastKeyword && songs.length == 0" class="tc f13">找不到与“{{this.lastKeyword}}”相关的歌曲</div>
-              
-              
+              <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading">
+                <inline-loading slot="spinner" :color="'#2481d2'" :bgColor="'rgba(255, 255, 255, 1)'"></inline-loading>
+                <span slot="no-results">没有记录</span>
+                <span slot="no-more">没有更多啦</span>
+              </infinite-loading>
             </div>
             <div class="bp-input-area flex">
               <input class="bp-input borderbox f14" maxlength="30" @focus="inputFocus" @blur="inputBlur" placeholder="好听的歌一起来分享~"  v-model="content"/>
@@ -115,9 +117,11 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading'
+import InlineLoading from '@/components/InlineLoading'
 // import twemoji from '@/vendor/twemoji.npm'
 // import { BASE_API } from '../../../config/prod.env'
-import { iOSversion, emojiReg } from '@/utils/utils'
+import { iOSversion, emojiReg, debounce } from '@/utils/utils'
 import { searchSong, canDianGe, tonightOdrList, onShelvesList, getMerchantSetting, isFinish, addSongOrder } from '@/api/'
 import BpDialog from '../bpDialog'
 export default {
@@ -141,14 +145,22 @@ export default {
       hasRight: false,
       dgStatusCode: 306000,
       setting: {},
+      originSongs: [],
+      form: {
+        page: 1,
+        pageSize: 10
+      },
       tabView: 1 // 1我要点歌 2本场已点 3不在点歌时间段内（我要点歌）
     }
+  },
+  created () {
+    this.searchChange = debounce(this.searchKeyword, 300)
   },
   mounted () {
     let id = this.$route.params.id
     var p1 = canDianGe({ht_id: id})
     var p2 = tonightOdrList({ht_id: id})
-    var p3 = onShelvesList({ht_id: id})
+    var p3 = searchSong({ht_id: id, key: this.keyword, ...this.form})
     var p4 = getMerchantSetting({ht_id: id})
     Promise.all([p1, p2, p3, p4]).then(results => {
       this.dgStatusCode = results[0].result
@@ -156,6 +168,7 @@ export default {
       this.tonightSongs = results[1].result.list
       this.hasRight = results[1].result.is_manager
       this.songs = results[2].result
+      this.originSongs = results[2].result
       this.setting = results[3].result
       this.$nextTick(() => {
         this.$emit('onMounted')
@@ -193,8 +206,34 @@ export default {
         console.log(res)
       })
     },
-    onSubmit () {
+    searchKeyword () {
+      this.searchTap = false
+      this.lastKeyword = this.keyword
+      this.songIndex = -1
+      this.songs = []
       if (!this.keyword) {
+        this.songs = Object.assign([], this.originSongs)
+        this.searchTap = true
+      } else {
+        this.searchSong()
+      }
+    },
+    infiniteHandler ($state) {
+      this.searchSong().then(() => {
+        console.log('123')
+      })
+    },
+    searchSong () {
+      return new Promise((resolve, reject) => {
+        return searchSong({ht_id: this.$route.params.id, key: this.keyword, ...this.form}).then((res) => {
+          this.songs = [...this.songs, ...res.result]
+          resolve()
+        })
+      })
+    },
+    onSubmit () {
+      return false
+      /* if (!this.keyword) {
         return false
       }
       this.lastKeyword = this.keyword
@@ -202,7 +241,7 @@ export default {
       searchSong({ht_id: this.$route.params.id, key: this.keyword}).then((res) => {
         this.songs = res.result
         this.searchTap = true
-      })
+      }) */
     },
     buy () {
       if (this.songIndex === -1) {
@@ -233,7 +272,7 @@ export default {
       // Number(this.setting.price)
       let postParams = {
         ht_id: this.$route.params.id,
-        price: 0.01,
+        price: Number(this.setting.price),
         content: content === '' ? '好听的歌一起来分享~' : content,
         song_id: this.currentSelectItem().song_id,
         to_id: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : 0,
@@ -294,7 +333,7 @@ export default {
         localStorage.setItem('payBack', '1')
         this.$router.push('/Charge') */
         this.buyDialogVisible = false
-        this.$parent.chargeVisible = true
+        this.$parent.chargeShow()
         this.$store.commit('app/SET_PAY_TYPE', 3)
         this.$store.commit('app/SET_FIELD', {field: 'buyComponetName', value: 'asyncComponent'})
         this.$store.commit('app/SET_FIELD', {field: 'sourceType', value: 4})
@@ -331,19 +370,15 @@ export default {
     }
   },
   components: {
-    BpDialog
+    BpDialog,
+    InfiniteLoading,
+    InlineLoading
   },
   computed: {
     total () {
       // Number(this.setting.price)
-      const songPrice = this.songIndex !== -1 ? 0.01 : 0
+      const songPrice = this.songIndex !== -1 ? Number(this.setting.price) : 0
       return Number(songPrice)
-      /* if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0) {
-        return 0
-      } else {
-        const songPrice = this.songIndex !== -1 ? Number(this.setting.price) : 0
-        return Number(songPrice).toFixed(2)
-      } */
     },
     timesDsText () {
       const texts = ['一', '二', '三']
@@ -448,10 +483,10 @@ export default {
     padding: 0.15rem 0.25rem;
     border: 1px solid transparent;
     border-radius: 6px;
-    &:not(:last-child):after {
+    /* &:not(:last-child):after {
       content: '';
       .setBottomLine(rgba(255, 255, 255, 0.3));
-    }
+    } */
     &.selected {
       border-color: @mainColor;
       /* .song-search-select:after {

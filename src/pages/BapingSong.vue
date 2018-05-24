@@ -1,70 +1,36 @@
 <template>
   <div class="container flex flex-v" style="height: 100%;">
-    <search
-    @on-submit="onSubmit"
-    v-model="value"
-    position="absolute"
-    auto-scroll-to-top 
-    @on-focus="onFocus"
-    @on-blur="onBlur"
-    @on-cancel="onCancel"
-    placeholder="搜索添加上架歌曲"
-    ref="search">
-    <div id="results" :style="{'min-height': resultHeight + 'px'}" style="padding-bottom: 44px;">
-      <p class="f14" style="padding: 10px 15px;" v-if="songList.length > 0">请勾选歌曲上架</p>
-      <checker v-model="songListValue" type="checkbox" default-item-class="song-item" selected-item-class="song-item-selected">
-      <template v-for="(v, i) in songList">
-        <checker-item :value="v.songid" :key="i" @on-item-click="onClick">
-          <div class="flex flex-align-center flex-1 song-search-item">
-            <div class="flex flex-v flex-pack-center flex-1">
-              <p class="">{{v.songname}}</p>
-              <div class="flex flex-align-center">
-                <div class="flex1 f13" style="color:#666;">{{v.author}}</div>
-              </div>
-            </div>
-            <div class="">
-              <check-icon :value="songListValue.some((vv,ii) => vv == v.songid)" type="plain"></check-icon>
-            </div>
-          </div>
-        </checker-item>
-      </template>
-    </checker>
-
-      <!-- <checklist label-position="left" :options="songList" v-model="songListValue" @on-change="change"></checklist> -->
-      <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading">
-        <inline-loading slot="spinner" :color="'#2481d2'" :bgColor="'rgba(200, 200, 200, 0.3)'"></inline-loading>
-        <div slot="no-results">
-          <span>搜索不到？</span>
-          <div style="margin-top: 10px;">
-            <x-button :gradients="['#1D62F0', '#1D62F0']" :mini="true" @click.native="customVisible = true">立即手动添加</x-button>
-          </div>
-        </div>
-        <span slot="no-more">没有更多啦</span>
-      </infinite-loading>
-    </div>
-    </search>
     <div id="song-set" class="flex-1 overscroll">
+      <div style="background-color:#fff;padding: 20px 10px;margin: 10px 10px 0;color:#2481d2;border-radius: 5px;box-shadow: 1px 4px 10px rgba(0,0,0,0.03);" class="tc" @click="$router.push(`/SongManage?id=${$route.query.id}`)">歌曲管理</div>
+      <!-- <group label-align="left">
+        <cell title="歌曲管理" is-link :link="{path: '/SongManage', query: {id: $route.query.id}}"></cell>
+      </group> -->
       <group label-width="14em" label-align="left">
-        <x-switch title="开启点歌功能" v-model="form.is_open" :value-map="['2', '1']"></x-switch>
-        <p class="f12" style="padding:0 15px;margin: -2px 0 10px;color: #aaaaaa;">请根据实际情况设置该数量以避免点歌订单过多而无法安排的退款情况</p>
+        <group-title slot="title">点歌设置</group-title>
+        <x-switch title="开启点歌功能" v-model="form.is_open" :value-map="['2', '1']" @on-change="switchChange"></x-switch>
+        <p class="f12" style="padding:0 15px;margin: -2px 0 10px;color: #aaaaaa;">开启后在设置的点歌时间段内用户可以购买点歌霸屏</p>
       </group>
       <template v-if="form.is_open == 1">
-      <group label-width="14em" label-align="left">
+      <group label-width="10em" label-align="left">
        <group-title slot="title">价格设置</group-title>
-       <x-input title="每首歌单价" text-align="right" type="number" :debounce="50" v-model="form.price" :show-clear="false" @on-change="validisPrice" pattern="[0-9]*">
+       <x-input title="每首歌单价" text-align="right" type="number" v-model="form.price" :show-clear="false" pattern="[0-9]*" placeholder="请输入" @on-blur="validisPrice">
         <span slot="right" style="margin-left:6px;">元</span>
       </x-input>
      </group>
-     <group label-width="13em" label-align="left">
+     <group label-width="10em" label-align="left">
        <group-title slot="title">设置可点歌时间段</group-title>
-       <cell title="开始时间" :value="form.open_time" is-link @click.native="showDate"></cell>
+       <cell title="开始时间" :value="form.open_time" is-link @click.native="showDate">
+         <span v-if="form.open_time" class="pr"><span style="position: absolute;left: -36px;top: -2px;">每日</span>{{form.open_time}}</span>
+         <span v-else>请选择</span>
+       </cell>
        <!-- <datetime title="开始时间" format="HH:mm" v-model="form.open_time" value-text-align="right" placeholder="选择"></datetime> -->
-       <x-input title="几小时后结束" text-align="right" type="number" v-model="form.open_hour" :show-clear="false" @on-blur="validisTime" pattern="[0-9]*">
+       <x-input title="几小时后结束" text-align="right" type="number" v-model="form.open_hour" :show-clear="false" pattern="[0-9]*" placeholder="请输入" @on-blur="validisTime">
         <span slot="right" style="margin-left:6px;">小时</span>
       </x-input>
-      <x-input title="点歌时间段内最多可点歌数量" text-align="right" type="number" v-model="form.amount" :debounce="50" :show-clear="false" @on-change="validisSong" pattern="[0-9]*">
+      <x-input title="可点歌数量" text-align="right" type="number" v-model="form.amount" :show-clear="false" pattern="[0-9]*" placeholder="请输入" @on-blur="validisSong">
         <span slot="right" style="margin-left:6px;">首</span>
       </x-input>
+      <p class="f12" style="padding:0 15px;margin: -2px 0 10px;color: #aaaaaa;">请根据实际情况设置该数量以避免点歌订单过多而无法安排的情况</p>
      </group>
      <group label-align="left" style="margin-bottom: 0.77em;">
        <group-title slot="title">其他设置</group-title>
@@ -73,52 +39,27 @@
        <p class="f12" style="padding:0 15px;margin: -8px 0 10px;color: #aaaaaa;">下一场点歌开始时，自动下架的歌曲会自动恢复上架</p>
      </group>
      </template>
-     <div style="width: 90%;margin: 0 auto 0.77em;">
-       <x-button :gradients="['#1D62F0', '#1D62F0']" @click.native="saveSetting">设置</x-button>
-     </div>
     </div>
-    <footer class="footer flex">
+    <div v-if="form.is_open == '1'" style="background-color:#fff;padding: 4px 0;box-shadow: 2px 0 10px 1px rgba(0,0,0,0.2);">
+      <x-button :gradients="['#2481d2', '#2481d2']" @click.native="saveSetting(true)" style="width: 90%;margin: auto;">保存</x-button>
+    </div>
+    <!-- <footer class="footer flex" v-if="form.is_open == '1'">
       <div class="flex-1 flex-v tc flex-pack-center flex-align-center">
-        <a @click.prevent="songsVisible = true" class="enter-bar">已点歌曲({{songNum}}首)</a>
+        <a @click.prevent="saveSetting(true)" class="enter-bar">保存</a>
       </div>
-    </footer>
-    <div v-transfer-dom>
-      <x-dialog v-model="customVisible" class="dialog-demo" hide-on-blur @on-hide="clearForm">
-        <div id="song-form">
-          <div class="song-form-group">
-            <label>歌曲名称：</label>
-            <x-input :max="10" v-model="manualForm.name" data-vv-as="歌曲名称" v-validate.initial="'required'"></x-input>
-          </div>
-          <div class="song-form-group">
-            <label>原唱歌手名：</label>
-            <x-input :max="10" v-model="manualForm.author" data-vv-as="原唱歌手名" v-validate.initial="'required'"></x-input>
-          </div>
-          <div class="weui-dialog__ft" style="margin-top: 25px;">
-            <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_default" @click="customVisible = false">取消</a>
-            <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="addSong">确定</a>
-          </div>
-        </div>
-      </x-dialog>
-    </div>
-    <bp-songs v-model="songsVisible"></bp-songs>
+     </footer> -->
   </div>
 </template>
 
 <script>
-import { GroupTitle, Group, Cell, XInput, XSwitch, XButton, Search, Datetime, XDialog, TransferDomDirective as TransferDom, Checker, CheckerItem, CheckIcon } from 'vux'
-import InfiniteLoading from 'vue-infinite-loading'
-import InlineLoading from '@/components/InlineLoading'
-import { isInteger, htmlDecode } from '@/utils/utils'
-import { addSong, getSongs, manualAddSong, getShelvesAmount, getMerchantSetting, merchantSetting } from '@/api/'
+import { GroupTitle, Group, Cell, XInput, XSwitch, XButton, Datetime, XDialog, TransferDomDirective as TransferDom } from 'vux'
+import { isInteger } from '@/utils/utils'
+import { getMerchantSetting, merchantSetting } from '@/api/'
 export default {
   directives: {
     TransferDom
   },
   components: {
-    Checker,
-    CheckerItem,
-    CheckIcon,
-    Search,
     GroupTitle,
     Group,
     Cell,
@@ -126,10 +67,7 @@ export default {
     XSwitch,
     XButton,
     Datetime,
-    XDialog,
-    InfiniteLoading,
-    InlineLoading,
-    BpSongs: () => import('@/components/BapingSetting/BapingSongs')
+    XDialog
   },
   data () {
     return {
@@ -138,26 +76,13 @@ export default {
       value: '',
       form: {
         ht_id: this.$route.query.id,
-        amount: 50,
-        open_hour: 1,
-        price: 100,
+        amount: '',
+        open_hour: '',
+        price: '',
         open_time: '',
         is_shelves: '2',
         is_open: '2'
-      },
-      manualForm: {
-        name: '',
-        author: ''
-      },
-      requestParams: {
-        page: 1,
-        pageSize: 20
-      },
-      songList: [],
-      songListValue: [],
-      customVisible: false,
-      songsVisible: false,
-      songNum: 0
+      }
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -165,48 +90,20 @@ export default {
     next()
   },
   beforeRouteLeave (to, from, next) {
-    window.jsonp4 = null
     next()
   },
   created () {
-    this.getSongNumber()
     getMerchantSetting({ht_id: this.$route.query.id}).then((res) => {
       if (res.result) {
-        res.result.price = Number(res.result.price)
+        res.result.price = res.result.price ? Number(res.result.price) : ''
+        res.result.amount = res.result.amount !== '0' ? Number(res.result.amount) : ''
+        res.result.open_hour = res.result.open_hour !== '0' ? Number(res.result.open_hour) : ''
+        res.result.open_time = res.result.open_time ? res.result.open_time : ''
         this.form = Object.assign(this.form, res.result)
       }
     })
   },
   mounted () {
-    this.resultHeight = window.innerHeight - 44
-    window.jsonp4 = (response) => {
-      getSongs({ht_id: this.$route.query.id}).then((res) => {
-        if (Array.isArray(res.result)) {
-          res.result.map(v => {
-            this.songListValue.push(Number(v.song_id))
-          })
-        }
-        let { song } = response.data
-        song.list.forEach((v) => {
-          v.songname = htmlDecode(v.songname)
-          v.author = Array.isArray(v.singer) && v.singer.length > 0 ? htmlDecode(v.singer[0].name) : '未知'
-        })
-        this.songList = [...this.songList, ...song.list]
-        if (this.songList.length < song.totalnum) {
-          this.requestParams.page++
-          this.infiniteLoading && this.infiniteLoading.loaded()
-        } else {
-          if (this.infiniteLoading && song.totalnum !== 0) {
-            this.infiniteLoading.loaded()
-            this.infiniteLoading.complete()
-          } else {
-            this.infiniteLoading.complete()
-          }
-        }
-      }).catch(() => {
-        this.infiniteLoading.complete()
-      })
-    }
   },
   methods: {
     showDate () {
@@ -227,33 +124,46 @@ export default {
         }
       })
     },
-    saveSetting () {
-      merchantSetting(this.form).then((res) => {
-        this.$vux.toast.show('设置成功')
-      })
-    },
-    getSongNumber () {
-      getShelvesAmount({ht_id: this.$route.query.id}).then((res) => {
-        this.songNum = res.result
-      })
-    },
-    onClick (itemValue, itemDisabled) {
-      let song = this.songList.find(v => v.songid === itemValue)
-      if (song) {
-        let params = {
-          ht_id: this.$route.query.id,
-          song_id: song.songid,
-          name: song.songname,
-          author: song.author
-        }
-        addSong(params).then(() => {
-          this.getSongNumber()
-        })
+    switchChange (val) {
+      if (val === '2') {
+        this.saveSetting()
       }
     },
-    clearForm () {
-      Object.keys(this.manualForm).forEach(v => {
-        this.manualForm[v] = ''
+    saveSetting (mes) {
+      if (mes) {
+        if (!this.form.price) {
+          this.$vux.toast.show({
+            text: '请输入价格',
+            width: '12em'
+          })
+          return false
+        }
+        if (!this.form.open_time) {
+          this.$vux.toast.show({
+            text: '请选择开始时间',
+            width: '12em'
+          })
+          return false
+        }
+        if (!this.form.open_hour) {
+          this.$vux.toast.show({
+            text: '请输入点歌持续时间',
+            width: '12em'
+          })
+          return false
+        }
+        if (!this.form.amount) {
+          this.$vux.toast.show({
+            text: '请输入可点歌数量',
+            width: '12em'
+          })
+          return false
+        }
+      }
+      merchantSetting(this.form).then((res) => {
+        if (mes) {
+          this.$vux.toast.show('设置成功')
+        }
       })
     },
     validisPrice (value) {
@@ -277,82 +187,6 @@ export default {
       } else if (value > 999) {
         this.form.amount = 999
       }
-      this.$forceUpdate()
-    },
-    onFocus () {
-      this.focus = true
-      this.$noscroll()
-    },
-    onBlur () {
-      this.$noscroll.cancel()
-      this.focus = false
-    },
-    onCancel () {
-      this.value = ''
-      this.songList = []
-      this.songListValue = []
-    },
-    onSubmit () {
-      this.songList = []
-      this.songListValue = []
-      this.requestParams.page = 1
-      this.infiniteLoading && this.infiniteLoading.reset()
-      this.getResult()
-    },
-    getResult () {
-      if (!this.infiniteLoading) {
-        this.$refs.infiniteLoading.attemptLoad()
-      } else {
-        this.$jsonp('http://i.y.qq.com/s.music/fcgi-bin/search_for_qq_cp', {
-          g_tk: 938407465,
-          uin: 0,
-          format: 'jsonp',
-          inCharset: 'utf-8',
-          outCharset: 'utf-8',
-          notice: 0,
-          platform: 'h5',
-          needNewCode: 1,
-          w: this.value,
-          zhidaqu: 1,
-          catZhida: 1,
-          t: 0,
-          flag: 1,
-          ie: 'utf-8',
-          sem: 1,
-          aggr: 0,
-          perpage: this.requestParams.pageSize,
-          n: this.requestParams.pageSize,
-          p: this.requestParams.page,
-          remoteplace: 'txt.mqq.all',
-          _: 1459991037831,
-          jsonpCallback: 'jsonp4'
-        })
-      }
-    },
-    infiniteHandler ($state) {
-      if (!this.infiniteLoading) {
-        this.infiniteLoading = $state
-      }
-      this.getResult(true)
-    },
-    addSong () {
-      this.$validator.validateAll().then(result => {
-        let getErrors = this.vErrors.all()
-        if (getErrors.length > 0) {
-          this.$vux.toast.show({
-            text: getErrors[0],
-            width: '10em'
-          })
-        } else {
-          let params = Object.assign(this.manualForm, {
-            ht_id: this.$route.query.id
-          })
-          manualAddSong(params).then((res) => {
-            this.$vux.toast.show('添加成功')
-            this.customVisible = false
-          })
-        }
-      })
     }
   }
 }

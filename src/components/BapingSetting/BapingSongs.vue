@@ -1,12 +1,13 @@
 <template>
   <div v-transfer-dom class="song-pop">
-    <popup v-model="visible" height="100%" class="flex flex-v" v-fixscroll="'#songs-list'" @on-hide="resetEvent" :should-rerender-on-show="true">
+    <popup v-model="popVisible" height="80%" class="flex flex-v" style="border-radius: 10px 10px 0 0;" v-fixscroll="'#songs-list'"  @on-hide="resetEvent" :should-rerender-on-show="true">
       <popup-header
-        left-text="取消"
-        right-text=""
+        @on-hide="popVisible = false"
+        left-text=""
+        right-text="确定"
         :title="'已选歌曲(' + songList.length + ')'"
         :show-bottom-border="false"
-        @on-click-left="$emit('setVisible', false)"></popup-header>
+        @on-click-right="popVisible = false"></popup-header>
       <div id="songs-list" class="flex-1 overscroll">
         <checker v-model="songListValue" type="checkbox" default-item-class="song-item" selected-item-class="song-item-selected">
         <template v-for="(v, i) in songList">
@@ -59,8 +60,10 @@ export default {
     InfiniteLoading,
     InlineLoading
   },
+  created () {
+  },
   watch: {
-    visible (newVal) {
+    popVisible (newVal) {
       if (newVal) {
         this.$nextTick(() => {
           this.$refs.infiniteLoading.attemptLoad()
@@ -70,6 +73,7 @@ export default {
   },
   data () {
     return {
+      popVisible: false,
       songList: [],
       songListValue: [],
       time: 1,
@@ -77,6 +81,9 @@ export default {
     }
   },
   methods: {
+    show () {
+      this.popVisible = true
+    },
     onClick (itemValue, itemDisabled) {
       if (this.songList[itemValue].is_confirm * 1) {
         underShelves({ht_id: this.$route.query.id, song_id: this.songList[itemValue].song_id})
@@ -126,7 +133,7 @@ export default {
   border-top: 1px solid #f2f2f2;
   background-color: #fff;
 }
-.song-pop /deep/ .vux-popup-header-right {
+.song-pop /deep/ .vux-popup-header-left {
   width: 47px;
 }
 </style>

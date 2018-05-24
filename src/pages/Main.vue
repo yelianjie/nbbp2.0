@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-if="show">
     <!-- :hbLimit="hongbao.amount" -->
-    <onlines :peoples="onlinePeople" @onShowCard="showCard" ref="onlines"></onlines>
+    <onlines :peoples="onlinePeople" v-model="onlineVisible" @onShowCard="showCard" ref="onlines"></onlines>
     <div class="main flex flex-v">
       <div class="flex boardcast flex-align-center" v-if="notice">
         <img src="../assets/boardcast-icon.png" class="boardcast-icon">
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div class="fff-bp more f13 flex flex-align-center" @click="$store.commit('app/SET_FIELD', {field: 'onlineVisible', value: true})"><span>更多</span><svg-icon  @click.native="onlineVisible = true" icon-class="arrow-right"/></div>
+      <div class="fff-bp more f13 flex flex-align-center" @click="onlineVisible = true"><span>更多</span><svg-icon  @click.native="onlineVisible = true" icon-class="arrow-right"/></div>
       <!-- 红包插入 -->
       <div class="hb-queen-container in">
         <div class="hb-model pr" @click="openHBModel(hbQueens[0])" v-if="hbQueens.length > 0" ref="hbModel">
@@ -323,7 +323,7 @@
     </transition>
   </template>
   <div v-transfer-dom>
-    <popup v-model="chargeVisible" @on-show="chargeShow" @on-hide="resetCharge">
+    <popup v-model="chargeVisible" @on-hide="resetCharge">
       <div class="charge-container white" v-fixscroll="'.charge-price-list'">
         <svg-icon icon-class="close" @click.native="chargeVisible = false"/>
         <p class="tc f18">充值购买</p>
@@ -1139,11 +1139,14 @@ export default {
       this.$wechat.previewImage(pics)
     },
     chargeShow () {
-      if (this.exps.length > 0) {
-        return false
-      }
+      this.$vux.loading.show('正在加载')
       getCharges().then((res) => {
         this.exps = res.result.exp
+        this.$nextTick(() => {
+          this.chargeVisible = true
+        })
+      }).finally(() => {
+        this.$vux.loading.hide()
       })
     },
     wxPay (cb) {
@@ -1234,7 +1237,7 @@ export default {
         localStorage.setItem('payBack', '1')
         this.$router.push('/Charge') */
         this.buyDialogVisible = false
-        this.chargeVisible = true
+        this.chargeShow()
         this.$store.commit('app/SET_FIELD', {field: 'buyComponetName', value: ''})
         // window.location.href = window.location.origin + window.location.pathname + '#/Charge'
       } else {
@@ -1474,6 +1477,9 @@ export default {
 <style lang="less" scoped>
 @import '../styles/main.less';
 @import '../styles/hongbao.less';
+.f-btn {
+  margin-top: -0.1rem;
+}
 .adbg {
   background-position: center;
   background-repeat: no-repeat;

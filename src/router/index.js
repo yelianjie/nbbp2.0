@@ -160,6 +160,16 @@ export default new Router({
         rights: '/BapingSetting'
       }
     },
+    {
+      path: '/SongManage',
+      name: 'SongManage',
+      component: _import('SongManage'),
+      meta: {
+        roles: ['user', 'business'],
+        managerValid: true,
+        rights: '/BapingSetting'
+      }
+    },
     /* {
       path: '/BgSetting',
       name: 'BgSetting',

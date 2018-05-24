@@ -6,7 +6,6 @@ const state = {
   direction: 'forward',
   fontSize: 50,
   hbCurInfo: {hb: {}},
-  onlineVisible: false,
   onlineHbChose: [],
   scene: '',
   hbmount: 50,
@@ -26,7 +25,6 @@ const getters = {
   hbRobInfo: () => state.hbRobInfo,
   currentUserInfo: () => state.currentUserInfo,
   payType: () => state.payType,
-  onlineVisible: () => state.onlineVisible,
   onlineHbChose: () => state.onlineHbChose,
   scene: () => state.scene
 }
@@ -63,9 +61,6 @@ const mutations = {
   },
   SET_PAY_TYPE (state, data) {
     state.payType = data
-  },
-  SET_ONLINEVISIBLE (state, data) {
-    state.onlineVisible = data
   },
   SET_ONLINESELECTED (state, data) {
     state.onlineHbChose = data

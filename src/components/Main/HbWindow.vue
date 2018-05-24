@@ -149,8 +149,7 @@ export default {
     hbForWhoChose (v) {
       this.hongbao.type = v
       if (v === 3) {
-        this.$store.commit('app/SET_ONLINEVISIBLE', true)
-        this.$store.commit('app/SET_ONLINEVISIBLE', true)
+        this.$parent.onlineVisible = true
         this.$store.commit('app/SET_FIELD', {field: 'scene', value: 'hongbao'})
       }
     },
@@ -276,7 +275,7 @@ export default {
         localStorage.setItem('payBack', '1')
         this.$router.push('/Charge') */
         this.buyDialogVisible = false
-        this.$parent.chargeVisible = true
+        this.$parent.chargeShow()
         this.$store.commit('app/SET_FIELD', {field: 'buyComponetName', value: 'hbRef'})
         this.$store.commit('app/SET_FIELD', {field: 'sourceType', value: 3})
         // window.location.href = window.location.origin + window.location.pathname + '#/Charge'

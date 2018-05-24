@@ -303,7 +303,7 @@ export default {
       } else {
         const timePrice = this.bpTimeIndex !== -1 ? Number(this.currentSelectItem(this.times, this.bpTimeRowIndex, this.bpTimeIndex).price) : 0
         const themePrice = this.bpThemeIndex !== -1 ? Number(this.currentSelectItem(this.screens, this.bpThemeRowIndex, this.bpThemeIndex).price) : 0
-        return Number((timePrice + themePrice) * this.bpTimes).toFixed(2)
+        return Number((timePrice + themePrice) * this.bpTimes)
       }
     },
     timesBpText () {

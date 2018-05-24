@@ -1,5 +1,5 @@
 <template>
-  <div class="fullscreen onlines flex flex-v" v-show="onlineVisible" v-fixscroll="'#online-scroller'">
+  <div class="fullscreen onlines flex flex-v" v-show="visible" v-fixscroll="'#online-scroller'">
     <div class="flex-1 scroll" id="online-scroller" style="padding: 0.4rem 0.4rem 0.95rem;">
       <ul>
         <li v-for="(v, i) in peoples" :key="i" class="online-item" @click="onAvatarClick(v)" :class="{'hbselect': selectCustom[v.id]}">
@@ -39,19 +39,23 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+  model: {
+    prop: 'visible',
+    event: 'close'
+  },
   data () {
     return {
       selectCustom: {}
     }
   },
-  props: ['peoples', 'payBus', 'hbLimit'],
+  props: ['visible', 'peoples', 'payBus', 'hbLimit'],
   methods: {
     close () {
-      this.$store.commit('app/SET_ONLINEVISIBLE', false)
       this.$store.commit('app/SET_FIELD', {field: 'scene', value: ''})
       if (Object.keys(this.selectCustom).length === 0) {
         this.$store.commit('app/SET_ONLINESELECTED', [])
       }
+      this.$emit('close', false)
     },
     onAvatarClick (data) {
       if (this.scene === 'hongbao') {
