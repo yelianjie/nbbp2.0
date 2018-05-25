@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex flex-v" style="height: 100%;">
+  <div class="container flex flex-v" style="height: 100%;" v-fixscroll="'#results'" >
     <search
     cancel-text="关闭"
     @on-submit="onSubmit"
@@ -11,7 +11,7 @@
     @on-cancel="onCancel"
     placeholder="搜索添加上架歌曲"
     ref="search">
-    <p class="f14" style="padding: 10px 15px;box-shadow: 0px 1px 1px rgba(0,0,0,0.1);" v-if="songList.length > 0">请勾选歌曲上架<!-- <span style="float: right;color: #09BB07;" @click="showPopSong">已上架歌曲{{songNum}}首</span> --></p>
+    <p class="f14" style="padding: 10px 15px;box-shadow: 0px 1px 1px rgba(0,0,0,0.1);" v-if="songList.length > 0">请勾选歌曲上架<span style="float: right;color: #09BB07;" @click="showPopSong">已上架歌曲{{songLength}}首</span></p>
     <div id="results" class="overscroll" :style="{'height': resultHeight + 'px'}" style="padding-bottom: 44px;">
       <checker v-model="songListValue" type="checkbox" default-item-class="song-item" selected-item-class="song-item-selected">
       <template v-for="(v, i) in songList">
@@ -51,7 +51,7 @@
     </div>
     <footer class="footer flex">
       <div class="flex-1 flex-v tc flex-pack-center flex-align-center">
-        <a @click.prevent="showPopSong" class="enter-bar">已点歌曲({{songNum}}首)</a>
+        <a @click.prevent="showPopSong" class="enter-bar">已上架歌曲({{songNum}}首)</a>
       </div>
     </footer>
     <div v-transfer-dom>
@@ -98,6 +98,11 @@ export default {
     InlineLoading,
     BpSongs: () => import('@/components/BapingSetting/BapingSongs')
   },
+  computed: {
+    songLength () {
+      return this.songNum - this.deleteCount
+    }
+  },
   data () {
     return {
       resultHeight: 0,
@@ -114,7 +119,8 @@ export default {
       songList: [],
       songListValue: [],
       customVisible: false,
-      songNum: 0
+      songNum: 0,
+      deleteCount: 0
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -154,7 +160,6 @@ export default {
             this.infiniteLoading.complete()
           }
         }
-        this.onBlur()
       }).catch(() => {
         this.infiniteLoading.complete()
       })
@@ -181,9 +186,11 @@ export default {
         }
         if (song.checked) {
           song.checked = 0
+          this.deleteCount++
           underShelves(params)
         } else {
           song.checked = 1
+          this.deleteCount--
           addSong(params)
         }
       }
@@ -205,6 +212,7 @@ export default {
       this.value = ''
       this.songList = []
       this.songListValue = []
+      this.getSongNumber()
     },
     onSubmit () {
       this.songList = []
@@ -264,6 +272,7 @@ export default {
           manualAddSong(params).then((res) => {
             this.$vux.toast.show('添加成功')
             this.customVisible = false
+            this.getSongNumber()
           })
         }
       })

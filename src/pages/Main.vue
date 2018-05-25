@@ -540,10 +540,10 @@ export default {
           })
           setTimeout(() => {
             this.adVisible = false
-            /* setTimeout(() => {
-              // 如果是充值跳回来的，显示之前勾选的选项
-              this.initIsSelected()
-            }, 1000) */
+            setTimeout(() => {
+              // this.initIsSelected()
+              this.initSongSelected()
+            }, 1000)
           }, 1000)
         }
         img.onerror = () => {
@@ -556,10 +556,10 @@ export default {
           this.show = true
           this.$nextTick(() => {
             this.scrollFix = new ScrollFix(this.$refs.scrollWrapper)
-            /* setTimeout(() => {
-              // 如果是充值跳回来的，显示之前勾选的选项
-              this.initIsSelected()
-            }, 1000) */
+            setTimeout(() => {
+              this.initSongSelected()
+              // this.initIsSelected()
+            }, 1000)
           })
         })
       }
@@ -619,6 +619,11 @@ export default {
     ...mapActions('app', {
       ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
     }),
+    initSongSelected () {
+      if (this.$store.state.app.initSelectSongWindow.show) {
+        this.songForAll()
+      }
+    },
     clearTimeAllOut () {
       clearTimeout(this.newsTimer)
       clearTimeout(this.noticeTimer)
@@ -1187,7 +1192,8 @@ export default {
       var _self = this
       this.chargeFlag = true // 标记充值下面弹起 充完去判断去修改buyDialogInfo.isCharge 还是不够就显示toast 够了直接执行confirmBuy
       this.chargeData.chargeMoney = this.exps[index].money
-      rechargePay({eid: this.exps[index].id, money: this.exps[index].money, pay_type: 3, source_type: this.$store.state.app.sourceType}).then((res) => {
+      rechargePay({eid: this.exps[index].id, money: this.exps[index].money, pay_type: 3, source_type: this.$store.state.app.sourceType, ht_id: this.$route.params.id}).then((res) => {
+        this.$store.commit('app/SET_FIELD', {field: 'order_no', value: res.result.recharge_no})
         window.WeixinJSBridge && window.WeixinJSBridge.invoke('getBrandWCPayRequest', res.result, function (res) {
           switch (res.err_msg) {
             case 'get_brand_wcpay_request:cancel':
@@ -1236,6 +1242,7 @@ export default {
         localStorage.setItem('currentUserInfo', JSON.stringify(this.currentUserInfo))
         localStorage.setItem('payBack', '1')
         this.$router.push('/Charge') */
+        this.$store.commit('app/SET_FIELD', {field: 'order_no', value: ''})
         this.buyDialogVisible = false
         this.chargeShow()
         this.$store.commit('app/SET_FIELD', {field: 'buyComponetName', value: ''})
@@ -1247,8 +1254,9 @@ export default {
           return false
         }
         this.confirmDisable = true
-        addBpDsMsg(this.buyDialogInfo.postParams).then((res) => {
+        addBpDsMsg({...this.buyDialogInfo.postParams, order_no: this.$store.state.app.order_no}).then((res) => {
           this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
+          this.$store.commit('app/SET_FIELD', {field: 'order_no', value: ''})
           this.buyDialogVisible = false
           this.bpWindowVisible = false
           this.dsWindowVisible = false

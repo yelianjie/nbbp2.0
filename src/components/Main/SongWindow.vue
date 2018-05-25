@@ -51,7 +51,7 @@
               <div class="submit"><button class="bp-button bp-submit" @click="buy">购买</button></div>
             </div>
           </div>
-          <div class="song-fixed-height flex flex-v flex-align-center tc f14 no-permission" v-else>
+          <div class="song-fixed-height flex flex-v flex-align-center tc f14 no-permission" v-if="tabView == 1">
             <template v-if="dgStatusCode == 306002">
               <p>可点歌时间段</p>
               <span class="time-range">{{setting.open_time}} ~ {{setting.end_time}}</span>
@@ -89,9 +89,9 @@
               </div>
             </div>
             <div class="manager-btn-group f15 flex" v-if="hasRight">
-              <router-link :to="`/SongOrders?id=${$route.params.id}`" class="flex-1">历史点歌详情</router-link>
+              <a class="flex-1" @click.prevent="routeTo('/SongOrders', {id: $route.params.id})">历史点歌详情</a>
               <div style="width: 0.8rem;"></div>
-              <router-link :to="`/BapingSong?type=BapingSong&id=${$route.params.id}`" class="flex-1">点歌霸屏管理</router-link>
+              <a class="flex-1" @click.prevent="routeTo('/BapingSong', {type: 'BapingSong', id: $route.params.id})">点歌霸屏管理</a>
             </div>
           </div>
         </div>
@@ -172,6 +172,8 @@ export default {
       this.setting = results[3].result
       this.$nextTick(() => {
         this.$emit('onMounted')
+        this.tabView = this.$store.state.app.initSelectSongWindow.tabView ? this.$store.state.app.initSelectSongWindow.tabView : 1
+        this.$store.commit('app/SET_FIELD', {field: 'initSelectSongWindow', value: {}})
         this.visible = true
       })
     })
@@ -180,6 +182,13 @@ export default {
     ...mapActions('app', {
       ChangeBuyDialogInfo: 'ChangeBuyDialogInfo'
     }),
+    routeTo (path, query) {
+      this.$store.commit('app/SET_FIELD', {field: 'initSelectSongWindow', value: {tabView: this.tabView, show: true}})
+      this.$router.push({
+        path: path,
+        query: query
+      })
+    },
     afterLeave () {
       this.$emit('onClose')
     },
@@ -343,6 +352,7 @@ export default {
         this.$router.push('/Charge') */
         this.buyDialogVisible = false
         this.$parent.chargeShow()
+        this.$store.commit('app/SET_FIELD', {field: 'order_no', value: ''})
         this.$store.commit('app/SET_PAY_TYPE', 3)
         this.$store.commit('app/SET_FIELD', {field: 'buyComponetName', value: 'asyncComponent'})
         this.$store.commit('app/SET_FIELD', {field: 'sourceType', value: 4})
@@ -357,7 +367,7 @@ export default {
         // 牛角买歌
         let params = Object.assign({}, this.buyDialogInfo.postParams)
         params.pay_type = this.payType
-        addSongOrder(params).then(res => {
+        addSongOrder({...params, order_no: this.$store.state.app.order_no}).then(res => {
           this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
           this.buyDialogVisible = false
           this.$parent.chargeVisible = false
@@ -367,6 +377,7 @@ export default {
             this.$parent.buySuccessDialogVisible = true
             this.$parent.chargeFlag = false
           }
+          this.$store.commit('app/SET_FIELD', {field: 'order_no', value: ''})
         }).finally(() => {
           this.confirmDisable = false
         })
@@ -527,7 +538,7 @@ export default {
 .song-search-select {
   width: 0.4rem;
 }
-.selected .song-search-select:after {
+/* .selected .song-search-select:after {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -538,7 +549,7 @@ export default {
   content: "";
   z-index: -1;
   background-color: #fff;
-}
+} */
 .song-fixed-height {
   height: 7.14rem;
   margin-bottom: 0.2rem;
@@ -548,6 +559,7 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
+    width: 100%;
   }
 }
 .song-list {

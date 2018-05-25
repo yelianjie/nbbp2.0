@@ -2,6 +2,7 @@
 const namespaced = true
 
 const state = {
+  order_no: '',
   buyDialogInfo: {},
   direction: 'forward',
   fontSize: 50,
@@ -12,6 +13,7 @@ const state = {
   hbRobInfo: {},
   currentUserInfo: {},
   buyComponetName: '',
+  initSelectSongWindow: {},
   sourceType: 1, // 1=》霸屏 2=》礼物 3=》红包 4=》点歌 5=》其他
   payType: 1 // 1=》牛角支付 2=》直接支付3=>充值购买
 }

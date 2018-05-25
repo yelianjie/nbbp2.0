@@ -1,7 +1,7 @@
 <template>
   <div class="container flex flex-v" style="height: 100%;">
     <div id="song-set" class="flex-1 overscroll">
-      <div style="background-color:#fff;padding: 20px 10px;margin: 10px 10px 0;color:#2481d2;border-radius: 5px;box-shadow: 1px 4px 10px rgba(0,0,0,0.03);" class="tc" @click="$router.push(`/SongManage?id=${$route.query.id}`)">歌曲管理</div>
+      <div style="background-color:#fff;padding: 20px 10px;margin: 10px 10px 0;color:#2481d2;border-radius: 5px;box-shadow: 1px 4px 10px rgba(0,0,0,0.03);" class="tc" @click="$router.push(`/SongManage?id=${$route.query.id}`)">歌曲上架管理</div>
       <!-- <group label-align="left">
         <cell title="歌曲管理" is-link :link="{path: '/SongManage', query: {id: $route.query.id}}"></cell>
       </group> -->
@@ -96,9 +96,11 @@ export default {
     getMerchantSetting({ht_id: this.$route.query.id}).then((res) => {
       if (res.result) {
         res.result.price = res.result.price ? Number(res.result.price) : ''
-        res.result.amount = res.result.amount !== '0' ? Number(res.result.amount) : ''
-        res.result.open_hour = res.result.open_hour !== '0' ? Number(res.result.open_hour) : ''
+        res.result.amount = Number(res.result.amount) !== 0 ? res.result.amount.toString() : ''
+        res.result.open_hour = Number(res.result.open_hour) !== 0 ? res.result.open_hour.toString() : ''
         res.result.open_time = res.result.open_time ? res.result.open_time : ''
+        res.result.is_open = res.result.is_open.toString()
+        res.result.is_shelves = res.result.is_shelves.toString()
         this.form = Object.assign(this.form, res.result)
       }
     })

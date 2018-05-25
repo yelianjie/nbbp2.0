@@ -1,11 +1,11 @@
 <template>
-  <div v-transfer-dom class="song-pop">
+  <div v-transfer-dom class="song-pop" v-fixscroll="'#songs-list'">
     <popup v-model="popVisible" height="80%" class="flex flex-v" style="border-radius: 10px 10px 0 0;" v-fixscroll="'#songs-list'"  @on-hide="resetEvent" :should-rerender-on-show="true">
       <popup-header
         @on-hide="popVisible = false"
         left-text=""
         right-text="确定"
-        :title="'已选歌曲(' + songLength + ')'"
+        :title="'已上架歌曲(' + songLength + ')'"
         :show-bottom-border="false"
         @on-click-right="popVisible = false"></popup-header>
       <div id="songs-list" class="flex-1 overscroll">
@@ -115,6 +115,7 @@ export default {
       })
     },
     resetEvent () {
+      this.deleteCount = 0
       setTimeout(() => {
         this.songList = []
         /* this.songListValue = [] */

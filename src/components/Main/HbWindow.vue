@@ -29,7 +29,7 @@
           </template>
         </div>
       </div>
-      <p class="hb-text-tip f13" style="margin: 0px 0 10px;">大于等于50元将在大屏幕上显示</p>
+      <p class="hb-text-tip f13" style="margin: 0px 0 10px;">大于等于20元将在大屏幕上显示</p>
       <div class="hb-input-box flex flex-align-center">
         <div class="hb-input-label">个数</div>
         <div class="hb-input-wrap flex-1">
@@ -117,7 +117,7 @@ export default {
         message: ['有钱任性，大家快抢啊！'],
         content: '',
         pay_type: 2, // 2 现金 1 牛角,
-        money: 50,
+        money: 20,
         amount: 10,
         auth_uid_str: '',
         type: 0 // 0 全场 2 男士 1 女士 3 自定义
@@ -276,6 +276,7 @@ export default {
         this.$router.push('/Charge') */
         this.buyDialogVisible = false
         this.$parent.chargeShow()
+        this.$store.commit('app/SET_FIELD', {field: 'order_no', value: ''})
         this.$store.commit('app/SET_FIELD', {field: 'buyComponetName', value: 'hbRef'})
         this.$store.commit('app/SET_FIELD', {field: 'sourceType', value: 3})
         // window.location.href = window.location.origin + window.location.pathname + '#/Charge'
@@ -290,7 +291,8 @@ export default {
           _params = Object.assign(this.hongbao, {})
         }
         _params.auth_uid_str = this.onlineHbChose.join(',')
-        createHb(_params).then((res) => {
+        createHb({..._params, order_no: this.$store.state.app.order_no}).then((res) => {
+          this.$store.commit('app/SET_FIELD', {field: 'order_no', value: ''})
           this.$store.commit('user/SET_USER_INFO_BALANCE', res.result.balance)
           this.$vux.toast.show({
             text: '红包已生成',
