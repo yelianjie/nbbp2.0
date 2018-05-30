@@ -71,7 +71,7 @@
                   <img :src="$options.filters.prefixImageUrl(v.toimgurl)" class="receiver-avatar db" v-if="v.to_id != 0"/>
                 </div>
                 <div class="song-item-info flex-1 flex flex-v flex-pack-center">
-                  <p class="f15 line1">{{v.name}}</p>
+                  <p class="f15 line1">{{v.name}} <span v-if="v.price == 0" class="f12" style='color:#f31374'>免费</span></p>
                   <p class="f12 line1" style="color: rgba(255,255,255, 0.5);">原唱：{{v.author}}</p>
                 </div>
                 <div class="song-item-right flex flex-v flex-pack-center">
@@ -100,8 +100,9 @@
     <bp-dialog :title="'确认支付'" v-model="buyDialogVisible" @onConfirm="confirmBuy" :cancelAutoClose="buyDialogInfo.cancelAutoClose" :onCancel="buyDialogInfo.onCancel" :cancelText="buyDialogInfo.cancelText" :cancelColor="buyDialogInfo.cancelColor" :confirmText="buyDialogInfo.confirmText">
     <div class="">
       <div style="font-size: 26px;margin-bottom: 8px;">{{buyDialogInfo.price}}<svg-icon icon-class="coin" style="width:0.32rem;fill: #fdc635;margin-left:2px;vertical-align: bottom;"/></div>
-      <template v-if="userInfo.is_recharge">
+      <template v-if="userInfo.is_recharge || (!userInfo.is_recharge && barManagerInfo.isManager)">
       <p style="color: #88878f;"><svg-icon icon-class="tip" style="margin-top:-2px;margin-right:2px;" />当前余额可用：<svg-icon icon-class="coin"  style="margin-top:-2px;margin-right:2px;"/>{{userInfo.balance}}</p>
+      <p class="f12" v-if="barManagerInfo.isManager" style="color:#b187e4;margin-top:6px;">今日剩余免费霸屏、打赏{{barManagerInfo.game_count}}次</p>
       <p class="f13" v-if="buyDialogInfo.isCharge" style="color:#8bc5ec;margin-top:6px;">余额不足，请充值</p>
       </template>
       <template v-else>
@@ -120,7 +121,7 @@ import InlineLoading from '@/components/InlineLoading'
 // import twemoji from '@/vendor/twemoji.npm'
 // import { BASE_API } from '../../../config/prod.env'
 import { iOSversion, emojiReg, debounce } from '@/utils/utils'
-import { searchSong, canDianGe, tonightOdrList, getMerchantSetting, isFinish, addSongOrder } from '@/api/'
+import { searchSong, canDianGe, tonightOdrList, getMerchantSetting, isFinish, addSongOrder, getRestScreenAmount } from '@/api/'
 import BpDialog from '../bpDialog'
 export default {
   /* model: {
@@ -168,6 +169,7 @@ export default {
       this.tonightSongs = results[1].result.list
       this.hasRight = results[1].result.is_manager
       this.songs = results[2].result.data
+      console.log(results[2])
       this.totalSong = results[2].result.total
       this.setting = results[3].result
       this.$nextTick(() => {
@@ -290,7 +292,7 @@ export default {
       // Number(this.setting.price)
       let postParams = {
         ht_id: this.$route.params.id,
-        price: Number(this.setting.price),
+        price: this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0 ? 0 : Number(this.setting.price),
         content: content === '' ? '好听的歌一起来分享~' : content,
         song_id: this.currentSelectItem().song_id,
         to_id: this.currentUserInfo.initiator_mc_id ? this.currentUserInfo.initiator_mc_id : 0,
@@ -378,6 +380,14 @@ export default {
             this.$parent.chargeFlag = false
           }
           this.$store.commit('app/SET_FIELD', {field: 'order_no', value: ''})
+          if (this.barManagerInfo.isManager) {
+            // 获取剩余次数
+            getRestScreenAmount({ht_id: this.$route.params.id}).then((res) => {
+              console.log(res)
+              var nextCount = Number(res.result)
+              this.$store.commit('user/SET_BAR_MANAGER', {isManager: true, game_count: nextCount, max_bp_time: this.barManagerInfo.max_bp_time})
+            })
+          }
         }).finally(() => {
           this.confirmDisable = false
         })
@@ -397,8 +407,13 @@ export default {
   computed: {
     total () {
       // Number(this.setting.price)
-      const songPrice = this.songIndex !== -1 ? Number(this.setting.price) : 0
-      return Number(songPrice)
+      console.log(this.barManagerInfo)
+      if (this.barManagerInfo.isManager && Number(this.barManagerInfo.game_count) > 0) {
+        return 0
+      } else {
+        const songPrice = this.songIndex !== -1 ? Number(this.setting.price) : 0
+        return Number(songPrice)
+      }
     },
     timesDsText () {
       const texts = ['一', '二', '三']
