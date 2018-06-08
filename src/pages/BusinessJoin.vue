@@ -82,11 +82,13 @@ export default {
     next()
   },
   created () {
+    console.log(this.userInfo)
     var codeStr = ''
     if (this.$route.query.code) {
       this.code = this.$route.query.code
     }
     getAgentCode().then((res) => {
+      console.log(res)
       var code = ''
       if (res.result) {
         code = res.result

@@ -826,6 +826,14 @@ export const underShelves = (data) => {
 }
 
 /**
+ * 判断是否可霸屏
+ * @param {*} data
+ */
+export const canBp = (data) => {
+  return request('/weixin/screen/canBp', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */

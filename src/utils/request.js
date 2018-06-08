@@ -25,6 +25,7 @@ Vue.http.interceptors.request.use(function (config) {
 })
 
 const request = (url, method = 'POST', data = {}) => {
+
   if (method === 'POST') {
     return Vue.http.post(url, data, {
       cancelToken: new CancelToken(function (cancel) {

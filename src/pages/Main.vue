@@ -338,7 +338,7 @@
 
 <script>
 // isSubscribe
-import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack, addBlack, getRestScreenAmount, isSubscribe, canDianGe } from '@/api/'
+import { getBarAllInfo, getNewestMsg, getMaxMsg, getBarNotice, addBpDsMsg, getOnlines, favoriteDo, deleteMsg, getCharges, rechargePay, wxPay, unFinishHbList, robHb, robHbMemberList, getPacketOrder, getHbInfo, getHbStatus, getDelMsg, isBlack, addBlack, getRestScreenAmount, isSubscribe, canDianGe, canBp } from '@/api/'
 import { XDialog, TransferDom, Popup, PopupPicker, XButton } from 'vux'
 import MarqueeTips from 'vue-marquee-tips'
 import BpDialog from '../components/bpDialog'
@@ -1288,9 +1288,22 @@ export default {
       this.$store.commit('app/SET_CURRENT_USER_INFO', {})
       this.dg()
     },
+    // screenForAll () {
+    //   this.$store.commit('app/SET_CURRENT_USER_INFO', {})
+    //   this.bpWindowVisible = true
+    // },
     screenForAll () {
-      this.$store.commit('app/SET_CURRENT_USER_INFO', {})
-      this.bpWindowVisible = true
+      canBp({ht_id: this.$route.params.id}).then((res) => {
+        if(res.result === '0') {
+          this.$vux.toast.show({
+            text: '当前模式下大屏幕不可霸屏',
+            width: '6rem'
+          })
+        } else {
+          this.$store.commit('app/SET_CURRENT_USER_INFO', {})
+          this.bpWindowVisible = true
+        }
+      })
     },
     rewardForAll () {
       this.$store.commit('app/SET_CURRENT_USER_INFO', {})
