@@ -1294,7 +1294,7 @@ export default {
     // },
     screenForAll () {
       canBp({ht_id: this.$route.params.id}).then((res) => {
-        if(res.result === '0') {
+        if(res.result == 2) {
           this.$vux.toast.show({
             text: '当前模式下大屏幕不可霸屏',
             width: '6rem'

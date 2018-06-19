@@ -66,8 +66,10 @@ export default {
         vm.r_business.code = code
       }
       vm.$nextTick(() => {
-        document.getElementById('iframe').style.width = window.innerWidth + 'px'
-        document.getElementById('iframe').style.height = window.innerHeight + 'px'
+        document.getElementById('iframe').style.width = '100%'
+        document.getElementById('iframe').style.height = '100%'
+        // document.getElementById('iframe').style.width = window.innerWidth + 'px'
+        // document.getElementById('iframe').style.height = window.innerHeight + 'px'
         window.addEventListener('message', vm.onSelectAddress, false)
       })
     })

@@ -834,6 +834,14 @@ export const canBp = (data) => {
 }
 
 /**
+ * 判断是否可霸屏
+ * @param {*} data
+ */
+export const getOrderList = (data) => {
+  return request('/weixin/merchant/orderList', 'POST', data)
+}
+
+/**
  * 上传图片
 
  */

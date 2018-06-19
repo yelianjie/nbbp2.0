@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     infiniteHandler ($state) {
-      getWithdrawList(this.params).then((res) => {
+      getWithdrawList(Object.assign({},this.params,{ht_id: this.$route.query.id})).then((res) => {
         if (Array.isArray(res.result.data)) {
           this.list = this.list.concat(res.result.data)
           if (this.list.length >= res.result.total) {

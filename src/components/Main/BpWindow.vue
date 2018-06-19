@@ -30,7 +30,7 @@
           <div class="bp-theme-container">
             <swiper :options="swiperThemeOption">
               <swiper-slide v-for="(vv, ii) in screens" :key="ii">
-                <div class="flex-1" v-for="(v, i) in vv" :key="i">
+                <div class="flex-1" v-for="(v, i) in vv" :key="i" style='flex:0 1 auto'>
                   <div class="bp-theme-item borderbox" :class="{'selected': bpThemeIndex == i && bpThemeRowIndex == ii}" @click="bpThemeSelect(ii, i)">
                     <div class="bp-theme-selected"><span class="selected-icon"><svg-icon icon-class="selected"/></span></div>
                     <div class="theme-icon"><img class="lazy-bp-img" src="../../assets/blank.gif" :data-src="$options.filters.prefixImageUrl(v.icon)"></div>
@@ -346,6 +346,12 @@ export default {
   }
   .swiper-container {
     padding: 0.15rem 0;
+  }
+}
+
+.bp-theme-container {
+  .swiper-slide {
+    justify-content: flex-start !important;
   }
 }
 

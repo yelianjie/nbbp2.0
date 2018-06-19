@@ -1,6 +1,9 @@
 <template>
   <div class="container padding-bar f7f7f7 borderbox">
     <BusinessAgentTop :hideIncome="iSHideIncome" :showTx="mInfo.is_merchant > 0" :name="barInfo.name" :logo="barInfo.logo | prefixImageUrl" :currentMoney="barInfo.merchant_balance" :totalMoney="barInfo.merchant_income" :yesMoney="barInfo.yst_money"></BusinessAgentTop>
+    <group gutter = '0' style="margin: 0;">
+      <cell style="margin: 0;background-color: #2481d2;color:#fff;" class='f14' title="收益统计详情" :link="{path: '/BusinessOrderDetail', query: {id: $route.query.id}}"></cell>
+    </group>
     <BusinessMenus :menus="menus"></BusinessMenus>
     <footer class="footer flex">
       <div class="flex-1 flex-v tc flex-pack-center flex-align-center">
@@ -16,6 +19,7 @@ import BusinessMenus from '@/components/Center/BusinessMenus'
 import logo from '../assets/logo.png'
 import { getBarMoney, getManagerInfo } from '@/api/'
 import { mapGetters } from 'vuex'
+import { Group, Cell } from 'vux'
 export default {
   name: 'BusinessCenter',
   data () {
@@ -70,7 +74,9 @@ export default {
   },
   components: {
     BusinessAgentTop,
-    BusinessMenus
+    BusinessMenus,
+    Group,
+    Cell
   },
   computed: {
     ...mapGetters('user', {

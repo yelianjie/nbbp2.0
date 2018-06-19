@@ -287,6 +287,14 @@ export default new Router({
       }
     },
     {
+      path: '/BusinessOrderDetail',
+      name: 'BusinessOrderDetail',
+      component: _import('BusinessOrderDetail'),
+      meta: {
+        roles: ['user', 'agent', 'business'],
+      }
+    },
+    {
       path: '/MyLevel',
       name: 'MyLevel',
       component: _import('MyLevel'),
