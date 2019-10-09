@@ -1,0 +1,774 @@
+{
+  "common": {
+    "please_login": "Please Login First",
+    "free_shipping": "Free Shipping",
+    "free_ems_shipping": "Free International Shipping",
+    "free_ems_shipping_text": "Delivery ETA: 7-12 working days. China Post, Small Packet Plus",
+    "pick_up_only": "Pick Up Only",
+    "loading": "Loading...",
+    "searchPlaceHolder": "Search by name or SKU",
+    "btns": {
+      "create_account": "Create an Account",
+      "login": "Login",
+      "cancel": "Cancel",
+      "ok": "Ok",
+      "done": "Done",
+      "submit": "Submit",
+      "delete": "Delete",
+      "apply": "Apply",
+      "edit": "Edit",
+      "add": "Add",
+      "close": "Close",
+      "set_as_default_shipping": "Set As Default Shipping Address",
+      "set_as_default_billing": "Set As Default Billing Address",
+      "add_adress": "Add New Address",
+      "save": "Save",
+      "subscribe": "Subscribe",
+      "add_to_wishlist": "Add to Wishlist",
+      "checkout": "Checkout",
+      "payment": "Payment",
+      "checkout": "Checkout",
+      "place_order": "Place Order",
+      "add_to_cart": "Add To Cart",
+      "email": "Email",
+      "back": "Back"
+    },
+    "info": {
+      "availability": "Availability",
+      "in_stock": "In Stock",
+      "out_stock": "Out of stock",
+      "qty": "Qty",
+      "blog_name": "Aosom Blog",
+      "more": "More",
+      "brand": "Brand",
+      "left_stock": "Only {qty} Left"
+    },
+    "only_left": "Only {qty} Left",
+    "newsletter": {
+      "email": "Enter Email to get 15% off",
+      "title": "JOIN OUR NEWSLETTER",
+      "placeholder": "Enter Your Email Address",
+      "alreay_subscribed": "This email address is already subscribed"
+    },
+    "message": {
+      "success": "Success",
+      "error": "Error",
+      "required_check_address": "Please Select One Address",
+      "information_change_success": "The account information has been saved",
+      "create_account_success": "You have created a account",
+      "cart_add_success": "You have added it to your shopcart",
+      "reordre_success": "You have reordered it. Please check in your shopcart",
+      "wishlist_delete": "Are you sure you want to remove this product from your wishlist?",
+      "browserhistory_delete": "Are you sure you want to remove this product from your browser history?",
+      "account_delete": "Are you sure you want delete this account?",
+      "address_delete": "Are you sure to delete this address?",
+      "shopcart_delete": "Are you sure you want to remove this product from your shopcart?",
+      "order_delete": "Are you sure you want to remove this order from your orders?",
+      "forgot_send_sucess": "Please check your email to continue",
+      "reset_password_success": "You have reset your password",
+      "no_data": "No data available",
+      "login_in": "You have logged in",
+      "add_cart_success": "Success"
+    },
+    "confirm_title": {
+      "prodcut_delete": "Remove Product",
+      "account_delete": "Delete Account",
+      "address_delete": "Delete Address",
+      "order_delete": "Delete Order",
+      "message": "Message",
+      "login": "Login",
+      "invalid_shopcart": "Some of the products you added are unvailable.",
+      "shopcart_guest_pay_before": "Join Aosom get more Benefits！"
+    },
+    "gdpr": {
+      "order_message": "By placing your order, you agree to Aosom’s ",
+      "create_account_message": "By creating an account, you agree to Aosom’s ",
+      "subscription_message": "By subscribing to our newsletter, you agree to The ",
+      "user_center_message": "We have improved our site compliant with GDPR, see ",
+      "and": "and",
+      "term": "Terms and Conditions",
+      "policy": "Privacy Policy",
+      "check_needed": "Please agree to the terms & conditions and privacy policy."
+    },
+    "cookie": {
+      "text": "uses cookies for site functionality and analytics. By continuing to browse the site you are agreeing to our use of cookies. ",
+      "href": "Find out more here.",
+      "accept": "Accept",
+      "decline": "Decline",
+      "link": "/page/privacy-policy"
+    },
+    "validate": {
+      "required": "The {field} field is required."
+    }
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "blog_with_tag": "Tagged with {tag}"
+  },
+  "advantage": {
+    "express": "Free Delivery",
+    "return": "30 Day Return Policy",
+    "process": "24 Hour Dispatch",
+    "secure": "Secure Checkout"
+  },
+  "top": {
+    "department": "Departments",
+    "sale": "Sale",
+    "blog": "Blog",
+    "menu": "Menu",
+    "hot": "Hot",
+    "hover_menus": {
+      "account": "My Account",
+      "sign_in": "Sign In",
+      "sign_out": "Sign Out"
+    },
+    "right_title1": "Free Shipping",
+    "right_title2": "On All Products"
+  },
+  "search": {
+    "recentSearchTitle": "Recent Searches"
+  },
+  "login": {
+    "meta_title": "Customer Login",
+    "login_title": "Sign In",
+    "login_with": "Or Login With",
+    "create_account_title": "New To Aosom?",
+    "create_account_benefit": "Creating an account has many benefits: check out faster, keep more than one address, track orders and more.",
+    "forget": "Forgot Your Password?",
+    "register": "Register",
+    "form": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "social_text": "SIGN IN WITH {social}"
+  },
+  "register": {
+    "meta_title": "Create New Customer Account",
+    "title": "Register",
+    "reg_btn": "Register",
+    "login_btn": "Log In",
+    "formWidth": "9em",
+    "form": {
+      "firstname": "First Name",
+      "lastname": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm Password"
+    },
+    "sign_up_newsletter": "Sign Up for Newsletter",
+    "alreay_have_account": "Already have an account?"
+  },
+  "passwordreset": {
+    "meta_title": "Password Reset",
+    "pageTitle": "Password Reset",
+    "tip": "Please enter your email address below. You will receive a link to reset your password.",
+    "form": {
+      "email": "Email"
+    }
+  },
+  "passwordcreate": {
+    "meta_title": "Set a New Password",
+    "pageTitle": "Set a New Password",
+    "form": {
+      "email": "Email",
+      "new_password": "New Password",
+      "confirm_password": "Confirm New Password"
+    },
+    "expired": "Your password reset link has expired."
+  },
+  "confirm": {
+    "meta_title": "Confirm Your Information",
+    "confirming": "Confirming your information",
+    "message": "We have sent a email of confirmation to {email}, Please Check in. If you didn't receive it for a long time",
+    "resend": "Resend Confirmation"
+  },
+  "product": {
+    "title": {
+      "detail": "Details",
+      "information": "Information",
+      "user_guide": "User Guide",
+      "video": "Video",
+      "also_buy": "Customer Ultimately Bought",
+      "related_product": "YOU MIGHT ALSO NEED",
+      "related_product_by_brand": "MORE FROM {brand_name}",
+      "bundle": "Bundle Promotions",
+      "file_download": "File Downloads User Guide",
+      "APlus": "Bullet Points",
+      "out_of_stock_recommend": "Can't Wait? Try These Instead"
+    },
+    "see_more": "See More",
+    "buy_now": "Buy Now",
+    "share_this": "Share This",
+    "email": "Email",
+    "warning_title": "⚠ CALIFORNIA PROPOSITION 65 WARNING",
+    "sku_need_select_error": "You need to choose sku for your item.",
+    "information": {
+      "color": "Color",
+      "size": "Size",
+      "brand": "Brand"
+    },
+    "flash": {
+      "text": "Flash Sale",
+      "start": "Will Be Start In",
+      "end": "Ends in"
+    },
+    "time": {
+      "day": "D",
+      "hour": "H",
+      "minute": "Min",
+      "seconds": "S"
+    },
+    "select": "Select",
+    "notify_btn": "Notify Me When Available",
+    "delivery": {
+      "delivery_time": "Delivery Time",
+      "default_time": "4-6 business days",
+      "notes": [
+        "1.For larger and heavy items the delivery courier requires a Pre Delivery Notice which means before you commit to buy on the item, please ensure you have a valid contact number on your order so the courier can contact you to arrange a specific delivery day/time. ",
+        "2.The driver is only able to deliver the goods to the kerbside of your property and will not take it indoors, to a specific point of your property or assemble it for you. ",
+        "3.Please ensure some helpers are available for facilitating a product of such size to avoid inconvenience when the driver delivers to your kerbside."
+      ]
+    }
+  },
+  "index": {
+    "expore": "explore all",
+    "idea": "aosom ideas",
+    "customer_rec": "customer recommended",
+    "best_sellers": "best sellers",
+    "loadmore": "Load More",
+    "loadend": "No More Data",
+    "popular_category": "Popular Category",
+    "shop_by": "Shop By",
+    "our_brands": "Our Brands",
+    "ideasTitle": "Aosom Ideas",
+    "bestSellerTitle": "Best Sellers",
+    "moreBestSellerTitle": "See All Best Sellers",
+    "popularCategories": "Popular Categories",
+    "recTitle": "Recommend For you",
+    "brandTitle": "Brands",
+    "lookbook": {
+      "detail": "Detail",
+      "buy_now": "Buy Now"
+    }
+  },
+  "products": {
+    "shop_by": "Shop By",
+    "filter": {
+      "price": "Price",
+      "fields": {
+        "cat": "Category",
+        "mgs_brand": "Brand",
+        "manufacturer": "Brand",
+        "size": "Size",
+        "color": "Color",
+        "material": "Material"
+      },
+      "done": "Done"
+    },
+    "labelName": {
+      "sort_by": "Sort By",
+      "show": "Show"
+    },
+    "sortName": {
+      "position": "Position",
+      "best_seller": "Best Seller",
+      "pro_name": "Product Name",
+      "price": "Price",
+      "discount_percent": "Greatest Discount",
+      "new": "New Releases",
+      "recommend_sort": "Customer Reviews",
+      "relevance": "Relevance"
+    },
+    "label": {
+      "new": "New"
+    }
+  },
+  "shopcart": {
+    "meta_title": "Shopping Cart",
+    "lack": "some products are out of stock",
+    "no_items": "You have no items in your shopping cart . Click here to continue shopping",
+    "invalid_items": "Invalid Items",
+    "can_not_ship_to": "We do not support shipping to this country",
+    "checkout_without_login": "Checkout Without Login",
+    "btns": {
+      "to_checkout": "Proceed to Checkout",
+      "shop_now": "Shop Now",
+      "clear": "Clear Shopping Cart",
+      "continue": "Continue Shopping"
+    },
+    "table": {
+      "item": "item",
+      "qty": "Qty",
+      "price": "Price",
+      "subtotal": "Subtotal"
+    },
+    "text": {
+      "total": "Total",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "tax": "Tax",
+      "order_total": "Order Total",
+      "discount": "Discount",
+      "summary": "Order Summary",
+      "cart_subtotal": "Cart Subtotal",
+      "tax_update": "(Updates after you input shipping address)"
+    },
+    "logindialog": {
+      "title": "Login to Your Account",
+      "create_account": "Create Your Account"
+    }
+  },
+  "checkout": {
+    "meta_title": "Checkout",
+    "method_title": ["Select Method", "Price", "Method Title", "Carrier Title"],
+    "tip_for_no_address": "Please add or select a address first.",
+    "add_address": "Add New Address"
+  },
+  "payment": {
+    "meta_title": "Payment",
+    "same_billing_tip": "My billing and shipping address are the same",
+    "total": "Total",
+    "items": "items",
+    "qty": "Qty",
+    "items_in_cart": "{num} Items in Cart",
+    "discount_code": "Discount Code",
+    "enter_code": "Select or enter discount code",
+    "coupon_applyed": "Coupon code \"{code}\" was applied",
+    "coupon_once": "Only one code is eligible per order",
+    "payment_methods": "Payment Methods",
+    "shipping_address": "Shipping Address",
+    "billing_address": "Billing Address",
+    "shipping_methods": "Shipping Methods",
+    "ship_to": "Ship To",
+    "need_login": "The {email} is already exsits.",
+    "adyen_card_error": "Please enter the correct card number",
+    "create_new_account": "Create an account for later use",
+    "step": {
+      "1": "Shipping",
+      "2": "Review & Payments",
+      "3": "Payment Successful"
+    },
+    "btns": {
+      "apply_code": "Apply",
+      "ship_here": "Ship Here",
+      "next": "Next",
+      "back": "Back"
+    },
+    "credit": {
+      "holder_name": "Holder Name",
+      "card_numer": "Card number",
+      "expire_date_month": "Expiration Date Of Month",
+      "expire_date_year": "Expiration Date Of Year",
+      "verify_number": "Card Verification Number",
+      "loading": "awaiting payment redirect",
+      "birthday": "Birthday Date",
+      "gender": "Gender",
+      "visa_verify_info": "The 3 digits are located on the back of the card.to the right of the signature strip.",
+      "amex_verify_info": "The 4 digits of the CVV are located on the front side of the card."
+    },
+    "months": {
+      "1": "01 - January",
+      "2": "02 - February",
+      "3": "03 - March",
+      "4": "04 - April",
+      "5": "05 - May",
+      "6": "06 - June",
+      "7": "07 - July",
+      "8": "08 - August",
+      "9": "09 - September",
+      "10": "10 - October",
+      "11": "11 - November",
+      "12": "12 - December"
+    },
+    "pay_error_dialog_text": "It appears that your payment has failed. You have not been charged for this transaction. Please try again or choose another payment method.",
+    "pay_error_inital": "Something wrong"
+  },
+  "success": {
+    "line1": "Your order has been received.",
+    "line2": "Thank you for your purchase!",
+    "line3": "Your order # is:",
+    "line4": "You will receive an order confirmation email with details of your order and a link to track its progress.",
+    "line5": "Click here to print a copy of your order confirmation."
+  },
+  "cateHome": {
+    "prefixTitle": "Recommended Category of ",
+    "recommendCategory": "Recommend Categories",
+    "recProductTitle": "Recommend Products",
+    "more": "See More Categories",
+    "readMore": "Show More",
+    "showLess": "Show Less",
+    "see_more_product": "See All Products"
+  },
+  "cate": {
+    "pageTitle": "Categories",
+    "hotCateTitle": "Hot Categories",
+    "hotActivityTitle": "Hot Activities",
+    "rankTitle": "Sale Rank"
+  },
+  "searchResult": {
+    "meta_title": "Search results for: '{q}'",
+    "results": "Results",
+    "no_result": "Your search: \"{q}\"returned no results.",
+    "rec_match": "Results matching fewer words",
+    "top_seller": "Aosom Top Sellers"
+  },
+  "plap": {
+    "see_more": "See Full Details",
+    "also_view": "Customers Also Viewed",
+    "frequently_bought": "Frequently Bought",
+    "best_sellers": "Best Sellers"
+  },
+  "account": {
+    "nav_menus": {
+      "dashboard": "Account Dashboard",
+      "information": "Account Information",
+      "orders": "My Orders",
+      "address_book": "Address Book",
+      "wishlist": "My Wish List",
+      "history_view": "Browser History",
+      "newsletter": "Newsletter Subscriptions",
+      "delete_account": "Delete Account",
+      "coupon": "My Coupons"
+    },
+    "index": {
+      "meta_title": "My Account",
+      "hello": "Hello",
+      "description": "From your My Account Dashboard you have the ability to view a snapshot of you recent account cativity and update your account information, Selsct a link below to view or edit information.",
+      "card": "My Order | My Wish List | Browser History",
+      "logout": "Logout",
+      "recent_order": "Recent Orders",
+      "view_all": "View All",
+      "navigation": "Account Navigation"
+    },
+    "orders": {
+      "meta_title": "My Orders",
+      "tabMenus": {
+        "all": "All",
+        "pending": "Pending",
+        "processing": "Processing",
+        "complete": "Complete"
+      },
+      "actions": {
+        "view_order": "View Order",
+        "re_order": "Reorder",
+        "review": "Review"
+      },
+      "item": {
+        "order_no": "Order #",
+        "ship": "Ship To",
+        "date": "Date",
+        "order_total": "Order Total",
+        "status": "Status",
+        "actions": "Actions"
+      }
+    },
+    "address": {
+      "meta_title": "Address Book",
+      "default_address_title": "Default Addresses",
+      "default_shipping_address_title": "Default Shipping Address",
+      "default_biling_address_title": "Default Billing Address",
+      "other_address_title": "Addtional Address Entries",
+      "edit_btn": "Edit Address",
+      "delete_btn": "Delete Address",
+      "address": "Address",
+      "default_shipping": "Default Shipping Address",
+      "default_billing": "Default Billing Address",
+      "edit_default_shiping_btn": "Change Shipping Address",
+      "edit_default_billing_btn": "Change Billing Address",
+      "select_country": "Select a country first",
+      "no_match_states": "No State/Province Matches",
+      "form": {
+        "email": "Email Address",
+        "firstname": "First Name",
+        "lastname": "Last Name",
+        "country": "Country",
+        "company": "Company",
+        "province": "State/Province",
+        "city": "City",
+        "street1": "Street Address 1",
+        "street2": "Street Address 2",
+        "zipcode": "Zip/Postal Code",
+        "phone": "Phone Number",
+        "google_autocomplete": "Address Auto Complete"
+      }
+    },
+    "order": {
+      "meta_title": "Order # ",
+      "pageTitle": "Order Details",
+      "addressTitle": "Shipping Address",
+      "paymentTitle": "Payment Method",
+      "order_title": "Items Ordered",
+      "print_order": "Print Order",
+      "back_to_orders": "Back To My Orders",
+      "order_date": "Order Date",
+      "invoice": "Invoice",
+      "print_invoice": "Print Invoice",
+      "table": {
+        "name": "PRODUCT NAME",
+        "sku": "SKU",
+        "price": "PRICE",
+        "qty": "QTY",
+        "subtotal": "SUBTOTAL"
+      },
+      "tabs": ["Order Information", "Shipment", "Invoices"],
+      "tracking_header": ["Tracking Number(s)", "Action"],
+      "check_more": "View",
+      "fee": {
+        "subtotal": "Subtotal",
+        "shipping": "Shipping & Handling",
+        "discount": "Discount",
+        "discount_label": "Discount Label",
+        "grand_total": "Grand Total",
+        "tax": "Tax"
+      },
+      "information": {
+        "title": "Order Information",
+        "shipping_address": "Shipping Address",
+        "shipping_method": "Shipping Method",
+        "billing_address": "Billing Address",
+        "payment_method": "Payment Method"
+      }
+    },
+    "wishlist": {
+      "meta_title": "My Wish List",
+      "pageTitle": "My Wishlist",
+      "add_all_cart": "Add All To Cart"
+    },
+    "coupon": {
+      "meta_title": "My Coupons",
+      "pageTitle": "My Coupons",
+      "promotion_code": "Promotion code",
+      "expires": "expires"
+    },
+    "browserhistory": {
+      "meta_title": "Browser History",
+      "pageTitle": "Browser History"
+    },
+    "information": {
+      "meta_title": "Account Information",
+      "pageTitle": "Account Information",
+      "change": "Change",
+      "and": "And",
+      "password_strength": "Password Strength",
+      "checkEmail": {
+        "check": "Change Email",
+        "title": "Email"
+      },
+      "checkPassword": {
+        "check": "Change Password",
+        "title": "Password"
+      },
+      "menus": {
+        "account_info": "Account Information",
+        "change_email": "Change Email",
+        "change_password": "Change Password",
+        "delete_account": "Delete Account"
+      },
+      "form": {
+        "firstname": "First Name",
+        "lastname": "Last Name",
+        "email": "Email",
+        "current_password": "Current Password",
+        "new_password": "New Password",
+        "confirm_password": "Confirm New Password"
+      },
+      "level": ["No Password", "Weak", "Medium", "Strong"]
+    },
+    "delete_account": {
+      "meta_title": "Delete Account",
+      "delete_account": "Delete My Account",
+      "delete_account_tip": "Please Note-Once you have marked your data to be deleted or anonymised from our system then your date cannot be restored."
+    },
+    "newsletter": {
+      "meta_title": "Newsletter Subscription",
+      "pageTitle": "Subscription Option",
+      "subscribe": "General Subscription"
+    }
+  },
+  "page404": {
+    "meta_title": "404",
+    "page_not_found": "Opps, the page cannot be found",
+    "no_exsit": "The page you are looking for doest not exist or has been deleted",
+    "error_msg": "<div class='text-xs-center'><h2 class='f28'>SORRY,</h2><h3 class='f20'>LOOKS LIKE SOMETHING WENT WRONG ON THE ROAD.</h3></div>",
+    "back_btn": "GO HOME",
+    "refresh_btn": "Refresh"
+  },
+  "service": {
+    "returnPolicy": {
+      "meta_title": "Return Policy",
+      "pageTitle": "Return Policy",
+      "line1": "You can start a return here online, ",
+      "line2": "we shall contact you within 3 business days!",
+      "select_photos": "Select Photos",
+      "photo_need": "Please upload some photos",
+      "form": {
+        "title": "You can start a return here online, we shall contact you within 3 business days!",
+        "type": "Return Type",
+        "no": "Order No.",
+        "email": "Email",
+        "tel": "Telephone",
+        "name": "Name",
+        "reason": "Reason to Return",
+        "upload": "Upload Photos",
+        "notice1": "* attached files no more than 10 pics, each picture no more than 1MB. You can upload photos in these files formats: JPEG/PNG/GIF.",
+        "notice2": "* Please be sure to enter correct details to facilitate a quick resolution."
+      },
+      "error": {
+        "size_limit": "The image size can not larger than 1M"
+      }
+    }
+  },
+  "bundle": {
+    "meta_title": "Bundle Promotions",
+    "sortName": {
+      "position": "Position",
+      "bundle_name": "Bundle Name",
+      "latest": "Latest"
+    },
+    "labelName": {
+      "sort_by": "Sort By",
+      "show": "Show"
+    },
+    "bundle_down": ["discount", "discount on buying this offer."]
+  },
+  "sendfriend": {
+    "product": {
+      "meta_title": "Send Email To Friend",
+      "sender": "Sender",
+      "invitee": "Invitee",
+      "form": {
+        "name": "Name",
+        "email": "Email",
+        "message": "Message"
+      },
+      "invitee_btn": "Add Invitee",
+      "email_btn": "Send Email",
+      "back_btn": "Back"
+    }
+  },
+  "new": {
+    "meta_title": "What's New",
+    "page_title": "New"
+  },
+  "rewardPoints": {
+    "title": "Reward Points",
+    "history": "History",
+    "product_can_earn": "With this product, you earn {point} loyalty point(s). {point} points = {money}.",
+    "cart_can_use": "This shopping cart is worth {point} loyalty point(s). {point} points = {money}.",
+    "detail": "Detail",
+    "apply": "Apply Points",
+    "remove": "Remove",
+    "max_use": "*Maximum points usage of an order is {percent}%.",
+    "max_use_2": "*Maximum points usage of an order is {percent}%. You have {available_points} loyalty point(s) available. {available_points} points = {money}.",
+    "pointsTab": [
+      "Your Points",
+      "Total Accumulated Points",
+      "Total Points Spent",
+      "Points waiting for validation"
+    ],
+    "historyTab": ["Title", "Points", "Created", "Status"],
+    "point_unit": "points",
+    "success": [
+      "You earned {earned_points} points and spent {spent_points} points",
+      "You earned {earned_points} points",
+      "You spent {spent_points} points",
+      "for the order"
+    ]
+  },
+  "blog": {
+    "meta_title": "Aosom Blog",
+    "recent_posts": "Recent Posts",
+    "tags": "Tags",
+    "recent_views": "Recently Viewed Products",
+    "sortName": {
+      "created_at": "Created At"
+    },
+    "by": "By",
+    "post_comments": "Post Comments",
+    "submit": "Submit Comment",
+    "read_more": "Read More",
+    "comment": "comment"
+  },
+  "comments": {
+    "reviews": "Reviews",
+    "over_rating": "Overall Rating",
+    "based_on": "Based On {number} reviews",
+    "can_not_review": "You may have not buyed this product or you have reviewed it. So you can not review it.",
+    "see_all_image": "See All Customer Images ({number})",
+    "sortName": {
+      "default": "Default",
+      "newest": "Newest",
+      "with_pictures": "With Pictures",
+      "highest": "Highest Rating",
+      "lowest": "Lowest Rating",
+      "most_votes": "Most Votes",
+      "least_votes": "Least Votes"
+    },
+    "helpful": "Helpful",
+    "write": "Write Review",
+    "share": "Share",
+    "review_dialog": {
+      "title": "Title",
+      "review": "Review",
+      "photo": "Photo"
+    },
+    "filter": "Filtered by {star} star",
+    "see_all": "See All Reviews",
+    "review_error": "You had reviewed it.",
+    "by_aosom": "By Aosom"
+  },
+  "sitemap": {
+    "meta_title": "Sitemap",
+    "category": "Our Categories"
+  },
+  "contact": {
+    "meta_title": "contact us",
+    "write_us": "WRITE US",
+    "write_info": "Jot us a note and we’ll get back to you as quickly as possible.",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "telephone": "Phone Number",
+      "comment": "What’s on your mind?"
+    },
+    "contact_btn": "SUBMIT"
+  },
+  "unsubscribe": {
+    "title": "unsubscribe prodouct",
+    "success": "You have unsubscribed it"
+  },
+  "quickpay": {
+    "customer_info": "Customer information",
+    "email_tip": "Please tell us to which email address we can send the order confirmation.",
+    "pay_now": "Pay Now",
+    "cancel_now": "Cancel"
+  },
+  "p404": {
+    "btns": {
+      "ok": "En: ok",
+      "confirm": "En: confirm",
+      "cancel": "En: cancel"
+    },
+    "reLogin": {
+      "title": "Your session has expired",
+      "content": "Please login again",
+      "confirm": "Login",
+      "cancel": "Cancel"
+    },
+    "reload": {
+      "title": "En: reload title",
+      "content": "En: reload content",
+      "confirm": "En: reload",
+      "cancel": "En: back home"
+    }
+  },
+  "minicart": {
+    "my_cart": "My Cart",
+    "view_cart": "View Cart"
+  },
+  "maintain": {
+    "progress_in": ["Scheduled Maintenance", "in Progress"],
+    "tip": "We are in the middle of an upgrade that requires a few minutes of downtime. Thank you for your patience!",
+    "try": "Try again in a few seconds."
+  }
+}
