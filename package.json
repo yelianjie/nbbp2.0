@@ -17,7 +17,7 @@
     "fastclick": "^1.0.6",
     "js-cookie": "^2.2.0",
     "jshashes": "^1.0.7",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.13",
     "moment": "^2.21.0",
     "photoclip": "^3.3.6",
     "promise.prototype.finally": "^3.1.0",
